@@ -22,8 +22,12 @@ const Navbar = () =>
                   onClick={handleLogoClick}
         ></img>
          <h1 className="h1">SafeClicks</h1>
-      
-       
+
+            <div className="rightPart">
+                <a href="https://www.w3schools.com/" className="a">Hakkında</a>
+                <a href="about.html" className="a">İletişim</a>
+                <a href="about.html" className="a">Görüşler</a>
+            </div>
         </nav>
     </div>
 
