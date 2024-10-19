@@ -1,11 +1,15 @@
 /* Taskbar */
 .taskbar {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #767575;
   height: 50px;
   display: flex;
   justify-content: space-between;
-  align-items: left;
+  position: fixed;
+  align-items: center;
   padding: 0 10px;
+  bottom: 0;
+  width: 100%;
+  z-index : 1000;
 }
 
 .start-menu img {
