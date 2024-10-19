@@ -3,8 +3,7 @@ import TaskBar from "./TaskBar/TaskBar";
 
 const Desktop = () => {
   return (
-    <div>
-       
+    <div>  
       <Container />
        <TaskBar />
     </div>
