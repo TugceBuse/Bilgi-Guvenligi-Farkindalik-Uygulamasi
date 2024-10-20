@@ -1,11 +1,14 @@
 .navbar {
     display: flex;
+    position: fixed; /* Sabitle */
+    top: 0; /* Sayfanın en üstünde */
     align-items: center;
-    width: 100% auto;
-    height: 30%;
+    width: 100%;
+    height: 10%;
     min-width: 400px;
     color: white;
     background-image: linear-gradient(to right,rgb(26, 42, 56), rgb(54, 117, 177));
+    z-index: 1000;
   }
 
   .logo{

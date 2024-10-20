@@ -13,13 +13,22 @@ const HomeContainer = () => {
             </div>
               
             </div>
+                    <div style={{display:"flex", flexDirection:"column"}}>
+                          <h1>Merhaba,</h1>
+                          <h2>Güzel Bir Deneyim Yaşamaya Hazır Mısın?</h2> 
 
-                  <h1>Merhaba,</h1>
-                  <h2>Güzel Bir Deneyim Yaşamaya Hazır Mısın?</h2>
-
-            
+                          <div style={{display:"flex", flexDirection:"column"}}>
+                          <h3>Başlayacağın simülasyon oyunu oltalama saldırılarına karşı seni hazırlayacak, </h3>
+                          <h3>bilgilerini koruman adına aktiviteler yapmanı sağlayacak.</h3>
+                          <h4>Peki Sen Buna Hazır Mısın?</h4>
+                          </div>
+                    </div>
 
         </div>
+
+
+       
+        
          
      
       <WorkSpaceModel />
