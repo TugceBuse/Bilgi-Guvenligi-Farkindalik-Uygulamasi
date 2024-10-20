@@ -10,7 +10,7 @@
 
   .logo{
     margin-right: 10px;
-    margin-left: 85px;
+    margin-left: 200px;
     width: 70px;
     border-radius: 50%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
@@ -33,24 +33,23 @@
     margin-left: auto;   
     display: flex;
     align-items: center;
-    gap: 45px;
-    width: 30%;
+    width: 38%;
   }
 
   .a{
-    width: 25%;
+    width: 22%;
     text-align: center;
     font-size: 22px;
-    text-shadow: 2px 2px 4px #413f3f;
-    background-color: #c0d2dd;
+    text-shadow: 6px 6px 8px #000000;
     border-radius: 3%;
-    color: #413f3f;
+    color: #fffdfd;
     text-decoration: none;
    }
 
   .a:hover{
-    background-color: #b1bfc7;
-    transform: scale(1.0);
+    background-color: #555758;
+    transform: scale(1.05);
+    background-image: linear-gradient(to right, rgb(59, 93, 124),rgb(38, 45, 51));
   }
 
   

@@ -1,0 +1,15 @@
+.canvas{
+    
+    background-color: rgb(47, 64, 78);
+   
+   
+    justify-content: center;
+    align-items: center;
+    
+    padding: 20px;
+}
+body{
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(47, 64, 78);
+}

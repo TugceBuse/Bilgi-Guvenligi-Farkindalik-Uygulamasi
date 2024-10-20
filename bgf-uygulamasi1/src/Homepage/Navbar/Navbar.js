@@ -28,6 +28,8 @@ const Navbar = () =>
                 <a href="about.html" className="a">İletişim</a>
                 <a href="about.html" className="a">Görüşler</a>
             </div>
+
+            
         </nav>
     </div>
 
