@@ -2,14 +2,14 @@ import React from 'react';
 import './Container.css';
 import { useState } from 'react';
 
-const Desktop = () => {
+const Container = () => {
 
   const [openWindow, setOpenWindow] = useState(null);
+
 
   const handleIconClick = (windowName) => {
     setOpenWindow(windowName);
   }
-  
 
   return (
 
@@ -18,11 +18,17 @@ const Desktop = () => {
         <div className="desktop-icons">
           {/* Masaüstü simgeleri */}
           <div className="icon">
-            <img src="https://img.icons8.com/fluency/48/000000/folder-invoices.png" alt="Folder Icon" />
+            <img src="/icons/folder-invoices.png" alt="Folder Icon" />
             <span>My Documents</span>
           </div>
+
+          <div className="icon">
+            <img src="/icons/mail.png" alt="Mail Icon" />
+            <span>Mail</span>
+          </div>
+
           <div className="icon" onClick={() => handleIconClick('recycleBin')}>
-            <img src="https://img.icons8.com/fluency/48/000000/recycle-bin.png" alt="Recycle Bin Icon" />
+            <img src="/icons/recycle-bin.png" alt="Recycle Bin Icon" />
             <span>Recycle Bin</span>
           </div>
         </div>
@@ -43,4 +49,4 @@ const Desktop = () => {
   );
 };
 
-export default Desktop;
+export default Container;

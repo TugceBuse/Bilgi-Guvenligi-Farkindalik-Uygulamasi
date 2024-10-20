@@ -4,8 +4,8 @@ import TaskBar from "./TaskBar/TaskBar";
 const Desktop = () => {
   return (
     <div>  
-      <Container />
-       <TaskBar />
+      <Container/>
+       <TaskBar/>
     </div>
   );
 }

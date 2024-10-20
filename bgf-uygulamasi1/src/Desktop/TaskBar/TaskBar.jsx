@@ -1,23 +1,37 @@
 import "./taskbar.css";
+import React, { useState, useEffect } from 'react';
 
 const TaskBar = () => {
+
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+
   return (
+
 
     // Görev çubuğu bileşeni
     <div className="taskbar">
     {/* Başlat Menüsü */}
     <div className="start-menu">
-      <img src="https://img.icons8.com/fluency/48/000000/windows-10.png" alt="Start Button" />
+      <img src="/icons/windows-10.png" alt="Start Button" />
     </div>
     
     <div className="taskbar-icons">
       <img src="https://img.icons8.com/fluency/48/000000/chrome.png" alt="Chrome Icon" />
-      <img src="https://img.icons8.com/fluency/48/000000/folder-invoices.png" alt="File Explorer Icon" />
+      <img src="/icons/folder-invoices.png" alt="File Explorer Icon" />
     </div>
 
     {/* Saat */}
     <div className="taskbar-clock">
-      {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
     </div>
   </div>
   );
