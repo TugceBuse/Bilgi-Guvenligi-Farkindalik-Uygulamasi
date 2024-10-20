@@ -68,24 +68,119 @@ body {
   margin-top: 5px;
 }
 
-.window {
+/*MAILBOX GORUNUM*/
+.mailbox-window {
   position: absolute;
-  top: 20%;
-  left: 20%;
-  width: 60%;
-  height: 60%;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
   background-color: white;
   border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.153);
   z-index: 1000;
-  overflow: auto; /* İçerik taşarsa kaydırma çubuğu ekler */
+  display: flex;
+  flex-direction: column;
 }
 
-.window h2 {
-  margin-top: 0;
+.mailbox-header {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 6%;
 }
 
-.window-content {
-  margin-top: 20px;
+.mailbox-inwindow {
+  top: 6%;
+  position: absolute;
+  width: 100%;
+  height: 94%;
+  background-color: white;
+  border: 2px solid #cccccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.153);
+  z-index: 1000;
+  display: flex;
+  flex-direction: row;
+}
+
+/*mailbox menu*/
+.mailbox-menu {
+  background-color: #d3d2d2;
+  border-right: 1px solid #ccc;
+  width: 200px;
+  height: 100%;
+  padding: 10px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.mailbox-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mailbox-menu li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.mailbox-menu li:hover {
+  background-color: #e6e6e6;
+}
+
+.mailbox-menu li.active {
+  background-color: #d4d4d4;
+  font-weight: bold;
+}
+
+.mailbox-close {
+  width:  2.8%;
+  height: 150%;
+  background-color: transparent;
+  border: none;
+  color: #ff5c5c;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.mailbox-close:hover {
+  background-color: #ff1c1c;
+}
+.mailbox-maillist {
+  height:100%;
+}
+.mailbox-maillist li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.mailbox-maillist li:hover {
+  background-color: #e6e6e6;
+}
+
+.mailbox-mails {
+  background-color: #f1f1f1;
+  border-right: 1px solid #575757;
+  width: 20%;
+  height: 100%;
+  overflow: auto;
+  display:flex;
+  flex-direction: column;
+}
+
+.mailbox-mailcontent {
+  width: 80%;
+  height: 100%;
+  padding: 10px;
+  overflow: auto;
+  display:flex;
+  flex-direction: column;
 }
