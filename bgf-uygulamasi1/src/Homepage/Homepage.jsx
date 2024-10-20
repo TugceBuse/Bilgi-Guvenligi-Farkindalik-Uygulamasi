@@ -7,10 +7,9 @@ const Homepage = () => {
       <div>
         <Navbar />
       
-        <div className="homeContainer">
+        <div>
           <Homepage2 />
            <HomeContainer />
-
         </div>
        
       </div>
