@@ -13,12 +13,27 @@ const Container = () => {
 
   //Mail kutusu açma işlemleri
   const [isMailboxOpen, setIsMailboxOpen] = useState(false);
+  //seçilen maili ve indexi tutacak state'ler
+  const [selectedMail, setSelectedMail] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const mails = [
+    {Name:'Ahmet Karaköse', from:'Ahmet@gmail.com', title: 'Mail1', content: 'Mail1 content' },
+    {Name:'Tuce ergun', from:'Tuce@gmail.com', title: 'Mail2', content: 'Mail2 content' },
+    {Name:'Onur yildiz', from:'Onur@gmail.com', title: 'Mail3', content: 'Mail3 content' },
+  ];
+
+  const handleMailClick = (mail,index) => {
+    setSelectedMail(mail);
+    setActiveIndex(index);
+  };
 
   const openMailbox = () => {
     setIsMailboxOpen(true);
   };
 
   const closeMailbox = () => {
+    setSelectedMail(null);
     setIsMailboxOpen(false);
   };
   //////////////////////////////////////////////
@@ -28,6 +43,7 @@ const Container = () => {
   return (
 
     <div className="desktop">
+
       {/* Masaüstü Arka Planı */}
         <div className="desktop-icons">
           {/* Masaüstü simgeleri */}
@@ -71,7 +87,7 @@ const Container = () => {
           {/* headerden sonra soldan sağa dizilen iç pencere */}
         <div className="mailbox-inwindow">
 
-          <div className="mailbox-menu">
+          <div className="mailbox-sidebar">
             <ul>
               <li className="active">Inbox</li>
               <li>Sent</li>
@@ -82,39 +98,49 @@ const Container = () => {
            - bir maile tıklandığında içeriği mailbox-mailcontent e gelmeli
          */}
           <div className="mailbox-mails">
-            <ul className="mailbox-maillist">
-              <li className="active">
-                <h3>Mail1</h3>
-                <p>Mail1 content</p>
-              </li>
-              <li>
-                <h3>Mail2</h3>
-                <p>Mail2 content</p>
-              </li>
-              <li>
-                <h3>Mail3</h3>
-                <p>Mail3 content</p>
-              </li>
-            </ul>
+          <ul className="mailbox-maillist">
+          {mails.map((mail, index) => (
+            <li key={index} onClick={() => handleMailClick(mail,index)}
+            className={activeIndex === index ? 'active' : ''}
+            >
+              <h3>{mail.title}</h3>
+              <p>{mail.content}</p>
+            </li>
+          ))}
+          </ul>
           </div>
 
             {/* mail içeriği --> Bu kısma Header falan eklenerek
             mailin kimden ne zaman geldiği tarzında bilgiler eklenmeli */}
             <div className="mailbox-mailcontent">
-              
+            {selectedMail ? (
+            <div className="mailbox-mailcontentheader">
+              <h3>{selectedMail?.Name}</h3>
+              <h3>&lt;{selectedMail?.from}&gt;</h3>
             </div>
+            ) : (
+              <h3>No mail selected</h3>
+            )}
+              {selectedMail ? (
+              <div className="mailbox-mailcontenttext">
+                <h2>{selectedMail.title}</h2>
+                <p>{selectedMail.content}</p>
+              </div>
+              ) : (
+                <p>No mail selected</p>
+              )}
+           </div>
 
         </div>
           
         
-      </div>
-
-      )}
 
 
+      </div>)}
 
-    </div>
-  );
+
+
+    </div>);
 };
 
 export default Container;
