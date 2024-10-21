@@ -119,7 +119,7 @@ const Container = () => {
               <h3>&lt;{selectedMail?.from}&gt;</h3>
             </div>
             ) : (
-              <h3>No mail selected</h3>
+              <p></p>
             )}
               {selectedMail ? (
               <div className="mailbox-mailcontenttext">
@@ -127,7 +127,7 @@ const Container = () => {
                 <p>{selectedMail.content}</p>
               </div>
               ) : (
-                <p>No mail selected</p>
+                <p></p>
               )}
            </div>
 
