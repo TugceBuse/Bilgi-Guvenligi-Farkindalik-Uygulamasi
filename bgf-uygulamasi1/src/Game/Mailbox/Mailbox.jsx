@@ -11,7 +11,17 @@ const [activeIndex, setActiveIndex] = useState(null);
 const mails = [
   {Name:'Ahmet Karaköse', from:'Ahmet@gmail.com', title: 'Mail1', content: 'Mail1 content' },
   {Name:'Tuce ergun', from:'Tuce@gmail.com', title: 'Mail2', content: 'Mail2 content' },
-  {Name:'Onur yildiz', from:'Onur@gmail.com', title: 'Mail3', content: 'Mail3 content' },
+  {Name:'Onur yildiz',
+  from:'Onur@gmail.com',
+  title: 'Mail3', 
+  content: `Merhaba Ahtkrk,
+
+Kargonuz yola çıktı. Teslimat detaylarını ve takip numaranızı görmek için buraya tıklayın:
+ <a href="https://kargo-takip-linki.com" target="_blank" rel="noopener noreferrer">Kargo Takip</a>.
+
+Teşekkürler,
+[Ruzgar Kargo]`
+},
 ];
 
 const handleMailClick = (mail,index) => {
@@ -47,7 +57,11 @@ const handleMailClick = (mail,index) => {
                 className={activeIndex === index ? 'active' : ''}
               >
                 <h3>{mail.title}</h3>
-                <p>{mail.content}</p>
+                <p>{/* mail contentin uzunlugunu belirler*/}
+                  {mail.content.length > 50
+                    ? `${mail.content.slice(0, 50)}...`
+                    : mail.content}
+                </p>
               </li>
             ))}
           </ul>
@@ -66,7 +80,12 @@ const handleMailClick = (mail,index) => {
           {selectedMail ? (
             <div className="mailbox-mailcontenttext">
               <h2>{selectedMail.title}</h2>
-              <p>{selectedMail.content}</p>
+              {/* pre yapılınca boşluk ve satir başlarini aliyor
+              ancak responsive olmuyor yazi taşarsa görünmüyor 
+              p ile yapilinca da düz yaziyor */}
+              <pre dangerouslySetInnerHTML=
+              {{ __html: selectedMail.content }}
+                ></pre>
             </div>
           ) : (
             <p></p>

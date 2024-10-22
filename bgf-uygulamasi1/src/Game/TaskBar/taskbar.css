@@ -1,15 +1,14 @@
 /* Taskbar */
 .taskbar {
-  background-color: #767575;
+  background-color: #555;
   height: 50px;
   display: flex;
   justify-content: space-between;
+  align-items:center;
   position: fixed;
-  align-items: center;
-  padding: 0 10px;
   bottom: 0;
   width: 100%;
-  z-index : 1000;
+  z-index: 1000;
 }
 
 .start-menu img {
@@ -25,7 +24,31 @@
   cursor: pointer;
 }
 
+.taskbar-icons img:hover {
+  background-color: #444;
+}
+
+.taskbar-icons img:active {
+  background-color: #333;
+}
+
+.taskbar-right {
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  width:auto;
+  margin-right: 10px;
+}
+
+.taskbar-status {
+  display: flex;
+  align-items: center;
+  border-left:#000000 solid 1px;
+}
+
 .taskbar-clock {
   color: white;
   font-size: 18px;
+  margin-right: 10px;
 }
