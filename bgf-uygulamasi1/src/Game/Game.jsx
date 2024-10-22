@@ -1,5 +1,5 @@
 import Desktop from "./Desktop/Desktop.jsx";
-import TaskBar from "./TaskBar/TaskBar";
+import TaskBar from "./TaskBar/TaskBar.jsx";
 
 const Game = () => {
   return (

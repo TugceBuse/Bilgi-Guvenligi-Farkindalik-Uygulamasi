@@ -7,7 +7,7 @@ const Navbar = () =>
     const navigate = useNavigate();
 
     const handleLogoClick = () => {
-        navigate("/desktop");
+        navigate("/game");
       };
 
     return (

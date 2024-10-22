@@ -3,7 +3,7 @@ import './Desktop.css';
 import { useState } from 'react';
 import Mailbox from '../Mailbox/Mailbox';
 
-const Container = () => {
+const Desktop = () => {
 
   //recycleBin penceresini açmak için state tanımladık
   const [openWindow, setOpenWindow] = useState(null);
@@ -93,4 +93,4 @@ const Container = () => {
     </div>);
 };
 
-export default Container;
+export default Desktop;
