@@ -14,27 +14,13 @@ const Desktop = () => {
 
   //Mail kutusu açma işlemleri
   const [isMailboxOpen, setIsMailboxOpen] = useState(false);
-  //seçilen maili ve indexi tutacak state'ler
-  const [selectedMail, setSelectedMail] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(null);
-
-  const mails = [
-    {Name:'Ahmet Karaköse', from:'Ahmet@gmail.com', title: 'Mail1', content: 'Mail1 content' },
-    {Name:'Tuce ergun', from:'Tuce@gmail.com', title: 'Mail2', content: 'Mail2 content' },
-    {Name:'Onur yildiz', from:'Onur@gmail.com', title: 'Mail3', content: 'Mail3 content' },
-  ];
-
-  const handleMailClick = (mail,index) => {
-    setSelectedMail(mail);
-    setActiveIndex(index);
-  };
+  
 
   const openMailbox = () => {
     setIsMailboxOpen(true);
   };
 
   const closeMailbox = () => {
-    setSelectedMail(null);
     setIsMailboxOpen(false);
   };
   //////////////////////////////////////////////
@@ -78,17 +64,7 @@ const Desktop = () => {
       )}
 
       {/* Mailbox penceresi */}
-      {isMailboxOpen && (
-        <Mailbox
-          mails={mails}
-          selectedMail={selectedMail}
-          activeIndex={activeIndex}
-          handleMailClick={handleMailClick}
-          closeMailbox={closeMailbox}
-        />
-      )}
-
-
+      {isMailboxOpen && ( <Mailbox closeMailbox={closeMailbox}/> )}
 
     </div>);
 };

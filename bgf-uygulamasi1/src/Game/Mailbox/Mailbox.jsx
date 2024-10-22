@@ -1,7 +1,25 @@
 import React from 'react';
 import './Mailbox.css';
+import { useState } from 'react';
 
-const Mailbox = ({ mails, selectedMail, activeIndex, handleMailClick, closeMailbox }) => {
+const Mailbox = ({ closeMailbox }) => {
+
+//seçilen maili ve indexi tutacak state'ler
+const [selectedMail, setSelectedMail] = useState(null);
+const [activeIndex, setActiveIndex] = useState(null);
+
+const mails = [
+  {Name:'Ahmet Karaköse', from:'Ahmet@gmail.com', title: 'Mail1', content: 'Mail1 content' },
+  {Name:'Tuce ergun', from:'Tuce@gmail.com', title: 'Mail2', content: 'Mail2 content' },
+  {Name:'Onur yildiz', from:'Onur@gmail.com', title: 'Mail3', content: 'Mail3 content' },
+];
+
+const handleMailClick = (mail,index) => {
+  setSelectedMail(mail);
+  setActiveIndex(index);
+};
+
+
   return (
     <div className="mailbox-window">
       <div className="mailbox-header">
