@@ -4,18 +4,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-.background {
-    background-image: url('/public/Background.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    color: rgb(255, 255, 255);
-    overflow: hidden;
-  }
 
 body {
   font-family: Arial, sans-serif;
@@ -25,7 +13,7 @@ body {
 .desktop {
   height: 100vh;
   width: 100vw;
-  background: url('https://wallpaperaccess.com/full/173854.jpg') no-repeat center center fixed;
+  background: url('../../../public/wallpaper.jpg') no-repeat center center fixed;
   background-size: cover;
   display: flex;
   flex-direction: column;

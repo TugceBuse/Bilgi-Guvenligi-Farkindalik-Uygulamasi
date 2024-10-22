@@ -1,6 +1,6 @@
 import React from 'react';
 import './Desktop.css';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Mailbox from '../Mailbox/Mailbox';
 
 const Desktop = () => {
@@ -25,8 +25,22 @@ const Desktop = () => {
   };
   //////////////////////////////////////////////
 
-  
+  // Sağ tıklamayı engellemek ve sol click tetikleme
+  // useEffect(() => {
+  //   const handleContextMenu = (event) => {
+  //     event.preventDefault();
+  //     // Sağ tıklama yapıldığında sol tıklama olayını tetikleyin
+  //     event.target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+  //   };
 
+  //   document.addEventListener('contextmenu', handleContextMenu);
+
+  //   // Cleanup event listener on component unmount
+  //   return () => {
+  //     document.removeEventListener('contextmenu', handleContextMenu);
+  //   };
+  // }, []);
+  
   return (
 
     <div className="desktop">
