@@ -38,7 +38,8 @@ const Notification = ({ seconds }) => {
         
         <div className="notification-content">
           <h3>Antivirus güncellemesi gerekli!</h3>
-          <p>Antivirüs programı güncel değil.Lütfen güvenliğiniz için programı güncelleyin.</p>
+          <p>Antivirüs programı güncel değil.</p>
+          <p>Lütfen güvenliğiniz için programı güncelleyin.</p>
           <div className="notification-buttons">
           <button onClick={handleUpdateNow}>Şimdi Güncelle</button>
           <button onClick={handleRemindLater}>Daha Sonra Hatırlat</button>  
