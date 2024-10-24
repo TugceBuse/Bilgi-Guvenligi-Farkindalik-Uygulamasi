@@ -2,6 +2,21 @@ import React from 'react';
 import './Mailbox.css';
 import { useState } from 'react';
 
+export const useMailbox = () => {
+  const [isMailboxOpen, setIsMailboxOpen] = useState(false);
+
+  const openMailbox = () => {
+    setIsMailboxOpen(true);
+  };
+
+  const closeMailbox = () => {
+    setIsMailboxOpen(false);
+  };
+
+  return { isMailboxOpen, openMailbox, closeMailbox };
+};
+
+
 const Mailbox = ({ closeMailbox }) => {
 
 //seçilen maili ve indexi tutacak state'ler

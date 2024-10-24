@@ -1,10 +1,13 @@
 import React from 'react';
 import './Desktop.css';
 import { useState,useEffect } from 'react';
-import Mailbox from '../Mailbox/Mailbox';
+import Mailbox, { useMailbox } from '../Mailbox/Mailbox';
+import Todolist, { useTodoList } from '../Todolist/Todolist';
 
 const Desktop = () => {
-
+  //Mailbox fonksiyonlarını kullanabilmek için import ettik
+  const { isMailboxOpen, openMailbox, closeMailbox } = useMailbox();
+  const {isTodoListOpen, openTodoList, closeTodoList} = useTodoList();
   //recycleBin penceresini açmak için state tanımladık
   const [openWindow, setOpenWindow] = useState(null);
   const handleIconClick = (windowName) => {
@@ -12,18 +15,18 @@ const Desktop = () => {
   }
   //////////////////////////////////////////////
 
-  //Mail kutusu açma işlemleri
-  const [isMailboxOpen, setIsMailboxOpen] = useState(false);
+  // //Mail kutusu açma işlemleri
+  // const [isMailboxOpen, setIsMailboxOpen] = useState(false);
   
 
-  const openMailbox = () => {
-    setIsMailboxOpen(true);
-  };
+  // const openMailbox = () => {
+  //   setIsMailboxOpen(true);
+  // };
 
-  const closeMailbox = () => {
-    setIsMailboxOpen(false);
-  };
-  //////////////////////////////////////////////
+  // const closeMailbox = () => {
+  //   setIsMailboxOpen(false);
+  // };
+  // //////////////////////////////////////////////
 
   // Sağ tıklamayı engellemek ve sol click tetikleme
   // useEffect(() => {
@@ -40,6 +43,9 @@ const Desktop = () => {
   //     document.removeEventListener('contextmenu', handleContextMenu);
   //   };
   // }, []);
+
+
+  
   
   return (
 
@@ -48,9 +54,9 @@ const Desktop = () => {
       {/* Masaüstü Arka Planı */}
         <div className="desktop-icons">
           {/* Masaüstü simgeleri */}
-          <div className="icon">
-            <img src="/icons/folder-invoices.png" alt="Folder Icon" />
-            <span>My Documents</span>
+          <div className="icon" onClick={openTodoList}>
+            <img src="/icons/to-do-list.png" alt="Todolist Icon" />
+            <span>To Do List</span>
           </div>
 
           <div className="icon" onClick={openMailbox}>
@@ -78,7 +84,10 @@ const Desktop = () => {
       )}
 
       {/* Mailbox penceresi */}
-      {isMailboxOpen && ( <Mailbox closeMailbox={closeMailbox}/> )}
+      {isMailboxOpen && <Mailbox closeMailbox={closeMailbox} />}
+
+      {/* To Do List penceresi */}
+      {isTodoListOpen && <Todolist closeTodoList={closeTodoList}/>}
 
     </div>);
 };
