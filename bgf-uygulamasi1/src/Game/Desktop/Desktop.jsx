@@ -29,20 +29,20 @@ const Desktop = () => {
   // //////////////////////////////////////////////
 
   // Sağ tıklamayı engellemek ve sol click tetikleme
-  // useEffect(() => {
-  //   const handleContextMenu = (event) => {
-  //     event.preventDefault();
-  //     // Sağ tıklama yapıldığında sol tıklama olayını tetikleyin
-  //     event.target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-  //   };
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+      // Sağ tıklama yapıldığında sol tıklama olayını tetikleyin
+      // event.target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    };
 
-  //   document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('contextmenu', handleContextMenu);
 
-  //   // Cleanup event listener on component unmount
-  //   return () => {
-  //     document.removeEventListener('contextmenu', handleContextMenu);
-  //   };
-  // }, []);
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
 
 
   
