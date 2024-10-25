@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import "./navbar.css"
+import "./navbar.css";
+import { useEffect, useState } from "react";
 
 
 const Navbar = () =>
@@ -10,28 +11,42 @@ const Navbar = () =>
         navigate("/game");
       };
 
+      const [scrolled, setScrolled] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          if (window.scrollY > 50) {
+            setScrolled(true);
+          } else {
+            setScrolled(false);
+          }
+        };
+    
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+          window.removeEventListener("scroll", handleScroll);
+        };
+      }, []);
+   
     return (
     
-    <div> 
-        <nav className="navbar">
+        <div > 
+        <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
          
-             <img
-                  className="logo"
-                  src="/logo.png"
-                  alt="Farkindalik Uygulamasi"
-                  onClick={handleLogoClick}
-        ></img>
-         <h1 className="h1">SafeClicks</h1>
+                <div className="logo-container">
+                <div className="logo"onClick={handleLogoClick}></div>
+                </div>
 
-            <div className="rightPart">
-                <a href="https://www.w3schools.com/" className="a">Hakkında</a>
-                <a href="about.html" className="a">İletişim</a>
-                <a href="about.html" className="a">Görüşler</a>
-            </div>
+            <h1 className="h1">SafeClicks</h1>
 
-            
+                <div className="rightPart">
+                    <a href="https://www.w3schools.com/" className="a">Hakkında</a>
+                    <a href="about.html" className="a">İletişim</a>
+                    <a href="about.html" className="a">Görüşler</a>
+                </div>
+
         </nav>
-    </div>
+        </div>
 
     );
 }

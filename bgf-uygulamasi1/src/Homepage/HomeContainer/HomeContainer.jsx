@@ -15,7 +15,7 @@ const HomeContainer = () => {
             </div>
                     <div style={{display:"flex", flexDirection:"column"}}>
                           <h1>Merhaba,</h1>
-                          <h2>Güzel Bir Deneyim Yaşamaya Hazır Mısın?</h2> 
+                          <h2>Güzel Bir Deneyime Hoşgeldin!</h2> 
 
                           <div style={{display:"flex", flexDirection:"column"}}>
                           <h3>Başlayacağın simülasyon oyunu oltalama saldırılarına karşı seni hazırlayacak, </h3>
