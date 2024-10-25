@@ -1,51 +1,58 @@
 import React, { useRef} from "react";
 import { Suspense,useEffect, useState } from "react";
 import {Canvas, useFrame} from "@react-three/fiber";
-import {OrbitControls, useGLTF, Html} from "@react-three/drei";
-
+import {OrbitControls, useGLTF, Html, useAnimations} from "@react-three/drei";
+import { useSpring, a } from "@react-spring/three";
+ 
 const Model = () => {
+  const { scene, animations } = useGLTF("./CalismaMasasi.glb");
+  const { actions } = useAnimations(animations, scene);
   const meshRef = useRef();
-  const [targetRotation, setTargetRotation] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (event) => {
-      const { clientX, clientY } = event;
-      const x = (clientX / window.innerWidth) * 2 - 1;
-      const y = -(clientY / window.innerHeight) * 2 + 1;
-      const maxRotation = Math.PI / 15; // 22.5 derece
-      const minRotation = -Math.PI / 15; // -22.5 derece
-
-      setTargetRotation({
-        x: Math.max(minRotation, Math.min(maxRotation, y * Math.PI)),
-        y: Math.max(minRotation, Math.min(maxRotation, x * Math.PI)),
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += (targetRotation.x - meshRef.current.rotation.x) * 0.1;
-      meshRef.current.rotation.y += (targetRotation.y - meshRef.current.rotation.y) * 0.1;
-    }
-  });
-
-
+  const [animationState, setAnimation] = useState(false);
 
   const computer = useGLTF("./CalismaMasasi.glb");
+  
+  useFrame(({ mouse, viewport}) => {
+    if (!animationState) {
+     const x = (mouse.x * viewport.width) / 2.5;
+     const y = (mouse.y * viewport.height) / 2.5;
+   }
+
+ });
+
+
+
+  const handleClick = () => {
+    if (!animationState) {
+      setAnimation(true);
+      actions.computerAction.play();
+    } 
+  };
+
+
+  
   return (
   
-      <mesh scale={[1, 1, 1]} receiveShadow position={[0, -2.5, 0]}>
+      <a.mesh ref={meshRef} scale={[1, 1, 1]} receiveShadow position={[0, -2.5, 0]} onClick={handleClick} 
+      onPointerOver={() => {
+      setAnimation(true); 
+      
+  
+      }} 
+      onPointerOut={() => {setAnimation(false); 
+      
         
-        <hemisphereLight intensity={150}
+      }}
+
+      >
+        
+        <hemisphereLight intensity={200}
         groundColor={"#111111"}
         color={"#020100"}
          />
-        <pointLight intensity={8} />
+        <pointLight 
+        position={[1,9.5, -1]}
+        intensity={25} />
         <spotLight 
         position={[0, 10, 10]}
         angle={0.3}
@@ -61,14 +68,14 @@ const Model = () => {
         rotation={[0, 1.2, 0]}
          />
          
-      </mesh>
-      
-      
+      </a.mesh>
   );
 };
 
 const ComputerCanvas= () =>{
   return(
+
+
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
       <Canvas 
       className="canvas"
@@ -79,6 +86,7 @@ const ComputerCanvas= () =>{
       
 
       >
+        
         <Suspense fallback={null}>
         <OrbitControls 
           enableZoom={false}
@@ -88,16 +96,18 @@ const ComputerCanvas= () =>{
           />
             <Model/> 
             <Html position={[0, -10, 0]} >
-        <button className="my-button" onClick={() => alert("Button Clicked!")}>
-          Start Simulation
+        <button className="my-button" >
+         Start Animation
         </button>
       </Html>   
         </Suspense>
+       
       </Canvas>
       
     </div>
     
   )
 }
+
 
 export default ComputerCanvas;
