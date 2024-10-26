@@ -3,30 +3,37 @@ import './Desktop.css';
 import { useState,useEffect } from 'react';
 import Mailbox, { useMailbox } from '../Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../Todolist/Todolist';
+import Alert from '../Notifications/Alert';
 
-const Desktop = () => {
+
+// Masaüstü bileşeni
+const Desktop = ({isWificonnected}) => {
+  //baglanti olup olmadıgı ama bu kontrol değişkeni aynı zamanda
+  // const [isWificonnected, setIsWificonnected] = useState(false);
   //Mailbox fonksiyonlarını kullanabilmek için import ettik
   const { isMailboxOpen, openMailbox, closeMailbox } = useMailbox();
   const {isTodoListOpen, openTodoList, closeTodoList} = useTodoList();
+  const [showAlert, setShowAlert] = useState(false);
+
+  // Alert penceresi kapa
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
   //recycleBin penceresini açmak için state tanımladık
   const [openWindow, setOpenWindow] = useState(null);
   const handleIconClick = (windowName) => {
     setOpenWindow(windowName);
   }
-  //////////////////////////////////////////////
-
-  // //Mail kutusu açma işlemleri
-  // const [isMailboxOpen, setIsMailboxOpen] = useState(false);
   
-
-  // const openMailbox = () => {
-  //   setIsMailboxOpen(true);
-  // };
-
-  // const closeMailbox = () => {
-  //   setIsMailboxOpen(false);
-  // };
-  // //////////////////////////////////////////////
+  // Mailbox penceresi açıldığında internet bağlantısı kontrolü
+  // Eğer internet bağlantısı yoksa kullanıcıya alert gösterir
+  useEffect(() => {
+    if (isMailboxOpen && !isWificonnected) {
+      setShowAlert(true);
+      closeMailbox();
+    }
+  }, [isMailboxOpen, isWificonnected]);
 
   // Sağ tıklamayı engellemek ve sol click tetikleme
   useEffect(() => {
@@ -45,7 +52,9 @@ const Desktop = () => {
   }, []);
 
 
-  
+  useEffect(() => {
+    console.log('isWificonnected:', isWificonnected);
+  }, [isWificonnected]);
   
   return (
 
@@ -83,9 +92,12 @@ const Desktop = () => {
         </div>
       )}
 
+      {console.log('desktop:isWificonnected->',isWificonnected)}
       {/* Mailbox penceresi */}
-      {isMailboxOpen && <Mailbox closeMailbox={closeMailbox} />}
-
+      {isMailboxOpen && isWificonnected && <Mailbox closeMailbox={closeMailbox} />}
+      <Alert show={showAlert} handleClose={handleCloseAlert}>
+        İnternete bağlanın
+      </Alert>
       {/* To Do List penceresi */}
       {isTodoListOpen && <Todolist closeTodoList={closeTodoList}/>}
 

@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 
 const Game = () => {
 
+  const [isWificonnected, setIsWificonnected] = useState(false);
+
   //Belirli işlem kontrolleri için süre sayımı
   const [seconds, setSeconds] = useState(0);
   useEffect(() => {
@@ -26,8 +28,8 @@ const Game = () => {
 
   return (
     <div>  
-      <Desktop/>
-      <TaskBar/>
+      <TaskBar isWificonnected={isWificonnected} setIsWificonnected={setIsWificonnected} />
+      <Desktop isWificonnected={isWificonnected}/>
       {/* Notification çağırır */}
       <Notification seconds={seconds} />
     </div>

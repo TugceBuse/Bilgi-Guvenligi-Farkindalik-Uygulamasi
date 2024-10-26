@@ -22,7 +22,7 @@ const Todolist = ({closeTodoList}) => {
 
     //TodoList doldurma
     const [todos, setTodos] = useState([
-        { text: 'Yapılacak 1', completed: false },
+        { text: "Diğer uygulamaları kullanabilmek için yeni kurulan Wifi'ı yapilandir ve şifresini belirle", completed: false },
         { text: 'Yapılacak 2', completed: false },
         { text: 'Yapılacak 3', completed: false },
     ]);
@@ -35,9 +35,6 @@ const Todolist = ({closeTodoList}) => {
     }, []);
 
         //Todolist içindeki checkbox'ın işlevi
-        //*************ÖNEMLİ ******************
-        //SITEYI BIRDEN FAZLA KIŞI KULLANIRKEN
-        //LOCALSTORAGE KARIŞIYOR MU??? TEST EDILMELI
     const handleCheckboxChange = (index) => {
         const newTodos = [...todos];
         newTodos[index].completed = !newTodos[index].completed;
