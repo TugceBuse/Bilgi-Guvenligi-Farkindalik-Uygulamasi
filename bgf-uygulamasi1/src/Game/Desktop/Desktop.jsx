@@ -3,8 +3,8 @@ import './Desktop.css';
 import { useState,useEffect } from 'react';
 import Mailbox, { useMailbox } from '../Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../Todolist/Todolist';
+import Browser, { useBrowser } from '../Browser/Browser';
 import Alert from '../Notifications/Alert';
-
 
 // Masaüstü bileşeni
 const Desktop = ({isWificonnected}) => {
@@ -12,6 +12,7 @@ const Desktop = ({isWificonnected}) => {
   // const [isWificonnected, setIsWificonnected] = useState(false);
   //Mailbox fonksiyonlarını kullanabilmek için import ettik
   const { isMailboxOpen, openMailbox, closeMailbox } = useMailbox();
+  const {isBrowserOpen, openBrowser, closeBrowser} = useBrowser();
   const {isTodoListOpen, openTodoList, closeTodoList} = useTodoList();
   const [showAlert, setShowAlert] = useState(false);
   
@@ -37,11 +38,12 @@ const Desktop = ({isWificonnected}) => {
   // Mailbox penceresi açıldığında internet bağlantısı kontrolü
   // Eğer internet bağlantısı yoksa kullanıcıya alert gösterir
   useEffect(() => {
-    if (isMailboxOpen && !isWificonnected) {
+    if ((isMailboxOpen||isBrowserOpen) && !isWificonnected) {
       setShowAlert(true);
       closeMailbox();
+      closeBrowser();
     }
-  }, [isMailboxOpen, isWificonnected]);
+  }, [isMailboxOpen,isBrowserOpen, isWificonnected]);
 
   // Sağ tıklamayı engellemek ve sol click tetikleme
   useEffect(() => {
@@ -59,10 +61,6 @@ const Desktop = ({isWificonnected}) => {
     };
   }, []);
 
-
-  useEffect(() => {
-    console.log('isWificonnected:', isWificonnected);
-  }, [isWificonnected]);
   
   return (
 
@@ -80,6 +78,13 @@ const Desktop = ({isWificonnected}) => {
             <img src="/icons/mail.png" alt="Mail Icon" />
             <span>Mail</span>
           </div>
+
+          <div className="icon" onClick={openBrowser}>
+            <img src="/icons/internet.png" alt="Internet Icon" />
+            <span>Browser</span>
+          </div>
+
+
 
           <div className="icon" onClick={() => handleIconClick('recycleBin')}>
             <img src="/icons/recycle-bin.png" alt="Recycle Bin Icon" />
@@ -100,8 +105,9 @@ const Desktop = ({isWificonnected}) => {
         </div>
       )}
 
-      {console.log('desktop:isWificonnected->',isWificonnected)}
+
       {/* Mailbox penceresi */}
+      {isBrowserOpen && isWificonnected && <Browser closeBrowser={closeBrowser} />}
       {isMailboxOpen && isWificonnected && <Mailbox closeMailbox={closeMailbox} />}
       <Alert show={showAlert} handleClose={handleCloseAlert}>
         İnternete bağlanın

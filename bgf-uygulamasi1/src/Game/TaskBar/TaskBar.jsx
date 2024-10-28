@@ -12,11 +12,6 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
   const [showWifiList, setShowWifiList] = useState(false);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
-  
-  useEffect(() => {
-    console.log('isWificonnected:', isWificonnected);
-  }, [isWificonnected]);
-
 
   const toggleWifiList = () => {
     setShowWifiList(!showWifiList);
