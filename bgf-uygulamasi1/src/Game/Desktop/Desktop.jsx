@@ -14,6 +14,14 @@ const Desktop = ({isWificonnected}) => {
   const { isMailboxOpen, openMailbox, closeMailbox } = useMailbox();
   const {isTodoListOpen, openTodoList, closeTodoList} = useTodoList();
   const [showAlert, setShowAlert] = useState(false);
+  
+
+  //TodoList'in başlangıç durumu
+  const [todos, setTodos] = useState([
+    { text: "Diğer uygulamaları kullanabilmek için yeni kurulan Wifi'ı yapilandir ve şifresini belirle", completed: false },
+    { text: 'Yapılacak 2', completed: false },
+    { text: 'Yapılacak 3', completed: false },
+]);
 
   // Alert penceresi kapa
   const handleCloseAlert = () => {
@@ -99,7 +107,7 @@ const Desktop = ({isWificonnected}) => {
         İnternete bağlanın
       </Alert>
       {/* To Do List penceresi */}
-      {isTodoListOpen && <Todolist closeTodoList={closeTodoList}/>}
+      {isTodoListOpen && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList}/>}
 
     </div>);
 };

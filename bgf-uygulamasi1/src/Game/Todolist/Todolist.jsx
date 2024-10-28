@@ -18,28 +18,13 @@ export const useTodoList = () => {
 
     
 
-const Todolist = ({closeTodoList}) => {
+const Todolist = ({closeTodoList, todos, setTodos}) => {
 
-    //TodoList doldurma
-    const [todos, setTodos] = useState([
-        { text: "Diğer uygulamaları kullanabilmek için yeni kurulan Wifi'ı yapilandir ve şifresini belirle", completed: false },
-        { text: 'Yapılacak 2', completed: false },
-        { text: 'Yapılacak 3', completed: false },
-    ]);
-      // Bileşen yüklendiğinde localStorage'dan verileri oku
-    useEffect(() => {
-        const storedTodos = JSON.parse(localStorage.getItem('todos'));
-        if (storedTodos) {
-        setTodos(storedTodos);
-        }
-    }, []);
-
-        //Todolist içindeki checkbox'ın işlevi
+        //Todolist değişikliklerini kaydetmeyi saglıyor
     const handleCheckboxChange = (index) => {
         const newTodos = [...todos];
         newTodos[index].completed = !newTodos[index].completed;
         setTodos(newTodos);
-        localStorage.setItem('todos', JSON.stringify(newTodos));
     };
 
   return (
