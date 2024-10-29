@@ -5,44 +5,24 @@ import {OrbitControls, useGLTF, Html, useAnimations} from "@react-three/drei";
 import { useSpring, a } from "@react-spring/three";
  
 const Model = () => {
-  const { scene, animations } = useGLTF("./CalismaMasasi.glb");
-  const { actions } = useAnimations(animations, scene);
-  const meshRef = useRef();
-  const [animationState, setAnimation] = useState(false);
 
   const computer = useGLTF("./CalismaMasasi.glb");
-  
-  useFrame(({ mouse, viewport}) => {
-    if (!animationState) {
-     const x = (mouse.x * viewport.width) / 2.5;
-     const y = (mouse.y * viewport.height) / 2.5;
-   }
+  const meshRef = useRef();
+  const [isRotating, setIsRotating] = useState(true);
 
- });
-
-
-
+  useFrame(() => {
+    if (isRotating && meshRef.current) {
+      meshRef.current.rotation.y += 0.001; // Y ekseninde döndür
+    }
+  });
   const handleClick = () => {
-    if (!animationState) {
-      setAnimation(true);
-      actions.computerAction.play();
-    } 
+    setIsRotating(!isRotating); // Rotasyonu başlat veya durdur
   };
-
 
   
   return (
   
-      <a.mesh ref={meshRef} scale={[1, 1, 1]} receiveShadow position={[0, -2.5, 0]} onClick={handleClick} 
-      onPointerOver={() => {
-      setAnimation(true); 
-      
-  
-      }} 
-      onPointerOut={() => {setAnimation(false); 
-      
-        
-      }}
+      <a.mesh ref={(meshRef)} scale={[1, 1, 1]} receiveShadow position={[0, -2.5, 0]} onClick={handleClick} 
 
       >
         
@@ -73,6 +53,7 @@ const Model = () => {
 };
 
 const ComputerCanvas= () =>{
+  
   return(
 
 
@@ -89,10 +70,12 @@ const ComputerCanvas= () =>{
         
         <Suspense fallback={null}>
         <OrbitControls 
+          enablePan={false}
           enableZoom={false}
           maxPolarAngle={Math.PI / 2.7}
           minPolarAngle={Math.PI / 3.1}
           target={[0, 0, 0]} // Kameranın odaklanacağı noktayı belirle
+          
           />
             <Model/> 
             <Html position={[0, -10, 0]} >
