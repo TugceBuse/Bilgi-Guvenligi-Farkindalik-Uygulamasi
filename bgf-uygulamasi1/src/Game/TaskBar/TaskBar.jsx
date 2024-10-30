@@ -9,9 +9,16 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
   //nerede tanımlanacağı henüz net değil
   // const [isWificonnected, setIsWificonnected] = useState(false);
 
+  const [showNotifications, setShowNotifications] = useState(false);
   const [showWifiList, setShowWifiList] = useState(false);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+    console.log("Bildirimler açıldı/kapatıldı");
+  };
+
 
   const toggleWifiList = () => {
     setShowWifiList(!showWifiList);
@@ -59,8 +66,8 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
     </div>
     
     <div className="taskbar-icons">
-      <img src="https://img.icons8.com/fluency/48/000000/chrome.png" alt="Chrome Icon" />
-      <img src="/icons/folder-invoices.png" alt="File Explorer Icon" />
+      <img src="/icons/internet.png" alt="Internet Icon" />
+      {/* <img src="/icons/folder-invoices.png" alt="File Explorer Icon" /> */}
     </div>
       
       {/* Görev Çubuğu Sağ Tarafı */}
@@ -100,9 +107,16 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
           </div>
 
           {/* Bildirimler */}
-          <div className="taskbar-notifications">
+          <div className="taskbar-notifications" onClick={toggleNotifications}>
             <img src="/icons/notification_blck.png"
             alt="Notification Icon" />
+            {showNotifications && (
+        <div className="notifications-window">
+          <h3>Bildirimler</h3>
+          <p>Henüz bir bildiriminiz yok.</p>
+        </div>
+            )
+            }
           </div>
 
       </div>
