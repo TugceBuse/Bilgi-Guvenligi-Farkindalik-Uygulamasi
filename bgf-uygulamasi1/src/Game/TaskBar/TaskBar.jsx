@@ -92,7 +92,11 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
       <div className="taskbar-status">
             {/* Saat */}
           <div className="taskbar-clock">
-            {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+
+            <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' ,hour12: false })}</div>
+
+            <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
+
           </div>
 
           {/* Bildirimler */}

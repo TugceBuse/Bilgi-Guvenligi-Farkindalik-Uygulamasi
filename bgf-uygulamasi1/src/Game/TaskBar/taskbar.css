@@ -132,7 +132,14 @@
 }
 
 .taskbar-clock {
+  display : flex;
+  flex-direction:column;
+  text-align: left;
   color: white;
   font-size: 18px;
   margin-right: 10px;
+}
+
+.taskbar-clock :nth-child(1) {
+  text-align: right;
 }
