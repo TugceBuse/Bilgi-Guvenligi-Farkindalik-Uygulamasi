@@ -19,7 +19,7 @@ const Desktop = ({isWificonnected}) => {
 
   //TodoList'in başlangıç durumu
   const [todos, setTodos] = useState([
-    { text: "Diğer uygulamaları kullanabilmek için yeni kurulan Wifi'ı yapilandir ve şifresini belirle", completed: false },
+    { text: "Yeni kurduğumuz ağ aktif olmalı,", completed: false },
     { text: 'Yapılacak 2', completed: false },
     { text: 'Yapılacak 3', completed: false },
 ]);
@@ -109,9 +109,7 @@ const Desktop = ({isWificonnected}) => {
       {/* Mailbox penceresi */}
       {isBrowserOpen && isWificonnected && <Browser closeBrowser={closeBrowser} />}
       {isMailboxOpen && isWificonnected && <Mailbox closeMailbox={closeMailbox} />}
-      <Alert show={showAlert} handleClose={handleCloseAlert}>
-        İnternete bağlanın
-      </Alert>
+      <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Internete bağlantısı bulunamadı'}></Alert>
       {/* To Do List penceresi */}
       {isTodoListOpen && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList}/>}
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Alert.css';
 
-const Alert = ({ show, handleClose, children }) => {
+const Alert = ({ show, handleClose, message }) => {
   if (!show) {
     return null;
   }
@@ -13,7 +13,7 @@ const Alert = ({ show, handleClose, children }) => {
             <button className="alert-close" onClick={handleClose}>×</button>
             </div>
             <div className="alert-content">
-            {children}
+            {message}
             </div>
         </div>
   );

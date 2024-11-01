@@ -21,7 +21,9 @@ const Browser = ({ closeBrowser }) => {
   const [url, setUrl] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
-  
+  //192.168.1.1 sayfasi login
+  const [loginusername, setLoginusername] = useState('');
+  const [loginpassword, setLoginpassword] = useState('');
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
@@ -31,7 +33,7 @@ const Browser = ({ closeBrowser }) => {
     setLoading(true);
     setTimeout(() => {
     if (url === '192.168.1.1') {
-      setContent('Example Content:This is the content for example.com.');
+      setContent(`login`);
     } else if (url === 'https://another.com') {
       setContent('Another Content:This is the content for another.com.');
     } else {
@@ -45,6 +47,15 @@ const Browser = ({ closeBrowser }) => {
     if (e.key === 'Enter') {
       handleGoClick();
     }
+  };
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    const username = e.target.elements.username.value;
+    const password = e.target.elements.password.value;
+    setLoginusername(username);
+    setLoginpassword(password);
+    console.log(`Username: ${username}, Password: ${password}`);
   };
 
   return (
@@ -78,6 +89,19 @@ const Browser = ({ closeBrowser }) => {
               <div></div>
               <div></div>
             </div>
+          </div>
+        ) : content === 'login' ? (
+          // kullanici adi ve şifre dogruluguna göre Wifi şifresi koyma işlemi yapılacak yeni bir page açılacak
+          //Wifi şifresini Taskbar kullanıyor o problemi çözmek için Taskbar'i Game.jsx'e de değil de Game.jsx>Desktop.jsx>Taskbar.jsx seklinde cagirilabilir mi?
+          <div className="login-container">
+            <h2>WiFi Login</h2>
+            <form id="login-form" onSubmit={handleLoginSubmit}>
+              <label htmlFor="username">Kullanıcı Adı:</label>
+              <input type="text" id="username" name="username" required />
+              <label htmlFor="password">Şifre:</label>
+              <input type="password" id="password" name="password" required />
+              <button type="submit">Login</button>
+            </form>
           </div>
         ) : (
           <div>{content}</div>

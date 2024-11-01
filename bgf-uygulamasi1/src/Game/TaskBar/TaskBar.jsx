@@ -1,9 +1,12 @@
+import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import React, { useState, useEffect } from 'react';
 
 const TaskBar = ({isWificonnected , setIsWificonnected }) => {
 
   const [time, setTime] = useState(new Date());
+
+  const pass = "1234";
 
   //baglanti olup olmadıgı ama bu kontrol değişkeni aynı zamanda
   //nerede tanımlanacağı henüz net değil
@@ -14,12 +17,11 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
 
+  const [showAlert, setShowAlert] = useState(false);
+
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
-    console.log("Bildirimler açıldı/kapatıldı");
   };
-
-
   const toggleWifiList = () => {
     setShowWifiList(!showWifiList);
   };
@@ -42,6 +44,13 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
     const password = e.target.elements.password.value;
     console.log(`Connecting to ${selectedWifi} with password ${password}`);
     setShowPasswordPrompt(false);
+
+    if (password === pass) {
+      setIsWificonnected(true);
+    } else {
+      setShowAlert(true);
+      setIsWificonnected(false);
+    }
     // WiFi bağlantı işlemleri olabilir
   };
 
@@ -83,7 +92,7 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
             <div className="wifi-list">
               <ul>
               <li onClick={() => handleWifiClick('WiFi Network 1', true)}>
-                  WiFi Network 1 <img src="/icons/lock.png" alt="Lock Icon" />
+                  XYZCompany Network 1 <img src="/icons/lock.png" alt="Lock Icon" />
                 </li>
                 <li onClick={() => handleWifiClick('WiFi Network 2', false)}>WiFi Network 2</li>
                 <li onClick={() => handleWifiClick('WiFi Network 3', false)}>WiFi Network 3</li>
@@ -133,6 +142,7 @@ const TaskBar = ({isWificonnected , setIsWificonnected }) => {
           </form>
         </div>
       )}
+    <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Şifre yanlış'}></Alert>
   </div>
   );
   }
