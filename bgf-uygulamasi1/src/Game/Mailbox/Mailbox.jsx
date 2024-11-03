@@ -84,28 +84,29 @@ const handleMailClick = (mail,index) => {
         {/* mail içeriği --> Bu kısma Header falan eklenerek
         mailin kimden ne zaman geldiği tarzında bilgiler eklenmeli */}
         <div className="mailbox-mailcontent">
-          {selectedMail ? (
-            <div className="mailbox-mailcontentheader">
-              <h3>{selectedMail?.Name}</h3>
-              <h3>&lt;{selectedMail?.from}&gt;</h3>
-            </div>
-          ) : (
-            <p></p>
-          )}
-          {selectedMail ? (
-            <div className="mailbox-mailcontenttext">
-              <h2>{selectedMail.title}</h2>
-              {/* pre yapılınca boşluk ve satir başlarini aliyor
-              ancak responsive olmuyor yazi taşarsa görünmüyor 
-              p ile yapilinca da düz yaziyor */}
-              <pre dangerouslySetInnerHTML=
-              {{ __html: selectedMail.content }}
-                ></pre>
-            </div>
-          ) : (
-            <p></p>
-          )}
+              {selectedMail ? (
+                <div className="mailbox-mailcontentheader">
+                  <h3>{selectedMail?.Name}</h3>
+                  <h3>&lt;{selectedMail?.from}&gt;</h3>
+                </div>
+              ) : (
+                <p></p>
+              )}
+              {selectedMail ? (
+                <div className="mailbox-mailcontenttext">
+                  <h2>{selectedMail.title}</h2>
+                  {/* pre yapılınca boşluk ve satir başlarini aliyor
+                  ancak responsive olmuyor yazi taşarsa görünmüyor 
+                  p ile yapilinca da düz yaziyor */}
+                  <pre dangerouslySetInnerHTML=
+                  {{ __html: selectedMail.content }}
+                    ></pre>
+                </div>
+              ) : (
+                <p></p>
+              )}
         </div>
+        
       </div>
     </div>
   );

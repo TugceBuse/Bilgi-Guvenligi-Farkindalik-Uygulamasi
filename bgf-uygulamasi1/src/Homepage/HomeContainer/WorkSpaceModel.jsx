@@ -22,7 +22,7 @@ const Model = () => {
   
   return (
   
-      <a.mesh ref={(meshRef)} scale={[1, 1, 1]} receiveShadow position={[0, -2.5, 0]} onClick={handleClick} 
+      <a.mesh  ref={meshRef} scale={[1, 1, 1]} receiveShadow position={[0, -2.5, 0]} onClick={handleClick} 
 
       >
         

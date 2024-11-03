@@ -64,7 +64,7 @@ body{
 
   .line {
     width: 3px;
-    height: 200px;
+    height: 250px;
     background-image: radial-gradient(rgb(249, 249, 255),rgb(245, 245, 245),rgb(208, 207, 219), rgb(5, 5, 5));
     border-radius: 5px;
     margin-top: 24.7px;
@@ -80,44 +80,36 @@ body{
     height: 100%;
     padding-top: 4%;
     margin-top: 5%;
+    margin-left: 4%;
     margin-bottom: 5%;
   }
 
   .FirstPart h1{
-    color: rgb(177, 130, 253);
+    color: rgb(123, 89, 177);
     font-size: 34px;
     padding-left: 1%;
     padding-bottom: 2%;
-    text-shadow: 2px 2px 4px #272727;
+    text-shadow: 1px 1px 2px #272727;
     letter-spacing: 2px; 
-  }
-
-  .FirstPart h2{
-    color: white;
-    font-size: 30px;
-    padding-left: 1%;
-    padding-bottom: 1%;
-    letter-spacing: 2px; 
-    text-shadow: 2px 2px 4px #272727;
   }
 
   .FirstPart h3{
     color: white;
-    font-size: 22px;
+    font-size: 25px;
     padding-left: 1%;
     letter-spacing: 1px; 
-    text-shadow: 2px 2px 4px #272727;
-    text-align: right;
+    text-shadow: 1px 1px 2px #272727;
+    text-align: left;
     text-decoration: dotted;
   }
 
   .FirstPart h4{
     padding-top: 2%;
-    color: rgb(228, 102, 102);
-    font-size: 32px;
+    color: rgb(165, 70, 70);
+    font-size: 28px;
     padding-left: 1%;
     letter-spacing: 1px; 
-    text-shadow: 2px 2px 4px #272727;
+    text-shadow: 1px 1px 2px #272727;
     text-align: left;
     text-decoration: dotted;
   }
