@@ -5,9 +5,11 @@ import Mailbox, { useMailbox } from '../Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../Todolist/Todolist';
 import Browser, { useBrowser } from '../Browser/Browser';
 import Alert from '../Notifications/Alert';
+import { useGameContext } from '../Context';
+
 
 // Masaüstü bileşeni
-const Desktop = ({isWificonnected}) => {
+const Desktop = () => {
   //baglanti olup olmadıgı ama bu kontrol değişkeni aynı zamanda
   // const [isWificonnected, setIsWificonnected] = useState(false);
   //Mailbox fonksiyonlarını kullanabilmek için import ettik
@@ -15,6 +17,7 @@ const Desktop = ({isWificonnected}) => {
   const {isBrowserOpen, openBrowser, closeBrowser} = useBrowser();
   const {isTodoListOpen, openTodoList, closeTodoList} = useTodoList();
   const [showAlert, setShowAlert] = useState(false);
+  const {isWificonnected} = useGameContext();
   
 
   //TodoList'in başlangıç durumu

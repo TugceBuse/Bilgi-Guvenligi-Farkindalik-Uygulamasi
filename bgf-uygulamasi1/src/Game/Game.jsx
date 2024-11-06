@@ -2,22 +2,21 @@ import Desktop from "./Desktop/Desktop.jsx";
 import TaskBar from "./TaskBar/TaskBar.jsx";
 import Notification from "./Notifications/Notifications.jsx";
 import { useState, useEffect } from 'react';
+import { GameContextProvider } from './Context';
 
 const Game = () => {
 
-  const [isWificonnected, setIsWificonnected] = useState(false);
-
   //Belirli işlem kontrolleri için süre sayımı
-  const [seconds, setSeconds] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds(prevSeconds => prevSeconds + 1);
+  // const [seconds, setSeconds] = useState(0);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setSeconds(prevSeconds => prevSeconds + 1);
       
-    }, 1000);
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
+  //   }, 1000);
+  //   // Cleanup interval on component unmount
+  //   return () => clearInterval(interval);
    
-  }, []);
+  // }, []);
   ////////////////////////////////////
 
   // useEffect(() => {
@@ -27,13 +26,14 @@ const Game = () => {
   // }, [seconds]);
 
   return (
-    <div>  
-      <TaskBar isWificonnected={isWificonnected} setIsWificonnected={setIsWificonnected} />
-      <Desktop isWificonnected={isWificonnected}/>
-      {/* Notification çağırır */}
-      <Notification seconds={seconds} />
-    </div>
+    <GameContextProvider>
+      <div className="game">
+        <TaskBar/>
+        <Desktop/>
+        <Notification />
+      </div>
+    </GameContextProvider>
   );
-}
+};
 
 export default Game;

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './Notifications.css';
+import { useGameContext } from '../Context';
 
-const Notification = ({ seconds }) => {
+const Notification = () => {
+  const { seconds } = useGameContext();
   const [showNotification, setShowNotification] = useState(false);
   const [isuptodate, setIsuptodate] = useState(false);
 
@@ -21,6 +23,7 @@ const Notification = ({ seconds }) => {
   };
 
   useEffect(() => {
+    console.log('Seconds:', seconds);
     if (seconds === 3) {
       setShowNotification(true);
     }

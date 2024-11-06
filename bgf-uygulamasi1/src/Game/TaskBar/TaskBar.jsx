@@ -1,10 +1,12 @@
+import { useGameContext } from "../Context";
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import React, { useState, useEffect } from 'react';
 
-const TaskBar = ({isWificonnected , setIsWificonnected }) => {
+const TaskBar = () => {
 
   const [time, setTime] = useState(new Date());
+  const {isWificonnected , setIsWificonnected } = useGameContext();
 
   const pass = "1234";
 
