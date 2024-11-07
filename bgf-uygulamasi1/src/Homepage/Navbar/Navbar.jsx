@@ -10,7 +10,9 @@ const Navbar = () =>
     const handleLogoClick = () => {
         navigate("/game");
       };
-
+      const LoginClick = () => {
+        navigate("/login");
+      };
       const [scrolled, setScrolled] = useState(false);
 
       useEffect(() => {
@@ -43,7 +45,13 @@ const Navbar = () =>
                     <a href="https://www.w3schools.com/" className="a">Hakkında</a>
                     <a href="about.html" className="a">İletişim</a>
                     <a href="about.html" className="a">Görüşler</a>
+
+                    <div className="loginPart">
+                    <img className="login" onClick={LoginClick} src="/login_simgesi.png" alt="login" />
+                    <p>GİRİŞ</p>
+                    </div> 
                 </div>
+                
 
         </nav>
         </div>
