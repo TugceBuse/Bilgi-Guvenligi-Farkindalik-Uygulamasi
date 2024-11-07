@@ -23,19 +23,23 @@ const [selectedMail, setSelectedMail] = useState(null);
 const [activeIndex, setActiveIndex] = useState(null);
 
 const mails = [
-  {Name:'Ahmet Karaköse', from:'Ahmet@gmail.com', title: 'Mail1', content: 'Mail1 content' },
-  {Name:'Tuce ergun', from:'Tuce@gmail.com', title: 'Mail2', content: 'Mail2 content' },
-  {Name:'Onur yildiz',
-  from:'Onur@gmail.com',
-  title: 'Mail3', 
-  content: `Merhaba Ahtkrk,
-
-Kargonuz yola çıktı. Teslimat detaylarını ve takip numaranızı görmek için buraya tıklayın:
- <a href="https://kargo-takip-linki.com" target="_blank" rel="noopener noreferrer">Kargo Takip</a>.
-
-Teşekkürler,
-[Ruzgar Kargo]`
-},
+  {Name:'Ahmet Karaköse', from:'Ahmet@gmail.com', title: 'IT Departmanı', precontent: `Hesabınız Güvenlik Nedeniyle Geçici Olarak Askıya Alındı – Hızlı Erişim Gerekli!`, content: 
+    (
+      <img src="Onur Yildiz (2).png" alt="placeholder" />
+    )
+   },
+//   {Name:'Tuce ergun', from:'Tuce@gmail.com', title: 'Mail2', content: 'Mail2 content' },
+//   {Name:'Onur yildiz',
+//   from:'Onur@gmail.com',
+//   title: 'Mail3', 
+//   content: (
+//     <p>
+//       Mail3 content <br />
+//       <a href="https://www.google.com">Google</a> <br /> 
+//       <img src="https://via.placeholder.com/150" alt="placeholder" />
+//     </p>   
+//   ),
+// },
 ];
 
 const handleMailClick = (mail,index) => {
@@ -72,9 +76,9 @@ const handleMailClick = (mail,index) => {
               >
                 <h3>{mail.title}</h3>
                 <p>{/* mail contentin uzunlugunu belirler*/}
-                  {mail.content.length > 50
-                    ? `${mail.content.slice(0, 50)}...`
-                    : mail.content}
+                  {mail.precontent.length > 50
+                    ? `${mail.precontent.slice(0, 50)}...`
+                    : mail.precontent}
                 </p>
               </li>
             ))}
@@ -83,23 +87,23 @@ const handleMailClick = (mail,index) => {
         {/* mail içeriği --> Bu kısma Header falan eklenerek
         mailin kimden ne zaman geldiği tarzında bilgiler eklenmeli */}
         <div className="mailbox-mailcontent">
-              {selectedMail ? (
+              {/* {selectedMail ? (
                 <div className="mailbox-mailcontentheader">
                   <h3>{selectedMail?.Name}</h3>
                   <h3>&lt;{selectedMail?.from}&gt;</h3>
                 </div>
               ) : (
                 <p></p>
-              )}
+              )} */}
               {selectedMail ? (
                 <div className="mailbox-mailcontenttext">
-                  <h2>{selectedMail.title}</h2>
+                  {/* <h2>{selectedMail.title}</h2> */}
                   {/* pre yapılınca boşluk ve satir başlarini aliyor
                   ancak responsive olmuyor yazi taşarsa görünmüyor 
                   p ile yapilinca da düz yaziyor */}
-                  <pre dangerouslySetInnerHTML=
-                  {{ __html: selectedMail.content }}
-                    ></pre>
+                  <p>
+                  { selectedMail.content }
+                    </p>
                 </div>
               ) : (
                 <p></p>
