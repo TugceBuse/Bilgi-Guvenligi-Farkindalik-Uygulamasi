@@ -1,6 +1,5 @@
-import React from 'react';
 import './Mailbox.css';
-import { useState } from 'react';
+import React,{ useState } from 'react';
 
 export const useMailbox = () => {
   const [isMailboxOpen, setIsMailboxOpen] = useState(false);

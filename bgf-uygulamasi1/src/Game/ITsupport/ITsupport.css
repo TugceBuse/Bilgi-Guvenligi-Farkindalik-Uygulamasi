@@ -1,0 +1,43 @@
+.ITsupport-window {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.153);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+}
+
+.ITsupport-header {
+  background-color: #494949;
+  padding: 10px;
+  border-bottom: 1px solid #1a1919;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 6%;
+}
+
+.ITsupport-close {
+    width:  2.8%;
+    height: 150%;
+    background-color: transparent;
+    border: none;
+    color: #e4e4e4;
+    font-size: 150%;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+.ITsupport-close:hover {
+  background-color: #ff0000;
+}
+

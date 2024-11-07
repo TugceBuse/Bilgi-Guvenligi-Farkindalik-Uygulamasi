@@ -1,23 +1,29 @@
 import React from 'react';
 import './Desktop.css';
 import { useState,useEffect } from 'react';
+
 import Mailbox, { useMailbox } from '../Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../Todolist/Todolist';
 import Browser, { useBrowser } from '../Browser/Browser';
+import ITsupport, { useITsupport } from '../ITsupport/ITsupport';
+
 import Alert from '../Notifications/Alert';
 import { useGameContext } from '../Context';
 
 
 // Masaüstü bileşeni
 const Desktop = () => {
-  //baglanti olup olmadıgı ama bu kontrol değişkeni aynı zamanda
-  // const [isWificonnected, setIsWificonnected] = useState(false);
-  //Mailbox fonksiyonlarını kullanabilmek için import ettik
+
+
   const { isMailboxOpen, openMailbox, closeMailbox } = useMailbox();
   const {isBrowserOpen, openBrowser, closeBrowser} = useBrowser();
   const {isTodoListOpen, openTodoList, closeTodoList} = useTodoList();
-  const [showAlert, setShowAlert] = useState(false);
+  const {isITsupportOpen, openITsupport, closeITsupport} = useITsupport();
+
+
   const {isWificonnected} = useGameContext();
+  const [showAlert, setShowAlert] = useState(false);
+  
   
 
   //TodoList'in başlangıç durumu
@@ -27,17 +33,6 @@ const Desktop = () => {
     { text: 'Yapılacak 3', completed: false },
 ]);
 
-  // Alert penceresi kapa
-  const handleCloseAlert = () => {
-    setShowAlert(false);
-  };
-
-  //recycleBin penceresini açmak için state tanımladık
-  const [openWindow, setOpenWindow] = useState(null);
-  const handleIconClick = (windowName) => {
-    setOpenWindow(windowName);
-  }
-  
   // Mailbox penceresi açıldığında internet bağlantısı kontrolü
   // Eğer internet bağlantısı yoksa kullanıcıya alert gösterir
   useEffect(() => {
@@ -89,29 +84,18 @@ const Desktop = () => {
 
 
 
-          <div className="icon" onClick={() => handleIconClick('recycleBin')}>
-            <img src="/icons/recycle-bin.png" alt="Recycle Bin Icon" />
-            <span>Recycle Bin</span>
+          <div className="icon" onClick={openITsupport}>
+            <img src="/icons/helpdesk.png" alt="IT Support Icon" />
+            <span>IT Support</span>
           </div>
         </div>
 
-        
-        {openWindow === 'recycleBin' && (
-        <div className="window">
-          <h2>Recycle Bin</h2>
-          <button onClick={() => setOpenWindow(null)}>Close</button>
-
-          <div className="window-content">
-            {/* Geri dönüşüm kutusu içeriği */}
-            <p>Here is the content of the Recycle Bin.</p>
-          </div>    
-        </div>
-      )}
 
 
       {/* Mailbox penceresi */}
       {isBrowserOpen && isWificonnected && <Browser closeBrowser={closeBrowser} />}
       {isMailboxOpen && isWificonnected && <Mailbox closeMailbox={closeMailbox} />}
+      {isITsupportOpen && <ITsupport closeITsupport={closeITsupport} />}
       <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Internete bağlantısı bulunamadı'}></Alert>
       {/* To Do List penceresi */}
       {isTodoListOpen && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList}/>}
