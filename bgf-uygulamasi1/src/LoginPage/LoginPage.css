@@ -1,3 +1,8 @@
+body{
+    background-color: #1c1f4b;
+}
+
+
 .box{
     position: absolute;
     top: 50%;
@@ -101,22 +106,18 @@
   } 
 
 .textbox{
-    width: 100%;
-    padding:3%;
+    width: 75%;
+    margin-bottom: 5%;
     overflow: hidden;
-    border-bottom: 1px solid #000;
-    box-sizing: border-box;
-    border: none;
+    box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+    border: 4px groove #92c0eb;
     border-radius: 4px;
-    cursor: pointer;
+    color: #000;
+    justify-self: center;
 }
 
-body{
-    background-color: #1c1f4b;
-    overflow: hidden;
-}
 .btn{
-    width: 50%;
+    width: 40%;
     background: none;
     border: 3px solid #4caf8e;
     color: white;
@@ -131,13 +132,24 @@ body{
     color: white;
 }
 
+.textbox input{
+    width: 300px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    background-color: #d5f1f8;
+    box-sizing: border-box;
+}
+
 .signIn{
     margin-top: 10px;
     padding: 0;
     font-weight: bold;
     color: #000000;
-    background-color: #98d1ce;
-    width: 60%;
+    background-color: #98b8e2;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    width: 65%;
     height: 10%;
     justify-self: center;
     align-items: center;
@@ -197,3 +209,4 @@ body{
         background-color: rgba(52, 152, 219, 0.7);
     }
   }
+

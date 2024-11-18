@@ -47,8 +47,11 @@ const Navbar = () =>
                     <a href="about.html" className="a">Görüşler</a>
 
                     <div className="loginPart">
-                    <img className="login" onClick={LoginClick} src="/login_simgesi.png" alt="login" />
-                    <p>GİRİŞ</p>
+                    {/* <img  onClick={LoginClick} src="/login_simgesi.png" alt="login" /> */}
+                    <button className="login" onClick={LoginClick}> GİRİŞ
+                      <span></span>
+                    </button>
+                    
                     </div> 
                 </div>
                 

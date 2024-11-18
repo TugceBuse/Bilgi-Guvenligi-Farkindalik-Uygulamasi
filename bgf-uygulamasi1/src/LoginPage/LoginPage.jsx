@@ -3,7 +3,7 @@ import "./LoginPage.css";
 const LoginPage = () => {
 
     return (
-      <div>
+      <div className="login_page">
             <div className="box">
                     <span></span>
                     <span></span>
@@ -12,14 +12,17 @@ const LoginPage = () => {
                 <form className="inputPart">
                    <img src="./user (1).png" alt="user"/> 
                         <div className="textbox">
-                            <input style={{width:250, height:35, fontSize:18}} type="text" placeholder=" Kullanıcı Adı" name="username" required/>
+                            <input type="text" placeholder=" Kullanıcı Adı" name="username" required/>
                         </div>
                         
                         <div className="textbox">
-                            <input style={{width:250, height:35, fontSize:18}} type="password" placeholder=" Şifre" name="password" required/>
+                            <input type="password" placeholder=" Şifre" name="password" required/>
                         </div>
                         <input type="submit" className="btn" value="Giriş Yap"/>
-                        <p className="signIn" >Henüz hesabınız yok mu? <a href="https://www.w3schools.com/">Kayıt Ol</a></p>
+                        <div className="signIn">
+                            <p>Henüz hesabınız yok mu? </p>
+                            <a href="https://www.w3schools.com/">Kayıt Ol</a>
+                        </div>
                         <p style={{color:"white", marginTop:15}}>Şifremi Unuttum</p>
                 </form>
                
