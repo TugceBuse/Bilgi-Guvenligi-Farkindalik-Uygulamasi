@@ -1,6 +1,15 @@
 import "./LoginPage.css";
+import { useEffect } from "react";
 
 const LoginPage = () => {
+
+    // useEffect hook'u ile sayfa yüklendiğinde yeni bir class üzerinden scroll kapıyor
+    useEffect(() => {
+      document.body.classList.add('no-scroll'); 
+      return () => {
+        document.body.classList.remove('no-scroll');
+      };
+    }, []);
 
     return (
       <div className="login_page">

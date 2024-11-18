@@ -5,7 +5,7 @@ import { useGameContext } from '../Context';
 const Notification = () => {
   const { seconds } = useGameContext();
   const [showNotification, setShowNotification] = useState(false);
-  const [isuptodate, setIsuptodate] = useState(false);
+  const {isuptodate, setIsuptodate} = useGameContext();
 
   //Güncelleme efekti eklenecek yükleme işlemi taklit edilecek...
   const handleUpdateNow = () => {

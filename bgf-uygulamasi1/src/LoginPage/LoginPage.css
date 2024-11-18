@@ -1,5 +1,11 @@
-body{
+body.no-scroll {
+  overflow: hidden;
+}
+
+
+body, html{
     background-color: #1c1f4b;
+  
 }
 
 
