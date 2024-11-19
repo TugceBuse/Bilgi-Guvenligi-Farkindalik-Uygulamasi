@@ -39,25 +39,24 @@ const LoginPage = () => {
                 <form className="inputPart" onSubmit={handleLogin} >
                    <img src="./user (1).png" alt="user"/> 
                         <div className="textbox">
-                        <input
-              type="text"
-              placeholder=" Kullanıcı Adı"
-              name="username"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)} // State'e bağlama
-            />
+                          <input
+                            type="text"
+                            placeholder=" Kullanıcı Adı"
+                            name="username"
+                            required
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)} // State'e bağlama
+                          />
                         </div>
-                        
                         <div className="textbox">
-                        <input
-              type="password"
-              placeholder=" Şifre"
-              name="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} // State'e bağlama
-            />
+                          <input
+                            type="password"
+                            placeholder=" Şifre"
+                            name="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} // State'e bağlama
+                          />
                         </div>
                         <input type="submit" className="btn" value="Giriş Yap"/>
                         <div className="signIn">
@@ -65,7 +64,7 @@ const LoginPage = () => {
                             <a href="#" onClick={handleRegisterClick}>Kayıt Ol</a>
                         </div>
                         <p style={{color:"white", marginTop:15}}>Şifremi Unuttum</p>
-                </form>
+                  </form>
                
             </div> 
             {showRegister && (
