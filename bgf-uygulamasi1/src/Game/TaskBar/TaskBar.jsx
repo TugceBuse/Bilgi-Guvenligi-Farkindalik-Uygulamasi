@@ -7,6 +7,7 @@ const TaskBar = () => {
 
   const [time, setTime] = useState(new Date());
   const {isWificonnected , setIsWificonnected } = useGameContext();
+  const {updating_antivirus} = useGameContext();
 
   const pass = "1234";
 
@@ -18,6 +19,8 @@ const TaskBar = () => {
   const [showWifiList, setShowWifiList] = useState(false);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
+
+  const {isantivirusuptodate} = useGameContext();//antivirus güncel mi değil mi
 
   const [showAlert, setShowAlert] = useState(false);
 
@@ -104,7 +107,17 @@ const TaskBar = () => {
       </div>
 
       <div className="taskbar-antivirus">
-          <img src="/icons/antivirus.png" alt="Antivirus Icon" />
+
+        { !updating_antivirus ? (isantivirusuptodate ? 
+        (<img src="/icons/antivirus_latest.png" alt="Antivirus Icon" />)
+        :
+        (<img src="/icons/antivirus_update.png" alt="Antivirus Warning Icon" />)
+        )
+        :
+        (<img src="/icons/antivirus_in_progress.png" alt="Antivirus Update Icon" />)
+        }
+      
+          
       </div>
 
       <div className="taskbar-status">
@@ -133,7 +146,7 @@ const TaskBar = () => {
       </div>
 
     </div>
-
+      {/* WiFi şifre giriş ekranı */}
     {showPasswordPrompt && (
         <div className="password-prompt">
           <form onSubmit={handlePasswordSubmit}>

@@ -4,27 +4,38 @@ import { useGameContext } from '../Context';
 
 const Notification = () => {
   const { seconds } = useGameContext();
+  const { setUpdating_antivirus } = useGameContext();
   const [showNotification, setShowNotification] = useState(false);
-  const {isuptodate, setIsuptodate} = useGameContext();
+  const {isantivirusuptodate, setAntivirusisuptodate} = useGameContext();
+  const [remindTime, setRemindTime] = useState(-1);
 
   //Güncelleme efekti eklenecek yükleme işlemi taklit edilecek...
   const handleUpdateNow = () => {
     console.log('Şimdi Güncelle butonuna tıklandı');
-    setIsuptodate(true); //güncelleme yapıldı
+    setUpdating_antivirus(true); // Yükleme işlemi başlatıldı
     setShowNotification(false);
+    // Yükleme işlemini taklit etmek için setTimeout kullanıyoruz
+    setTimeout(() => {
+      setUpdating_antivirus(false);
+      setAntivirusisuptodate(true); 
+      
+      
+    }, 10000); // 10 saniye bekleme süresi
   };
 
   //daha sonra hatırlatmaya bastıgında 
   const handleRemindLater = () => {
     console.log('Daha Sonra Hatırlat butonuna tıklandı');
-    setIsuptodate(false); //güncelleme yapılmadı
+    setAntivirusisuptodate(false); //güncelleme yapılmadı
     //bu durumda kullanici bir saldiriya maruz kalir
+    setRemindTime(seconds + 60);//1 dakika sonra tekrar hatirlat
     setShowNotification(false);
   };
 
   useEffect(() => {
     console.log('Seconds:', seconds);
-    if (seconds === 3) {
+    // ilk bildirim gösterileceği süre ve daha sonra hatırlat durumunda süre
+    if ( (seconds === 3 || seconds===remindTime) && !isantivirusuptodate) {
       setShowNotification(true);
     }
   }, [seconds]);

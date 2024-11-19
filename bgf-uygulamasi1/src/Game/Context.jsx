@@ -7,7 +7,8 @@ const GameContext = createContext();
 export const GameContextProvider = ({ children }) => {
   const [seconds, setSeconds] = useState(0);
   const [isWificonnected, setIsWificonnected] = useState(false);
-  const [isuptodate, setIsuptodate] = useState(false);
+  const [updating_antivirus, setUpdating_antivirus] = useState(false);
+  const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,7 +23,8 @@ export const GameContextProvider = ({ children }) => {
     value=
     {{ seconds,
      isWificonnected, setIsWificonnected,
-     isuptodate, setIsuptodate
+     isantivirusuptodate, setAntivirusisuptodate,
+     updating_antivirus, setUpdating_antivirus
     }}>
       {children}
     </GameContext.Provider>
