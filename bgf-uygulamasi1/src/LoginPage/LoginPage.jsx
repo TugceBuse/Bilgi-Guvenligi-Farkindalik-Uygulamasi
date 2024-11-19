@@ -81,9 +81,7 @@ const LoginPage = () => {
               type="text" 
               placeholder=" Ad" 
               name="name" 
-              required 
-              value={username}
-              onChange={(e) => setUsername(e.target.value)} />
+              required />
             </div>
             <div className="textbox">
               <input type="text" placeholder=" Soyad" name="surname" required  />
