@@ -3,7 +3,8 @@ import "./LoginPage.css";
 
 
 const LoginPage = () => {
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showRegister, setShowRegister] = useState(false);
   useEffect(() => {
     document.body.classList.add('no-scroll');
@@ -12,6 +13,10 @@ const LoginPage = () => {
     };
   }, []);
 
+  const handleLogin = (e) => {
+    e.preventDefault(); // Sayfanın yeniden yüklenmesini engeller
+    console.log("Username:", username);
+    console.log("Password:", password);};
 
     const handleRegisterClick = (e) => {
       e.preventDefault();
@@ -31,14 +36,28 @@ const LoginPage = () => {
                     <span></span>
                     <span></span>
                     <span></span>
-                <form className="inputPart" >
+                <form className="inputPart" onSubmit={handleLogin} >
                    <img src="./user (1).png" alt="user"/> 
                         <div className="textbox">
-                            <input type="text" placeholder=" Kullanıcı Adı" name="username" required/>
+                        <input
+              type="text"
+              placeholder=" Kullanıcı Adı"
+              name="username"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)} // State'e bağlama
+            />
                         </div>
                         
                         <div className="textbox">
-                            <input type="password" placeholder=" Şifre" name="password" required/>
+                        <input
+              type="password"
+              placeholder=" Şifre"
+              name="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // State'e bağlama
+            />
                         </div>
                         <input type="submit" className="btn" value="Giriş Yap"/>
                         <div className="signIn">
@@ -56,14 +75,15 @@ const LoginPage = () => {
                 <span></span>
                 <span></span>
           <form className="inputPart">
-            <img className="img_sign" style={{marginTop:-15}} src="./user (1).png" alt="user" />
+            <img style={{marginTop:-15}} src="./user (1).png" alt="user" />
             <div className="textbox">
               <input 
               type="text" 
               placeholder=" Ad" 
               name="name" 
               required 
-              />
+              value={username}
+              onChange={(e) => setUsername(e.target.value)} />
             </div>
             <div className="textbox">
               <input type="text" placeholder=" Soyad" name="surname" required  />
@@ -83,5 +103,6 @@ const LoginPage = () => {
       </div>
     );
   };
+
 
 export default LoginPage;
