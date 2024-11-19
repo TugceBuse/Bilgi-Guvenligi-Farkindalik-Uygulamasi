@@ -19,7 +19,7 @@ export const useBrowser = () => {
 const Browser = ({ closeBrowser }) => {
 
   const [url, setUrl] = useState('');
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState('main');
   const [loading, setLoading] = useState(false);
   //192.168.1.1 sayfasi login
   const [loginusername, setLoginusername] = useState('');
@@ -73,21 +73,6 @@ const Browser = ({ closeBrowser }) => {
         <button className="browser-close" onClick={closeBrowser}>×</button>      
       </div>
       <div className="browser-content">
-
-        <div className='firstPartOfBrowser'>
-           <h1>Google</h1>
-           <div className='searchPart'>
-             <img src="./icons/search.png" alt="Google Voice Logo"/>
-            <input type="text" placeholder="Google'da Ara" />
-             
-                    <div className='searchPart_right'>
-                      <img src="./icons/keyboard.png" alt="Google Voice Logo"/>
-                      <img src="./icons/google-voice.png" alt="Google Voice Logo"/>
-                    </div>
-                    
-           </div>
-        </div>
-
         
       {loading ? (
           <div className="browser-loading">
@@ -119,9 +104,23 @@ const Browser = ({ closeBrowser }) => {
               <button type="submit">Login</button>
             </form>
           </div>
-        ) : (
-          <div>{content}</div>
-        )}
+        ) : content === 'main' ? (
+          <div className='firstPartOfBrowser'>
+             <h1>Google</h1>
+             <div className='searchPart'>
+               <img src="./icons/search.png" alt="Google Voice Logo"/>
+              <input type="text" placeholder="Google'da Ara" />
+               
+                      <div className='searchPart_right'>
+                        <img src="./icons/keyboard.png" alt="Google Voice Logo"/>
+                        <img src="./icons/google-voice.png" alt="Google Voice Logo"/>
+                      </div>
+             </div>
+          </div>
+          ) : (
+            <div>{content}</div>
+          )
+        }
       </div>
     </div>
   );
