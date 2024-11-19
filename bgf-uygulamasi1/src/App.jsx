@@ -4,6 +4,7 @@ import React from "react";
 import Homepage from "./Homepage/Homepage";
 import Game from "./Game/Game";
 import LoginPage from "./LoginPage/LoginPage";
+import SignPage from "./SignPage/SignPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Homepage/> } />
         <Route path="/game" element={<Game/>} />
         <Route path="/login" element={<LoginPage/>} />
+        <Route path="/signIn" element={<SignPage/>} />
       </Routes>
     </BrowserRouter>
   );
