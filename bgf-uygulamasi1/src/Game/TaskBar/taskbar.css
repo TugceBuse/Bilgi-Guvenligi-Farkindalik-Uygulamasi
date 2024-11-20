@@ -78,8 +78,44 @@
   background-color: #555;
 }
 
+.taskbar-antivirus {
+  position: relative;
+}
 .taskbar-antivirus img{
   margin-left: 10px;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 200%; /* Tooltip'in ikonun üstünde görünmesi için */
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; /* Tooltip'in altına üçgen eklemek için */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.taskbar-antivirus:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 .password-prompt {

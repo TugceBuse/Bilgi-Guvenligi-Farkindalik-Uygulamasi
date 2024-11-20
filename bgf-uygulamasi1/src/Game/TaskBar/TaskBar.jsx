@@ -67,6 +67,20 @@ const TaskBar = () => {
     return () => clearInterval(interval);
   }, []);
 
+  let antivirusIcon;
+  let tooltipText;
+
+  if (updating_antivirus) {
+    antivirusIcon = <img src="/icons/antivirus_in_progress.png" alt="Antivirus Update Icon" />;
+    tooltipText = "Antivirus güncelleniyor...";
+  } else if (isantivirusuptodate) {
+    antivirusIcon = <img src="/icons/antivirus_latest.png" alt="Antivirus Icon" />;
+    tooltipText = "Antivirus güncel";
+  } else {
+    antivirusIcon = <img src="/icons/antivirus_update.png" alt="Antivirus Warning Icon" />;
+    tooltipText = "Antivirus güncellemesi gerekli!";
+  }
+
 
   return (
 
@@ -107,17 +121,8 @@ const TaskBar = () => {
       </div>
 
       <div className="taskbar-antivirus">
-
-        { !updating_antivirus ? (isantivirusuptodate ? 
-        (<img src="/icons/antivirus_latest.png" alt="Antivirus Icon" />)
-        :
-        (<img src="/icons/antivirus_update.png" alt="Antivirus Warning Icon" />)
-        )
-        :
-        (<img src="/icons/antivirus_in_progress.png" alt="Antivirus Update Icon" />)
-        }
-      
-          
+          {antivirusIcon}
+          <div className="tooltip">{tooltipText}</div>
       </div>
 
       <div className="taskbar-status">
