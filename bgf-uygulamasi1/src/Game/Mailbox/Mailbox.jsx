@@ -1,5 +1,5 @@
 import './Mailbox.css';
-import React,{ useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 export const useMailbox = () => {
   const [isMailboxOpen, setIsMailboxOpen] = useState(false);
@@ -22,6 +22,8 @@ const Mailbox = ({ closeMailbox }) => {
 const [selectedMail, setSelectedMail] = useState(null);
 const [activeIndex, setActiveIndex] = useState(null);
 
+const mailboxRef = useRef(null);//mailbox konumu
+
 const mails = [
   {Name:'Ahmet Karaköse', from:'Ahmet@gmail.com', title: 'IT Departmanı', precontent: `Hesabınız Güvenlik Nedeniyle Geçici Olarak Askıya Alındı – Hızlı Erişim Gerekli!`, content: 
     (
@@ -42,6 +44,50 @@ const mails = [
 // },
 ];
 
+
+//vvvvvvvvvvvvvvv BILEŞENIN SURUKLENMESI vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+useEffect(() => {
+  const mailbox = mailboxRef.current;
+  if (!mailbox) return;
+  
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  const handleMouseDown = (e) => {
+    isDragging = true;
+    offsetX = e.clientX - mailbox.getBoundingClientRect().left;
+    offsetY = e.clientY - mailbox.getBoundingClientRect().top;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      mailbox.style.left = `${e.clientX - offsetX}px`;
+      mailbox.style.top = `${e.clientY - offsetY}px`;
+    }
+  };
+
+  const handleMouseUp = () => {
+    isDragging = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  const header = mailbox.querySelector('.mailbox-header');
+  if (header) {
+    header.addEventListener('mousedown', handleMouseDown);
+  }
+
+  return () => {
+    if (header) {
+      header.removeEventListener('mousedown', handleMouseDown);
+    }
+  };
+}, []);
+//////////////////////////////////////////////////////////////////
+
 const handleMailClick = (mail,index) => {
   setSelectedMail(mail);
   setActiveIndex(index);
@@ -49,7 +95,7 @@ const handleMailClick = (mail,index) => {
 
 
   return (
-    <div className="mailbox-window">
+    <div className="mailbox-window" ref={mailboxRef}>
       <div className="mailbox-header">
         <h2>Mailbox</h2>
         <button className="mailbox-close" onClick={closeMailbox}>×</button>
