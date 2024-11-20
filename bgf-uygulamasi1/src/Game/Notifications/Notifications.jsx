@@ -47,7 +47,7 @@ const Notification = () => {
         <div className="notification-header">
           <img src="/icons/caution.png" alt="Caution Icon" className="notification-icon" />
           <h2>Notification</h2>
-          <button className="notification-close" onClick={() => setShowNotification(false)}>×</button>
+          {/* <button className="notification-close" onClick={() => setShowNotification(false)}>×</button> */}
         </div>
         
         <div className="notification-content">
