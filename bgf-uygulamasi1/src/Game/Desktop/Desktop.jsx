@@ -23,6 +23,14 @@ const Desktop = () => {
 
   const {isWificonnected} = useGameContext();
   const [showAlert, setShowAlert] = useState(false);
+
+  // Masaüstü bileşeni yüklendiğinde sayfayı kaydırmayı engelle
+  useEffect(() => {
+    document.body.classList.add('no-scroll');
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, []);
   
   
 
