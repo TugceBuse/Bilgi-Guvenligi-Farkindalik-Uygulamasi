@@ -112,12 +112,12 @@ const Browser = ({ closeBrowser }) => {
           <div className='firstPartOfBrowser'>
              <h1>Google</h1>
              <div className='searchPart'>
-               <img src="./icons/search.png" alt="Google Voice Logo"/>
+               <img src="./icons/search.png" alt="Search Logo"/>
               <input type="text" placeholder="Google'da Ara" />
                
                       <div className='searchPart_right'>
-                        <img src="./icons/keyboard.png" alt="Google Voice Logo"/>
-                        <img src="./icons/google-voice.png" alt="Google Voice Logo"/>
+                        <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
+                        <img src="./icons/google-voice.png" alt="Voice Logo"/>
                       </div>
              </div>
           </div>
