@@ -1,5 +1,6 @@
 import "./Todolist.css";
-import { useState , useEffect} from "react";
+import React, { useState , useEffect, useRef} from "react";
+import { MakeDraggable } from '../Draggable';
 
 export const useTodoList = () => {
     const [isTodoListOpen, setIsTodoListOpen] = useState(false);
@@ -20,6 +21,10 @@ export const useTodoList = () => {
 
 const Todolist = ({closeTodoList, todos, setTodos}) => {
 
+  const todolistRef = useRef(null);
+
+  MakeDraggable(todolistRef, '.Todolist-header');
+
         //Todolist değişikliklerini kaydetmeyi saglıyor
     const handleCheckboxChange = (index) => {
         const newTodos = [...todos];
@@ -28,7 +33,7 @@ const Todolist = ({closeTodoList, todos, setTodos}) => {
     };
 
   return (
-    <div className="Todolist-window">
+    <div className="Todolist-window" ref={todolistRef}>
         
         <div className="Todolist-header">
             <h2>To-Do List</h2>

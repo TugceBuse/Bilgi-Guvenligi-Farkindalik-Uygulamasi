@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import './Browser.css';
+import { MakeDraggable } from '../Draggable';
 
 export const useBrowser = () => {
   const [isBrowserOpen, setIsBrowserOpen] = useState(false);
@@ -24,6 +25,9 @@ const Browser = ({ closeBrowser }) => {
   //192.168.1.1 sayfasi login
   const [loginusername, setLoginusername] = useState('');
   const [loginpassword, setLoginpassword] = useState('');
+
+  const browserRef = useRef(null);
+  MakeDraggable(browserRef, '.browser-header');
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
@@ -59,7 +63,7 @@ const Browser = ({ closeBrowser }) => {
   };
 
   return (
-    <div className="browser-window">
+    <div className="browser-window" ref={browserRef}>
       <div className="browser-header">
         <input
           type="text"
