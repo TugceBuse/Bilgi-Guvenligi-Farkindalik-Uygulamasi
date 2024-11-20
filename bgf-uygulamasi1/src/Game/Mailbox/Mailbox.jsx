@@ -43,14 +43,22 @@ const handleMailClick = (mail,index) => {
   return (
     <div className="mailbox-window" ref={mailboxRef}>
       <div className="mailbox-header">
-        <h2>Mailbox</h2>
+        {/* Mailbox header */}
+              <div className = 'mailbox-header-left'>
+                <img className = "menu-icon" src="./icons/menu.png" alt="Menu Icon"/>
+                <img className = "search-icon" src="./icons/search.png" alt="Search Icon"/>
+                <input type="text" placeholder = " Ara" />
+                <img  src="./icons/undo.png" alt="Undo Icon"/>
+                <img  src="./icons/undo-all.png" alt="Undo-All Icon"/>
+                <img  src="./icons/next.png" alt="Right-Arrow Icon"/>
+              </div>
         <button className="mailbox-close" onClick={closeMailbox}>×</button>
       </div>
       {/* headerden sonra soldan sağa dizilen iç pencere */}
       <div className="mailbox-inwindow">
         <div className="mailbox-sidebar">
           <ul>
-            <li className="active">Inbox</li>
+            <li className="active"><img className = "inbox-icon" src="./icons/inbox.png" alt="Inbox Icon"/> Inbox</li>
             <li>Sent</li>
           </ul>
         </div>

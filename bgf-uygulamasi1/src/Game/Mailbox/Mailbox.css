@@ -22,12 +22,40 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 6%;
+    height: 8%;
   }
-  
+  .mailbox-header-left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+  }
+.mailbox-header-left input{
+  width: 70%;
+  height: 25px;
+  border: none;
+  background-color: #e9e9e9;
+  color: #000000;
+  border-radius: 20px;
+}
+  /*menü iconu CSS*/
+  .menu-icon{
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    margin-right: 15px;
+  }
+  .search-icon{
+    width: 20px;
+    height: 20px;
+  }
+  .inbox-icon{
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
   .mailbox-inwindow {
     top: 6%;
-    position: absolute;
     width: 100%;
     height: 94%;
     background-color: rgb(146, 146, 146);
@@ -42,7 +70,7 @@
   .mailbox-sidebar {
     background-color: #292929;
     border-right: 1px solid #444;
-    width: 200px;
+    width: 300px;
     height: 100%;
     padding: 10px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -63,6 +91,8 @@
     cursor: pointer;
     border-bottom: 1px solid #444;
     color : #f1f1f1;
+    display: flex; /* Flex container yap */
+    align-items: center; /* Dikey olarak ortala */
   }
   
   .mailbox-sidebar li:hover {
@@ -75,8 +105,8 @@
   }
   
   .mailbox-close {
-    width:  2.8%;
-    height: 150%;
+    width:  3.5%;
+    height: 100%;
     background-color: transparent;
     border: none;
     color: #e4e4e4;
@@ -116,7 +146,7 @@
   .mailbox-mails {
     background-color: #333333;
     border-right: 1px solid #575757;
-    width: 25%;
+    width: 35%;
     height: 100%;
     overflow: auto;
     display:flex;
