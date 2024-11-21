@@ -63,6 +63,19 @@
     cursor: progress;
   }
 
+  .navbar.scrolled .login span{
+    border-color: black;
+    border-radius: 5px;
+  }
+
+  .navbar.scrolled .login {
+    color: black;
+  }
+
+  .navbar.scrolled .login:hover span::before{
+    background: rgb(196, 196, 196);
+  }
+
   .logo-container {
     background-color: rgb(227, 228, 230);
     border-radius: 50%;
@@ -107,12 +120,12 @@
   }
 
   .login{
-    border: none;
+  border: none;
   display: block;
   position: relative;
   padding: 0.7em 2.4em;
-  font-size: 18px;
   background: transparent;
+  font-size: 18px;
   cursor: pointer;
   user-select: none;
   overflow: hidden;
@@ -129,6 +142,7 @@
     height: 100%;
     background: transparent;
     z-index: -1;
+    border-radius: 5px;
     border: 4px solid rgb(125, 143, 197);
   }
   
