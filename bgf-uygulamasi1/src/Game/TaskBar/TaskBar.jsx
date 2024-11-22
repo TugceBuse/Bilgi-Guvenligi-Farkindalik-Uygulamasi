@@ -9,6 +9,8 @@ const TaskBar = () => {
   const {isWificonnected , setIsWificonnected } = useGameContext();
   const {updating_antivirus} = useGameContext();
 
+  const [wifiname, setwifiname] = useState('');
+
   const pass = "1234";
 
   //baglanti olup olmadıgı ama bu kontrol değişkeni aynı zamanda
@@ -38,6 +40,7 @@ const TaskBar = () => {
     } else {
       //şifresiz wifi baglantı saglanır
       setIsWificonnected(true);
+      setwifiname(wifiName);
       console.log(`Connecting to ${wifiName}`);
       // WiFi bağlantı işlemleri olabilir
     }
@@ -68,19 +71,28 @@ const TaskBar = () => {
   }, []);
 
   let antivirusIcon;
-  let tooltipText;
+  let antivirusTooltip;
+  let wifiIcon;
+  let wifiTooltip;
 
   if (updating_antivirus) {
     antivirusIcon = <img src="/icons/antivirus_in_progress.png" alt="Antivirus Update Icon" />;
-    tooltipText = "Antivirus güncelleniyor...";
+    antivirusTooltip = "Antivirus güncelleniyor...";
   } else if (isantivirusuptodate) {
     antivirusIcon = <img src="/icons/antivirus_latest.png" alt="Antivirus Icon" />;
-    tooltipText = "Antivirus güncel";
+    antivirusTooltip = "Antivirus güncel";
   } else {
     antivirusIcon = <img src="/icons/antivirus_update.png" alt="Antivirus Warning Icon" />;
-    tooltipText = "Antivirus güncellemesi gerekli!";
+    antivirusTooltip = "Antivirus güncellemesi gerekli!";
   }
 
+  if (isWificonnected) {
+    wifiIcon = <img src="/icons/wifi.png" alt="Wifi Connected Icon" />;
+    wifiTooltip = `${wifiname}`;
+  } else {
+    wifiIcon = <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />;
+    wifiTooltip = "WiFi Bağlı Değil";
+  }
 
   return (
 
@@ -94,19 +106,19 @@ const TaskBar = () => {
     </div>
     
     <div className="taskbar-icons">
-      <img src="/icons/internet.png" alt="Internet Icon" />
-      {/* <img src="/icons/folder-invoices.png" alt="File Explorer Icon" /> */}
+    
     </div>
       
       {/* Görev Çubuğu Sağ Tarafı */}
     <div className="taskbar-right">
 
       <div className="taskbar-wifi" onClick={toggleWifiList}>
-        {isWificonnected ? (
-          <img src="/icons/wifi.png" alt="Wifi Connected Icon" />
-        ) : (
-          <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />
-        )}
+          {wifiIcon}
+          <div className="tooltip">
+            <b>{wifiTooltip}</b>
+            <br/>
+            İnternet erişimi
+          </div>
           {showWifiList && (
             <div className="wifi-list">
               <ul>
@@ -122,7 +134,7 @@ const TaskBar = () => {
 
       <div className="taskbar-antivirus">
           {antivirusIcon}
-          <div className="tooltip">{tooltipText}</div>
+          <div className="tooltip">{antivirusTooltip}</div>
       </div>
 
       <div className="taskbar-status">

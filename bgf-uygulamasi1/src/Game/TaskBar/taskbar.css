@@ -95,7 +95,7 @@
   padding: 5px;
   position: absolute;
   z-index: 1;
-  bottom: 200%; /* Tooltip'in ikonun üstünde görünmesi için */
+  bottom: 175%; /* Tooltip'in ikonun üstünde görünmesi için */
   left: 50%;
   margin-left: -100px;
   opacity: 0;
@@ -105,7 +105,7 @@
 .tooltip::after {
   content: '';
   position: absolute;
-  top: 100%; /* Tooltip'in altına üçgen eklemek için */
+  top: 100%;
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
@@ -114,6 +114,11 @@
 }
 
 .taskbar-antivirus:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.taskbar-wifi:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
