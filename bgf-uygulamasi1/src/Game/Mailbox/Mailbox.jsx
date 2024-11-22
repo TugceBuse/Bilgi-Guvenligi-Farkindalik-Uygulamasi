@@ -1,19 +1,20 @@
 import './Mailbox.css';
 import React, { useRef, useEffect, useState } from 'react';
 import { MakeDraggable } from '../Draggable';
+import { useGameContext } from '../Context';
 
 export const useMailbox = () => {
-  const [isMailboxOpen, setIsMailboxOpen] = useState(false);
+  const { toggleWindow, setActiveWindow } = useGameContext();
 
   const openMailbox = () => {
-    setIsMailboxOpen(true);
+    toggleWindow('mailbox');
   };
 
   const closeMailbox = () => {
-    setIsMailboxOpen(false);
+    toggleWindow('mailbox');
   };
 
-  return { isMailboxOpen, openMailbox, closeMailbox };
+  return { openMailbox, closeMailbox };
 };
 
 

@@ -22,6 +22,7 @@ const TaskBar = () => {
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
 
+  const { openWindows, toggleWindow, activeWindow, handleIconClick } = useGameContext();
   const {isantivirusuptodate} = useGameContext();//antivirus güncel mi değil mi
 
   const [showAlert, setShowAlert] = useState(false);
@@ -106,7 +107,38 @@ const TaskBar = () => {
     </div>
     
     <div className="taskbar-icons">
-    
+        {openWindows.includes('browser') && (
+          <img
+            src="/icons/internet.png"
+            alt="Browser Icon"
+            className={activeWindow === 'browser' ? 'active' : ''}
+            onClick={() => handleIconClick('browser')}
+          />
+        )}
+        {openWindows.includes('itsupport') && (
+          <img
+            src="/icons/helpdesk.png"
+            alt="IT Support Icon"
+            className={activeWindow === 'itsupport' ? 'active' : ''}
+            onClick={() => handleIconClick('itsupport')}
+          />
+        )}
+        {openWindows.includes('todolist') && (
+          <img
+            src="/icons/to-do-list.png"
+            alt="Todolist Icon"
+            className={activeWindow === 'todolist' ? 'active' : ''}
+            onClick={() => handleIconClick('todolist')}
+          />
+        )}
+        {openWindows.includes('mailbox') && (
+          <img
+            src="/icons/mail.png"
+            alt="Mailbox Icon"
+            className={activeWindow === 'mailbox' ? 'active' : ''}
+            onClick={() => handleIconClick('mailbox')}
+          />
+        )}
     </div>
       
       {/* Görev Çubuğu Sağ Tarafı */}

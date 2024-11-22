@@ -10,6 +10,9 @@ export const GameContextProvider = ({ children }) => {
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
 
+  const [openWindows, setOpenWindows] = useState([]);
+  const [activeWindow, setActiveWindow] = useState(null);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setSeconds((prevSeconds) => prevSeconds + 1);
@@ -18,13 +21,36 @@ export const GameContextProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const toggleWindow = (windowName) => {
+    setOpenWindows((prevOpenWindows) =>
+      prevOpenWindows.includes(windowName)
+        ? prevOpenWindows.filter((name) => name !== windowName)
+        : [...prevOpenWindows, windowName]
+    );
+    handleIconClick(windowName);
+  };
+
+  useEffect(() => {
+    console.log(openWindows, activeWindow);
+  }, [openWindows,activeWindow]);
+
+  const handleIconClick = (windowName) => {
+    if (activeWindow === windowName) {
+      setActiveWindow(null);
+    } else {
+      setActiveWindow(windowName);
+      console.log(activeWindow);
+    }
+  };
+
   return (
     <GameContext.Provider 
     value=
     {{ seconds,
      isWificonnected, setIsWificonnected,
      isantivirusuptodate, setAntivirusisuptodate,
-     updating_antivirus, setUpdating_antivirus
+     updating_antivirus, setUpdating_antivirus,
+     openWindows, toggleWindow, activeWindow, handleIconClick
     }}>
       {children}
     </GameContext.Provider>

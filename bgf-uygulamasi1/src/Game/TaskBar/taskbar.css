@@ -12,32 +12,39 @@
 }
 
 .start-menu img {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 }
 
+.taskbar-icons {
+  display: inline-flex;
+  align-items: center;
+}
+
 .taskbar-icons img {
-  margin: 0 10px;
   width: 40px;
   height: 40px;
+  margin: 0 5px;
   cursor: pointer;
+  transition: background-color 0.3s, border 0.3s;
 }
 
 .taskbar-icons img:hover {
   background-color: #444;
 }
 
-.taskbar-icons img:active {
-  background-color: #333;
+.taskbar-icons img.active {
+  background-color: #3a3a3a;
+  border: 2px solid #09253d;
+  border-radius: 4px;
 }
 
 .taskbar-right {
-  display: inline-flex;
+  display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 5px;
-  width:auto;
   margin-right: 10px;
 }
 /* Wifi kısmı*/

@@ -1,19 +1,20 @@
 import React, { useState,useEffect, useRef } from 'react';
 import './Browser.css';
 import { MakeDraggable } from '../Draggable';
-
+import { useGameContext } from '../Context';
+  
 export const useBrowser = () => {
-  const [isBrowserOpen, setIsBrowserOpen] = useState(false);
+  const { toggleWindow, setActiveWindow } = useGameContext();
 
   const openBrowser = () => {
-    setIsBrowserOpen(true);
+    toggleWindow('browser');
   };
 
   const closeBrowser = () => {
-    setIsBrowserOpen(false);
+    toggleWindow('browser');
   };
 
-  return { isBrowserOpen, openBrowser, closeBrowser };
+  return { openBrowser, closeBrowser };
 };
 
 

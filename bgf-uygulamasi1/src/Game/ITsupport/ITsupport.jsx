@@ -1,22 +1,23 @@
 import React, { useState, useRef } from 'react';
 import './ITsupport.css';
 import { MakeDraggable } from '../Draggable';
+import { useGameContext } from '../Context';
+
 
 
 export const useITsupport = () => {
-    const [isITsupportOpen, setIsITsupportOpen] = useState(false);
-
+    const { toggleWindow, setActiveWindow } = useGameContext();
     
 
     const openITsupport = () => {
-        setIsITsupportOpen(true);
+        toggleWindow('itsupport');
     };
     
     const closeITsupport = () => {
-        setIsITsupportOpen(false);
+        toggleWindow('itsupport');
     };
     
-    return { isITsupportOpen, openITsupport, closeITsupport };
+    return { openITsupport, closeITsupport };
     }
 
 const ITsupport = ({ closeITsupport }) => {

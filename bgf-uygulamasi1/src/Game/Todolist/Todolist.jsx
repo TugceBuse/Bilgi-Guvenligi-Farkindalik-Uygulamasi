@@ -1,19 +1,21 @@
 import "./Todolist.css";
 import React, { useState , useEffect, useRef} from "react";
 import { MakeDraggable } from '../Draggable';
+import { useGameContext } from '../Context';
+  
 
 export const useTodoList = () => {
-    const [isTodoListOpen, setIsTodoListOpen] = useState(false);
-    
+    const { toggleWindow, setActiveWindow } = useGameContext();
+
     const openTodoList = () => {
-        setIsTodoListOpen(true);
+        toggleWindow('todolist');
     };
     
     const closeTodoList = () => {
-        setIsTodoListOpen(false);
+        toggleWindow('todolist');
     };
     
-    return { isTodoListOpen, openTodoList, closeTodoList };
+    return { openTodoList, closeTodoList };
     }
 
 
