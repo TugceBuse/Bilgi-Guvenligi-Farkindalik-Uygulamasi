@@ -112,13 +112,28 @@ const TaskBar = () => {
 
   if (updating_antivirus) {
     antivirusIcon = <img src="/icons/antivirus_in_progress.png" alt="Antivirus Update Icon" />;
-    antivirusTooltip = "Antivirus güncelleniyor...";
+    antivirusTooltip = (
+      <div className="tooltip tooltip-visible">
+        Antivirus güncelleniyor...
+        <div className="loading-bar">
+          <div className="loading-bar-progress"></div>
+        </div>
+      </div>
+    );
   } else if (isantivirusuptodate) {
     antivirusIcon = <img src="/icons/antivirus_latest.png" alt="Antivirus Icon" />;
-    antivirusTooltip = "Antivirus güncel";
+    antivirusTooltip = (
+      <div className="tooltip">
+        Antivirus güncel!
+      </div>
+    )
   } else {
     antivirusIcon = <img src="/icons/antivirus_update.png" alt="Antivirus Warning Icon" />;
-    antivirusTooltip = "Antivirus güncellemesi gerekli!";
+    antivirusTooltip = (
+      <div className="tooltip">
+        Antivirus güncellemesi gerekli!
+      </div>
+    );
   }
 
   if (isWificonnected) {
@@ -200,7 +215,7 @@ const TaskBar = () => {
 
       <div className="taskbar-antivirus">
           {antivirusIcon}
-          <div className="tooltip">{antivirusTooltip}</div>
+          {antivirusTooltip}
       </div>
 
       <div className="taskbar-status">

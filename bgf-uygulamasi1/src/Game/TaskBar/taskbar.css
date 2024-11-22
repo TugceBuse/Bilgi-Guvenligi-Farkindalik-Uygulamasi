@@ -101,14 +101,14 @@
   border-radius: 6px;
   padding: 5px;
   position: absolute;
-  z-index: 1;
+  z-index: 999;
   bottom: 175%; /* Tooltip'in ikonun üstünde görünmesi için */
   left: 50%;
   margin-left: -100px;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.5s;
 }
-
+/*tooltipin altındaki üçgen*/
 .tooltip::after {
   content: '';
   position: absolute;
@@ -120,6 +120,11 @@
   border-color: #555 transparent transparent transparent;
 }
 
+.taskbar-antivirus .tooltip-visible {
+  visibility: visible;
+  opacity: 1;
+}
+
 .taskbar-antivirus:hover .tooltip {
   visibility: visible;
   opacity: 1;
@@ -128,6 +133,34 @@
 .taskbar-wifi:hover .tooltip {
   visibility: visible;
   opacity: 1;
+}
+
+/*Antivirus tooltip loadingbar kodları*/
+.loading-bar {
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.loading-bar-progress {
+  width: 0;
+  height: 4px;
+  background-color: #0078d7;
+  animation: loading 20s infinite;
+}
+
+@keyframes loading {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
 }
 
 .password-prompt {
