@@ -1,4 +1,4 @@
-.Todolist-window {
+.todolist-window {
     position: absolute;
     top: 10%;
     left: 10%;
@@ -13,7 +13,7 @@
     color: #f1f1f1;
 } 
   
-  .Todolist-header {
+  .todolist-header {
     background-color: #333; 
     padding: 10px;
     border-bottom: 1px solid #444;
@@ -22,7 +22,7 @@
     align-items: center;
   }
   
-  .Todolist-close {
+  .todolist-close {
     width:  10%;
     height: 150%;
     background-color: transparent;
@@ -35,40 +35,40 @@
     line-height: 1;
   }
   
-  .Todolist-close:hover {
+  .todolist-close:hover {
     background-color: #ff1c1c;
   }
   
-  .Todolist-content {
+  .todolist-content {
     flex: 1;
     padding: 10px;
     overflow-y: auto;
     background-color: #222; 
   }
   
-  .Todolist-content ul {
+  .todolist-content ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
   }
   
-  .Todolist-content li {
+  .todolist-content li {
     padding: 10px;
     border-bottom: 1px solid #444;
     cursor: pointer;
     color: #f1f1f1;
   }
   
-  /* .Todolist-content li:hover {
+  /* .todolist-content li:hover {
     background-color: #555;
   }
   
-  .Todolist-content li.active {
+  .todolist-content li.active {
     background-color: #666;
     font-weight: bold;
   } */
 
-  .Todolist-content input[type="checkbox"] {
+  .todolist-content input[type="checkbox"] {
     margin-right: 10px;
     width: 20px; 
     height: 20px; 

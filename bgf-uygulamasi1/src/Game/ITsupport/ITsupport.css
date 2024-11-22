@@ -1,4 +1,4 @@
-.ITsupport-window {
+.itsupport-window {
   position: absolute;
   top: 10%;
   left: 10%;
@@ -13,7 +13,7 @@
   color: #ffffff;
 }
 
-.ITsupport-header {
+.itsupport-header {
   background-color: #494949;
   padding: 10px;
   border-bottom: 1px solid #1a1919;
@@ -24,7 +24,7 @@
   height: 6%;
 }
 
-.ITsupport-close {
+.itsupport-close {
     width:  2.8%;
     height: 150%;
     background-color: transparent;
@@ -37,7 +37,7 @@
     line-height: 1;
 }
 
-.ITsupport-close:hover {
+.itsupport-close:hover {
   background-color: #ff0000;
 }
 

@@ -25,7 +25,7 @@ const Todolist = ({closeTodoList, todos, setTodos}) => {
 
   const todolistRef = useRef(null);
 
-  MakeDraggable(todolistRef, '.Todolist-header');
+  MakeDraggable(todolistRef, '.todolist-header');
 
         //Todolist değişikliklerini kaydetmeyi saglıyor
     const handleCheckboxChange = (index) => {
@@ -35,13 +35,13 @@ const Todolist = ({closeTodoList, todos, setTodos}) => {
     };
 
   return (
-    <div className="Todolist-window" ref={todolistRef}>
+    <div className="todolist-window" ref={todolistRef}>
         
-        <div className="Todolist-header">
+        <div className="todolist-header">
             <h2>To-Do List</h2>
-            <button className="Todolist-close" onClick={closeTodoList}>×</button>
+            <button className="todolist-close" onClick={closeTodoList}>×</button>
         </div>
-        <div className="Todolist-content">
+        <div className="todolist-content">
         <ul>
           {todos.map((todo, index) => (
             <li key={index} className={todo.completed ? 'completed' : ''}>

@@ -11,6 +11,8 @@ const TaskBar = () => {
 
   const [wifiname, setwifiname] = useState('');
 
+  const [zindex, setzindex] = useState(100);
+
   const pass = "1234";
 
   //baglanti olup olmadıgı ama bu kontrol değişkeni aynı zamanda
@@ -64,6 +66,38 @@ const TaskBar = () => {
   };
 
   useEffect(() => {
+    console.log('Z-index değişti:', zindex);
+  }, [zindex]);
+
+  const handleIconClickWithVisibility = (windowName) => {
+    const element = document.querySelector(`.${windowName}-window`);
+    if (activeWindow === windowName) {
+      if (element) {
+        setzindex(zindex - 1);
+        element.style.visibility = 'hidden';
+        element.style.zIndex = `${zindex}`; // Arka plana almak için z-index azaltma
+      }
+      handleIconClick(windowName);
+    } else {
+      if (element) {//zindex < 9999 aslında koşul
+        zindex < 9999 && setzindex(zindex + 1); // zindex şişip hata çıkarmasın diye
+        element.style.visibility = 'visible';
+        element.style.zIndex = `${zindex}`; // Ön plana çıkarmak için z-index artırma
+        console.log(element.style.zIndex);
+      }
+      handleIconClick(windowName);
+    }
+  };
+
+  //zindex şişmemesi için bütün pencereler kapatıldığında 100 e çek
+  useEffect(() => {
+    console.log('Active window değişti:', openWindows);
+    if(openWindows.length === 0) {
+      setzindex(100);
+    }
+  }, [openWindows]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setTime(new Date());
     }, 1000);
@@ -112,7 +146,7 @@ const TaskBar = () => {
             src="/icons/internet.png"
             alt="Browser Icon"
             className={activeWindow === 'browser' ? 'active' : ''}
-            onClick={() => handleIconClick('browser')}
+            onClick={() => handleIconClickWithVisibility('browser')}
           />
         )}
         {openWindows.includes('itsupport') && (
@@ -120,7 +154,7 @@ const TaskBar = () => {
             src="/icons/helpdesk.png"
             alt="IT Support Icon"
             className={activeWindow === 'itsupport' ? 'active' : ''}
-            onClick={() => handleIconClick('itsupport')}
+            onClick={() => handleIconClickWithVisibility('itsupport')}
           />
         )}
         {openWindows.includes('todolist') && (
@@ -128,7 +162,7 @@ const TaskBar = () => {
             src="/icons/to-do-list.png"
             alt="Todolist Icon"
             className={activeWindow === 'todolist' ? 'active' : ''}
-            onClick={() => handleIconClick('todolist')}
+            onClick={() => handleIconClickWithVisibility('todolist')}
           />
         )}
         {openWindows.includes('mailbox') && (
@@ -136,7 +170,7 @@ const TaskBar = () => {
             src="/icons/mail.png"
             alt="Mailbox Icon"
             className={activeWindow === 'mailbox' ? 'active' : ''}
-            onClick={() => handleIconClick('mailbox')}
+            onClick={() => handleIconClickWithVisibility('mailbox')}
           />
         )}
     </div>

@@ -39,7 +39,6 @@ export const GameContextProvider = ({ children }) => {
       setActiveWindow(null);
     } else {
       setActiveWindow(windowName);
-      console.log(activeWindow);
     }
   };
 
