@@ -73,17 +73,21 @@ const TaskBar = () => {
     const element = document.querySelector(`.${windowName}-window`);
     if (activeWindow === windowName) {
       if (element) {
-        setzindex(zindex - 1);
+        let newZindex = zindex - 1;
+        setzindex(newZindex); // zindex şişip hata çıkarmasın diye
         element.style.visibility = 'hidden';
         element.style.zIndex = `${zindex}`; // Arka plana almak için z-index azaltma
       }
       handleIconClick(windowName);
     } else {
       if (element) {//zindex < 9999 aslında koşul
-        zindex < 9999 && setzindex(zindex + 1); // zindex şişip hata çıkarmasın diye
-        element.style.visibility = 'visible';
-        element.style.zIndex = `${zindex}`; // Ön plana çıkarmak için z-index artırma
-        console.log(element.style.zIndex);
+        if (zindex < 9999) {
+          let newZindex = zindex + 1;
+          setzindex(newZindex);
+          element.style.visibility = 'visible';
+          element.style.zIndex = `${newZindex}`; // Ön plana çıkarmak için z-index artırma
+          console.log(newZindex);
+        }
       }
       handleIconClick(windowName);
     }
