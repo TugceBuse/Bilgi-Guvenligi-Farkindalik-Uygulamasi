@@ -142,7 +142,13 @@ const TaskBar = () => {
 
   if (isWificonnected) {
     wifiIcon = <img src="/icons/wifi.png" alt="Wifi Connected Icon" />;
-    wifiTooltip = `${wifiname}`;
+    wifiTooltip = ( 
+      <>
+        <b>{wifiname}</b>
+        <br />
+        Internet erişimi
+      </>
+     );
   } else {
     wifiIcon = <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />;
     wifiTooltip = "WiFi Bağlı Değil";
@@ -200,9 +206,7 @@ const TaskBar = () => {
       <div className="taskbar-wifi" onClick={toggleWifiList}>
           {wifiIcon}
           <div className="tooltip">
-            <b>{wifiTooltip}</b>
-            <br/>
-            İnternet erişimi
+            {wifiTooltip}
           </div>
           {showWifiList && (
             <div className="wifi-list">
