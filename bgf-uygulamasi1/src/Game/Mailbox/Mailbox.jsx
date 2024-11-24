@@ -39,14 +39,14 @@ const mails = [
               Bu nedenle hesabınız geçici olarak askıya alınmıştır. 
               Hesabınıza yeniden erişebilmeniz için aşağıdaki bağlantıdan giriş yaparak bilgilerinizi güncellemeniz gerekmektedir.<br/><br/>
 
-              Bağlantı: <span style={{color:"blue", textDecoration: "underline", cursor:"pointer"}}>Hesabı Yeniden Etkinleştir!</span><br/><br/>
+              Bağlantı: <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}>Hesabı Yeniden Etkinleştir!</span><br/><br/>
               
               Bu işlemi 24 saat içinde gerçekleştirmezseniz, hesabınız kalıcı olarak kapatılacaktır ve tüm verileriniz silinecektir.
               E-posta güvenliği politikamız gereğince, bu bağlantının gizliliğini koruyun ve kimseyle paylaşmayın.<br/><br/><br/>
 
               <b>Teşekkürler,<br/><br/>
               GlobalBank IT Destek Ekibi</b><br/>
-              <b>E-posta:</b> <span style={{color:"blue", cursor:"pointer"}}>destek@globalbank.com</span><br/>
+              <b>E-posta:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@globalbank.com</span><br/>
               <b>Telefon:</b> +90 212 555 0101
             </pre>
       </div>
@@ -63,7 +63,9 @@ const mails = [
 
               Teslimat sürecinde yaşanan bu aksaklığı en kısa sürede çözmek ve paketinizi yeniden yönlendirebilmek için lütfen aşağıdaki bağlantıya tıklayarak adres bilgilerinizi doğrulayınız:<br/><br/>
 
-              <span style={{color:"blue", textDecoration: "underline", cursor:"pointer"}}>Paketimi Güncelle</span><br/><br/>
+              <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
+              title='https://shipmenttracker.com/track/123456'
+              >Paketimi Güncelle</span><br/><br/>
               
               Güncellenen bilgilerle paketinizin yeniden sevkiyatını gerçekleştirebiliriz. Eğer adres doğrulama işlemi gerçekleştirilmezse, gönderinizi teslim edemeyeceğimiz için siparişiniz otomatik olarak 3 iş günü içerisinde iade edilecektir.
 

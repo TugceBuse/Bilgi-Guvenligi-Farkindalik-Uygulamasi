@@ -36,7 +36,7 @@
 
 .taskbar-icons img.active {
   background-color: #3a3a3a;
-  border: 2px solid #09253d;
+  border: 2px solid orange;
   border-radius: 4px;
 }
 
