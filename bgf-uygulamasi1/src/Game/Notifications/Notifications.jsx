@@ -61,6 +61,26 @@ const Notification = () => {
         </div>
       </div>
       )}
+
+{showNotification && (
+      <div className="notification">
+        <div className="notification-header">
+          <img src="/icons/caution.png" alt="Caution Icon" className="notification-icon" />
+          <h2>Notification</h2>
+          {/* <button className="notification-close" onClick={() => setShowNotification(false)}>×</button> */}
+        </div>
+        
+        <div className="notification-content">
+          <h3>Antivirus güncellemesi gerekli!</h3>
+          <p>Antivirüs programı güncel değil.</p>
+          <p>Lütfen güvenliğiniz için programı güncelleyin.</p>
+          <div className="notification-buttons">
+          <button onClick={handleUpdateNow}>Şimdi Güncelle</button>
+          <button onClick={handleRemindLater}>Daha Sonra Hatırlat</button>  
+          </div>      
+        </div>
+      </div>
+      )}
     </>
   );
 };
