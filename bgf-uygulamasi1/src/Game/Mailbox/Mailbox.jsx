@@ -260,7 +260,7 @@ const resetReadMails = () => {
                         <h3>&lt;{selectedMail?.from}&gt;</h3>
                         <h3 style={{paddingTop:8}}>Bugün</h3>
                       </div>
-                      <div style={{width:24, height:24, display:"flex", flexDirection:"row", gap:20,marginLeft:200}}>
+                      <div style={{top:20, right:30, display:"flex", flexDirection:"row", gap:20,marginLeft:200, position:"absolute"}}>
                       <img  src="./icons/undo.png" alt="Undo Icon"/>
                       <img  src="./icons/undo-all.png" alt="Undo-All Icon"/>
                       <img  src="./icons/next.png" alt="Right-Arrow Icon"/>
