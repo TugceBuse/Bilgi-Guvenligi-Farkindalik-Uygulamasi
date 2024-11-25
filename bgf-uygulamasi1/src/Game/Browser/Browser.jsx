@@ -23,6 +23,11 @@ const Browser = ({ closeBrowser }) => {
   const [url, setUrl] = useState('');
   const [content, setContent] = useState('main');
   const [loading, setLoading] = useState(false);
+  //Dosya indirme Senaryosu için kullanılacak
+  const [showDownloadDiv, setShowDownloadDiv] = useState(false);
+  const [downloadMessage, setDownloadMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+
   //192.168.1.1 sayfasi login
   const [loginusername, setLoginusername] = useState('');
   const [loginpassword, setLoginpassword] = useState('');
@@ -48,9 +53,42 @@ const Browser = ({ closeBrowser }) => {
     }, 2000); // 2 saniye gecikme
   };
 
+  const handleDownloadClick = (fileUrl) => {
+    setDownloadMessage("İndiriliyor...");
+    setTimeout(() => {
+      setDownloadMessage("");
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000); // 3 saniye sonra pop-up'ı gizle
+    }, 1000); // 1 saniye gecikme
+  };
+
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleGoClick();
+    if (e.key === "Enter") {
+      // URL boşsa tarayıcı ekranını temizle
+      if (!url.trim()) {
+        setContent("");
+        setUrl("");
+      } else if (url.trim().toLowerCase() === "indir") {
+        // URL "indir" ise başka bir div göster ve URL inputunu değiştir
+        setShowDownloadDiv(true);
+        setContent("");
+        setUrl("https://download.example.com");
+      } else {
+        // URL doluysa girilen URL'ye yönlendir
+        setLoading(true);
+        setTimeout(() => {
+          if (url === '192.168.1.1') {
+            setContent(`login`);
+          } else if (url === 'https://another.com') {
+            setContent('Another Content: This is the content for another.com.');
+          } else {
+            setContent('404 Not Found. The requested URL was not found on this server.');
+          }
+          setLoading(false);
+        }, 2000); // 2 saniye gecikme
+      }
     }
   };
 
@@ -126,8 +164,44 @@ const Browser = ({ closeBrowser }) => {
             <div>{content}</div>
           )
         }
-      </div>
-    </div>
+
+           {/* Dosya indirme sayfası */}
+           {showDownloadDiv && (
+          <div className="download-div">
+            <img src="./download-background.jpg" alt="Download Background" />
+            <h2>Download Section</h2>
+            <p>This is the download section content.</p>
+            <div className="download-links">
+              <h3>Available Downloads:</h3>
+              <ul>
+                <li>
+                  <button onClick={handleDownloadClick}>
+                    Download File 1
+                  </button>
+                </li>
+                <li>
+                  <button onClick={handleDownloadClick}>
+                    Download File 2
+                  </button>
+                </li>
+                <li>
+                  <button onClick={handleDownloadClick}>
+                    Download File 3
+                  </button>
+                </li>
+              </ul>
+              {downloadMessage && <p>{downloadMessage}</p>}
+            </div>
+          </div>
+        )}
+        {showPopup && (
+          <div className="popup">
+            <p>İndirildi</p>
+          </div>
+        )}
+            
+          </div>
+        </div>
   );
 };
 

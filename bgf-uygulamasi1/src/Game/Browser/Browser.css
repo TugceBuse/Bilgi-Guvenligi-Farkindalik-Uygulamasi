@@ -271,3 +271,37 @@
   align-self: center;
   justify-self: flex-end;
 }
+
+/* Dosya indirme sayfası için: */
+.download-div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  height: 100%;
+  width: 100%;
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+}
+.download-div h1{
+  font-size: 4rem;
+  margin-bottom: 20px;
+  margin-top: 10%;
+}
+.download-div img{
+  width:50%;
+  height: 300px;
+  padding-bottom:5%;
+}
+.popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
