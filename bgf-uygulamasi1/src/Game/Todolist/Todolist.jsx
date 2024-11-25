@@ -21,7 +21,7 @@ export const useTodoList = () => {
 
     
 
-const Todolist = ({closeTodoList, todos, setTodos}) => {
+const Todolist = ({closeTodoList, todos, setTodos, style}) => {
 
   const todolistRef = useRef(null);
 
@@ -35,7 +35,7 @@ const Todolist = ({closeTodoList, todos, setTodos}) => {
     };
 
   return (
-    <div className="todolist-window" ref={todolistRef}>
+    <div className="todolist-window" /*style={style}*/ ref={todolistRef}>
         
         <div className="todolist-header">
             <h2>To-Do List</h2>

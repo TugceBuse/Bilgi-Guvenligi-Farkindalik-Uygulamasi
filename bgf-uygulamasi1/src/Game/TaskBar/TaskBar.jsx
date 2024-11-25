@@ -6,26 +6,20 @@ import React, { useState, useEffect } from 'react';
 const TaskBar = () => {
 
   const [time, setTime] = useState(new Date());
-  const {isWificonnected , setIsWificonnected } = useGameContext();
-  const {updating_antivirus} = useGameContext();
+  const {
+    isWificonnected , setIsWificonnected,
+    updating_antivirus,isantivirusuptodate,
+    openWindows, activeWindow, handleIconClick,
+    zindex, setZindex
+   } = useGameContext();
 
   const [wifiname, setwifiname] = useState('');
-
-  const [zindex, setzindex] = useState(100);
-
   const pass = "1234";
-
-  //baglanti olup olmadıgı ama bu kontrol değişkeni aynı zamanda
-  //nerede tanımlanacağı henüz net değil
-  // const [isWificonnected, setIsWificonnected] = useState(false);
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showWifiList, setShowWifiList] = useState(false);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
-
-  const { openWindows, activeWindow, handleIconClick } = useGameContext();
-  const {isantivirusuptodate} = useGameContext();//antivirus güncel mi değil mi
 
   const [showAlert, setShowAlert] = useState(false);
 
@@ -75,9 +69,11 @@ const TaskBar = () => {
     } else {
       if (element) {//zindex < 9999 aslında koşul
         if (zindex < 9999) {
+          console.log(`Opening ${windowName} with zIndex: ${zindex + 1}`);
           let newZindex = zindex + 1;
-          setzindex(newZindex);
+          setZindex(newZindex);
           element.style.visibility = 'visible';
+          console.log(`newZindex: ${newZindex}`);
           element.style.zIndex = `${newZindex}`; // Ön plana çıkarmak için z-index artırma
         }
       }
@@ -88,7 +84,7 @@ const TaskBar = () => {
   //zindex şişmemesi için bütün pencereler kapatıldığında 100 e çek
   useEffect(() => {
     if(openWindows.length === 0) {
-      setzindex(100);
+      setZindex(100);
     }
   }, [openWindows]);
 

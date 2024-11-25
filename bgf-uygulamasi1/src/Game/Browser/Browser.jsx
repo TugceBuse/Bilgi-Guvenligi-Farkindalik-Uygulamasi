@@ -18,7 +18,7 @@ export const useBrowser = () => {
 };
 
 
-const Browser = ({ closeBrowser }) => {
+const Browser = ({ closeBrowser, style }) => {
 
   const [url, setUrl] = useState('');
   const [content, setContent] = useState('main');
@@ -38,6 +38,7 @@ const Browser = ({ closeBrowser }) => {
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
+
 
   const handleGoClick = () => {
     setLoading(true);
@@ -102,7 +103,7 @@ const Browser = ({ closeBrowser }) => {
   };
 
   return (
-    <div className="browser-window" ref={browserRef}>
+    <div className="browser-window" /*style={style}*/ ref={browserRef}>
       <div className="browser-header">
         <input
           type="text"

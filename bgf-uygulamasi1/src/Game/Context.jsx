@@ -13,6 +13,7 @@ export const GameContextProvider = ({ children }) => {
   const [openWindows, setOpenWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
   const [mails, setMails] = useState(initialMails);
+  const [zindex , setZindex] = useState(100);
 
 
   useEffect(() => {
@@ -44,6 +45,10 @@ export const GameContextProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+   console.log(zindex);
+  },[zindex]);
+
   return (
     <GameContext.Provider 
     value=
@@ -54,7 +59,8 @@ export const GameContextProvider = ({ children }) => {
      openWindows, toggleWindow, 
      activeWindow, setActiveWindow,
      handleIconClick,
-     mails, setMails
+     mails, setMails,
+    zindex, setZindex
     }}>
       {children}
     </GameContext.Provider>

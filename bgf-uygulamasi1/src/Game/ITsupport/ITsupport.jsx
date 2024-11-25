@@ -20,13 +20,13 @@ export const useITsupport = () => {
     return { openITsupport, closeITsupport };
     }
 
-const ITsupport = ({ closeITsupport }) => {
+const ITsupport = ({ closeITsupport, style }) => {
 
     const ITsupportRef = useRef(null);
     MakeDraggable(ITsupportRef, '.itsupport-header');
 
     return (
-        <div className="itsupport-window" ref={ITsupportRef}>
+        <div className="itsupport-window" /*style={style}*/ ref={ITsupportRef}>
             <div className="itsupport-header">
                 <h2>IT Support</h2>
                 <button className="itsupport-close" onClick={closeITsupport}>×</button>

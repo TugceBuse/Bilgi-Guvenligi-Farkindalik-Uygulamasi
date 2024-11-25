@@ -19,9 +19,13 @@ const Desktop = () => {
   const { openBrowser, closeBrowser} = useBrowser();
   const { openTodoList, closeTodoList} = useTodoList();
   const { openITsupport, closeITsupport} = useITsupport();
-  const [zIndex, setZIndex] = useState(100);
 
-  const {openWindows, activeWindow, handleIconClick, isWificonnected} = useGameContext();
+  const {
+    openWindows, activeWindow,
+    handleIconClick, isWificonnected,
+    zindex , setZindex
+        } = useGameContext();
+
   const [showAlert, setShowAlert] = useState(false);
 
   // Masaüstü bileşeni yüklendiğinde sayfayı kaydırmayı engelle
@@ -43,7 +47,7 @@ const Desktop = () => {
 
   useEffect(() => {
     if(openWindows.length === 0){
-      setZIndex(100);
+      setZindex(100);
     }
   },[openWindows]);
 
@@ -53,16 +57,18 @@ const Desktop = () => {
       //eğer internet gerekli bileşen varsa ekle
       if (windowName === 'browser' || windowName === 'mailbox') {//browser ve mailbox için internet gerekli
         if (isWificonnected) {
-          setZIndex((prevZIndex) => prevZIndex + 1);
-          console.log(`Opening ${windowName} with zIndex: ${zIndex + 1}`);
+          let newZindex = zindex + 1;
+          setZindex(newZindex);
+          console.log(`Opening ${windowName} with zIndex: ${zindex}`);
           openComponent();
           handleIconClick(windowName);
         } else {
           setShowAlert(true);
         }
       } else {
-        setZIndex((prevZIndex) => prevZIndex + 1);
-        console.log(`Opening ${windowName} with zIndex: ${zIndex + 1}`);
+        let newZindex = zindex + 1;
+        setZindex(newZindex);
+        console.log(`Opening ${windowName} with zIndex: ${zindex}`);
         openComponent();
         handleIconClick(windowName);
       }
@@ -94,15 +100,13 @@ const Desktop = () => {
 
 
       {/* Bileşenler */}
-      {openWindows.includes('browser') && <Browser closeBrowser={closeBrowser} style={{ zIndex: zIndex }} />}
-      {openWindows.includes('mailbox') && <Mailbox closeMailbox={closeMailbox} style={{ zIndex: zIndex }} />}
-      {openWindows.includes('itsupport') && <ITsupport closeITsupport={closeITsupport} style={{ zIndex: zIndex }} />}
-      {openWindows.includes('todolist') && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList} style={{ zIndex: zIndex }}/>}
+      {openWindows.includes('browser') && <Browser closeBrowser={closeBrowser} /*style={{zIndex: zindex}}*//>} 
+      {openWindows.includes('mailbox') && <Mailbox closeMailbox={closeMailbox} /*style={{zIndex: zindex}}*/ />} 
+      {openWindows.includes('itsupport') && <ITsupport closeITsupport={closeITsupport} /*style={{zIndex: zindex}}*/ />} 
+      {openWindows.includes('todolist') && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList} /*style={{zIndex: zindex}}*/ />}
       
       <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Internete bağlantısı bulunamadı'} />
-  
       
-
     </div>);
 };
 
