@@ -5,25 +5,16 @@ import { useState, useEffect } from 'react';
 import { GameContextProvider } from './Context';
 
 const Game = () => {
-
-  //Belirli işlem kontrolleri için süre sayımı
-  // const [seconds, setSeconds] = useState(0);
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setSeconds(prevSeconds => prevSeconds + 1);
-      
-  //   }, 1000);
-  //   // Cleanup interval on component unmount
-  //   return () => clearInterval(interval);
-   
-  // }, []);
-  ////////////////////////////////////
-
-  // useEffect(() => {
-  //   if (seconds === 10) {
-  //     setShowNotification(true);
-  //   }
-  // }, [seconds]);
+   // Sağ tıklamayı engellemek ve sol click tetikleme
+   useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
 
   return (
     <GameContextProvider>

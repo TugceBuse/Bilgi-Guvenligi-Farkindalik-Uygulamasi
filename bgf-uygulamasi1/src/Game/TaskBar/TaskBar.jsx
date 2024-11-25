@@ -24,7 +24,7 @@ const TaskBar = () => {
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
 
-  const { openWindows, toggleWindow, activeWindow, handleIconClick } = useGameContext();
+  const { openWindows, activeWindow, handleIconClick } = useGameContext();
   const {isantivirusuptodate} = useGameContext();//antivirus güncel mi değil mi
 
   const [showAlert, setShowAlert] = useState(false);
@@ -65,18 +65,11 @@ const TaskBar = () => {
     // WiFi bağlantı işlemleri olabilir
   };
 
-  useEffect(() => {
-    console.log('Z-index değişti:', zindex);
-  }, [zindex]);
-
   const handleIconClickWithVisibility = (windowName) => {
     const element = document.querySelector(`.${windowName}-window`);
     if (activeWindow === windowName) {
       if (element) {
-        let newZindex = zindex - 1;
-        setzindex(newZindex); // zindex şişip hata çıkarmasın diye
         element.style.visibility = 'hidden';
-        element.style.zIndex = `${zindex}`; // Arka plana almak için z-index azaltma
       }
       handleIconClick(windowName);
     } else {
@@ -86,7 +79,6 @@ const TaskBar = () => {
           setzindex(newZindex);
           element.style.visibility = 'visible';
           element.style.zIndex = `${newZindex}`; // Ön plana çıkarmak için z-index artırma
-          console.log(newZindex);
         }
       }
       handleIconClick(windowName);
@@ -95,7 +87,6 @@ const TaskBar = () => {
 
   //zindex şişmemesi için bütün pencereler kapatıldığında 100 e çek
   useEffect(() => {
-    console.log('Active window değişti:', openWindows);
     if(openWindows.length === 0) {
       setzindex(100);
     }

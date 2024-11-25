@@ -19,9 +19,9 @@ const Desktop = () => {
   const { openBrowser, closeBrowser} = useBrowser();
   const { openTodoList, closeTodoList} = useTodoList();
   const { openITsupport, closeITsupport} = useITsupport();
+  const [zIndex, setZIndex] = useState(100);
 
-
-  const {openWindows, activeWindow, isWificonnected} = useGameContext();
+  const {openWindows, activeWindow, handleIconClick, isWificonnected} = useGameContext();
   const [showAlert, setShowAlert] = useState(false);
 
   // Masaüstü bileşeni yüklendiğinde sayfayı kaydırmayı engelle
@@ -41,65 +41,51 @@ const Desktop = () => {
     { text: 'Yapılacak 3', completed: false },
 ]);
 
-  // Mailbox penceresi açıldığında internet bağlantısı kontrolü
-  // Eğer internet bağlantısı yoksa kullanıcıya alert gösterir
-  // useEffect(() => {
-  //   if ((isMailboxOpen||isBrowserOpen) && !isWificonnected) {
-  //     setShowAlert(true);
-  //     closeMailbox();
-  //     closeBrowser();
-  //   }
-  // }, [isMailboxOpen,isBrowserOpen, isWificonnected]);
-
-  // Sağ tıklamayı engellemek ve sol click tetikleme
   useEffect(() => {
-    const handleContextMenu = (event) => {
-      event.preventDefault();
-      // Sağ tıklama yapıldığında sol tıklama olayını tetikleyin
-      // event.target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-    };
-
-    document.addEventListener('contextmenu', handleContextMenu);
-
-    // Cleanup event listener on component unmount
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
-  }, []);
+    if(openWindows.length === 0){
+      setZIndex(100);
+    }
+  },[openWindows]);
 
   // masaüstü uygulamalarına  tıklandığında açar
-  const handleIconClick = (windowName, openFunction) => {
-    if (!openWindows.includes(windowName)) {
+  const handleDesktopClick = (windowName, openComponent) => {
+    if (!openWindows.includes(windowName)) {//eğer bileşen açık değilse aç
       //eğer internet gerekli bileşen varsa ekle
-      if (windowName === 'browser' || windowName === 'mailbox') {
+      if (windowName === 'browser' || windowName === 'mailbox') {//browser ve mailbox için internet gerekli
         if (isWificonnected) {
-          openFunction();
+          setZIndex((prevZIndex) => prevZIndex + 1);
+          console.log(`Opening ${windowName} with zIndex: ${zIndex + 1}`);
+          openComponent();
+          handleIconClick(windowName);
         } else {
           setShowAlert(true);
         }
       } else {
-        openFunction();
+        setZIndex((prevZIndex) => prevZIndex + 1);
+        console.log(`Opening ${windowName} with zIndex: ${zIndex + 1}`);
+        openComponent();
+        handleIconClick(windowName);
       }
     }
   };
-
+  
   return (
     //masaüstü içeriği
     <div className="desktop">
       <div className="desktop-icons">
-        <div className="icon" onClick={() => handleIconClick('todolist', openTodoList)}>
+        <div className="icon" onClick={() => handleDesktopClick('todolist', openTodoList)}>
           <img src="/icons/to-do-list.png" alt="Todolist Icon" />
           <span>To Do List</span>
         </div>
-        <div className="icon" onClick={() => handleIconClick('mailbox', openMailbox)}>
+        <div className="icon" onClick={() => handleDesktopClick('mailbox', openMailbox)}>
           <img src="/icons/mail.png" alt="Mail Icon" />
           <span>Mail</span>
         </div>
-        <div className="icon" onClick={() => handleIconClick('browser', openBrowser)}>
+        <div className="icon" onClick={() => handleDesktopClick('browser', openBrowser)}>
           <img src="/icons/internet.png" alt="Internet Icon" />
           <span>Browser</span>
         </div>
-        <div className="icon" onClick={() => handleIconClick('itsupport', openITsupport)}>
+        <div className="icon" onClick={() => handleDesktopClick('itsupport', openITsupport)}>
           <img src="/icons/helpdesk.png" alt="IT Support Icon" />
           <span>IT Support</span>
         </div>
@@ -108,11 +94,12 @@ const Desktop = () => {
 
 
       {/* Bileşenler */}
-      {openWindows.includes('browser') && <Browser closeBrowser={closeBrowser} />}
-      {openWindows.includes('mailbox') && <Mailbox closeMailbox={closeMailbox} />}
-      {openWindows.includes('itsupport') && <ITsupport closeITsupport={closeITsupport} />}
-      {openWindows.includes('todolist') && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList}/>}
-      <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Internete bağlantısı bulunamadı'}></Alert>
+      {openWindows.includes('browser') && <Browser closeBrowser={closeBrowser} style={{ zIndex: zIndex }} />}
+      {openWindows.includes('mailbox') && <Mailbox closeMailbox={closeMailbox} style={{ zIndex: zIndex }} />}
+      {openWindows.includes('itsupport') && <ITsupport closeITsupport={closeITsupport} style={{ zIndex: zIndex }} />}
+      {openWindows.includes('todolist') && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList} style={{ zIndex: zIndex }}/>}
+      
+      <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Internete bağlantısı bulunamadı'} />
   
       
 

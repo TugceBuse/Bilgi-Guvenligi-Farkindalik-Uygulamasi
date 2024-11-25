@@ -49,7 +49,9 @@ export const GameContextProvider = ({ children }) => {
      isWificonnected, setIsWificonnected,
      isantivirusuptodate, setAntivirusisuptodate,
      updating_antivirus, setUpdating_antivirus,
-     openWindows, toggleWindow, activeWindow, handleIconClick
+     openWindows, toggleWindow, 
+     activeWindow, setActiveWindow,
+     handleIconClick
     }}>
       {children}
     </GameContext.Provider>
