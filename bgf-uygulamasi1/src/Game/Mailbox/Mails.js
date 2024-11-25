@@ -1,6 +1,7 @@
 export const mails = [
     /* 1.Mail Content*/
-  {Name:'IT Departmanı', from:'IT.Destek@globalbank-support.com', title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, 
+  {Name:'IT Departmanı', from:'IT.Destek@globalbank-support.com',
+  title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, read: false,
     content: 
     (
       <div className="mail-content">
@@ -25,7 +26,8 @@ export const mails = [
    },
 
    /* 2.Mail Content*/
-   {Name:'UPS Kargo Şirketi', from:'info@shipmenttracker.com', title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, 
+   {Name:'UPS Kargo Şirketi', from:'info@shipmenttracker.com',
+   title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, read: false,
     content: 
     (
       <div className="mail-content">
@@ -56,7 +58,8 @@ export const mails = [
     )
    },
         /* 3.Mail Content*/
-   {Name:'Global Jobs', from:'hr@global-jobs.com', title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, 
+   {Name:'Global Jobs', from:'hr@global-jobs.com',
+   title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, read: false, 
     content: 
     (
       <div className="mail-content">
@@ -94,7 +97,8 @@ export const mails = [
    },
 
    /* 4.Mail Content*/
-  //  {Name:'UPS Kargo Şirketi', from:'info@shipmenttracker.com', title: 'UPS Kargo Şirketi', precontent: `Paketiniz Teslim Edilemedi!`, 
+  //  {Name:'UPS Kargo Şirketi', from:'info@shipmenttracker.com',
+  //  title: 'UPS Kargo Şirketi', precontent: `Paketiniz Teslim Edilemedi!`, read: false
   //   content: 
   //   (
   //     <div className="mail-content">

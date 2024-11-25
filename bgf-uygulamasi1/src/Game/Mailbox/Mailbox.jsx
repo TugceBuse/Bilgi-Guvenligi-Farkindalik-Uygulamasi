@@ -2,7 +2,7 @@ import './Mailbox.css';
 import React, { useRef, useEffect, useState } from 'react';
 import { MakeDraggable } from '../Draggable';
 import { useGameContext } from '../Context';
-import { mails } from './Mails';
+import { mails as initialMails } from './Mails';
 
 export const useMailbox = () => {
   const { toggleWindow, setActiveWindow } = useGameContext();
@@ -23,13 +23,7 @@ const Mailbox = ({ closeMailbox }) => {
 //seçilen maili ve indexi tutacak state'ler
 const [selectedMail, setSelectedMail] = useState(null);
 const [activeIndex, setActiveIndex] = useState(null);
-const [readMails, setReadMails] = useState(() => {
-  // Bileşen yüklendiğinde localStorage'dan okunan mailleri al
-  const savedReadMails = localStorage.getItem("readMails");
-  return savedReadMails ? new Set(JSON.parse(savedReadMails)) : new Set();
-});
-
-
+const {mails, setMails } = useGameContext();
 
 
 const mailboxRef = useRef(null);//mailbox referansı
@@ -38,27 +32,22 @@ MakeDraggable(mailboxRef, '.mailbox-header');//mailboxi sürüklemek için kulla
 const handleMailClick = (mail,index) => {
   setSelectedMail(mail);
   setActiveIndex(index);
-  setReadMails((prevReadMails) => {
-    const newReadMails = new Set(prevReadMails).add(index);
-    localStorage.setItem("readMails", JSON.stringify(Array.from(newReadMails)));
-    return newReadMails;
-  });
-};
-const resetReadMails = () => {
-  setReadMails(new Set());
-  localStorage.removeItem("readMails");
+  // Maili okundu olarak işaretle
+  setMails((prevMails) =>
+    prevMails.map((m, i) =>
+      i === index ? { ...m, read: true } : m
+    )
+  );
 };
 
-// const { seconds } = useGameContext();
-// const [remindTime, setRemindTime] = useState(-1);
-// const [showMailNotification, setShowMailNotification] = useState(false);
-// useEffect(() => {
-//   console.log('Seconds:', seconds);
-//   // ilk bildirim gösterileceği süre ve daha sonra hatırlat durumunda süre
-//   if ( (seconds === 3 || seconds===remindTime)) {
-//     setShowMailNotification(true);
-//   }
-// }, [seconds]);
+
+
+
+const resetReadMails = () => {
+  setMails((prevMails) =>
+    prevMails.map((m) => ({ ...m, read: false }))
+  );
+};
 
   return (
     <div className="mailbox-window" ref={mailboxRef}>
@@ -106,7 +95,7 @@ const resetReadMails = () => {
                 <div style={{display:"flex", flexDirection:"row"}}>
 
                   
-                {!readMails.has(index) && <div className="dot"></div>}
+                {!mail.read && <div className="dot"></div>}
                   
                   
                   <h3>{mail.title}</h3>

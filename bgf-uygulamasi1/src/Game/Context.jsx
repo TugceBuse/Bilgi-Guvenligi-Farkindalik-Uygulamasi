@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
+import {mails as initialMails } from './Mailbox/Mails'
 // Context oluşturma
 const GameContext = createContext();
 
@@ -12,6 +12,8 @@ export const GameContextProvider = ({ children }) => {
 
   const [openWindows, setOpenWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
+  const [mails, setMails] = useState(initialMails);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,7 +53,8 @@ export const GameContextProvider = ({ children }) => {
      updating_antivirus, setUpdating_antivirus,
      openWindows, toggleWindow, 
      activeWindow, setActiveWindow,
-     handleIconClick
+     handleIconClick,
+     mails, setMails
     }}>
       {children}
     </GameContext.Provider>
