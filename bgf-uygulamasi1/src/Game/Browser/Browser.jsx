@@ -27,6 +27,7 @@ const Browser = ({ closeBrowser, style }) => {
   const [showDownloadDiv, setShowDownloadDiv] = useState(false);
   const [downloadMessage, setDownloadMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [showDownloadDivInside, setShowDownloadDivInside] = useState(false);
 
   //192.168.1.1 sayfasi login
   const [loginusername, setLoginusername] = useState('');
@@ -71,11 +72,11 @@ const Browser = ({ closeBrowser, style }) => {
       if (!url.trim()) {
         setContent("");
         setUrl("");
-      } else if (url.trim().toLowerCase() === "indir") {
+      } else if (url.trim().toLowerCase() === "dosya indir") {
         // URL "indir" ise başka bir div göster ve URL inputunu değiştir
         setShowDownloadDiv(true);
         setContent("");
-        setUrl("https://download.example.com");
+        setUrl("https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu");
       } else {
         // URL doluysa girilen URL'ye yönlendir
         setLoading(true);
@@ -101,6 +102,13 @@ const Browser = ({ closeBrowser, style }) => {
     setLoginpassword(password);
     console.log(`Username: ${username}, Password: ${password}`);
   };
+
+  const handleDownloadClickInside = () => {
+    setShowDownloadDiv(false);
+    setShowDownloadDivInside(true);
+    setContent("");
+    setUrl("https://www.download-example.com");
+  }
 
   return (
     <div className="browser-window" /*style={style}*/ ref={browserRef}>
@@ -153,7 +161,7 @@ const Browser = ({ closeBrowser, style }) => {
              <h1>Google</h1>
              <div className='searchPart'>
                <img src="./icons/search.png" alt="Search Logo"/>
-              <input type="text" placeholder="Google'da Ara" />
+              <input onChange={handleUrlChange} onKeyDown={handleKeyDown} type="text" placeholder="Google'da Ara" />
                
                       <div className='searchPart_right'>
                         <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
@@ -168,7 +176,53 @@ const Browser = ({ closeBrowser, style }) => {
 
            {/* Dosya indirme sayfası */}
            {showDownloadDiv && (
-          <div className="download-div">
+          <div className='download-pages'>
+           <h2 onClick={handleDownloadClickInside} style={{cursor:"pointer"}}>Dosya İndir 1 ....</h2>
+           <h2>Dosya İndir 2 ....</h2>
+           <h2>Dosya İndir 3 ....</h2>
+            </div>
+          
+        )}
+
+        {showDownloadDivInside && (
+          <div className="download-div-inside">
+          <img src="./download-background.jpg" alt="Download Background" />
+          <h2>Download Section</h2>
+          <p>This is the download section content.</p>
+          <div className="download-links">
+            <h3>Available Downloads:</h3>
+            <ul>
+              <li>
+                <button onClick={handleDownloadClick}>
+                  Download File 1
+                </button>
+              </li>
+              <li>
+                <button onClick={handleDownloadClick}>
+                  Download File 2
+                </button>
+              </li>
+              <li>
+                <button onClick={handleDownloadClick}>
+                  Download File 3
+                </button>
+              </li>
+            </ul>
+            {downloadMessage && <p style={{justifySelf:"center"}}>{downloadMessage}</p>}
+          </div>
+        </div>
+        )}
+        {showPopup && (
+          <div className="popup">
+            <p>İndirildi</p>
+          </div>
+        )}
+            
+
+
+
+
+            {/* <div className="download-div">
             <img src="./download-background.jpg" alt="Download Background" />
             <h2>Download Section</h2>
             <p>This is the download section content.</p>
@@ -193,14 +247,7 @@ const Browser = ({ closeBrowser, style }) => {
               </ul>
               {downloadMessage && <p>{downloadMessage}</p>}
             </div>
-          </div>
-        )}
-        {showPopup && (
-          <div className="popup">
-            <p>İndirildi</p>
-          </div>
-        )}
-            
+          </div> */}
           </div>
         </div>
   );
