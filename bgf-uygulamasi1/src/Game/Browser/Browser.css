@@ -273,27 +273,7 @@
 }
 
 /* Dosya indirme sayfası için: */
-.download-div{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  justify-self: center;
-  height: 100%;
-  width: 100%;
-  background-color: #1e1e1e;
-  color: #f1f1f1;
-}
-.download-div h1{
-  font-size: 4rem;
-  margin-bottom: 20px;
-  margin-top: 10%;
-}
-.download-div img{
-  width:50%;
-  height: 300px;
-  padding-bottom:5%;
-}
+
 .popup {
   position: fixed;
   top: 20px;
@@ -305,33 +285,34 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
-.download-pages{
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+
+
+/* İndirme Seçenekleri Kısmı */
+.download-pages {
   width: 100%;
-  background-color: #1e1e1e;
-  color: #f1f1f1;
-  align-items: center;
-  justify-content: center;
-}
-.download-pages h2{
-  display: flex;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  margin-top: 2%;
-  padding: 30px;
-  width: 15%;
-  height: 2% ;
-  background-color: #333;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  height: 100%;
+  padding: 20px;
+  background-color: #c4c4c4;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 }
 
+.download-pages h2 {
+  font-size: 25px;
+  margin-bottom: 50px;
+  margin-left: 10px;
+  cursor: pointer;
+  color: #007bff;
+  background-color: #d8d9e2;
+  border-radius: 5px;
+  padding-left: 20px;
+}
 
-
-
+.download-pages h2:hover {
+  text-decoration: underline;
+}
 
 .download-div-inside {
   display: flex;
@@ -394,4 +375,21 @@
   cursor: pointer;
   align-self: center;
   justify-self: center;
+}
+
+/* Arama alt kısım */
+.searchPart_bottom {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 3px solid #444;
+  margin-bottom: 60px;
+}
+
+.searchPart_bottom h3 {
+  padding-right: 40px;
+  color: #000000;
+  margin-bottom: 2px;
+}
+.tümü{
+  text-decoration: 2px underline #ffffff solid;
 }

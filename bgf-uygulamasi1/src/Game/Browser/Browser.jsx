@@ -177,6 +177,23 @@ const Browser = ({ closeBrowser, style }) => {
            {/* Dosya indirme sayfası */}
            {showDownloadDiv && (
           <div className='download-pages'>
+            <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
+               <img src="./icons/search.png" alt="Search Logo"/>
+              <input onChange={handleUrlChange} onKeyDown={handleKeyDown} type="text" placeholder="Google'da Ara" />
+               
+                      <div className='searchPart_right'>
+                        <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
+                        <img src="./icons/google-voice.png" alt="Voice Logo"/>
+                      </div>
+             </div>
+             <div className= 'searchPart_bottom'>
+                        <h3 className='tümü'>Tümü</h3>
+                        <h3>Görseller</h3>
+                        <h3>Videolar</h3>
+                        <h3>Yer siteleri</h3>
+                        <h3>Haberler</h3>
+                        <h3>Web</h3>
+            </div>
            <h2 onClick={handleDownloadClickInside} style={{cursor:"pointer"}}>Dosya İndir 1 ....</h2>
            <h2>Dosya İndir 2 ....</h2>
            <h2>Dosya İndir 3 ....</h2>
@@ -218,36 +235,6 @@ const Browser = ({ closeBrowser, style }) => {
           </div>
         )}
             
-
-
-
-
-            {/* <div className="download-div">
-            <img src="./download-background.jpg" alt="Download Background" />
-            <h2>Download Section</h2>
-            <p>This is the download section content.</p>
-            <div className="download-links">
-              <h3>Available Downloads:</h3>
-              <ul>
-                <li>
-                  <button onClick={handleDownloadClick}>
-                    Download File 1
-                  </button>
-                </li>
-                <li>
-                  <button onClick={handleDownloadClick}>
-                    Download File 2
-                  </button>
-                </li>
-                <li>
-                  <button onClick={handleDownloadClick}>
-                    Download File 3
-                  </button>
-                </li>
-              </ul>
-              {downloadMessage && <p>{downloadMessage}</p>}
-            </div>
-          </div> */}
           </div>
         </div>
   );
