@@ -13,8 +13,19 @@
     display: flex;
     flex-direction: column;
   }
-  
+
   .browser-header {
+    background-color: #494949;
+    padding: 10px;
+    border-bottom: 1px solid #1a1919;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 6%;
+  }
+  
+  .browser-search {
     display: flex;
     align-items: center;
     padding: 10px;
