@@ -105,20 +105,26 @@
   }
   
   .mailbox-close {
-    width:  3.5%;
+    width: 30px;
     height: 100%;
     background-color: transparent;
     border: none;
     color: #e4e4e4;
-    font-size: 150%;
+    font-size: 1.5em;
     cursor: pointer;
+    border-radius: 3px;
     padding: 0;
     margin: 0;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out;
   }
   
   .mailbox-close:hover {
     background-color: #ff1c1c;
+    transform: scale(1.1);
   }
 
   .mailbox-maillist {

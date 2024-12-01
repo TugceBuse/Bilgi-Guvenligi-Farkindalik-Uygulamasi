@@ -11,6 +11,7 @@ export const GameContextProvider = ({ children }) => {
   const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
 
   const [openWindows, setOpenWindows] = useState([]);
+  const [visibleWindows, setVisibleWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
   const [mails, setMails] = useState(initialMails);
   const [zindex , setZindex] = useState(100);
@@ -30,17 +31,24 @@ export const GameContextProvider = ({ children }) => {
         ? prevOpenWindows.filter((name) => name !== windowName)
         : [...prevOpenWindows, windowName]
     );
+    setVisibleWindows((prevVisibleWindows) =>
+      prevVisibleWindows.includes(windowName)
+        ? prevVisibleWindows.filter((name) => name !== windowName)
+        : [...prevVisibleWindows, windowName]
+    );
     handleIconClick(windowName);
   };
 
   useEffect(() => {
-    console.log(openWindows, activeWindow);
-  }, [openWindows,activeWindow]);
+    console.log(`openWindows: ${openWindows} AKTIF:${activeWindow}`);
+    console.log(`visibleWindows: ${visibleWindows}`);
+  }, [openWindows,activeWindow,visibleWindows]);
 
   const handleIconClick = (windowName) => {
     if (activeWindow === windowName) {
-      setActiveWindow(null);
-    } else {
+     setActiveWindow(null);
+    }
+    else {
       setActiveWindow(windowName);
     }
   };
@@ -56,8 +64,10 @@ export const GameContextProvider = ({ children }) => {
      isWificonnected, setIsWificonnected,
      isantivirusuptodate, setAntivirusisuptodate,
      updating_antivirus, setUpdating_antivirus,
-     openWindows, toggleWindow, 
+     openWindows, setOpenWindows,
+     toggleWindow, 
      activeWindow, setActiveWindow,
+     visibleWindows, setVisibleWindows,
      handleIconClick,
      mails, setMails,
     zindex, setZindex

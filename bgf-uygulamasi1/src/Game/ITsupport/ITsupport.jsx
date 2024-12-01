@@ -26,7 +26,7 @@ const ITsupport = ({ closeITsupport, style }) => {
     MakeDraggable(ITsupportRef, '.itsupport-header');
 
     return (
-        <div className="itsupport-window" /*style={style}*/ ref={ITsupportRef}>
+        <div className="itsupport-window" style={style} ref={ITsupportRef}>
             <div className="itsupport-header">
                 <h2>IT Support</h2>
                 <button className="itsupport-close" onClick={closeITsupport}>×</button>

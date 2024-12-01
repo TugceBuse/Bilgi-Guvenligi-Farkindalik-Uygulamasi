@@ -9,7 +9,10 @@ const TaskBar = () => {
   const {
     isWificonnected , setIsWificonnected,
     updating_antivirus,isantivirusuptodate,
-    openWindows, activeWindow, handleIconClick,
+    openWindows,setOpenWindows,
+    activeWindow, setActiveWindow,
+    visibleWindows, setVisibleWindows,
+    handleIconClick,
     zindex, setZindex
    } = useGameContext();
 
@@ -64,17 +67,24 @@ const TaskBar = () => {
     if (activeWindow === windowName) {
       if (element) {
         element.style.visibility = 'hidden';
+        setVisibleWindows((prevVisibleWindows) => {
+          const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
+          return [...filteredWindows];
+        });
       }
-      handleIconClick(windowName);
+      handleIconClick(windowName); // aktif ise pasif, pasifse aktif yapar
     } else {
-      if (element) {//zindex < 9999 aslında koşul
+      if (element) {
         if (zindex < 9999) {
-          console.log(`Opening ${windowName} with zIndex: ${zindex + 1}`);
           let newZindex = zindex + 1;
           setZindex(newZindex);
           element.style.visibility = 'visible';
-          console.log(`newZindex: ${newZindex}`);
           element.style.zIndex = `${newZindex}`; // Ön plana çıkarmak için z-index artırma
+          // visibleWindows dizisini güncelle
+          setVisibleWindows((prevVisibleWindows) => {
+            const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
+            return [...filteredWindows, windowName];
+          });
         }
       }
       handleIconClick(windowName);
@@ -87,6 +97,10 @@ const TaskBar = () => {
       setZindex(100);
     }
   }, [openWindows]);
+
+  useEffect(() => {
+    setActiveWindow(visibleWindows[visibleWindows.length - 1]);
+  }, [activeWindow]);
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -88,12 +88,8 @@ const Browser = ({ closeBrowser, style }) => {
     console.log(`Username: ${username}, Password: ${password}`);
   };
 
-  const handleDownloadClickInside = () => {
-    
-  }
-
   return (
-    <div className="browser-window" /*style={style}*/ ref={browserRef}>
+    <div className="browser-window" style={style} ref={browserRef}>
         <div className="browser-header">
           <h2>Browser</h2>
           <button className="browser-close" onClick={closeBrowser}>×</button> 

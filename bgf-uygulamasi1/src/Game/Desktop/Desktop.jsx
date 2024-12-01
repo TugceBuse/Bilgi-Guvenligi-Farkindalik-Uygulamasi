@@ -35,6 +35,19 @@ const Desktop = () => {
       document.body.classList.remove('no-scroll');
     };
   }, []);
+
+  const calculateWindowPosition = (index) => {
+    const offset = 30;
+    const initialLeft = window.innerWidth / 10;
+    const initialTop = window.innerHeight / 10;
+    let zindex = 100 + index;
+    return {
+      left: `${initialLeft + index * offset}px`,
+      top: `${initialTop + index * offset}px`,
+      zIndex: zindex
+    };
+
+    }
   
   
 
@@ -59,7 +72,6 @@ const Desktop = () => {
         if (isWificonnected) {
           let newZindex = zindex + 1;
           setZindex(newZindex);
-          console.log(`Opening ${windowName} with zIndex: ${zindex}`);
           openComponent();
           handleIconClick(windowName);
         } else {
@@ -68,7 +80,6 @@ const Desktop = () => {
       } else {
         let newZindex = zindex + 1;
         setZindex(newZindex);
-        console.log(`Opening ${windowName} with zIndex: ${zindex}`);
         openComponent();
         handleIconClick(windowName);
       }
@@ -100,14 +111,45 @@ const Desktop = () => {
 
 
       {/* Bileşenler */}
-      {openWindows.includes('browser') && <Browser closeBrowser={closeBrowser} /*style={{zIndex: zindex}}*//>} 
-      {openWindows.includes('mailbox') && <Mailbox closeMailbox={closeMailbox} /*style={{zIndex: zindex}}*/ />} 
-      {openWindows.includes('itsupport') && <ITsupport closeITsupport={closeITsupport} /*style={{zIndex: zindex}}*/ />} 
-      {openWindows.includes('todolist') && <Todolist todos={todos} setTodos={setTodos} closeTodoList={closeTodoList} /*style={{zIndex: zindex}}*/ />}
+      {openWindows.includes('browser') &&
+       <Browser
+          closeBrowser={closeBrowser}
+          style={{
+            ...calculateWindowPosition(openWindows.indexOf('browser'))
+          }}
+        />} 
+      {openWindows.includes('mailbox') &&
+       <Mailbox
+          closeMailbox={closeMailbox}
+          style={{
+            ...calculateWindowPosition(openWindows.indexOf('mailbox'))
+          }} 
+        />} 
+      {openWindows.includes('itsupport') &&
+       <ITsupport
+          closeITsupport={closeITsupport}
+          style={{
+            ...calculateWindowPosition(openWindows.indexOf('itsupport'))
+          }} 
+        />} 
+      {openWindows.includes('todolist') &&
+       <Todolist
+          todos={todos}
+          setTodos={setTodos}
+          closeTodoList={closeTodoList}
+          style={{
+            ...calculateWindowPosition(openWindows.indexOf('todolist'))
+          }} 
+        />}
       
-      <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Internete bağlantısı bulunamadı'} />
+      <Alert
+       show={showAlert}
+       handleClose={() => setShowAlert(false)}
+       message={'Internete bağlantısı bulunamadı'} 
+       />
       
-    </div>);
+    </div>
+  );
 };
 
 export default Desktop;

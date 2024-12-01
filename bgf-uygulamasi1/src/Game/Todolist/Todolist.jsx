@@ -35,7 +35,7 @@ const Todolist = ({closeTodoList, todos, setTodos, style}) => {
     };
 
   return (
-    <div className="todolist-window" /*style={style}*/ ref={todolistRef}>
+    <div className="todolist-window" style={style} ref={todolistRef}>
         
         <div className="todolist-header">
             <h2>To-Do List</h2>

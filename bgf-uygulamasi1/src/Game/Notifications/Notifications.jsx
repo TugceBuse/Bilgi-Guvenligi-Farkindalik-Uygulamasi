@@ -33,7 +33,6 @@ const Notification = () => {
   };
 
   useEffect(() => {
-    console.log('Seconds:', seconds);
     // ilk bildirim gösterileceği süre ve daha sonra hatırlat durumunda süre
     if ( (seconds === 3 || seconds===remindTime) && !isantivirusuptodate) {
       setShowNotification(true);
