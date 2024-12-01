@@ -9,7 +9,6 @@ const Notification = () => {
   const {isantivirusuptodate, setAntivirusisuptodate} = useGameContext();
   const [remindTime, setRemindTime] = useState(-1);
 
-  //Güncelleme efekti eklenecek yükleme işlemi taklit edilecek...
   const handleUpdateNow = () => {
     console.log('Şimdi Güncelle butonuna tıklandı');
     setUpdating_antivirus(true); // Yükleme işlemi başlatıldı

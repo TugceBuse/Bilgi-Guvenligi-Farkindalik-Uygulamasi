@@ -5,16 +5,28 @@ const GameContext = createContext();
 
 // Context sağlayıcı (provider) bileşeni
 export const GameContextProvider = ({ children }) => {
-  const [seconds, setSeconds] = useState(0);
+
+  const [seconds, setSeconds] = useState(0);//oyun süresi
+
+  //Ağ bağlantısı ve antivirüs güncellemesi için state'ler
   const [isWificonnected, setIsWificonnected] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
 
+  //virusler
+  const [isransomware, setIsransomware] = useState(false);
+
+  //Pencere yönetimi için state'ler
   const [openWindows, setOpenWindows] = useState([]);
   const [visibleWindows, setVisibleWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
-  const [mails, setMails] = useState(initialMails);
   const [zindex , setZindex] = useState(100);
+
+  //mail.js den import edilen mail state'i
+  const [mails, setMails] = useState(initialMails);
+
+  
+  
 
 
   useEffect(() => {
@@ -60,17 +72,18 @@ export const GameContextProvider = ({ children }) => {
   return (
     <GameContext.Provider 
     value=
-    {{ seconds,
-     isWificonnected, setIsWificonnected,
-     isantivirusuptodate, setAntivirusisuptodate,
-     updating_antivirus, setUpdating_antivirus,
-     openWindows, setOpenWindows,
-     toggleWindow, 
-     activeWindow, setActiveWindow,
-     visibleWindows, setVisibleWindows,
-     handleIconClick,
-     mails, setMails,
-    zindex, setZindex
+    {{  seconds,
+        isWificonnected, setIsWificonnected,
+        isantivirusuptodate, setAntivirusisuptodate,
+        updating_antivirus, setUpdating_antivirus,
+        openWindows, setOpenWindows,
+        toggleWindow, 
+        activeWindow, setActiveWindow,
+        visibleWindows, setVisibleWindows,
+        handleIconClick,
+        mails, setMails,
+        zindex, setZindex,
+        isransomware, setIsransomware
     }}>
       {children}
     </GameContext.Provider>
