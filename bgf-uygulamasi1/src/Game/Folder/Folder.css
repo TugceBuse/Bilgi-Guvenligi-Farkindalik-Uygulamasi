@@ -132,4 +132,28 @@
     margin-bottom: 15%;
     margin-top: 15%;
   }
-  
+
+  .folder-content-right{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .folder-content-right-inside{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 55px;
+    margin-bottom: 8px;
+    gap: 130px;
+    justify-content: center;
+    text-align: left;
+    font-size: 15px;
+    color: rgb(255, 255, 255);
+  }
+  .Icons{
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+  }
