@@ -21,7 +21,7 @@ const Game = () => {
       <div className="game">
         <TaskBar/>
         <Desktop/>
-        <Notification />
+        <Notification/>
       </div>
     </GameContextProvider>
   );
