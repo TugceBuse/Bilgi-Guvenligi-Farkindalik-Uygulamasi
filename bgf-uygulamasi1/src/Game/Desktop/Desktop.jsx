@@ -10,6 +10,8 @@ import Folder, { useFolder } from '../Folder/Folder';
 
 import Alert from '../Notifications/Alert';
 import { useGameContext } from '../Context';
+import RansomScreen from '../Notifications/Ransom';
+
 
 
 // Masaüstü bileşeni
@@ -22,10 +24,12 @@ const Desktop = () => {
   const { openITsupport, closeITsupport} = useITsupport();
   const { openFolder, closeFolder} = useFolder();
 
+
   const {
     openWindows, activeWindow,
     handleIconClick, isWificonnected,
-    zindex , setZindex
+    zindex , setZindex,
+    isransomware, setIsransomware
         } = useGameContext();
 
   const [showAlert, setShowAlert] = useState(false);
@@ -160,6 +164,9 @@ const Desktop = () => {
        handleClose={() => setShowAlert(false)}
        message={'Internete bağlantısı bulunamadı'} 
        />
+
+
+      { isransomware && <RansomScreen/> }
       
     </div>
   );
