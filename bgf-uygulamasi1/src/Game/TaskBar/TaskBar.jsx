@@ -199,6 +199,14 @@ const TaskBar = () => {
             onClick={() => handleIconClickWithVisibility('mailbox')}
           />
         )}
+        {openWindows.includes('folder') && (
+          <img
+            src="/icons/folder.png"
+            alt="Folder Icon"
+            className={activeWindow === 'folder' ? 'active' : ''}
+            onClick={() => handleIconClickWithVisibility('folder')}
+          />
+        )}
     </div>
       
       {/* Görev Çubuğu Sağ Tarafı */}

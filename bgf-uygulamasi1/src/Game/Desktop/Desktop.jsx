@@ -6,6 +6,7 @@ import Mailbox, { useMailbox } from '../Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../Todolist/Todolist';
 import Browser, { useBrowser } from '../Browser/Browser';
 import ITsupport, { useITsupport } from '../ITsupport/ITsupport';
+import Folder, { useFolder } from '../Folder/Folder';
 
 import Alert from '../Notifications/Alert';
 import { useGameContext } from '../Context';
@@ -19,6 +20,7 @@ const Desktop = () => {
   const { openBrowser, closeBrowser} = useBrowser();
   const { openTodoList, closeTodoList} = useTodoList();
   const { openITsupport, closeITsupport} = useITsupport();
+  const { openFolder, closeFolder} = useFolder();
 
   const {
     openWindows, activeWindow,
@@ -106,6 +108,10 @@ const Desktop = () => {
           <img src="/icons/helpdesk.png" alt="IT Support Icon" />
           <span>IT Support</span>
         </div>
+        <div className="icon" onClick={() => handleDesktopClick('folder', openFolder)}>
+          <img src="/icons/folder.png" alt="Folder Icon" />
+          <span>Folder</span>
+        </div>
       </div>
 
 
@@ -141,6 +147,13 @@ const Desktop = () => {
             ...calculateWindowPosition(openWindows.indexOf('todolist'))
           }} 
         />}
+      {openWindows.includes('folder') &&
+       <Folder
+          closeFolder={closeFolder}
+          style={{
+            ...calculateWindowPosition(openWindows.indexOf('folder'))
+          }} 
+       />} 
       
       <Alert
        show={showAlert}
