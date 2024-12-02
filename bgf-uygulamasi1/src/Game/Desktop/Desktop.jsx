@@ -32,6 +32,8 @@ const Desktop = () => {
     isransomware, setIsransomware
         } = useGameContext();
 
+
+  const [showRansom , setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   // Masaüstü bileşeni yüklendiğinde sayfayı kaydırmayı engelle
@@ -69,6 +71,30 @@ const Desktop = () => {
       setZindex(100);
     }
   },[openWindows]);
+
+  useEffect(() => {
+    if (isransomware) {
+      const randomDelay = Math.floor(Math.random() * 20000) + 10000; // 10 ila 30 saniye arasında rastgele bir süre
+      const timer = setTimeout(() => {
+        setShowRansom(true);
+      }, randomDelay);
+      return () => clearTimeout(timer);
+    }
+  }, [isransomware]);
+
+  useEffect(() => {
+    let audio;
+    if (showRansom) {
+      audio = new Audio('/audio/ransomware.m4a');
+      audio.play();
+    }
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    };
+  }, [showRansom]);
 
   // masaüstü uygulamalarına  tıklandığında açar
   const handleDesktopClick = (windowName, openComponent) => {
@@ -166,7 +192,7 @@ const Desktop = () => {
        />
 
 
-      { isransomware && <RansomScreen/> }
+      { showRansom && <RansomScreen/> }
       
     </div>
   );
