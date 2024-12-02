@@ -188,8 +188,13 @@ const TaskBar = () => {
       {showStartMenu && (
         <div className="start-menu-window">
           <h2>Başlat Menüsü</h2>
-          <h3>Sabitlendi</h3>
-          <img style={{width:30, height:30}} src="/icons/synchronize.png" alt="Synchronize Icon" />
+          
+          <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
+            <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/synchronize.png" alt="Synchronize Icon"/>
+            <p style={{marginLeft:-12}}>Yedekle</p>
+          </div>
+          
+          
           <div className="shutdown-button" onClick={handleShutdownClick}>
             <img src="/icons/switch.png" alt="Switch Icon" />
             Bilgisayarı Kapat
