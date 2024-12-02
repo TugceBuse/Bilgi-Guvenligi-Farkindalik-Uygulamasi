@@ -1,3 +1,26 @@
+import { useGameContext } from '../Context';
+import { useState } from 'react';
+
+const RansomwareButton = ({ label }) => {
+  const { setIsransomware } = useGameContext();
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = () => {
+    setDownloading(true);
+    setTimeout(() => {
+      setDownloading(false);
+      setIsransomware(true);
+    }, 3000); // 3 saniye sonra indirme işlemi tamamlanır ve ransomware tetiklenir
+  };
+
+  return (
+    <button onClick={handleDownload}>
+      {label}
+      {downloading && <div className="download-progress"></div>}
+    </button>
+  );
+};
+
 export const mails = [
     /* 1.Mail Content*/
   {Name:'IT Departmanı', from:'IT.Destek@globalbank-support.com',
@@ -130,17 +153,16 @@ export const mails = [
        <div className="mail-content">
           <div className="attachments">
               <ul>
-
                 <li>
-                  <button onClick={() => window.location.href = "https://example.com/file1.pdf"}>File 1.pdf</button>
+                <RansomwareButton label='file1.pdf' />
                 </li>
 
                 <li>
-                  <button onClick={() => window.location.href = "https://example.com/file2.docx"}>File 2.docx</button>
+                <RansomwareButton label='file2.docx' />
                 </li>
 
                 <li>
-                  <button onClick={() => window.location.href = "https://example.com/file3.jpg"}>File 3.jpg</button>
+                  <button onClick={() => null}>File3.jpg</button>
                 </li>
 
               </ul>
