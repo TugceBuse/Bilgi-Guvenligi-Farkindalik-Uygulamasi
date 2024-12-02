@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {mails as initialMails } from './Mailbox/Mails'
+import {sentMails as initialsentMails}  from './Mailbox/Mails'
+
 // Context oluşturma
 const GameContext = createContext();
 
@@ -24,6 +26,7 @@ export const GameContextProvider = ({ children }) => {
 
   //mail.js den import edilen mail state'i
   const [mails, setMails] = useState(initialMails);
+ const [sentMails, setSentMails] = useState(initialsentMails);
 
   
   
@@ -82,6 +85,7 @@ export const GameContextProvider = ({ children }) => {
         visibleWindows, setVisibleWindows,
         handleIconClick,
         mails, setMails,
+        sentMails, setSentMails,
         zindex, setZindex,
         isransomware, setIsransomware
     }}>

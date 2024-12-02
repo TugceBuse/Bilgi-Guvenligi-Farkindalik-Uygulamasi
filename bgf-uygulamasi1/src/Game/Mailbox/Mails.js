@@ -129,3 +129,22 @@ export const mails = [
   //   )
   //  },
   ];
+
+  export const sentMails = [
+    {
+      Name: 'John Doe',
+      from: 'me@myemail.com',
+      title: 'Meeting Reminder',
+      precontent: 'Reminder: Meeting at 3 PM',
+      content: (
+        <div className="mail-content">
+          <pre>
+            <b>Hi John,</b><br/><br/>
+            This is a reminder for our meeting scheduled at 3 PM today. Please make sure to join on time.<br/><br/>
+            Best regards,<br/>
+            Your Name
+          </pre>
+        </div>
+      )
+    }
+  ];
