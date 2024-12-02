@@ -25,12 +25,19 @@ const Mailbox = ({ closeMailbox, style }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeTab, setActiveTab] = useState('inbox');
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
+ 
+
   const {
     mails, setMails,
     sentMails,setSentMails
   } = useGameContext();
 
-
+ useEffect(() => {
+    const count = mails.filter(mail => !mail.read).length;
+    setUnreadCount(count);
+  }, [mails]); 
 
   const mailboxRef = useRef(null);//mailbox referansı
   MakeDraggable(mailboxRef, '.mailbox-header');//mailboxi sürüklemek için kullanılan fonksiyon
@@ -82,12 +89,39 @@ const Mailbox = ({ closeMailbox, style }) => {
                 className={activeTab === 'inbox' ? 'active' : ''}
                 onClick={() => handleTabClick('inbox')}
               >
-                <img className = "inbox-icon" src="./icons/inbox.png" alt="Inbox Icon"/> Inbox</li>
+                <img className = "is-icon" src="./icons/inbox.png" alt="Inbox Icon"/>  Inbox <div className="number-of-mails">{unreadCount}</div></li>
               <li 
                 className={activeTab === 'sent' ? 'active' : ''}
                 onClick={() => handleTabClick('sent')}
-              >Sent</li>
+              ><img className = "is-icon" src="./icons/sent.png" alt="Sent Icon"/>Sent</li>
+
+
+             <div style={{display:"flex", flexDirection:"column", padding: 10, gap:10, marginTop: 50, opacity:0.7}}>
+                <span>
+                  <img className = "is-icon" src="./icons/junk-mail.png" alt="Junk Mail Icon"/>Junk Mail
+                </span>
+
+                <span>
+                  <img className = "is-icon" src="./icons/draft.png" alt="Draft Icon"/>Drafts
+                </span>
+
+                <span>
+                  <img className = "is-icon" src="./icons/remove.png" alt="Remove Icon"/>Deleted Items
+                </span>
+
+                <span>
+                  <img className = "is-icon" src="./icons/inbox (2).png" alt="Archive Icon"/>Archives
+                </span>
+
+                <span>
+                  <img className = "is-icon" src="./icons/writing.png" alt="Writing Icon"/>Notes
+                </span>
+             
+             </div>
             </ul>
+
+          
+
           </div>
           {/* vvvvvvvvvvvvv mail listesi vvvvvvvvvvvvv
           - Mailler dinamik eklenebilir hale gelmeli
@@ -148,7 +182,7 @@ const Mailbox = ({ closeMailbox, style }) => {
           <div className="mailbox-mailcontent">
                 {selectedMail ? (               
                   <div className="mailbox-mailcontentheader">
-                    <img src="./icons/user (2).png" alt="Mail Image" className="mail-image" />
+                    <img src="./icons/user (2).png" alt="Mail Pic" className="mail-image"/>
                         <div style={{display:"flex", flexDirection:"column", gap:10}}>
                           <h3>{selectedMail?.Name}</h3>
                           <h3>&lt;{selectedMail?.from}&gt;</h3>

@@ -22,7 +22,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 8%;
+    height: 6%;
   }
   .mailbox-header-left{
     display: flex;
@@ -49,7 +49,7 @@
     width: 20px;
     height: 20px;
   }
-  .inbox-icon{
+  .is-icon{
     background-color: #f8f8f8;
     border-radius: 5px;
     margin-right: 10px;
@@ -249,4 +249,71 @@
     margin-bottom: 3px;
     display: inline-block;
     opacity: 0.8;
+  }
+
+  /* Mail İçeriğindeki Ögeler İçin CSS */
+
+  .verify-button {
+    color: orange;
+    background-color: rgb(81, 73, 57);
+    text-decoration: underline;
+    cursor: pointer;
+    
+    border: none; /* Kenarlıkları kaldır */
+    font-size: 16px; /* Yazı boyutunu ayarla */
+    padding: 10px 20px; /* İç boşluk ekle */
+    border-radius: 5px; /* Kenarları yuvarla */
+    transition: background-color 0.3s ease; /* Arka plan rengini yumuşak geçişle değiştir */
+   
+    /* Hover durumu */
+    &:hover {
+      background-color: rgba(255, 165, 0, 0.1); /* Hover durumunda arka plan rengini değiştir */
+    }
+  }
+
+  .attachments {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #969696;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .attachments h3 {
+    margin-bottom: 10px;
+    font-size: 20px; 
+    font-weight: bold; 
+    color: #333; 
+  }
+  
+  .attachments ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+  }
+  .attachments button {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .attachments button:hover {
+    background-color: #0056b3;
+  } 
+  .number-of-mails {
+    display: inline-block;
+    background-color: #f3ad81;
+    color: black;
+    border-radius: 50%;
+    padding: 5px 10px;
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
   }

@@ -2,6 +2,7 @@ import { useGameContext } from "../Context";
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 const TaskBar = () => {
 
@@ -15,7 +16,24 @@ const TaskBar = () => {
     handleIconClick,
     zindex, setZindex
    } = useGameContext();
+   
+   /* Windows Menüsü İçin Gerekli Fonksiyonlar */
+   const [showStartMenu, setShowStartMenu] = useState(false);
+   const [shuttingDown, setShuttingDown] = useState(false);
+   const navigate = useNavigate();
 
+   const handleStartButtonClick = () => {
+     setShowStartMenu(!showStartMenu);
+   };
+
+   const handleShutdownClick = () => {
+    setShuttingDown(true);
+    setTimeout(() => {
+      navigate("/"); // Ana ekrana yönlendir
+    }, 2000); // 2 saniye gecikme
+  };
+
+   
   const [wifiname, setwifiname] = useState('');
   const pass = "1234";
 
@@ -162,9 +180,30 @@ const TaskBar = () => {
   <div className="taskbar">
 
     {/* Başlat Menüsü */}
-    <div className="start-menu">
-      <img src="/icons/windows-10.png" alt="Start Button" />
+    <div className="taskbar-icons" onClick={handleStartButtonClick}>
+      <img src="/icons/menu (1).png" alt="Start Button" />
     </div>
+
+    {/* Başlat Menüsü Penceresi */}
+      {showStartMenu && (
+        <div className="start-menu-window">
+          <h2>Başlat Menüsü</h2>
+          <h3>Sabitlendi</h3>
+          <img style={{width:30, height:30}} src="/icons/synchronize.png" alt="Synchronize Icon" />
+          <div className="shutdown-button" onClick={handleShutdownClick}>
+            <img src="/icons/switch.png" alt="Switch Icon" />
+            Bilgisayarı Kapat
+          </div>
+
+            {/* Kapanıyor Ekranı */}
+            {shuttingDown && (
+              <div className="shutdown-screen">
+                <p className="shutdown-text">Kapanıyor...</p>
+              </div>
+            )}
+
+        </div>
+      )}
     
     <div className="taskbar-icons">
         {openWindows.includes('browser') && (

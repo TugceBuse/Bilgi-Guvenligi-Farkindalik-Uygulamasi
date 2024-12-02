@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { GameContextProvider } from './Context';
 
 const Game = () => {
-
    // Sağ tıklamayı engellemek ve sol click tetikleme
    useEffect(() => {
     const handleContextMenu = (event) => {

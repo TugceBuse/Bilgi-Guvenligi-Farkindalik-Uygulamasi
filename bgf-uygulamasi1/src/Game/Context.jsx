@@ -26,7 +26,7 @@ export const GameContextProvider = ({ children }) => {
 
   //mail.js den import edilen mail state'i
   const [mails, setMails] = useState(initialMails);
- const [sentMails, setSentMails] = useState(initialsentMails);
+  const [sentMails, setSentMails] = useState(initialsentMails);
 
   
   
@@ -54,11 +54,6 @@ export const GameContextProvider = ({ children }) => {
     handleIconClick(windowName);
   };
 
-  useEffect(() => {
-    console.log(`openWindows: ${openWindows} AKTIF:${activeWindow}`);
-    console.log(`visibleWindows: ${visibleWindows}`);
-  }, [openWindows,activeWindow,visibleWindows]);
-
   const handleIconClick = (windowName) => {
     if (activeWindow === windowName) {
      setActiveWindow(null);
@@ -67,10 +62,6 @@ export const GameContextProvider = ({ children }) => {
       setActiveWindow(windowName);
     }
   };
-
-  useEffect(() => {
-   console.log(zindex);
-  },[zindex]);
 
   return (
     <GameContext.Provider 
