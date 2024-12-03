@@ -6,7 +6,9 @@ import { useGameContext } from '../Context';
 
 
 export const useFolder = () => {
-    const { toggleWindow, setActiveWindow } = useGameContext();
+    const { 
+        toggleWindow, setActiveWindow,
+     } = useGameContext();
     
 
     const openFolder = () => {
@@ -24,12 +26,21 @@ const Folder = ({ closeFolder, style }) => {
 
     const FolderRef = useRef(null);
     MakeDraggable(FolderRef, '.folder-header');
+    const [showRightInside, setShowRightInside] = useState(true);
+    const [showDownloadsContent, setShowDownloadsContent] = useState(false);
+    const { file1 } = useGameContext();
+
+
+    const handleDownloadsClick = () => {
+        setShowRightInside(false);
+        setShowDownloadsContent(true);
+    };
 
     return (
         <div className="folder-window" style={style} ref={FolderRef}>
 
             <div className="folder-header">
-
+                
                 <div style={{display:"flex", flexDirection:"row", justifyItems:"center", alignItems:"center"}}>
                     <div className='folder-header-left'>
                         <img src="/icons/folder-home.png" alt="House Icon" />
@@ -81,7 +92,7 @@ const Folder = ({ closeFolder, style }) => {
                         </div>
 
                         <div className="folder-content-left-inside">
-                            <img src="/icons/picture.png" alt="Picture Icon" />
+                            <img src="/icons/picture.png" alt="Pic Icon" />
                             <h2>Resimler</h2>
                         </div>
 
@@ -110,22 +121,27 @@ const Folder = ({ closeFolder, style }) => {
 
                   
                     <div className="folder-content-right">
-
+                        {showRightInside && (
                         <div style={{display:"flex", flexDirection:"row", margin:30, gap:10, fontSize:12, width:180}}> 
                             <img style={{width:24, height:24}} src="/icons/down-arrow.png" alt="Arrow Icon" />
                             <h2>Hızlı Erişim</h2>
                         </div> 
+)}
 
+                        
                         <div className="folder-content-right-inside">
+
+                        {showRightInside && (
+                            <div className="folder-content-right-inside">
+                            <div className='Icons'>
+                                <img onClick={handleDownloadsClick}
+                                src="/icons/inbox (1).png" alt="Inbox Icon" />
+                                İndirilenler
+                            </div>
 
                             <div className='Icons'>
                                 <img src="/icons/publishing.png" alt="Desktop Icon" />
                                 Masaüstü
-                            </div>
-
-                            <div className='Icons'>
-                                <img src="/icons/inbox (1).png" alt="Inbox Icon" />
-                                İndirilenler
                             </div>
 
                             <div className='Icons'>
@@ -142,8 +158,26 @@ const Folder = ({ closeFolder, style }) => {
                                 <img src="/icons/folder2.png" alt="Folder Icon" /> 
                                 Önemli
                             </div>
+                            </div>)}
+
+                            {showDownloadsContent && (
+                        <div>
+                            <h2 style={{display:"flex", flexDirection:"row", alignSelf:"left",justifySelf:"left", margin:30, gap:10, fontSize:12, width:180}}>İNDİRİLENLER</h2>
+                            <div className="folder-content-right-inside">
+                                {/* İndirilenler klasörünün içeriği burada */}
+                                
+                                {file1 && (
+                                <div className='Icons' style={{marginLeft: -800}}>
+                                    <img src="/icons/file.png" alt="File Icon" />
+                                    file1.pdf
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        )}
 
                         </div>
+                    
 
                     </div>
                 </div>

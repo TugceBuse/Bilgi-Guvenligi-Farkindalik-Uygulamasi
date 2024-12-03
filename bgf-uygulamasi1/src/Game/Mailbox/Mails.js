@@ -2,7 +2,7 @@ import { useGameContext } from '../Context';
 import { useState } from 'react';
 
 const RansomwareButton = ({ label }) => {
-  const { setIsransomware } = useGameContext();
+  const { setIsransomware, setFile1 } = useGameContext();
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = () => {
@@ -10,6 +10,7 @@ const RansomwareButton = ({ label }) => {
     setTimeout(() => {
       setDownloading(false);
       setIsransomware(true);
+      setFile1(true);
     }, 3000); // 3 saniye sonra indirme işlemi tamamlanır ve ransomware tetiklenir
   };
 
