@@ -13,7 +13,6 @@ import { useGameContext } from '../Context';
 import RansomScreen from '../Notifications/Ransom';
 
 
-
 // Masaüstü bileşeni
 const Desktop = () => {
 

@@ -1,6 +1,7 @@
 import { useGameContext } from '../Context';
 import { useState } from 'react';
 
+//Manuel ayarlanmış RansomwareButton compenent'i
 const RansomwareButton = ({ label }) => {
   const { setIsransomware } = useGameContext();
   const [downloading, setDownloading] = useState(false);

@@ -10,11 +10,12 @@ const TaskBar = () => {
   const {
     isWificonnected , setIsWificonnected,
     updating_antivirus,isantivirusuptodate,
-    openWindows,setOpenWindows,
+    openWindows,
     activeWindow, setActiveWindow,
     visibleWindows, setVisibleWindows,
     handleIconClick,
-    zindex, setZindex
+    zindex, setZindex,
+    isantivirusinstalled
    } = useGameContext();
    
    /* Windows Menüsü İçin Gerekli Fonksiyonlar */
@@ -274,10 +275,12 @@ const TaskBar = () => {
           )}
       </div>
 
-      <div className="taskbar-antivirus">
+      {isantivirusinstalled &&
+        <div className="taskbar-antivirus">
           {antivirusIcon}
           {antivirusTooltip}
-      </div>
+        </div>
+      }
 
       <div className="taskbar-status">
             {/* Saat */}

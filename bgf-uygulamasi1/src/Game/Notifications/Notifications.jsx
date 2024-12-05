@@ -3,10 +3,14 @@ import './Notifications.css';
 import { useGameContext } from '../Context';
 
 const Notification = () => {
-  const { seconds } = useGameContext();
-  const { setUpdating_antivirus } = useGameContext();
   const [showNotification, setShowNotification] = useState(false);
-  const {isantivirusuptodate, setAntivirusisuptodate} = useGameContext();
+
+  const {
+    isantivirusuptodate, setAntivirusisuptodate,
+    isantivirusinstalled,setUpdating_antivirus,
+    seconds
+  } = useGameContext();
+
   const [remindTime, setRemindTime] = useState(-1);
 
   const handleUpdateNow = () => {
@@ -17,8 +21,6 @@ const Notification = () => {
     setTimeout(() => {
       setUpdating_antivirus(false);
       setAntivirusisuptodate(true); 
-      
-      
     }, 10000); // 10 saniye bekleme süresi
   };
 
@@ -33,7 +35,7 @@ const Notification = () => {
 
   useEffect(() => {
     // ilk bildirim gösterileceği süre ve daha sonra hatırlat durumunda süre
-    if ( (seconds === 3 || seconds===remindTime) && !isantivirusuptodate) {
+    if ( isantivirusinstalled && (seconds === 3 || seconds===remindTime) && !isantivirusuptodate) {
       setShowNotification(true);
     }
   }, [seconds]);

@@ -14,6 +14,7 @@ export const GameContextProvider = ({ children }) => {
   const [isWificonnected, setIsWificonnected] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
+  const [isantivirusinstalled, setIsantivirusinstalled] = useState(false);
 
   //virusler
   const [isransomware, setIsransomware] = useState(false);
@@ -28,8 +29,6 @@ export const GameContextProvider = ({ children }) => {
   const [mails, setMails] = useState(initialMails);
   const [sentMails, setSentMails] = useState(initialsentMails);
 
-  
-  
 
 
   useEffect(() => {
@@ -68,6 +67,7 @@ export const GameContextProvider = ({ children }) => {
     value=
     {{  seconds,
         isWificonnected, setIsWificonnected,
+        isantivirusinstalled, setIsantivirusinstalled,
         isantivirusuptodate, setAntivirusisuptodate,
         updating_antivirus, setUpdating_antivirus,
         openWindows, setOpenWindows,
