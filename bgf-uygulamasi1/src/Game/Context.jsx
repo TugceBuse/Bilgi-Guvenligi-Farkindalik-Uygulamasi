@@ -29,6 +29,9 @@ export const GameContextProvider = ({ children }) => {
   const [mails, setMails] = useState(initialMails);
   const [sentMails, setSentMails] = useState(initialsentMails);
 
+  //DOSYALAR
+  const [file1, setFile1] = useState(false);
+  
 
 
   useEffect(() => {
@@ -78,7 +81,8 @@ export const GameContextProvider = ({ children }) => {
         mails, setMails,
         sentMails, setSentMails,
         zindex, setZindex,
-        isransomware, setIsransomware
+        isransomware, setIsransomware,
+        file1, setFile1
     }}>
       {children}
     </GameContext.Provider>
