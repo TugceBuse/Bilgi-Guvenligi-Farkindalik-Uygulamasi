@@ -41,26 +41,28 @@ const Browser = ({ closeBrowser, style }) => {
 
   const handleGoClick = () => {
     setLoading(true);
-      // URL doluysa girilen URL'ye yönlendir
-      setTimeout(() => {
-        if (!url.trim()) {
-          setContent("");
-          setUrl("");
-        } else if (url.trim().toLowerCase() === "dosya indir") {
+    setTimeout(() => {
+      // URL'yi normalize et
+      const normalizedUrl = url.replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
+  
+      if (!normalizedUrl.trim()) {
+        setContent("");
+        setUrl("");
+      } else if (normalizedUrl.trim().toLowerCase() === "dosya indir") {
         // URL "indir" ise başka bir div göster ve URL inputunu değiştir
         setContent("download");
         setUrl("https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu");
-        } else if (url === '192.168.1.1') {
-          setContent(`login`);
-        } else if (url === 'https://another.com') {
-          setContent('Another Content: This is the content for another.com.');
-        } else {
-          setContent('404 Not Found. The requested URL was not found on this server.');
-        }
-        console.log('Current content:',content); // content değerini kontrol et
-        setLoading(false);
-      }, 2000); // 2 saniye gecikme
-    };
+      } else if (normalizedUrl === '192.168.1.1') {
+        setContent('login');
+      } else if (normalizedUrl === 'google.com') {
+        setContent('main');
+        setUrl('https://www.google.com/');
+      } else {
+        setContent('404 Not Found. The requested URL was not found on this server.');
+      }
+      setLoading(false);
+    }, 2000); // 2 saniye gecikme
+  };
 
   const handleDownloadClick = (fileUrl) => {
     setDownloadMessage("İndiriliyor...");
