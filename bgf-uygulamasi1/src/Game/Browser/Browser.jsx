@@ -2,6 +2,7 @@ import React, { useState,useEffect, useRef } from 'react';
 import './Browser.css';
 import { MakeDraggable } from '../Draggable';
 import { useGameContext } from '../Context';
+import BrowserBar from './BrowserBar';
   
 export const useBrowser = () => {
   const { toggleWindow, setActiveWindow } = useGameContext();
@@ -41,7 +42,6 @@ const Browser = ({ closeBrowser, style }) => {
 
   const handleGoClick = () => {
     setLoading(true);
-<<<<<<< Updated upstream
     setTimeout(() => {
       // URL'yi normalize et
       const normalizedUrl = url.replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
@@ -50,14 +50,6 @@ const Browser = ({ closeBrowser, style }) => {
         setContent("");
         setUrl("");
       } else if (normalizedUrl.trim().toLowerCase() === "dosya indir") {
-=======
-      // URL doluysa girilen URL'ye yönlendir
-      setTimeout(() => {
-        if (!url.trim()) {
-          setContent("");
-          setUrl("");
-        } else if (url.trim().toLowerCase() === "antivirüs indir") {
->>>>>>> Stashed changes
         // URL "indir" ise başka bir div göster ve URL inputunu değiştir
         setContent("download");
         setUrl("https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu");
@@ -195,6 +187,7 @@ const Browser = ({ closeBrowser, style }) => {
                 case 'download':
                   return (
                     <div className='download-pages'>
+
                       <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
                           <img src="./icons/search.png" alt="Search Logo"/>
                           <input onChange={handleUrlChange} onKeyDown={handleKeyDown} type="text" placeholder="Google'da Ara" />
@@ -203,6 +196,7 @@ const Browser = ({ closeBrowser, style }) => {
                           <img src="./icons/google-voice.png" alt="Voice Logo"/>
                         </div>
                       </div>
+
                         <div className= 'searchPart_bottom'>
                           <h3 className='tümü'>Tümü</h3>
                           <h3>Görseller</h3>
@@ -213,8 +207,17 @@ const Browser = ({ closeBrowser, style }) => {
                         </div>
 
                         {/* Dosya indirme linkleri */}
+
+                        {/* 1.link */}
                         <div className='link-part'>  
-                          <p>https://www.download-example.com</p>
+                          <div className='top-of-the-link'>
+                            <div className='image-div'>SH</div>
+                                <div style={{display: "flex", flexDirection:"column"}}>
+                                    ShieldSecure
+                                    <p>https://www.download-example.com</p>
+                                </div>
+                          </div>
+
                           <h2 onClick={() => {
                           setContent("download1")
                           setUrl("https://www.download-example.com")}} 
@@ -226,34 +229,73 @@ const Browser = ({ closeBrowser, style }) => {
                           <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
                         </div>
                     
+                        {/* 2.link */}
+                        <div className='link-part'>  
+                          <div className='top-of-the-link'>
+                            <div className='image-div' style={{backgroundImage: "radial-gradient(circle, #e3e2e2 25%, #d9a196 50%, #801b07 75%, #54f651 100%)"}}>CS</div>
+                                <div style={{display: "flex", flexDirection:"column"}}>
+                                    CyberSentinel
+                                    <p>https://www.download-example2.com</p>
+                                </div>
+                          </div>
 
+                          <h2 onClick={() => {
+                          setContent("download1")
+                          setUrl("https://www.download-example.com")}} 
+                          style={{cursor:"pointer"}}
+                          title='https://www.download-example2.com'
+                          >  
+                          VirusVanisher | Antivirüs ve VPN İndir!
+                          </h2>  
+                          <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
+                        </div>
 
-                    <h2>Dosya İndir 2 ....</h2>
-                    <h2>Dosya İndir 3 ....</h2>
+                        {/* 3.link */}                
+                        <div className='link-part'>  
+                          <div className='top-of-the-link'>
+                            <div className='image-div' style={{ color:"#d9d4d4", backgroundImage: "linear-gradient(-20deg, #2d342a 2%, #374a39 50%, #282d22 75%, #ffffcc 100%)" }}>VV</div>
+                                <div style={{display: "flex", flexDirection:"column"}}>
+                                    VirusVanisher
+                                    <p>https://www.download-example.com</p>
+                                </div>
+                          </div>
+
+                          <h2 onClick={() => {
+                          setContent("download1")
+                          setUrl("https://www.download-example.com")}} 
+                          style={{cursor:"pointer"}}
+                          title='https://www.download-example.com'
+                          >  
+                          ShieldSecure | Antivirüs ve VPN İndir!
+                          </h2>  
+                          <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
+                        </div>
                     </div>
                   );
+
                 case 'download1':
                   return (
                     <div className="download-div-inside">
+                      <BrowserBar/>
                         <img src="./download-background.jpg" alt="Download Background" />
-                        <h2>Download Section</h2>
-                        <p>This is the download section content.</p>
+                        <h2>ShieldSecure Antivirüs İndirme Bölümü</h2>
+                        <p>ShieldSecure antivirüs yazılımını indirmek için aşağıdaki bağlantıları kullanabilirsiniz.</p>
                       <div className="download-links">
-                        <h3>Available Downloads:</h3>
+                        <h3>Mevcut İndirmeler:</h3>
                         <ul>
                           <li>
                             <button onClick={handleDownloadClick}>
-                              Download File 1
+                                ShieldSecure Setup
                             </button>
                           </li>
                           <li>
                             <button onClick={handleDownloadClick}>
-                              Download File 2
+                                ShieldSecure Güncelleme
                             </button>
                           </li>
                           <li>
                             <button onClick={handleDownloadClick}>
-                              Download File 3
+                                ShieldSecure Kullanım Kılavuzu
                             </button>
                           </li>
                         </ul>
