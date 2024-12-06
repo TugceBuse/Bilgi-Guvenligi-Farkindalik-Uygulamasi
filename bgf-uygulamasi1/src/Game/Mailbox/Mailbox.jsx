@@ -2,7 +2,7 @@ import './Mailbox.css';
 import React, { useRef, useEffect, useState } from 'react';
 import { MakeDraggable } from '../Draggable';
 import { useGameContext } from '../Context';
-import { sentMails } from './Mails';
+import { sentMails, spamMails } from './Mails';
 
 export const useMailbox = () => {
   const { toggleWindow, setActiveWindow } = useGameContext();
@@ -25,19 +25,26 @@ const Mailbox = ({ closeMailbox, style }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeTab, setActiveTab] = useState('inbox');
 
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCountMail, setUnreadCountMail] = useState(0);
+  const [unreadCountSpam, setUnreadCountSpam] = useState(0);
 
  
 
   const {
     mails, setMails,
-    sentMails,setSentMails
+    sentMails,setSentMails,
+    spamMails, setSpamMails
   } = useGameContext();
 
  useEffect(() => {
     const count = mails.filter(mail => !mail.read).length;
-    setUnreadCount(count);
+    setUnreadCountMail(count);
   }, [mails]); 
+
+  useEffect(() => {
+    const count = spamMails.filter(mail => !mail.read).length;
+    setUnreadCountSpam(count);
+  }, [spamMails]); 
 
   const mailboxRef = useRef(null);//mailbox referansı
   MakeDraggable(mailboxRef, '.mailbox-header');//mailboxi sürüklemek için kullanılan fonksiyon
@@ -46,8 +53,15 @@ const Mailbox = ({ closeMailbox, style }) => {
     setSelectedMail(mail);
     setActiveIndex(index);
     // Maili okundu olarak işaretle
-    if (mail.hasOwnProperty('read')) {
+    if (mail.hasOwnProperty('readMail')) {
       setMails((prevMails) =>
+        prevMails.map((m, i) =>
+          i === index ? { ...m, read: true } : m
+        )
+      );
+    }
+    else if (mail.hasOwnProperty('readSpam')) {
+      setSpamMails((prevMails) =>
         prevMails.map((m, i) =>
           i === index ? { ...m, read: true } : m
         )
@@ -89,7 +103,16 @@ const Mailbox = ({ closeMailbox, style }) => {
                 className={activeTab === 'inbox' ? 'active' : ''}
                 onClick={() => handleTabClick('inbox')}
               >
-                <img className = "is-icon" src="./icons/inbox.png" alt="Inbox Icon"/>  Inbox <div className="number-of-mails">{unreadCount}</div></li>
+                <img className = "is-icon" src="./icons/inbox.png" alt="Inbox Icon"/>  Inbox <div className="number-of-mails">{unreadCountMail}</div>
+              </li>
+                
+                
+              <li 
+               className={activeTab === 'spam' ? 'active' : '' }
+               onClick={() => handleTabClick('spam')}
+              ><img className = "is-icon" src="./icons/spam.png" alt="Spam Icon"/>Spam <div className="number-of-mails">{unreadCountSpam}</div>
+              </li>
+
               <li 
                 className={activeTab === 'sent' ? 'active' : ''}
                 onClick={() => handleTabClick('sent')}
@@ -156,7 +179,7 @@ const Mailbox = ({ closeMailbox, style }) => {
                     </p>
                     
                   </li>
-                ))) :
+                ))) : activeTab === 'sent' ?
                 (sentMails.map((mail, index) => (
                   <li
                     key={index}
@@ -173,7 +196,25 @@ const Mailbox = ({ closeMailbox, style }) => {
                     </p>
                     
                   </li>
-                )))
+                ))) : activeTab === 'spam' ?
+                (spamMails.map((mail, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleMailClick(mail, index)}
+                    className={activeIndex === index ? 'active' : ''}
+                  >
+                    <div style={{display:"flex", flexDirection:"row"}}>        
+                      {!mail.read && <div className="dot"></div>}
+                      <h3>{mail.title}</h3>
+                    </div>
+                    <p>{/* mail contentin uzunlugunu belirler*/}
+                      {mail.precontent.length > 50
+                        ? `${mail.precontent.slice(0, 50)}...`
+                        : mail.precontent}
+                    </p>
+                    
+                  </li>
+                ))) : null
               }
             </ul>
           </div>

@@ -26,7 +26,7 @@ const RansomwareButton = ({ label }) => {
 export const mails = [
     /* 1.Mail Content*/
   {Name:'IT Departmanı', from:'IT.Destek@globalbank-support.com',
-  title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, read: false,
+  title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, readMail: false,
     content: 
     (
       <div className="mail-content">
@@ -52,7 +52,7 @@ export const mails = [
 
    /* 2.Mail Content*/
    {Name:'UPS Kargo Şirketi', from:'info@shipmenttracker.com',
-   title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, read: false,
+   title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, readMail: false,
     content: 
     (
       <div className="mail-content">
@@ -84,7 +84,7 @@ export const mails = [
    },
         /* 3.Mail Content*/
    {Name:'Global Jobs', from:'hr@global-jobs.com',
-   title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, read: false, 
+   title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, readMail: false, 
     content: 
     (
       <div className="mail-content">
@@ -123,7 +123,7 @@ export const mails = [
 
    /* 4.Mail Content*/
    {Name:'Trusted Platformu', from:'no-reply@trustedplatform.com',
-   title: 'Trusted Platformu', precontent: `Üyeliğiniz Başarıyla Oluşturuldu!`, read: false,
+   title: 'Trusted Platformu', precontent: `Üyeliğiniz Başarıyla Oluşturuldu!`, readMail: false,
     content: 
     (
       <div className="mail-content">
@@ -149,7 +149,7 @@ export const mails = [
 
    /* 5.Mail Content*/
    {Name:'Ahmet Karaköse', from:'aht-krkse@gmail.com',
-    title: 'Ahmet Karaköse', precontent: `Üyeliğiniz Başarıyla Oluşturuldu!`, read: false,
+    title: 'Ahmet Karaköse', precontent: `Üyeliğiniz Başarıyla Oluşturuldu!`, readMail: false,
      content: 
      (
        <div className="mail-content">
@@ -198,4 +198,49 @@ export const mails = [
       )
     }
   ];
+
+
+  export const spamMails = [
+    {
+      Name: 'Winbig',
+      from: 'rewards@winbig.com',
+      title: 'Winbig',
+      precontent: 'iPhone 15 Pro Max Sizi Bekliyor!',
+      readSpam: false,
+      content: (
+        <div className="mail-content">
+          <pre>
+            <b>Merhaba,</b><br/><br/>
+            Bugün şanslı gününüz! Çekilişimize katıldığınız için bir iPhone 15 Pro Max kazandınız. Hediyenizi talep etmek için hemen aşağıdaki bağlantıya tıklayın:<br/>
+            <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
+              title='rewarsd@winbig.com'>
+              Hediyemi Al
+              </span><br/><br/>
+            Bu fırsatı kaçırmayın! Sadece 24 saat içinde talep etmelisiniz.<br/><br/>
+          </pre>
+        </div>
+      )
+    },
+    {
+      Name: 'Winbig',
+      from: 'rewards@winbig.com',
+      title: 'Winbig',
+      precontent: 'iPhone 15 Pro Max Sizi Bekliyor!',
+      readSpam: false,
+      content: (
+        <div className="mail-content">
+          <pre>
+            <b>Merhaba,</b><br/><br/>
+            Bugün şanslı gününüz! Çekilişimize katıldığınız için bir iPhone 15 Pro Max kazandınız. Hediyenizi talep etmek için hemen aşağıdaki bağlantıya tıklayın:<br/>
+            <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
+              title='https://global-jbos.com/track/#45%33'>
+              Hediyemi Al
+              </span><br/><br/>
+            Bu fırsatı kaçırmayın! Sadece 24 saat içinde talep etmelisiniz.<br/><br/>
+          </pre>
+        </div>
+      )
+    }
+  ];
+         
          
