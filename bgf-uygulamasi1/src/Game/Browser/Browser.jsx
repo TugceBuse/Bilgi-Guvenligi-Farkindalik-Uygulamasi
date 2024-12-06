@@ -2,6 +2,7 @@ import React, { useState,useEffect, useRef } from 'react';
 import './Browser.css';
 import { MakeDraggable } from '../Draggable';
 import { useGameContext } from '../Context';
+import { use } from 'react';
   
 export const useBrowser = () => {
   const { toggleWindow, setActiveWindow } = useGameContext();
@@ -26,6 +27,10 @@ const Browser = ({ closeBrowser, style }) => {
   //Dosya indirme Senaryosu için kullanılacak
   const [downloadMessage, setDownloadMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [history, setHistory] = useState([`google.com`]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const prevIndexRef = useRef(currentIndex);
+  const shouldGoClickRef = useRef(false);
 
   //192.168.1.1 sayfasi login
   const [loginusername, setLoginusername] = useState('');
@@ -39,39 +44,59 @@ const Browser = ({ closeBrowser, style }) => {
   };
 
 
-  const handleGoClick = () => {
+  const handleGoClick = (newUrl = url, addToHistory = true) => {
     setLoading(true);
-<<<<<<< Updated upstream
     setTimeout(() => {
       // URL'yi normalize et
-      const normalizedUrl = url.replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
-  
+      const normalizedUrl = newUrl.replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
+
       if (!normalizedUrl.trim()) {
-        setContent("");
-        setUrl("");
-      } else if (normalizedUrl.trim().toLowerCase() === "dosya indir") {
-=======
-      // URL doluysa girilen URL'ye yönlendir
-      setTimeout(() => {
-        if (!url.trim()) {
-          setContent("");
-          setUrl("");
-        } else if (url.trim().toLowerCase() === "antivirüs indir") {
->>>>>>> Stashed changes
-        // URL "indir" ise başka bir div göster ve URL inputunu değiştir
-        setContent("download");
-        setUrl("https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu");
-      } else if (normalizedUrl === '192.168.1.1') {
-        setContent('login');
-      } else if (normalizedUrl === 'google.com') {
-        setContent('main');
-        setUrl('https://www.google.com/');
+        setContent('');
+        setUrl('');
       } else {
-        setContent('404 Not Found. The requested URL was not found on this server.');
+        if (addToHistory) {
+          if (currentIndex === history.length - 1) {
+            // Kullanıcı history'nin sonundaysa yeni URL'yi ekle
+            const newHistory = [...history, normalizedUrl];
+            setHistory(newHistory);
+            setCurrentIndex(newHistory.length - 1);
+          } else {
+            // Kullanıcı history'nin sonunda değilse yeni URL'yi history sonu yap
+            const newHistory = [...history.slice(0, currentIndex + 1), normalizedUrl];
+            setHistory(newHistory);
+            setCurrentIndex(newHistory.length - 1);
+          }
+        }
+
+        if (normalizedUrl.trim().toLowerCase() === 'antivirus.com') {
+          setContent('download');
+          setUrl('https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu');
+        } else if (normalizedUrl === '192.168.1.1') {
+          setContent('login');
+        } else if (normalizedUrl === 'google.com') {
+          setContent('main');
+          setUrl('https://www.google.com/');
+        } else {
+          setContent('404 Not Found. The requested URL was not found on this server.');
+        }
       }
       setLoading(false);
     }, 2000); // 2 saniye gecikme
   };
+
+  useEffect(() => {
+    console.log(`'History:', ${history},${history.length} Content: ${content}`);
+  }, [history, content]);
+
+  useEffect(() => {
+    console.log(`URL: ${url}`);
+  }, [url]);
+
+  useEffect(() => {
+    console.log(`CurrentIndex: ${currentIndex}`);
+  }, [currentIndex]);
+
+
 
   const handleDownloadClick = (fileUrl) => {
     setDownloadMessage("İndiriliyor...");
@@ -85,8 +110,26 @@ const Browser = ({ closeBrowser, style }) => {
   };
 
   const handleBackClick = () => {
-    setContent("download");
+    if (currentIndex > 0) {
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+    }
   };
+  
+  const handleForwardClick = () => {
+    if (currentIndex < history.length - 1) {
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
+    }
+  };
+
+  useEffect(() => {
+    if (prevIndexRef.current !== currentIndex && currentIndex >= 0 && currentIndex < history.length) {
+      handleGoClick(history[currentIndex], false);
+    }
+    prevIndexRef.current = currentIndex;
+  }, [currentIndex]);
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleGoClick();
@@ -116,19 +159,17 @@ const Browser = ({ closeBrowser, style }) => {
           />
 
         <img 
-          style={{ color:'white', width: 20, height: 20, marginRight: 10, filter: 'invert(1)', cursor: 'pointer', opacity: 0.5 }}
+          style={{ color:'white', width: 20, height: 20, marginRight: 10, filter: 'invert(1)', cursor: 'pointer', opacity: 1 }}
           src="./icons/right-arrow (1).png" alt="Right Arrow Logo" 
-          
-          
+          onClick={handleForwardClick}
           />
 
           <img 
           style={{ color:'white', width: 24, height: 24, marginRight: 10, filter: 'invert(1)', cursor: 'pointer' }}
           src="./icons/home.png" alt="Home Logo" 
           onClick={() => {
-            if(!loading){
-            setContent('main')
-            setUrl('https://www.google.com/')}}
+            if(!loading && content !== 'main') {
+            handleGoClick('google.com')}}
           }
           />
           <input
@@ -165,7 +206,6 @@ const Browser = ({ closeBrowser, style }) => {
             (() => {
               switch (content) {
                 case 'login':
-                  console.log('login calisti');
                   return (
                     <div className="login-container">
                       <h2>WiFi Login</h2>
