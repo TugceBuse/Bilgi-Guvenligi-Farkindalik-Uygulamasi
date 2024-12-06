@@ -257,7 +257,7 @@
   background-color: #333;
   width: 30%;
   height: 6%;
-  border: 1px solid #000000;
+  border: 1px solid #222222;
   border-radius: 20px;
   align-items: center;
   align-self: center;
@@ -312,22 +312,36 @@
   width: 100%;
   height: 100%;
   padding: 20px;
-  background-color: #c4c4c4;
-  border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
+  background-color: #1e1e1e;
 }
 
 .download-pages h2 {
   font-size: 25px;
-  margin-bottom: 50px;
-  margin-left: 10px;
   cursor: pointer;
-  color: #007bff;
-  background-color: #d8d9e2;
+  color: orange;
   border-radius: 5px;
+}
+.link-part{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  gap: 3px;
+}
+
+.link-part p:first-child{
+  color: rgb(255, 237, 204);
+  opacity:0.6;
   padding-left: 20px;
+  font-size: 12px;
+}
+
+.link-part p:last-child{
+  color: rgb(255, 237, 204);
+  opacity:0.6;
+  font-size: 18px;
 }
 
 .download-pages h2:hover {
@@ -407,9 +421,9 @@
 
 .searchPart_bottom h3 {
   padding-right: 40px;
-  color: #000000;
+  color: #c8c8c8;
   margin-bottom: 2px;
 }
 .tümü{
-  text-decoration: 2px underline #ffffff solid;
+  text-decoration: 2px underline #aeaeae solid;
 }

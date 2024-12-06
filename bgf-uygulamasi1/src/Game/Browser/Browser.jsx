@@ -41,6 +41,7 @@ const Browser = ({ closeBrowser, style }) => {
 
   const handleGoClick = () => {
     setLoading(true);
+<<<<<<< Updated upstream
     setTimeout(() => {
       // URL'yi normalize et
       const normalizedUrl = url.replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
@@ -49,6 +50,14 @@ const Browser = ({ closeBrowser, style }) => {
         setContent("");
         setUrl("");
       } else if (normalizedUrl.trim().toLowerCase() === "dosya indir") {
+=======
+      // URL doluysa girilen URL'ye yönlendir
+      setTimeout(() => {
+        if (!url.trim()) {
+          setContent("");
+          setUrl("");
+        } else if (url.trim().toLowerCase() === "antivirüs indir") {
+>>>>>>> Stashed changes
         // URL "indir" ise başka bir div göster ve URL inputunu değiştir
         setContent("download");
         setUrl("https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu");
@@ -75,6 +84,9 @@ const Browser = ({ closeBrowser, style }) => {
     }, 1000); // 1 saniye gecikme
   };
 
+  const handleBackClick = () => {
+    setContent("download");
+  };
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleGoClick();
@@ -97,6 +109,19 @@ const Browser = ({ closeBrowser, style }) => {
           <button className="browser-close" onClick={closeBrowser}>×</button> 
         </div>
         <div className="browser-search">
+        <img 
+          style={{ color:'white', width: 20, height: 20, marginRight: 10, filter: 'invert(1)', cursor: 'pointer' }}
+          src="./icons/arrow.png" alt="Arrow Logo" 
+          onClick={handleBackClick}
+          />
+
+        <img 
+          style={{ color:'white', width: 20, height: 20, marginRight: 10, filter: 'invert(1)', cursor: 'pointer', opacity: 0.5 }}
+          src="./icons/right-arrow (1).png" alt="Right Arrow Logo" 
+          
+          
+          />
+
           <img 
           style={{ color:'white', width: 24, height: 24, marginRight: 10, filter: 'invert(1)', cursor: 'pointer' }}
           src="./icons/home.png" alt="Home Logo" 
@@ -186,11 +211,23 @@ const Browser = ({ closeBrowser, style }) => {
                           <h3>Haberler</h3>
                           <h3>Web</h3>
                         </div>
-                    <h2 onClick={() => {
-                      setContent("download1")
-                      setUrl("https://www.download-example.com")}} 
-                      style={{cursor:"pointer"}}
-                    >Dosya İndir 1 ....</h2>
+
+                        {/* Dosya indirme linkleri */}
+                        <div className='link-part'>  
+                          <p>https://www.download-example.com</p>
+                          <h2 onClick={() => {
+                          setContent("download1")
+                          setUrl("https://www.download-example.com")}} 
+                          style={{cursor:"pointer"}}
+                          title='https://www.download-example.com'
+                          >  
+                          ShieldSecure | Antivirüs ve VPN İndir!
+                          </h2>  
+                          <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
+                        </div>
+                    
+
+
                     <h2>Dosya İndir 2 ....</h2>
                     <h2>Dosya İndir 3 ....</h2>
                     </div>
