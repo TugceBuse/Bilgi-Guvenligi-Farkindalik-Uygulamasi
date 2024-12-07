@@ -77,9 +77,9 @@ const Browser = ({ closeBrowser, style }) => {
         } else if (normalizedUrl === 'google.com') {
           setContent('main');
           setUrl('https://www.google.com/');
-        } else if ('www.download-example.com') {
+        } else if ('www.ShieldSecure.com') {
           setContent('download1');
-          setUrl('https://www.download-example.com');
+          setUrl('https://www.ShieldSecure.com');
         }else {
           setContent('404 Not Found. The requested URL was not found on this server.');
         }
@@ -266,15 +266,15 @@ const Browser = ({ closeBrowser, style }) => {
                             <div className='image-div'>SH</div>
                                 <div style={{display: "flex", flexDirection:"column"}}>
                                     ShieldSecure
-                                    <p>https://www.download-example.com</p>
+                                    <p>https://www.ShieldSecure.com</p>
                                 </div>
                           </div>
 
                           <h2 onClick={() => {
-                          handleGoClick("https://www.download-example.com")
+                          handleGoClick("https://www.ShieldSecure.com")
                           }} 
                           style={{cursor:"pointer"}}
-                          title='https://www.download-example.com'
+                          title='https://www.ShieldSecure.com'
                           >  
                           ShieldSecure | Antivirüs ve VPN İndir!
                           </h2>  

@@ -176,8 +176,7 @@ const Mailbox = ({ closeMailbox, style }) => {
                       {mail.precontent.length > 50
                         ? `${mail.precontent.slice(0, 50)}...`
                         : mail.precontent}
-                    </p>
-                    
+                    </p> 
                   </li>
                 ))) : activeTab === 'sent' ?
                 (sentMails.map((mail, index) => (
@@ -194,7 +193,6 @@ const Mailbox = ({ closeMailbox, style }) => {
                         ? `${mail.precontent.slice(0, 50)}...`
                         : mail.precontent}
                     </p>
-                    
                   </li>
                 ))) : activeTab === 'spam' ?
                 (spamMails.map((mail, index) => (
@@ -212,10 +210,10 @@ const Mailbox = ({ closeMailbox, style }) => {
                         ? `${mail.precontent.slice(0, 50)}...`
                         : mail.precontent}
                     </p>
-                    
                   </li>
                 ))) : null
               }
+              <div style={{height:3}}></div>
             </ul>
           </div>
           {/* mail içeriği --> Bu kısma Header falan eklenerek
