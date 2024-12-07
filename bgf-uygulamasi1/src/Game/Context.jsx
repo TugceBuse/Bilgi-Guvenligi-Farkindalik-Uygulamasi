@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {mails as initialMails } from './Mailbox/Mails'
 import {sentMails as initialsentMails}  from './Mailbox/Mails'
+import {spamMails as initialspamMails}  from './Mailbox/Mails'
 
 // Context oluşturma
 const GameContext = createContext();
@@ -28,6 +29,7 @@ export const GameContextProvider = ({ children }) => {
   //mail.js den import edilen mail state'i
   const [mails, setMails] = useState(initialMails);
   const [sentMails, setSentMails] = useState(initialsentMails);
+  const [spamMails, setSpamMails] = useState(initialspamMails);
 
   //DOSYALAR
   const [file1, setFile1] = useState(false);
@@ -80,6 +82,7 @@ export const GameContextProvider = ({ children }) => {
         handleIconClick,
         mails, setMails,
         sentMails, setSentMails,
+        spamMails, setSpamMails,
         zindex, setZindex,
         isransomware, setIsransomware,
         file1, setFile1

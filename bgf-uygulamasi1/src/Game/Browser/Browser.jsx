@@ -328,7 +328,7 @@ const Browser = ({ closeBrowser, style }) => {
                 case 'download1':
                   return (
                     <div className="download-div-inside">
-                      <BrowserBar/>
+                        <BrowserBar/>
                         <img src="./download-background.jpg" alt="Download Background" />
                         <h2>ShieldSecure Antivirüs İndirme Bölümü</h2>
                         <p>ShieldSecure antivirüs yazılımını indirmek için aşağıdaki bağlantıları kullanabilirsiniz.</p>
