@@ -22,16 +22,18 @@ export const useBrowser = () => {
 
 const Browser = ({ closeBrowser, style }) => {
 
+  const { setIsantivirusinstalled } = useGameContext();
+
   const [url, setUrl] = useState('https://www.google.com/');
   const [content, setContent] = useState('main');
   const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
   //Dosya indirme Senaryosu için kullanılacak
   const [downloadMessage, setDownloadMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [history, setHistory] = useState([`google.com`]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const prevIndexRef = useRef(currentIndex);
-  const shouldGoClickRef = useRef(false);
 
   //192.168.1.1 sayfasi login
   const [loginusername, setLoginusername] = useState('');
@@ -102,15 +104,19 @@ const Browser = ({ closeBrowser, style }) => {
 
 
 
-  const handleDownloadClick = (fileUrl) => {
-    setDownloadMessage("İndiriliyor...");
+  const handleDownloadClick = () => {
+    setButtonLoading(true);
+    setDownloadMessage('İndiriliyor...');
     setTimeout(() => {
-      setDownloadMessage("");
+      setButtonLoading(false);
+      setDownloadMessage('İndirme tamamlandı!');
       setShowPopup(true);
+      setIsantivirusinstalled(true);
       setTimeout(() => {
         setShowPopup(false);
+        setDownloadMessage('');
       }, 3000); // 3 saniye sonra pop-up'ı gizle
-    }, 1000); // 1 saniye gecikme
+    }, 10000); // 10 saniye gecikme
   };
 
   const handleBackClick = () => {
@@ -148,6 +154,14 @@ const Browser = ({ closeBrowser, style }) => {
     setLoginpassword(password);
     console.log(`Username: ${username}, Password: ${password}`);
   };
+
+  const googleSearch = (e) => {
+    const search = e.target.value.toLowerCase();
+    if (search === 'antivirus') {
+      setContent('download');
+    }
+  }
+
 
   return (
     <div className="browser-window" style={style} ref={browserRef}>
@@ -228,7 +242,7 @@ const Browser = ({ closeBrowser, style }) => {
                       <h1>Google</h1>
                       <div className='searchPart'>
                         <img src="./icons/search.png" alt="Search Logo"/>
-                        <input onChange={handleUrlChange} onKeyDown={handleKeyDown} type="text" placeholder="Google'da Ara" />
+                        <input /*onChange={}*/ onKeyDown={googleSearch} type="text" placeholder="Google'da Ara" />
                         <div className='searchPart_right'>
                           <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
                           <img src="./icons/google-voice.png" alt="Voice Logo"/>
@@ -336,9 +350,9 @@ const Browser = ({ closeBrowser, style }) => {
                         <h3>Mevcut İndirmeler:</h3>
                         <ul>
                           <li>
-                            <button onClick={handleDownloadClick}>
-                                ShieldSecure Setup
-                            </button>
+                          <button onClick={handleDownloadClick} disabled={buttonLoading} className="download-button">
+                            {buttonLoading ? <div className="progress-bar"></div> : 'ShieldSecure Setup'}
+                          </button>
                           </li>
                           <li>
                             <button onClick={handleDownloadClick}>
@@ -346,14 +360,14 @@ const Browser = ({ closeBrowser, style }) => {
                             </button>
                           </li>
                           <li>
-                            <button onClick={handleDownloadClick}>
+                            <button /*onClick={handleDownloadClick}*/ >
                                 ShieldSecure Kullanım Kılavuzu
                             </button>
                           </li>
                         </ul>
                         {downloadMessage && <p style={{justifySelf:"center"}}>{downloadMessage}</p>}
                       </div>
-                      {showPopup && <div className="popup">İndirildi!</div>}
+                      { showPopup && <div className="popup">İndirildi!</div>}
                     </div>
                   );
                 default:

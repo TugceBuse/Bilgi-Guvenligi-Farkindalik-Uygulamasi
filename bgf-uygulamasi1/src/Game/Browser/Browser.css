@@ -80,6 +80,7 @@
   }
   
   .browser-content {
+    position: relative;
     flex: 1;
     padding: 20px;
     overflow-y: auto;
@@ -233,7 +234,31 @@
     }
 }
 
+.download-button {
+  position: relative;
+  width: 150px;
+  height: 50px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: hidden;
+}
 
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  animation: progress 10s linear forwards;
+}
+
+@keyframes progress {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
 
 /* Tarayıcının Ana Ekran CSS'i */
 .firstPartOfBrowser{
@@ -295,9 +320,9 @@
 /* Dosya indirme sayfası için: */
 
 .popup {
-  position: fixed;
-  bottom: 98px; 
-  left: 200px;
+  position: absolute; /* İçerik konteynerine göre konumlandır */
+  top: 5px; /* Header'in hemen altında */
+  right: 5px; /* İçerik konteynerinin sağından 10px içeride */
   background-color: #4caf50;
   color: white;
   padding: 10px;
