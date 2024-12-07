@@ -77,7 +77,10 @@ const Browser = ({ closeBrowser, style }) => {
         } else if (normalizedUrl === 'google.com') {
           setContent('main');
           setUrl('https://www.google.com/');
-        } else {
+        } else if ('www.download-example.com') {
+          setContent('download1');
+          setUrl('https://www.download-example.com');
+        }else {
           setContent('404 Not Found. The requested URL was not found on this server.');
         }
       }
@@ -268,8 +271,8 @@ const Browser = ({ closeBrowser, style }) => {
                           </div>
 
                           <h2 onClick={() => {
-                          setContent("download1")
-                          setUrl("https://www.download-example.com")}} 
+                          handleGoClick("https://www.download-example.com")
+                          }} 
                           style={{cursor:"pointer"}}
                           title='https://www.download-example.com'
                           >  
