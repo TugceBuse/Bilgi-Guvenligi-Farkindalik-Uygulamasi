@@ -7,6 +7,7 @@ import Todolist, { useTodoList } from '../Todolist/Todolist';
 import Browser, { useBrowser } from '../Browser/Browser';
 import ITsupport, { useITsupport } from '../ITsupport/ITsupport';
 import Folder, { useFolder } from '../Folder/Folder';
+import Scanner, { useScanner } from '../Scanner/Scanner';
 
 import Alert from '../Notifications/Alert';
 import { useGameContext } from '../Context';
@@ -22,6 +23,7 @@ const Desktop = () => {
   const { openTodoList, closeTodoList} = useTodoList();
   const { openITsupport, closeITsupport} = useITsupport();
   const { openFolder, closeFolder} = useFolder();
+  const { openScanner, closeScanner} = useScanner();
 
 
   const {
@@ -141,6 +143,10 @@ const Desktop = () => {
           <img src="/icons/folder.png" alt="Folder Icon" />
           <span>Folder</span>
         </div>
+        <div className="icon" onClick={() => handleDesktopClick('scanner', openScanner)}>
+          <img src="/icons/qr-code.png" alt="QR Code Icon" />
+          <span>QR Scanner</span>
+        </div>
       </div>
 
 
@@ -181,6 +187,13 @@ const Desktop = () => {
           closeFolder={closeFolder}
           style={{
             ...calculateWindowPosition(openWindows.indexOf('folder'))
+          }} 
+       />} 
+       {openWindows.includes('scanner') &&
+       <Scanner
+          closeScanner={closeScanner}
+          style={{
+            ...calculateWindowPosition(openWindows.indexOf('scanner'))
           }} 
        />} 
       

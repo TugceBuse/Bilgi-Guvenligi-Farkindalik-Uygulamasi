@@ -296,8 +296,8 @@
 
 .popup {
   position: fixed;
-  bottom: 98px; 
-  left: 200px;
+  top: 20px;
+  right: 20px;
   background-color: #4caf50;
   color: white;
   padding: 10px;

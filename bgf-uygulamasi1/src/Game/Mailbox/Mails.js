@@ -83,45 +83,27 @@ export const mails = [
       </div>
     )
    },
-        /* 3.Mail Content*/
-   {Name:'Global Jobs', from:'hr@global-jobs.com',
-   title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, readMail: false, 
-    content: 
-    (
-      <div className="mail-content">
+   /* 3.Mail Content*/
+   {Name:'ShoppingPlus', from:'rewards@shoppingplus.com',
+    title: 'ShoppingPlus', precontent: `-Sadakat Puanlarınızı Hemen Kullanın!`, readMail: false,
+     content: 
+     (
+       <div className="mail-content">
           <pre>
               <b>Merhaba,</b><br/><br/>
-              Profesyonel yetenekleriniz ve iş deneyimlerinizle ilgili profilinizi inceledik. Sizden etkilendiğimizi ve ekibimize katılmanızın bizim için büyük bir fırsat olacağını düşündük.<br/><br/>
-              Şu anda sizin uzmanlık alanınıza uygun bir pozisyon için başvurunuzu kabul etmeye hazırız. Pozisyon, büyüme odaklı bir kariyer fırsatı sunarken, yeteneklerinizi en iyi şekilde kullanabileceğiniz bir ortam sağlamayı hedeflemektedir.<br/><br/>
-              
-              <b>Pozisyon Detayları:<br/><br/>
-              <div className='dots' ></div> Pozisyon Adı:</b> Kıdemli Yazılım Uzmanı<br/>
-              <div className='dots' ></div> <b>Lokasyon:</b> Uzaktan Çalışma / Hibrit Model<br/>
-              <div className='dots' ></div> <b>Başlangıç Tarihi:</b> 01/12/2024<br/>
-              <div className='dots' ></div> <b>Maaş Aralığı:</b> Pozisyonla ilgili detayları görmek için tıklayın.<br/><br/>
-              Pozisyonla ilgili ayrıntıları incelemek ve başvuru işleminizi tamamlamak için lütfen aşağıdaki bağlantıya tıklayın:<br/><br/>
+              Sadakat programımız sayesinde kazandığınız puanlar kullanılmaya hazır. İndirim kodlarınızı ve özel fırsatları görmek için aşağıdaki karekodu tarayın.<br/><br/>
+              <img style={{width:300, height:300, paddingTop:20, paddingBottom:20}} src="./MailPictures/QrCode.png" alt="QrCode Pic"></img><br/>
+              <b>Puanların Son Kullanım Tarihi:</b> 31 Aralık 2024<br/>
+  
+              Bize her alışverişinizde eşlik ettiğiniz için teşekkür ederiz!
 
-              <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
-              title='https://global-jbos.com/track/#45%33'>
-              Pozisyon Detaylarını Gör
-              </span><br/><br/>
+              <b>Saygılarımızla,<br/>
+              Shopping Plus Ekibi</b><br/>
               
-              Başvurunuzu tamamlamak için, lütfen ilgili formu doldurup özgeçmişinizi yükleyiniz. 
-              Bu işlemi 48 saat içerisinde tamamlamanızı rica ediyoruz. 
-              Sürecin sonunda, mülakat davetiyeniz tarafınıza gönderilecektir.<br/><br/>
-              Sorularınız için bizimle 
-              <span style={{color:"orange", textDecoration: "underline"}}>
-               hr@global-jobs.com
-              </span> adresinden iletişime geçebilirsiniz.
-
-              <b>Teşekkürler,<br/><br/>
-              İnsan Kaynakları Departmanı<br/>
-              Global Jobs</b><br/>
-              global-jobs.com<br/>
-            </pre>
-      </div>
-    )
-   },
+          </pre>
+        </div>
+     )
+    },
 
    /* 4.Mail Content*/
    {Name:'Trusted Platformu', from:'no-reply@trustedplatform.com',
@@ -254,6 +236,111 @@ export const mails = [
             </div>
          )
         },
+        /* 9.Mail Content*/
+        {Name:'BankOnline', from:'security@bankonline.com',
+          title: 'BankOnline', precontent: `-Hesap Şifrenizi Güncelleyin`, readMail: false,
+           content: 
+           (
+             <div className="mail-content">
+                <pre>
+                    <b>Merhaba,</b><br/><br/>
+                    Hesap güvenliğinizi artırmak için BankOnline olarak şifre politikasında önemli bir güncelleme yaptık. 
+                    Bu kapsamda, hesabınızın güvende kalmasını sağlamak için yeni bir şifre oluşturmanız gerekmektedir.<br/><br/>
+                    
+                    <b>Yeni Şifre Oluşturmak İçin:</b><br/>
+                    <p>  1. Hesabınıza giriş yapın.</p>
+                    <p>  2. “Ayarlar” menüsünden Güvenlik sekmesine gidin.</p>
+                    <p>  3. Yeni bir şifre belirleyin ve onaylayın.</p><br/><br/>
+
+                    <b>Dikkat Edilmesi Gerekenler:</b><br/>
+                    <div className='dots' ></div> Şifreniz en az 8 karakterden oluşmalı ve büyük harf, rakam, sembol içermelidir.<br/>
+                    <div className='dots' ></div> Şifrenizi kimseyle paylaşmayın.<br/><br/>
+  
+                    Eğer bu talep size ait değilse veya bir şüpheli aktivite fark ettiyseniz, acilen bizimle iletişime geçin:
+                    <span style={{color:"orange", cursor:"pointer"}} title='securty@bankonline.com'> Destek Hattımız</span>.<br/><br/> 
+  
+                    <b>Teşekkürler,<br/>
+                    BankOnline Güvenlik Ekibi</b><br/>
+                    
+                </pre>
+              </div>
+           )
+          },
+
+        /* 10.Mail Content*/
+        {Name:'Global Jobs', from:'hr@global-jobs.com',
+          title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, readMail: false, 
+          content: 
+          (
+            <div className="mail-content">
+                <pre>
+                    <b>Merhaba,</b><br/><br/>
+                    Profesyonel yetenekleriniz ve iş deneyimlerinizle ilgili profilinizi inceledik. Sizden etkilendiğimizi ve ekibimize katılmanızın bizim için büyük bir fırsat olacağını düşündük.<br/><br/>
+                    Şu anda sizin uzmanlık alanınıza uygun bir pozisyon için başvurunuzu kabul etmeye hazırız. Pozisyon, büyüme odaklı bir kariyer fırsatı sunarken, yeteneklerinizi en iyi şekilde kullanabileceğiniz bir ortam sağlamayı hedeflemektedir.<br/><br/>
+                    
+                    <b>Pozisyon Detayları:<br/><br/>
+                    <div className='dots' ></div> Pozisyon Adı:</b> Kıdemli Yazılım Uzmanı<br/>
+                    <div className='dots' ></div> <b>Lokasyon:</b> Uzaktan Çalışma / Hibrit Model<br/>
+                    <div className='dots' ></div> <b>Başlangıç Tarihi:</b> 01/12/2024<br/>
+                    <div className='dots' ></div> <b>Maaş Aralığı:</b> Pozisyonla ilgili detayları görmek için tıklayın.<br/><br/>
+                    Pozisyonla ilgili ayrıntıları incelemek ve başvuru işleminizi tamamlamak için lütfen aşağıdaki bağlantıya tıklayın:<br/><br/>
+      
+                    <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
+                    title='https://global-jbos.com/track/#45%33'>
+                    Pozisyon Detaylarını Gör
+                    </span><br/><br/>
+                    
+                    Başvurunuzu tamamlamak için, lütfen ilgili formu doldurup özgeçmişinizi yükleyiniz. 
+                    Bu işlemi 48 saat içerisinde tamamlamanızı rica ediyoruz. 
+                    Sürecin sonunda, mülakat davetiyeniz tarafınıza gönderilecektir.<br/><br/>
+                    Sorularınız için bizimle 
+                    <span style={{color:"orange", textDecoration: "underline"}}>
+                      hr@global-jobs.com
+                    </span> adresinden iletişime geçebilirsiniz.
+      
+                    <b>Teşekkürler,<br/><br/>
+                    İnsan Kaynakları Departmanı<br/>
+                    Global Jobs</b><br/>
+                    global-jobs.com<br/>
+                  </pre>
+            </div>
+          )
+          },
+          /* 11.Mail Content*/
+          {Name:'WellCheck', from:'health@wellcheck.com',
+            title: 'WellCheck', precontent: `-Sağlık Testi Sonuçlarınız Hazır: Hemen Kontrol Edin`, readMail: false, 
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      Geçtiğimiz günlerde yaptırmış olduğunuz sağlık testinin sonuçları sistemimize yüklenmiştir. Sonuçlarınız, daha iyi bir sağlık yönetimi için dikkatle hazırlanmış ve detaylandırılmıştır. Bu önemli bilgileri görmek için lütfen aşağıdaki karekodu tarayın:<br/><br/>
+                      
+                      <img style={{width:300, height:300, paddingTop:20, paddingBottom:20}} src="./MailPictures/QrCode2.png" alt="QrCode Pic"></img><br/>
+
+                      <b>Sonuçlara Neden Erişmelisiniz?<br/><br/>
+                      <div className='dots' ></div> Kişiselleştirilmiş Analiz:</b> Test sonuçlarınız doğrultusunda size özel sağlık önerileri.<br/>
+                      <div className='dots' ></div> <b>Acil Durumlar İçin Bilgilendirme:</b> Erken teşhis şansı sağlamak için kapsamlı değerlendirme.<br/>
+                      <div className='dots' ></div> <b>Güvenli Erişim:</b> Sonuçlarınıza yalnızca sizin erişiminiz sağlanır.<br/><br/>
+                      
+                      <b>Önemli Not:</b><br/>
+                      Test sonuçlarınıza yalnızca 48 saat içinde erişebilirsiniz. Bu süre zarfında görüntüleme yapılmazsa, veri güvenliği politikamız gereği kayıtlar otomatik olarak sistemden silinecektir.<br/><br/>
+        
+                      Herhangi bir sorun yaşarsanız veya destek almak isterseniz, müşteri hizmetleri ekibimizle iletişime geçebilirsiniz.<br/><br/>
+                      Sağlığınız bizim için önemli!<br/><br/>
+        
+                      Teşekkürler,<br/>
+                     <b>WellCheck Sağlık Ekibi<br/><br/>
+                      İletişim:</b><br/>
+                      E-posta: 
+                      <span 
+                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> support@wellcheck.com</span><br/>
+                      Telefon: +90 555 123 4567
+
+                    </pre>
+              </div>
+            )
+            },
   ];
 
 
@@ -293,7 +380,11 @@ export const mails = [
             <b>Merhaba,</b><br/><br/>
             Bugün şanslı gününüz! Katkı sağladığınız çekilişimizi kazanmış bulunmaktasınız. Bir iPhone 15 Pro Max kazandınız!.<br/><br/>
             Sadece bununla da kalmadık, sizi görüp kıskanmasın diye yakınlarınızdan birine de bir çift airpods hediye!. Hediyenizi talep etmek için ilerleyin...<br/>
-            <img style={{width:400, height:400, paddingTop:20, paddingBottom:20}} src="./SpamMailPictures/gift.jpg" alt="Gift Pic"></img><br/>
+            <img style={{width:400, height:400, paddingTop:20, paddingBottom:20, cursor:"pointer"}} 
+            title='rewarsd@winbig.com' 
+            src="./SpamMailPictures/gift.jpg" 
+            alt="Gift Pic"
+            ></img><br/>
             <button 
               className="claim-button"
               title='rewarsd@winbig.com'
