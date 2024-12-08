@@ -77,10 +77,16 @@ const Browser = ({ closeBrowser, style }) => {
         } else if (normalizedUrl === 'google.com') {
           setContent('main');
           setUrl('https://www.google.com/');
-        } else if ('www.ShieldSecure.com') {
+        } else if ('www.CyberSentinel.com') {
+          console.log('CyberSentinel');
+          setContent('download2');
+          setUrl('https://www.CyberSentinel.com');
+        }
+          else if ('www.ShieldSecure.com') {
+          console.log('ShieldSecure');
           setContent('download1');
-          setUrl('https://www.ShieldSecure.com');
-        }else {
+          setUrl('https://www.ShieldSecure.com'); 
+        } else {
           setContent('404 Not Found. The requested URL was not found on this server.');
         }
       }
@@ -271,7 +277,7 @@ const Browser = ({ closeBrowser, style }) => {
                           </div>
 
                           <h2 onClick={() => {
-                          handleGoClick("https://www.ShieldSecure.com")
+                          handleGoClick("www.ShieldSecure.com")
                           }} 
                           style={{cursor:"pointer"}}
                           title='https://www.ShieldSecure.com'
@@ -284,20 +290,20 @@ const Browser = ({ closeBrowser, style }) => {
                         {/* 2.link */}
                         <div className='link-part'>  
                           <div className='top-of-the-link'>
-                            <div className='image-div' style={{backgroundImage: "radial-gradient(circle, #e3e2e2 25%, #d9a196 50%, #801b07 75%, #54f651 100%)"}}>CS</div>
+                            <div className='image-div2'>CS</div>
                                 <div style={{display: "flex", flexDirection:"column"}}>
                                     CyberSentinel
-                                    <p>https://www.download-example2.com</p>
+                                    <p>https://www.CyberSentinel.com</p>
                                 </div>
                           </div>
 
                           <h2 onClick={() => {
-                          setContent("download1")
-                          setUrl("https://www.download-example.com")}} 
+                           handleGoClick("www.CyberSentinel.com")
+                          }} 
                           style={{cursor:"pointer"}}
-                          title='https://www.download-example2.com'
+                          title='https://www.CyberSentinel.com'
                           >  
-                          VirusVanisher | Antivirüs ve VPN İndir!
+                          CyberSentinel | Antivirüs ve VPN İndir!
                           </h2>  
                           <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
                         </div>
@@ -356,15 +362,42 @@ const Browser = ({ closeBrowser, style }) => {
                       {showPopup && <div className="popup">İndirildi!</div>}
                     </div>
                   );
+                  case 'download2':
+                    return (
+                      <div className="download-div-inside">                    
+                          <h2>ShieldSecure Antivirüs İndirme Bölümü</h2>
+                          <p>ShieldSecure antivirüs yazılımını indirmek için aşağıdaki bağlantıları kullanabilirsiniz.</p>
+                        <div className="download-links">
+                          <h3>Mevcut İndirmeler:</h3>
+                          <ul>
+                            <li>
+                              <button onClick={handleDownloadClick}>
+                                  ShieldSecure Setup
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={handleDownloadClick}>
+                                  ShieldSecure Güncelleme
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={handleDownloadClick}>
+                                  ShieldSecure Kullanım Kılavuzu
+                              </button>
+                            </li>
+                          </ul>
+                          {downloadMessage && <p style={{justifySelf:"center"}}>{downloadMessage}</p>}
+                        </div>
+                        {showPopup && <div className="popup">İndirildi!</div>}
+                      </div>
+                    );
                 default:
                   return <div>{content}</div>;
               }
             })()
           )
         }
-
-       
-            
+  
       </div>
     </div>
   );

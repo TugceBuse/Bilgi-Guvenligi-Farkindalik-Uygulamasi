@@ -436,6 +436,20 @@
   text-decoration: solid;
   text-shadow: #000000;
 }
+.image-div2{
+  background-image: radial-gradient(circle, #e3e2e2 25%, #d9a196 50%, #801b07 75%, #54f651 100%);
+  border-radius: 50%;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: #2c2c2c;
+  text-align: center;
+  align-content: center;
+  font-size: 23px;
+  font-weight: bold;
+  text-decoration: solid;
+  text-shadow: #000000;
+}
 .top-of-the-link{
   display: flex;
   flex-direction: row;
