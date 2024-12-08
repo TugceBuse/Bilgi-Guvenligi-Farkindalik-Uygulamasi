@@ -173,7 +173,7 @@
   }
   .mailbox-mailcontent{
     width: 95%;
-    height: 100%;
+    height: auto;
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -194,7 +194,7 @@
     display: flex;
     flex-direction: row;
     width: 95%;
-    height: 90vh;
+    height: auto;
     box-sizing: border-box;
     padding: 2% 7% 0 7%;
     font-size: 12px;
@@ -260,14 +260,13 @@
   .verify-button {
     color: orange;
     background-color: rgb(81, 73, 57);
-    text-decoration: underline;
     cursor: pointer;
-    
     border: none; /* Kenarlıkları kaldır */
     font-size: 16px; /* Yazı boyutunu ayarla */
-    padding: 10px 20px; /* İç boşluk ekle */
+    padding: 10px 10px; /* İç boşluk ekle */
     border-radius: 5px; /* Kenarları yuvarla */
     transition: background-color 0.3s ease; /* Arka plan rengini yumuşak geçişle değiştir */
+    text-align: center;
    
     /* Hover durumu */
     &:hover {
@@ -344,4 +343,22 @@
     margin-left: 10px;
     font-size: 14px;
     font-weight: bold;
+  }
+ 
+  /* Mail.js Spam Mails CSS */
+  .claim-button {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .claim-button:hover {
+    background-color: darkorange;
   }

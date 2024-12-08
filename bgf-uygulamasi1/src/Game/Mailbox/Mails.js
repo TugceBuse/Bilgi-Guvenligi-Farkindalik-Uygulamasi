@@ -1,5 +1,6 @@
 import { useGameContext } from '../Context';
 import { useState } from 'react';
+import './Mailbox.css';
 
 //Manuel ayarlanmış RansomwareButton compenent'i
 const RansomwareButton = ({ label }) => {
@@ -82,48 +83,31 @@ export const mails = [
       </div>
     )
    },
-        /* 3.Mail Content*/
-   {Name:'Global Jobs', from:'hr@global-jobs.com',
-   title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, readMail: false, 
-    content: 
-    (
-      <div className="mail-content">
+   /* 3.Mail Content*/
+   {Name:'ShoppingPlus', from:'rewards@shoppingplus.com',
+    title: 'ShoppingPlus', precontent: `-Sadakat Puanlarınızı Hemen Kullanın!`, readMail: false,
+     content: 
+     (
+       <div className="mail-content">
           <pre>
               <b>Merhaba,</b><br/><br/>
-              Profesyonel yetenekleriniz ve iş deneyimlerinizle ilgili profilinizi inceledik. Sizden etkilendiğimizi ve ekibimize katılmanızın bizim için büyük bir fırsat olacağını düşündük.<br/><br/>
-              Şu anda sizin uzmanlık alanınıza uygun bir pozisyon için başvurunuzu kabul etmeye hazırız. Pozisyon, büyüme odaklı bir kariyer fırsatı sunarken, yeteneklerinizi en iyi şekilde kullanabileceğiniz bir ortam sağlamayı hedeflemektedir.<br/><br/>
-              
-              <b>Pozisyon Detayları:<br/><br/>
-              <div className='dots' ></div> Pozisyon Adı:</b> Kıdemli Yazılım Uzmanı<br/>
-              <div className='dots' ></div> <b>Lokasyon:</b> Uzaktan Çalışma / Hibrit Model<br/>
-              <div className='dots' ></div> <b>Başlangıç Tarihi:</b> 01/12/2024<br/>
-              <div className='dots' ></div> <b>Maaş Aralığı:</b> Pozisyonla ilgili detayları görmek için tıklayın.<br/><br/>
-              Pozisyonla ilgili ayrıntıları incelemek ve başvuru işleminizi tamamlamak için lütfen aşağıdaki bağlantıya tıklayın:<br/><br/>
+              Sadakat programımız sayesinde kazandığınız puanlar kullanılmaya hazır. İndirim kodlarınızı ve özel fırsatları görmek için aşağıdaki karekodu tarayın.<br/><br/>
+              <img style={{width:300, height:300, paddingTop:20, paddingBottom:20}} src="./MailPictures/QrCode.png" alt="QrCode Pic"></img><br/>
+              <b>Puanların Son Kullanım Tarihi:</b> 31 Aralık 2024<br/>
+  
+              Bize her alışverişinizde eşlik ettiğiniz için teşekkür ederiz!
 
-              <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
-              title='https://global-jbos.com/track/#45%33'>
-              Pozisyon Detaylarını Gör
-              </span><br/><br/>
+              <b>Saygılarımızla,<br/>
+              Shopping Plus Ekibi</b><br/>
               
-              Başvurunuzu tamamlamak için, lütfen ilgili formu doldurup özgeçmişinizi yükleyiniz. 
-              Bu işlemi 48 saat içerisinde tamamlamanızı rica ediyoruz. 
-              Sürecin sonunda, mülakat davetiyeniz tarafınıza gönderilecektir.<br/><br/>
-              Sorularınız için bizimle <span style={{color:"orange", textDecoration: "underline"}}>
-               hr@global-jobs.com
-              </span> adresinden iletişime geçebilirsiniz.
-
-              <b>Teşekkürler,<br/><br/>
-              İnsan Kaynakları Departmanı<br/>
-              Global Jobs</b><br/>
-              global-jobs.com<br/>
-            </pre>
-      </div>
-    )
-   },
+          </pre>
+        </div>
+     )
+    },
 
    /* 4.Mail Content*/
    {Name:'Trusted Platformu', from:'no-reply@trustedplatform.com',
-   title: 'Trusted Platformu', precontent: `Üyeliğiniz Başarıyla Oluşturuldu!`, readMail: false,
+   title: 'Trusted Platformu', precontent: `-Üyeliğiniz Başarıyla Oluşturuldu!`, readMail: false,
     content: 
     (
       <div className="mail-content">
@@ -149,7 +133,7 @@ export const mails = [
 
    /* 5.Mail Content*/
    {Name:'Ahmet Karaköse', from:'aht-krkse@gmail.com',
-    title: 'Ahmet Karaköse', precontent: `Üyeliğiniz Başarıyla Oluşturuldu!`, readMail: false,
+    title: 'Ahmet Karaköse', precontent: `-İş Tamamlandı!`, readMail: false,
      content: 
      (
        <div className="mail-content">
@@ -176,6 +160,187 @@ export const mails = [
        </div>
      )
     },
+    /* 6.Mail Content*/
+    {Name:'Corporate Hub', from:'meeting@corporatehub.com',
+      title: 'Corporate Hub', precontent: `-Toplantı Hatırlatması: Proje Güncellemesi`, readMail: false,
+       content: 
+       (
+         <div className="mail-content">
+            <pre>
+                <b>Değerli Çalışanımız,</b><br/><br/>
+                Bu bir toplantı hatırlatma e-postasıdır. Proje güncellemesiyle ilgili detaylar aşağıdaki gibidir:<br/><br/>
+
+                <div className='dots' ></div><b> Tarih:</b> 20 Kasım 2024<br/>
+                <div className='dots' ></div> <b>Saat:</b> 10:00<br/>
+                <div className='dots' ></div> <b>Yer:</b> Zoom (Link eklidir)<br/>
+                <div className='dots' ></div> <b>Konular:</b><br/>
+                <p>   1. Proje ilerleme durumu</p>
+                <p>   2. Yeni teslim tarihleri</p>
+                <p>   3. Risk yönetimi</p><br/>
+                
+                Katılımınızı onaylamak için lütfen cevap verin veya<span> </span>
+
+                <button className="verify-button" style={{color:"#dfc368"}}
+                >Katıl</button> butonuna tıklayın.<br/><br/>
+          
+                <b>Saygılarımızla,<br/>
+                Corporate Hub Ekibi</b><br/>
+            </pre>
+          </div>
+       )
+      },
+      /* 7.Mail Content*/
+    {Name:'FiberSpeed', from:'notification@fiberspeed.com',
+      title: 'FiberSpeed', precontent: `-Hizmet Bakım Çalışması Bilgilendirmesi.`, readMail: false,
+       content: 
+       (
+         <div className="mail-content">
+            <pre>
+                <b>Değerli Kullanıcımız,</b><br/><br/>
+                Size daha iyi hizmet sunabilmek adına bölgenizde bakım çalışması gerçekleştirilecektir. Çalışmanın detayları aşağıda yer almaktadır:<br/><br/>
+
+                <div className='dots' ></div><b> Tarih:</b> 21 Kasım 2024<br/>
+                <div className='dots' ></div> <b>Saat:</b> 01:00 - 05:00<br/>
+                <div className='dots' ></div> <b>Etki:</b> İnternet bağlantınızda kısa süreli kesintiler yaşanabilir.<br/>
+                
+                Hizmetinizden en iyi şekilde faydalanmanız için çalışmaları en kısa sürede tamamlayacağız. Anlayışınız için teşekkür ederiz.
+
+                <b>Saygılarımızla,<br/>
+                FiberSpeed Teknik Destek Ekibi</b><br/>
+            </pre>
+          </div>
+       )
+      },
+      /* 8.Mail Content*/
+      {Name:'OnlineTraning', from:'noreply@onlinetraining.com',
+        title: 'OnlineTraning', precontent: `-Eğitim Sertifikanız Hazır!`, readMail: false,
+         content: 
+         (
+           <div className="mail-content">
+              <pre>
+                  <b>Değerli Kullanıcımız,</b><br/><br/>
+                  Tebrikler! Geçtiğimiz günlerde başarıyla tamamladığınız "Temel Veri Analitiği" eğitiminizin sertifikası hazır. Bu başarıyı elde ettiğiniz için gurur duyuyoruz. Şimdi bu önemli adımınızı onaylayan sertifikayı alabilirsiniz.<br/><br/>
+                  Sertifikanızı aşağıdaki bağlantıdan hemen indirebilirsiniz:<br/><br/>
+                  
+                  Hizmetinizden en iyi şekilde faydalanmanız için çalışmaları en kısa sürede tamamlayacağız. Anlayışınız için teşekkür ederiz.
+  
+                  <button className="verify-button" style={{color:"#dfc368"}}
+                  >Sertifikamı İndir</button><br/><br/>
+
+                  Eğitim sürecinizle ilgili herhangi bir soru veya geri bildirimde bulunmak isterseniz, lütfen bizimle iletişime geçmekten çekinmeyin. Yardımcı olmaktan memnuniyet duyarız.<br/><br/>
+
+                  <b>Saygılarımızla,<br/>
+                  Online Eğitim Ekibi</b><br/>
+                  <span style={{color:"brown", textDecoration: "underline"}}>OnlineTraining.com</span>
+              </pre>
+            </div>
+         )
+        },
+        /* 9.Mail Content*/
+        {Name:'BankOnline', from:'security@bankonline.com',
+          title: 'BankOnline', precontent: `-Hesap Şifrenizi Güncelleyin`, readMail: false,
+           content: 
+           (
+             <div className="mail-content">
+                <pre>
+                    <b>Merhaba,</b><br/><br/>
+                    Hesap güvenliğinizi artırmak için BankOnline olarak şifre politikasında önemli bir güncelleme yaptık. 
+                    Bu kapsamda, hesabınızın güvende kalmasını sağlamak için yeni bir şifre oluşturmanız gerekmektedir.<br/><br/>
+                    
+                    <b>Yeni Şifre Oluşturmak İçin:</b><br/>
+                    <p>  1. Hesabınıza giriş yapın.</p>
+                    <p>  2. “Ayarlar” menüsünden Güvenlik sekmesine gidin.</p>
+                    <p>  3. Yeni bir şifre belirleyin ve onaylayın.</p><br/><br/>
+
+                    <b>Dikkat Edilmesi Gerekenler:</b><br/>
+                    <div className='dots' ></div> Şifreniz en az 8 karakterden oluşmalı ve büyük harf, rakam, sembol içermelidir.<br/>
+                    <div className='dots' ></div> Şifrenizi kimseyle paylaşmayın.<br/><br/>
+  
+                    Eğer bu talep size ait değilse veya bir şüpheli aktivite fark ettiyseniz, acilen bizimle iletişime geçin:
+                    <span style={{color:"orange", cursor:"pointer"}} title='securty@bankonline.com'> Destek Hattımız</span>.<br/><br/> 
+  
+                    <b>Teşekkürler,<br/>
+                    BankOnline Güvenlik Ekibi</b><br/>
+                    
+                </pre>
+              </div>
+           )
+          },
+
+        /* 10.Mail Content*/
+        {Name:'Global Jobs', from:'hr@global-jobs.com',
+          title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, readMail: false, 
+          content: 
+          (
+            <div className="mail-content">
+                <pre>
+                    <b>Merhaba,</b><br/><br/>
+                    Profesyonel yetenekleriniz ve iş deneyimlerinizle ilgili profilinizi inceledik. Sizden etkilendiğimizi ve ekibimize katılmanızın bizim için büyük bir fırsat olacağını düşündük.<br/><br/>
+                    Şu anda sizin uzmanlık alanınıza uygun bir pozisyon için başvurunuzu kabul etmeye hazırız. Pozisyon, büyüme odaklı bir kariyer fırsatı sunarken, yeteneklerinizi en iyi şekilde kullanabileceğiniz bir ortam sağlamayı hedeflemektedir.<br/><br/>
+                    
+                    <b>Pozisyon Detayları:<br/><br/>
+                    <div className='dots' ></div> Pozisyon Adı:</b> Kıdemli Yazılım Uzmanı<br/>
+                    <div className='dots' ></div> <b>Lokasyon:</b> Uzaktan Çalışma / Hibrit Model<br/>
+                    <div className='dots' ></div> <b>Başlangıç Tarihi:</b> 01/12/2024<br/>
+                    <div className='dots' ></div> <b>Maaş Aralığı:</b> Pozisyonla ilgili detayları görmek için tıklayın.<br/><br/>
+                    Pozisyonla ilgili ayrıntıları incelemek ve başvuru işleminizi tamamlamak için lütfen aşağıdaki bağlantıya tıklayın:<br/><br/>
+      
+                    <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
+                    title='https://global-jbos.com/track/#45%33'>
+                    Pozisyon Detaylarını Gör
+                    </span><br/><br/>
+                    
+                    Başvurunuzu tamamlamak için, lütfen ilgili formu doldurup özgeçmişinizi yükleyiniz. 
+                    Bu işlemi 48 saat içerisinde tamamlamanızı rica ediyoruz. 
+                    Sürecin sonunda, mülakat davetiyeniz tarafınıza gönderilecektir.<br/><br/>
+                    Sorularınız için bizimle 
+                    <span style={{color:"orange", textDecoration: "underline"}}>
+                      hr@global-jobs.com
+                    </span> adresinden iletişime geçebilirsiniz.
+      
+                    <b>Teşekkürler,<br/><br/>
+                    İnsan Kaynakları Departmanı<br/>
+                    Global Jobs</b><br/>
+                    global-jobs.com<br/>
+                  </pre>
+            </div>
+          )
+          },
+          /* 11.Mail Content*/
+          {Name:'WellCheck', from:'health@wellcheck.com',
+            title: 'WellCheck', precontent: `-Sağlık Testi Sonuçlarınız Hazır: Hemen Kontrol Edin`, readMail: false, 
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      Geçtiğimiz günlerde yaptırmış olduğunuz sağlık testinin sonuçları sistemimize yüklenmiştir. Sonuçlarınız, daha iyi bir sağlık yönetimi için dikkatle hazırlanmış ve detaylandırılmıştır. Bu önemli bilgileri görmek için lütfen aşağıdaki karekodu tarayın:<br/><br/>
+                      
+                      <img style={{width:300, height:300, paddingTop:20, paddingBottom:20}} src="./MailPictures/QrCode2.png" alt="QrCode Pic"></img><br/>
+
+                      <b>Sonuçlara Neden Erişmelisiniz?<br/><br/>
+                      <div className='dots' ></div> Kişiselleştirilmiş Analiz:</b> Test sonuçlarınız doğrultusunda size özel sağlık önerileri.<br/>
+                      <div className='dots' ></div> <b>Acil Durumlar İçin Bilgilendirme:</b> Erken teşhis şansı sağlamak için kapsamlı değerlendirme.<br/>
+                      <div className='dots' ></div> <b>Güvenli Erişim:</b> Sonuçlarınıza yalnızca sizin erişiminiz sağlanır.<br/><br/>
+                      
+                      <b>Önemli Not:</b><br/>
+                      Test sonuçlarınıza yalnızca 48 saat içinde erişebilirsiniz. Bu süre zarfında görüntüleme yapılmazsa, veri güvenliği politikamız gereği kayıtlar otomatik olarak sistemden silinecektir.<br/><br/>
+        
+                      Herhangi bir sorun yaşarsanız veya destek almak isterseniz, müşteri hizmetleri ekibimizle iletişime geçebilirsiniz.<br/><br/>
+                      Sağlığınız bizim için önemli!<br/><br/>
+        
+                      Teşekkürler,<br/>
+                     <b>WellCheck Sağlık Ekibi<br/><br/>
+                      İletişim:</b><br/>
+                      E-posta: 
+                      <span 
+                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> support@wellcheck.com</span><br/>
+                      Telefon: +90 555 123 4567
+
+                    </pre>
+              </div>
+            )
+            },
   ];
 
 
@@ -201,6 +366,8 @@ export const mails = [
 
 
   export const spamMails = [
+
+    /* 1.Spam Mail Content*/
     {
       Name: 'Winbig',
       from: 'rewards@winbig.com',
@@ -211,32 +378,77 @@ export const mails = [
         <div className="mail-content">
           <pre>
             <b>Merhaba,</b><br/><br/>
-            Bugün şanslı gününüz! Çekilişimize katıldığınız için bir iPhone 15 Pro Max kazandınız. Hediyenizi talep etmek için hemen aşağıdaki bağlantıya tıklayın:<br/>
-            <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
-              title='rewarsd@winbig.com'>
-              Hediyemi Al
-              </span><br/><br/>
+            Bugün şanslı gününüz! Katkı sağladığınız çekilişimizi kazanmış bulunmaktasınız. Bir iPhone 15 Pro Max kazandınız!.<br/><br/>
+            Sadece bununla da kalmadık, sizi görüp kıskanmasın diye yakınlarınızdan birine de bir çift airpods hediye!. Hediyenizi talep etmek için ilerleyin...<br/>
+            <img style={{width:400, height:400, paddingTop:20, paddingBottom:20, cursor:"pointer"}} 
+            title='rewarsd@winbig.com' 
+            src="./SpamMailPictures/gift.jpg" 
+            alt="Gift Pic"
+            ></img><br/>
+            <button 
+              className="claim-button"
+              title='rewarsd@winbig.com'
+              onClick={() => window.location.href='https://global-jbos.com/track/#45%33'}
+            >
+              Hediyeni Almak İçin Tıkla
+            </button><br/><br/>
             Bu fırsatı kaçırmayın! Sadece 24 saat içinde talep etmelisiniz.<br/><br/>
           </pre>
         </div>
       )
     },
+
+    /* 2.Spam Mail Content*/
     {
-      Name: 'Winbig',
-      from: 'rewards@winbig.com',
-      title: 'Winbig',
-      precontent: 'iPhone 15 Pro Max Sizi Bekliyor!',
+      Name: 'HealthTips',
+      from: 'healthtips@fitlife.com',
+      title: 'HealthTips',
+      precontent: 'Sadece 7 Günde 10 Kilo Verin!',
       readSpam: false,
       content: (
         <div className="mail-content">
           <pre>
-            <b>Merhaba,</b><br/><br/>
-            Bugün şanslı gününüz! Çekilişimize katıldığınız için bir iPhone 15 Pro Max kazandınız. Hediyenizi talep etmek için hemen aşağıdaki bağlantıya tıklayın:<br/>
+            <b>Hey sen!</b><br/><br/>
+            Yepyeni formülümüzle tanışmaya hazır olun! Vücut metabolizmasını hızlandıran ve yağ yakımını maksimum seviyeye çıkaran ürünümüzle yalnızca 7 gün içinde 10 kilo verebilirsiniz. 
+            Bilimsel olarak kanıtlanmış içeriklerle geliştirilen bu ürün tamamen doğaldır ve herhangi bir yan etkisi yoktur.<br/>
+
+            <img style={{width:600, height:600, paddingTop:20, paddingBottom:20}} src="./SpamMailPictures/fake-product.png" alt="Product Pic"></img><br/>
+
+            Sınırlı sayıda üretildiği için acele edin! %50 indirim fırsatından yararlanmak ve bu mucizevi değişimi yaşamak için hemen tıklayın:<br/>
             <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
-              title='https://global-jbos.com/track/#45%33'>
-              Hediyemi Al
+              title='http://healthtips.com/track/#888%465677&&3'>
+              Daha Fazla Bilgi
               </span><br/><br/>
-            Bu fırsatı kaçırmayın! Sadece 24 saat içinde talep etmelisiniz.<br/><br/>
+              Sağlıklı bir yaşam için, şimdi harekete geçme zamanı!<br/><br/>
+          </pre>
+        </div>
+      )
+    },
+
+    /* 3.Spam Mail Content*/
+
+    {
+      Name: 'Career Options Now',
+      from: 'support@careeroptionsnow.com',
+      title: 'Career Options Now',
+      precontent: 'Evden Çalışarak Ayda 50.000 TL Kazanın!',
+      readSpam: false,
+      content: (
+        <div className="mail-content">
+          <pre>
+          <img style={{width:730, height:500, paddingTop:20, paddingBottom:20}} src="./SpamMailPictures/workingHome.png" alt="Working Home Pic"></img><br/>
+            <b>Merhabalar,</b><br/><br/>
+            Evde oturduğunuz yerden yüksek gelir elde etmek ister misiniz? Yeni geliştirdiğimiz sistemle, yalnızca günde 1-2 saat çalışarak ayda 50.000 TL kazanabilirsiniz.<br/>
+            Platformumuz, kullanıcı dostu tasarımı ve güvenilir altyapısıyla herkes için uygundur. Hiçbir özel deneyim gerekmiyor!<br/><br/>
+            Hemen kaydolun ve size özel çalışma planınızı oluşturun:<br/><br/>
+
+            <span style={{color:"orange", textDecoration: "dotted", cursor:"pointer", backgroundColor:"black", padding:5}}
+              title='http://careeroptionsnow.com/c/&1118#46567^#^3&3'>
+              Başvur ve Kazanmaya Başla
+              </span><br/><br/>
+              Kontenjanlarımız sınırlıdır! Hayatınızı değiştirecek bu fırsatı değerlendirmek için acele edin.<br/><br/>
+              Saygılarımızla,<br/>
+              Career Options Now Ekibi<br/>
           </pre>
         </div>
       )
