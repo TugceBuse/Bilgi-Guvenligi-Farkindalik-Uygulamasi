@@ -49,7 +49,7 @@ const Browser = ({ closeBrowser, style }) => {
     setLoading(true);
     setTimeout(() => {
       // URL'yi normalize et
-      const normalizedUrl = newUrl.replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
+      const normalizedUrl = newUrl.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
 
       if (!normalizedUrl.trim()) {
         setContent('');
@@ -69,7 +69,7 @@ const Browser = ({ closeBrowser, style }) => {
           }
         }
 
-        if (normalizedUrl.trim().toLowerCase() === 'antivirus.com') {
+        if (normalizedUrl === 'antivirus.com') {
           setContent('download');
           setUrl('https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu');
         } else if (normalizedUrl === '192.168.1.1') {
@@ -77,12 +77,11 @@ const Browser = ({ closeBrowser, style }) => {
         } else if (normalizedUrl === 'google.com') {
           setContent('main');
           setUrl('https://www.google.com/');
-        } else if ('www.CyberSentinel.com') {
+        } else if (normalizedUrl === 'cybersentinel.com') {
           console.log('CyberSentinel');
           setContent('download2');
           setUrl('https://www.CyberSentinel.com');
-        }
-          else if ('www.ShieldSecure.com') {
+        } else if (normalizedUrl === 'shieldsecure.com') {
           console.log('ShieldSecure');
           setContent('download1');
           setUrl('https://www.ShieldSecure.com'); 
