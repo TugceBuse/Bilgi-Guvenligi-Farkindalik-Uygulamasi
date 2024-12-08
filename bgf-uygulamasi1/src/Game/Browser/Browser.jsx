@@ -22,7 +22,7 @@ export const useBrowser = () => {
 
 const Browser = ({ closeBrowser, style }) => {
 
-  const { setIsantivirusinstalled } = useGameContext();
+  const { setAntivirusexe } = useGameContext();
 
   const [url, setUrl] = useState('https://www.google.com/');
   const [content, setContent] = useState('main');
@@ -111,7 +111,7 @@ const Browser = ({ closeBrowser, style }) => {
       setButtonLoading(false);
       setDownloadMessage('İndirme tamamlandı!');
       setShowPopup(true);
-      setIsantivirusinstalled(true);
+      setAntivirusexe(true);
       setTimeout(() => {
         setShowPopup(false);
         setDownloadMessage('');
@@ -159,6 +159,12 @@ const Browser = ({ closeBrowser, style }) => {
     const search = e.target.value.toLowerCase();
     if (search === 'antivirus') {
       setContent('download');
+    }
+  }
+
+  const searchkeydown = (e) => {
+    if (e.key === "Enter") {
+      googleSearch(e);
     }
   }
 
@@ -242,7 +248,7 @@ const Browser = ({ closeBrowser, style }) => {
                       <h1>Google</h1>
                       <div className='searchPart'>
                         <img src="./icons/search.png" alt="Search Logo"/>
-                        <input /*onChange={}*/ onKeyDown={googleSearch} type="text" placeholder="Google'da Ara" />
+                        <input /*onChange={}*/ onKeyDown={searchkeydown} type="text" placeholder="Google'da Ara" />
                         <div className='searchPart_right'>
                           <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
                           <img src="./icons/google-voice.png" alt="Voice Logo"/>

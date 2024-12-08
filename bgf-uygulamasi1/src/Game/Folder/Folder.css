@@ -141,19 +141,36 @@
   }
 
   .folder-content-right-inside{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 55px;
-    margin-bottom: 8px;
-    gap: 130px;
-    justify-content: center;
-    text-align: left;
-    font-size: 15px;
-    color: rgb(255, 255, 255);
+    display: grid;
+    grid-template: auto / auto auto auto;
+    gap: 5px;
+    padding : 10px;
   }
-  .Icons{
-    width: 55px;
-    height: 55px;
-    cursor: pointer;
+
+  .Icons {
+    width: 97.7px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    padding: 10px;
+  }
+
+  .Icons:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #3a3a3a;
+  }
+  .Icons img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 5px;
+  }
+  
+  .Icons span {
+    font-size: 12px;
+    color: #ffffff;
+    text-align: center;
+    word-wrap: break-word;
   }

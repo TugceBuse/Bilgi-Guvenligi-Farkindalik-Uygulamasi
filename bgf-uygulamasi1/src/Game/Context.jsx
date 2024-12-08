@@ -16,6 +16,7 @@ export const GameContextProvider = ({ children }) => {
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
   const [isantivirusinstalled, setIsantivirusinstalled] = useState(false);
+  const [antivirusexe , setAntivirusexe] = useState(false);
 
   //virusler
   const [isransomware, setIsransomware] = useState(false);
@@ -74,6 +75,7 @@ export const GameContextProvider = ({ children }) => {
         isWificonnected, setIsWificonnected,
         isantivirusinstalled, setIsantivirusinstalled,
         isantivirusuptodate, setAntivirusisuptodate,
+        antivirusexe, setAntivirusexe,
         updating_antivirus, setUpdating_antivirus,
         openWindows, setOpenWindows,
         toggleWindow, 

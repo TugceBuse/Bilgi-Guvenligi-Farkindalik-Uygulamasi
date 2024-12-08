@@ -28,32 +28,35 @@ const Folder = ({ closeFolder, style }) => {
     MakeDraggable(FolderRef, '.folder-header');
     const [showRightInside, setShowRightInside] = useState(true);
     const [showDownloadsContent, setShowDownloadsContent] = useState(false);
-    const { file1 } = useGameContext();
+    const { 
+        file1,
+        antivirusexe,
+     } = useGameContext();
 
 
-    const handleDownloadsClick = () => {
-        setShowRightInside(false);
-        setShowDownloadsContent(true);
-    };
+        const handleDownloadsClick = () => {
+            setShowRightInside(false);
+            setShowDownloadsContent(true);
+        };
 
-    return (
-        <div className="folder-window" style={style} ref={FolderRef}>
+        return (
+            <div className="folder-window" style={style} ref={FolderRef}>
 
-            <div className="folder-header">
+                <div className="folder-header">
                 
-                <div style={{display:"flex", flexDirection:"row", justifyItems:"center", alignItems:"center"}}>
-                    <div className='folder-header-left'>
-                        <img src="/icons/folder-home.png" alt="House Icon" />
-                        <h2>Giriş</h2>
-                        <button className="folder-left-close" onClick={closeFolder}>×</button>
+                    <div style={{display:"flex", flexDirection:"row", justifyItems:"center", alignItems:"center"}}>
+                        <div className='folder-header-left'>
+                            <img src="/icons/folder-home.png" alt="House Icon" />
+                            <h2>Giriş</h2>
+                            <button className="folder-left-close" onClick={closeFolder}>×</button>
+                        </div>
+
+                        <span style={{fontSize:22, marginLeft:10, color:"#e4e4e4", opacity:0.9}}>+</span>
+
                     </div>
 
-                    <span style={{fontSize:22, marginLeft:10, color:"#e4e4e4", opacity:0.9}}>+</span>
-
+                    <button className="folder-close" onClick={closeFolder}>×</button>
                 </div>
-
-                <button className="folder-close" onClick={closeFolder}>×</button>
-            </div>
 
              
                 <div className="folder-content-top"> 
@@ -126,63 +129,66 @@ const Folder = ({ closeFolder, style }) => {
                             <img style={{width:24, height:24}} src="/icons/down-arrow.png" alt="Arrow Icon" />
                             <h2>Hızlı Erişim</h2>
                         </div> 
-)}
-
+                        )}
                         
-                        <div className="folder-content-right-inside">
-
                         {showRightInside && (
                             <div className="folder-content-right-inside">
-                            <div className='Icons'>
-                                <img onClick={handleDownloadsClick}
-                                src="/icons/inbox (1).png" alt="Inbox Icon" />
-                                İndirilenler
-                            </div>
-
-                            <div className='Icons'>
-                                <img src="/icons/publishing.png" alt="Desktop Icon" />
-                                Masaüstü
-                            </div>
-
-                            <div className='Icons'>
-                                <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                Proje
-                            </div>
-
-                            <div className='Icons'>
-                                <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                Kişisel
-                            </div>
-
-                            <div className='Icons'>
-                                <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                Önemli
-                            </div>
-                            </div>)}
-
-                            {showDownloadsContent && (
-                        <div>
-                            <h2 style={{display:"flex", flexDirection:"row", alignSelf:"left",justifySelf:"left", margin:30, gap:10, fontSize:12, width:180}}>İNDİRİLENLER</h2>
-                            <div className="folder-content-right-inside">
-                                {/* İndirilenler klasörünün içeriği burada */}
-                                
-                                {file1 && (
-                                <div className='Icons' style={{marginLeft: -800}}>
-                                    <img src="/icons/file.png" alt="File Icon" />
-                                    file1.pdf
+                                <div className='Icons'>
+                                    <img onClick={handleDownloadsClick}
+                                    src="/icons/inbox (1).png" alt="Inbox Icon" />
+                                    İndirilenler
                                 </div>
-                                )}
+
+                                <div className='Icons'>
+                                    <img src="/icons/publishing.png" alt="Desktop Icon" />
+                                    Masaüstü
+                                </div>
+
+                                <div className='Icons'>
+                                    <img src="/icons/folder2.png" alt="Folder Icon" /> 
+                                    Proje
+                                </div>
+
+                                <div className='Icons'>
+                                    <img src="/icons/folder2.png" alt="Folder Icon" /> 
+                                    Kişisel
+                                </div>
+
+                                <div className='Icons'>
+                                    <img src="/icons/folder2.png" alt="Folder Icon" /> 
+                                    Önemli
+                                </div>
                             </div>
-                        </div>
                         )}
 
-                        </div>
-                    
+                        {showDownloadsContent && (
+                            <div className="folder-content-right-inside">
+                            {/* İndirilenler klasörünün içeriği burada */}
+                                
+                                {true && (
+                                    <div className='Icons'>
+                                        <img src="/icons/antivirus.png" alt="Antivirus Icon" />
+                                        <span>SetupAntivirus.exe</span>
+                                    </div>
+                                )}
 
+                                {true && (
+                                    <div className='Icons' >
+                                        <img src="/icons/file.png" alt="File Icon" />
+                                        <span>file1.pdf</span>
+                                    </div>
+                                )}
+                                {true && (
+                                    <div className='Icons' >
+                                        <img src="/icons/file.png" alt="File Icon" />
+                                        <span>file1.pdf</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}              
                     </div>
                 </div>
-        
-        </div>
+            </div>
     );
 
 }
