@@ -136,28 +136,29 @@ const Folder = ({ closeFolder, style }) => {
                                 <div className='Icons'>
                                     <img onClick={handleDownloadsClick}
                                     src="/icons/inbox (1).png" alt="Inbox Icon" />
-                                    İndirilenler
+                                    <span>İndirilenler</span>
                                 </div>
 
                                 <div className='Icons'>
                                     <img src="/icons/publishing.png" alt="Desktop Icon" />
-                                    Masaüstü
+                                    <span>Masaüstü</span>
                                 </div>
 
                                 <div className='Icons'>
                                     <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                    Proje
+                                    <span>Proje</span>
                                 </div>
 
                                 <div className='Icons'>
                                     <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                    Kişisel
+                                    <span>Kişisel</span>
                                 </div>
 
                                 <div className='Icons'>
                                     <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                    Önemli
+                                    <span>Önemli</span>
                                 </div>
+                                
                             </div>
                         )}
 

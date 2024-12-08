@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './Scanner.css';
 import { MakeDraggable } from '../Draggable';
 import { useGameContext } from '../Context';
-import QrScanner from "react-qr-scanner";
+
 
 
 export const useScanner = () => {
