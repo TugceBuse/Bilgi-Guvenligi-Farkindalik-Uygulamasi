@@ -26,18 +26,24 @@ const Folder = ({ closeFolder, style }) => {
 
     const FolderRef = useRef(null);
     MakeDraggable(FolderRef, '.folder-header');
-    const [showRightInside, setShowRightInside] = useState(true);
-    const [showDownloadsContent, setShowDownloadsContent] = useState(false);
+
+   
+
     const { 
         file1,
         antivirusexe,
      } = useGameContext();
 
 
-        const handleDownloadsClick = () => {
-            setShowRightInside(false);
-            setShowDownloadsContent(true);
-        };
+     //Folder içerisindeki view'ler
+     const VIEW_TYPES = {
+        DEFAULT: 'default',
+        DOWNLOAD: 'download',
+    };
+    const [currentView, setCurrentView] = useState( VIEW_TYPES.DEFAULT );//default, download
+    const handleViewChange = ( view ) => setCurrentView(view);
+    
+
 
         return (
             <div className="folder-window" style={style} ref={FolderRef}>
@@ -67,8 +73,8 @@ const Folder = ({ closeFolder, style }) => {
 
                     <div className="folder-content-left">
 
-                        <div className="folder-content-left-inside">
-                            <img src="/icons/folder-home.png" alt="House Icon" />
+                        <div className="folder-content-left-inside" onClick={() => handleViewChange( VIEW_TYPES.DEFAULT )} style={{ cursor:'pointer'}}>
+                            <img src="/icons/folder-home.png" alt="House Icon"/>
                             <h2>Giriş</h2>
                         </div>
 
@@ -84,7 +90,7 @@ const Folder = ({ closeFolder, style }) => {
                             <h2>Masaüstü</h2>
                         </div>
 
-                        <div className="folder-content-left-inside">
+                        <div className="folder-content-left-inside" onClick={() => handleViewChange( VIEW_TYPES.DOWNLOAD)}style={{ cursor:'pointer' }}>
                             <img src="/icons/download.png" alt="Download Icon" />
                             <h2>İndirilenler</h2>
                         </div>
@@ -122,19 +128,19 @@ const Folder = ({ closeFolder, style }) => {
                         </div>
                     </div>
 
-                  
+                    {/* SAĞ İÇERİK */}
                     <div className="folder-content-right">
-                        {showRightInside && (
+                        {currentView === VIEW_TYPES.DEFAULT && (
                         <div style={{display:"flex", flexDirection:"row", margin:30, gap:10, fontSize:12, width:180}}> 
                             <img style={{width:24, height:24}} src="/icons/down-arrow.png" alt="Arrow Icon" />
                             <h2>Hızlı Erişim</h2>
                         </div> 
                         )}
                         
-                        {showRightInside && (
+                        {currentView === VIEW_TYPES.DEFAULT && (
                             <div className="folder-content-right-inside">
                                 <div className='Icons'>
-                                    <img onClick={handleDownloadsClick}
+                                    <img onClick={() => handleViewChange(VIEW_TYPES.DOWNLOAD)}
                                     src="/icons/inbox (1).png" alt="Inbox Icon" />
                                     <span>İndirilenler</span>
                                 </div>
@@ -162,24 +168,18 @@ const Folder = ({ closeFolder, style }) => {
                             </div>
                         )}
 
-                        {showDownloadsContent && (
+                        {currentView === VIEW_TYPES.DOWNLOAD  && (
                             <div className="folder-content-right-inside">
                             {/* İndirilenler klasörünün içeriği burada */}
                                 
-                                {true && (
+                                {antivirusexe && (
                                     <div className='Icons'>
                                         <img src="/icons/antivirus.png" alt="Antivirus Icon" />
                                         <span>SetupAntivirus.exe</span>
                                     </div>
                                 )}
 
-                                {true && (
-                                    <div className='Icons' >
-                                        <img src="/icons/file.png" alt="File Icon" />
-                                        <span>file1.pdf</span>
-                                    </div>
-                                )}
-                                {true && (
+                                {file1 && (
                                     <div className='Icons' >
                                         <img src="/icons/file.png" alt="File Icon" />
                                         <span>file1.pdf</span>
