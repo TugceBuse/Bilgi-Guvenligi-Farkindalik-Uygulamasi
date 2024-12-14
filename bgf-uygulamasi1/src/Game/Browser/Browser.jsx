@@ -2,22 +2,22 @@ import React, { useState,useEffect, useRef } from 'react';
 import './Browser.css';
 import { MakeDraggable } from '../Draggable';
 import BrowserBar from './BrowserBar';
-import { useUIContext } from '../Context/UIContext';
-import { useFileContext } from '../Context/FileContext';
-import { useGameContext } from '../Context/GameContext';
+import { useUIContext } from '../Contexts/UIContext';
+import { useFileContext } from '../Contexts/FileContext';
+import { useGameContext } from '../Contexts/GameContext';
   
 export const useBrowser = () => {
   const { toggleWindow } = useUIContext();
 
-  const openBrowser = () => {
+  const openHandler = () => {
     toggleWindow('browser');
   };
 
-  const closeBrowser = () => {
+  const closeHandler = () => {
     toggleWindow('browser');
   };
 
-  return { openBrowser, closeBrowser };
+  return { openHandler, closeHandler };
 };
 
 

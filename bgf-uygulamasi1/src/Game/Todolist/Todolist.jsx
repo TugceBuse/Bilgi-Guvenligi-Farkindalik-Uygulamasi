@@ -1,38 +1,37 @@
 import "./Todolist.css";
-import React, { useState , useEffect, useRef} from "react";
+import React, { useRef } from "react";
 import { MakeDraggable } from '../Draggable';
-import { useUIContext } from "../Context/UIContext";
-  
+import { useUIContext } from "../Contexts/UIContext";
+import { useTodoContext } from '../Contexts/TodoContext';
 
-export const useTodoList = () => {
+  export const useTodoList = () => {
     const { toggleWindow } = useUIContext();
 
-    const openTodoList = () => {
+    const openHandler = () => {
         toggleWindow('todolist');
     };
     
-    const closeTodoList = () => {
+    const closeHandler = () => {
         toggleWindow('todolist');
     };
     
-    return { openTodoList, closeTodoList };
-    }
+    return { openHandler, closeHandler };
+  }
 
 
-    
+const Todolist = ({closeHandler, style}) => {
 
-const Todolist = ({closeHandler, todos, setTodos, style}) => {
-
+  const { todos, setTodos } = useTodoContext();
   const todolistRef = useRef(null);
 
   MakeDraggable(todolistRef, '.todolist-header');
 
         //Todolist değişikliklerini kaydetmeyi saglıyor
-    const handleCheckboxChange = (index) => {
-        const newTodos = [...todos];
-        newTodos[index].completed = !newTodos[index].completed;
-        setTodos(newTodos);
-    };
+        const handleCheckboxChange = (index) => {
+          const newTodos = [...todos];
+          newTodos[index].completed = !newTodos[index].completed;
+          setTodos(newTodos);
+        };
 
   return (
     <div className="todolist-window" style={style} ref={todolistRef}>

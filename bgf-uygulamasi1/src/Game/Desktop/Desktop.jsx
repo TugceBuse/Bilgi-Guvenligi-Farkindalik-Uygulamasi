@@ -1,72 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './Desktop.css';
-
-import Mailbox, { useMailbox } from '../Mailbox/Mailbox';
-import Todolist, { useTodoList } from '../Todolist/Todolist';
-import Browser, { useBrowser } from '../Browser/Browser';
-import ITsupport, { useITsupport } from '../ITsupport/ITsupport';
-import Folder, { useFolder } from '../Folder/Folder';
-import Scanner, { useScanner } from '../Scanner/Scanner';
-
+import { windowConfig } from '../windowConfig';
+import { useUIContext } from '../Contexts/UIContext';
+import { useGameContext } from '../Contexts/GameContext';
 import Alert from '../Notifications/Alert';
-import { useGameContext } from '../Context/GameContext';
-import { useUIContext } from '../Context/UIContext';
 import RansomScreen from '../Notifications/Ransom';
-
-// Pencereler için yapılandırma nesnesi
-const windowConfig = {
-  todolist: {
-    icon: '/icons/to-do-list.png',
-    label: 'To Do List',
-    component: Todolist,
-  },
-  mailbox: {
-    icon: '/icons/mail.png',
-    label: 'Mail',
-    component: Mailbox,
-  },
-  browser: {
-    icon: '/icons/internet.png',
-    label: 'Browser',
-    component: Browser,
-  },
-  itsupport: {
-    icon: '/icons/helpdesk.png',
-    label: 'IT Support',
-    component: ITsupport,
-  },
-  folder: {
-    icon: '/icons/folder.png',
-    label: 'Folder',
-    component: Folder,
-  },
-  scanner: {
-    icon: '/icons/qr-code.png',
-    label: 'QR Scanner',
-    component: Scanner,
-  },
-};
+import { TodoProvider } from '../Contexts/TodoContext';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
   const { openWindows, handleIconClick, zindex, setZindex } = useUIContext();
 
-  const { openMailbox, closeMailbox } = useMailbox();
-  const { openBrowser, closeBrowser } = useBrowser();
-  const { openTodoList, closeTodoList } = useTodoList();
-  const { openITsupport, closeITsupport } = useITsupport();
-  const { openFolder, closeFolder } = useFolder();
-  const { openScanner, closeScanner } = useScanner();
-
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  // TodoList başlangıç durumu
-  const [todos, setTodos] = useState([
-    { text: 'Yeni kurduğumuz ağ aktif olmalı', completed: false },
-    { text: 'Yapılacak 2', completed: false },
-    { text: 'Yapılacak 3', completed: false },
-  ]);
+  const handlers = {
+    todolist: windowConfig.todolist.useComponent(),
+    mailbox: windowConfig.mailbox.useComponent(),
+    browser: windowConfig.browser.useComponent(),
+    itsupport: windowConfig.itsupport.useComponent(),
+    folder: windowConfig.folder.useComponent(),
+    scanner: windowConfig.scanner.useComponent(),
+  };
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
@@ -77,7 +32,7 @@ const Desktop = () => {
 
   useEffect(() => {
     if (isransomware) {
-      const randomDelay = Math.floor(Math.random() * 20000) + 10000; // 10-30 saniye
+      const randomDelay = Math.floor(Math.random() * 20000) + 10000;
       const timer = setTimeout(() => setShowRansom(true), randomDelay);
       return () => clearTimeout(timer);
     }
@@ -104,8 +59,13 @@ const Desktop = () => {
   });
 
   const handleDesktopClick = (windowKey) => {
+    const { openHandler } = handlers[windowKey];
+    if (!openHandler) {
+      console.error(`openHandler is not defined for ${windowKey}`);
+      return;
+    }
+
     if (!openWindows.includes(windowKey)) {
-      const { openHandler } = getHandlers(windowKey);
       if ((windowKey === 'browser' || windowKey === 'mailbox') && !isWificonnected) {
         setShowAlert(true);
       } else {
@@ -116,21 +76,8 @@ const Desktop = () => {
     }
   };
 
-  const getHandlers = (windowKey) => {
-    const handlers = {
-      browser: { openHandler: openBrowser, closeHandler: closeBrowser },
-      mailbox: { openHandler: openMailbox, closeHandler: closeMailbox },
-      todolist: { openHandler: openTodoList, closeHandler: closeTodoList },
-      itsupport: { openHandler: openITsupport, closeHandler: closeITsupport },
-      folder: { openHandler: openFolder, closeHandler: closeFolder },
-      scanner: { openHandler: openScanner, closeHandler: closeScanner },
-    };
-    return handlers[windowKey];
-  };
-
   return (
     <div className="desktop">
-      {/* Masaüstü ikonları */}
       <div className="desktop-icons">
         {Object.keys(windowConfig).map((key) => (
           <div
@@ -143,23 +90,20 @@ const Desktop = () => {
           </div>
         ))}
       </div>
-
-      {/* Açık pencereler */}
+      <TodoProvider>
       {openWindows.map((windowKey, index) => {
         const { component: WindowComponent } = windowConfig[windowKey];
-        const { closeHandler } = getHandlers(windowKey);
+        const { closeHandler } = handlers[windowKey];
         return (
           <WindowComponent
             key={windowKey}
             closeHandler={closeHandler}
             style={calculateWindowPosition(index)}
-            todos={windowKey === 'todolist' ? todos : undefined}
-            setTodos={windowKey === 'todolist' ? setTodos : undefined}
-          />
-        );
-      })}
+          />);
+        })
+      }
+      </TodoProvider>
 
-      {/* Uyarılar ve Ransomware */}
       <Alert
         show={showAlert}
         handleClose={() => setShowAlert(false)}

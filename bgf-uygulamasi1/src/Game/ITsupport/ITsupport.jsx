@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './ITsupport.css';
 import { MakeDraggable } from '../Draggable';
-import { useUIContext } from '../Context/UIContext';
+import { useUIContext } from '../Contexts/UIContext';
 
 
 
@@ -9,15 +9,15 @@ export const useITsupport = () => {
     const { toggleWindow } = useUIContext();
     
 
-    const openITsupport = () => {
+    const openHandler = () => {
         toggleWindow('itsupport');
     };
     
-    const closeITsupport = () => {
+    const closeHandler = () => {
         toggleWindow('itsupport');
     };
     
-    return { openITsupport, closeITsupport };
+    return { openHandler, closeHandler };
     }
 
 const ITsupport = ({ closeHandler, style }) => {

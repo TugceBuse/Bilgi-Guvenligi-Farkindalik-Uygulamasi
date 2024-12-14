@@ -1,18 +1,15 @@
-import { useGameContext } from '../Context/GameContext';
-import { useUIContext } from '../Context/UIContext';
-import { useFileContext } from '../Context/FileContext';
-import Alert from "../Notifications/Alert";
-import "./Taskbar.css";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useGameContext } from '../Contexts/GameContext';
+import { useUIContext } from '../Contexts/UIContext';
+import { windowConfig } from '../windowConfig';
+import Alert from "../Notifications/Alert";
+import "./Taskbar.css";
 
 const TaskBar = () => {
-
   const [time, setTime] = useState(new Date());
-  //Window menüsü için gerekli state'ler
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [shuttingDown, setShuttingDown] = useState(false);
-
   const [showNotifications, setShowNotifications] = useState(false);
   const [showWifiList, setShowWifiList] = useState(false);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
@@ -26,29 +23,19 @@ const TaskBar = () => {
     isWificonnected, setIsWificonnected,
     updating_antivirus, isantivirusuptodate,
     isantivirusinstalled
-} = useGameContext();
+  } = useGameContext();
 
-const {
+  const {
     openWindows, activeWindow, setActiveWindow,
     visibleWindows, setVisibleWindows,
     handleIconClick, zindex, setZindex
-} = useUIContext();
-
+  } = useUIContext();
 
   const renderIcons = () => {
-    const icons = {
-      browser: "/icons/internet.png",
-      itsupport: "/icons/helpdesk.png",
-      todolist: "/icons/to-do-list.png",
-      mailbox: "/icons/mail.png",
-      folder: "/icons/folder.png",
-      scanner: "/icons/qr-code.png",
-    };
-
     return openWindows.map((windowName) => (
       <img
         key={windowName}
-        src={icons[windowName]}
+        src={windowConfig[windowName].icon}
         alt={`${windowName} Icon`}
         className={activeWindow === windowName ? 'active' : ''}
         onClick={() => handleIconClickWithVisibility(windowName)}
@@ -56,18 +43,19 @@ const {
     ));
   };
 
-   const handleStartButtonClick = () => {
-     setShowStartMenu(!showStartMenu);
-   };
+  const handleStartButtonClick = () => {
+    setShowStartMenu(!showStartMenu);
+  };
 
-   const handleShutdownClick = () => {
+  const handleShutdownClick = () => {
     setShuttingDown(true);
-    setTimeout(() => navigate("/"), 2000); // Ana ekrana yönlendir
+    setTimeout(() => navigate("/"), 2000);
   };
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
   };
+
   const toggleWifiList = () => {
     setShowWifiList(!showWifiList);
   };
@@ -77,18 +65,14 @@ const {
       setSelectedWifi(wifiName);
       setShowPasswordPrompt(true);
     } else {
-      //şifresiz wifi baglantı saglanır
       setIsWificonnected(true);
       setwifiname(wifiName);
-      // WiFi bağlantı işlemleri olabilir
     }
   };
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    //formdan sifreyi alir (sifreyi kullanici üretecek dogrulamalıyız)
     const password = e.target.elements.password.value;
-    console.log(`Connecting to ${selectedWifi} with password ${password}`);
     setShowPasswordPrompt(false);
 
     if (password === pass) {
@@ -97,7 +81,6 @@ const {
       setShowAlert(true);
       setIsWificonnected(false);
     }
-    // WiFi bağlantı işlemleri olabilir
   };
 
   const handleIconClickWithVisibility = (windowName) => {
@@ -110,15 +93,14 @@ const {
           return [...filteredWindows];
         });
       }
-      handleIconClick(windowName); // aktif ise pasif, pasifse aktif yapar
+      handleIconClick(windowName);
     } else {
       if (element) {
         if (zindex < 9999) {
           let newZindex = zindex + 1;
           setZindex(newZindex);
           element.style.visibility = 'visible';
-          element.style.zIndex = `${newZindex}`; // Ön plana çıkarmak için z-index artırma
-          // visibleWindows dizisini güncelle
+          element.style.zIndex = `${newZindex}`;
           setVisibleWindows((prevVisibleWindows) => {
             const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
             return [...filteredWindows, windowName];
@@ -129,13 +111,11 @@ const {
     }
   };
 
-  //zindex şişmemesi için bütün pencereler kapatıldığında 100 e çek
   useEffect(() => {
     if (openWindows.length === 0) {
       setZindex(100);
     }
   }, [openWindows]);
-
 
   useEffect(() => {
     setActiveWindow(visibleWindows[visibleWindows.length - 1]);
@@ -179,15 +159,11 @@ const {
       };
     }
   };
-  
-  // Antivirüs Durumu ve Tooltip İçeriği
+
   const { icon: antivirusIcon, tooltip: antivirusTooltip } = setAntivirus();
-  
-  // WiFi Durumu
   const wifiIcon = isWificonnected 
     ? <img src="/icons/wifi.png" alt="Wifi Connected Icon" /> 
     : <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />;
-  
   const wifiTooltip = isWificonnected
     ? (
         <>
@@ -199,56 +175,44 @@ const {
     : "WiFi Bağlı Değil";
 
   return (
+    <div className="taskbar">
+      <div className="taskbar-icons" onClick={handleStartButtonClick}>
+        <img src="/icons/menu (1).png" alt="Start Button" />
+      </div>
 
-
-    // Görev çubuğu bileşeni
-  <div className="taskbar">
-
-    {/* Başlat Menüsü */}
-    <div className="taskbar-icons" onClick={handleStartButtonClick}>
-      <img src="/icons/menu (1).png" alt="Start Button" />
-    </div>
-
-      {/* Başlat Menüsü Penceresi */}
       {showStartMenu && (
         <div className="start-menu-window">
           <h2>Başlat Menüsü</h2>
-          
+
           <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
             <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/synchronize.png" alt="Synchronize Icon"/>
             <p style={{marginLeft:-12}}>Yedekle</p>
           </div>
-          
-          
+
           <div className="shutdown-button" onClick={handleShutdownClick}>
             <img src="/icons/switch.png" alt="Switch Icon" />
             Bilgisayarı Kapat
           </div>
 
-            {/* Kapanıyor Ekranı */}
-            {shuttingDown && (
-              <div className="shutdown-screen">
-                <p className="shutdown-text">Kapanıyor...</p>
-              </div>
-            )}
-
+          {shuttingDown && (
+            <div className="shutdown-screen">
+              <p className="shutdown-text">Kapanıyor...</p>
+            </div>
+          )}
         </div>
       )}
-    
-      {/* Dinamik Pencere İkonları */}
+
       <div className="taskbar-icons">{renderIcons()}</div>
-      
-      {/* Görev Çubuğu Sağ Tarafı */}
-    <div className="taskbar-right">
 
-      {isantivirusinstalled && (
-      <div className="taskbar-antivirus">
-          {antivirusIcon}
-          {antivirusTooltip}
-      </div>
-      )}
+      <div className="taskbar-right">
+        {isantivirusinstalled && (
+          <div className="taskbar-antivirus">
+            {antivirusIcon}
+            {antivirusTooltip}
+          </div>
+        )}
 
-      <div className="taskbar-wifi" onClick={toggleWifiList}>
+        <div className="taskbar-wifi" onClick={toggleWifiList}>
           {wifiIcon}
           <div className="tooltip">
             {wifiTooltip}
@@ -256,7 +220,7 @@ const {
           {showWifiList && (
             <div className="wifi-list">
               <ul>
-              <li onClick={() => handleWifiClick('WiFi Network 1', true)}>
+                <li onClick={() => handleWifiClick('WiFi Network 1', true)}>
                   XYZCompany Network 1 <img src="/icons/lock.png" alt="Lock Icon" />
                 </li>
                 <li onClick={() => handleWifiClick('WiFi Network 2', false)}>WiFi Network 2</li>
@@ -264,36 +228,27 @@ const {
               </ul>
             </div>
           )}
-      </div>
-
-      <div className="taskbar-status">
-            {/* Saat */}
-          <div className="taskbar-clock">
-
-            <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' ,hour12: false })}</div>
-
-            <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
-
-          </div>
-
-          {/* Bildirimler */}
-          <div className="taskbar-notifications" onClick={toggleNotifications}>
-            <img src="/icons/notification_blck.png"
-            alt="Notification Icon" />
-            {showNotifications && (
-        <div className="notifications-window">
-          <h3>Bildirimler</h3>
-          <p>Henüz bir bildiriminiz yok.</p>
         </div>
-            )
-            }
+
+        <div className="taskbar-status">
+          <div className="taskbar-clock">
+            <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' ,hour12: false })}</div>
+            <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
           </div>
 
+          <div className="taskbar-notifications" onClick={toggleNotifications}>
+            <img src="/icons/notification_blck.png" alt="Notification Icon" />
+            {showNotifications && (
+              <div className="notifications-window">
+                <h3>Bildirimler</h3>
+                <p>Henüz bir bildiriminiz yok.</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-    </div>
-      {/* WiFi şifre giriş ekranı */}
-    {showPasswordPrompt && (
+      {showPasswordPrompt && (
         <div className="password-prompt">
           <form onSubmit={handlePasswordSubmit}>
             <h3>{selectedWifi} için şifre girin:</h3>
@@ -303,9 +258,9 @@ const {
           </form>
         </div>
       )}
-    <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Şifre yanlış'}></Alert>
-  </div>
+      <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Şifre yanlış'}></Alert>
+    </div>
   );
-  }
+};
 
 export default TaskBar;

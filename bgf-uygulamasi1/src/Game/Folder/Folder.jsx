@@ -1,26 +1,24 @@
 import React, { useState, useRef } from 'react';
 import './Folder.css';
 import { MakeDraggable } from '../Draggable';
-import { useFileContext } from '../Context/FileContext';
-import { useUIContext } from '../Context/UIContext';
+import { useFileContext } from '../Contexts/FileContext';
+import { useUIContext } from '../Contexts/UIContext';
 
 
 
 export const useFolder = () => {
-    const { 
-        toggleWindow
-     } = useUIContext();
+    const { toggleWindow } = useUIContext();
     
 
-    const openFolder = () => {
+    const openHandler = () => {
         toggleWindow('folder');
     };
     
-    const closeFolder = () => {
+    const closeHandler = () => {
         toggleWindow('folder');
     };
     
-    return { openFolder, closeFolder };
+    return { openHandler, closeHandler };
     }
 
 const Folder = ({ closeHandler, style }) => {

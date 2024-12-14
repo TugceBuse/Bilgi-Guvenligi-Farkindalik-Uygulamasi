@@ -1,21 +1,21 @@
 import './Mailbox.css';
 import React, { useRef, useEffect, useState } from 'react';
 import { MakeDraggable } from '../Draggable';
-import { useUIContext } from '../Context/UIContext';
-import { useMailContext } from '../Context/MailContext';
+import { useUIContext } from '../Contexts/UIContext';
+import { useMailContext } from '../Contexts/MailContext';
 
 export const useMailbox = () => {
   const { toggleWindow } = useUIContext();
 
-  const openMailbox = () => {
+  const openHandler = () => {
     toggleWindow('mailbox');
   };
 
-  const closeMailbox = () => {
+  const closeHandler = () => {
     toggleWindow('mailbox');
   };
 
-  return { openMailbox, closeMailbox };
+  return { openHandler, closeHandler };
 };
 
 const Mailbox = ({ closeHandler, style }) => {

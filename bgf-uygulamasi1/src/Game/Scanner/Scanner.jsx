@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './Scanner.css';
 import { MakeDraggable } from '../Draggable';
-import { useUIContext } from '../Context/UIContext';
+import { useUIContext } from '../Contexts/UIContext';
 
 
 
@@ -9,15 +9,15 @@ export const useScanner = () => {
     const { toggleWindow } = useUIContext();
     
 
-    const openScanner = () => {
+    const openHandler = () => {
         toggleWindow('scanner');
     };
     
-    const closeScanner = () => {
+    const closeHandler = () => {
         toggleWindow('scanner');
     };
     
-    return { openScanner, closeScanner };
+    return { openHandler, closeHandler };
     }
 
 const Scanner = ({ closeHandler, style }) => {
