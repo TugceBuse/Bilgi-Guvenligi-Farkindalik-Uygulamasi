@@ -5,6 +5,7 @@ import Browser, { useBrowser } from './Browser/Browser';
 import ITsupport, { useITsupport } from './ITsupport/ITsupport';
 import Folder, { useFolder } from './Folder/Folder';
 import Scanner, { useScanner } from './Scanner/Scanner';
+import Setup, { useSetup } from './Setup/Setup';
 
 // Ortak konfigürasyon dosyası
 export const windowConfig = {
@@ -43,5 +44,11 @@ export const windowConfig = {
     label: 'QR Scanner',
     component: Scanner,
     useComponent: useScanner,
+  },
+  setup: {
+    icon: '/icons/setting.png',
+    label: 'Setup',
+    component: Setup,
+    useComponent: useSetup,
   },
 };

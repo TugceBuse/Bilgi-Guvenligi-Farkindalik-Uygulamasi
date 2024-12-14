@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Mailbox.css';
-import { useFileContext } from '../Context/FileContext';
-import { useGameContext } from '../Context/GameContext';
+import { useFileContext } from '../Contexts/FileContext';
+import { useGameContext } from '../Contexts/GameContext';
 
 //Manuel ayarlanmış RansomwareButton compenent'i
 const RansomwareButton = ({ label }) => {

@@ -21,6 +21,7 @@ const Desktop = () => {
     itsupport: windowConfig.itsupport.useComponent(),
     folder: windowConfig.folder.useComponent(),
     scanner: windowConfig.scanner.useComponent(),
+    setup: windowConfig.setup.useComponent(),
   };
 
   useEffect(() => {
