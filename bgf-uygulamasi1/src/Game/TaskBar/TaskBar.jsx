@@ -1,4 +1,6 @@
-import { useGameContext } from "../Context";
+import { useGameContext } from '../Context/GameContext';
+import { useUIContext } from '../Context/UIContext';
+import { useFileContext } from '../Context/FileContext';
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import React, { useState, useEffect } from 'react';
@@ -7,21 +9,52 @@ import { useNavigate } from "react-router-dom";
 const TaskBar = () => {
 
   const [time, setTime] = useState(new Date());
+  //Window menüsü için gerekli state'ler
+  const [showStartMenu, setShowStartMenu] = useState(false);
+  const [shuttingDown, setShuttingDown] = useState(false);
+
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showWifiList, setShowWifiList] = useState(false);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [selectedWifi, setSelectedWifi] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [wifiname, setwifiname] = useState('');
+
+  const pass = "1234";
+  const navigate = useNavigate();
   const {
-    isWificonnected , setIsWificonnected,
-    updating_antivirus,isantivirusuptodate,
-    openWindows,
-    activeWindow, setActiveWindow,
-    visibleWindows, setVisibleWindows,
-    handleIconClick,
-    zindex, setZindex,
+    isWificonnected, setIsWificonnected,
+    updating_antivirus, isantivirusuptodate,
     isantivirusinstalled
-   } = useGameContext();
-   
-   /* Windows Menüsü İçin Gerekli Fonksiyonlar */
-   const [showStartMenu, setShowStartMenu] = useState(false);
-   const [shuttingDown, setShuttingDown] = useState(false);
-   const navigate = useNavigate();
+} = useGameContext();
+
+const {
+    openWindows, activeWindow, setActiveWindow,
+    visibleWindows, setVisibleWindows,
+    handleIconClick, zindex, setZindex
+} = useUIContext();
+
+
+  const renderIcons = () => {
+    const icons = {
+      browser: "/icons/internet.png",
+      itsupport: "/icons/helpdesk.png",
+      todolist: "/icons/to-do-list.png",
+      mailbox: "/icons/mail.png",
+      folder: "/icons/folder.png",
+      scanner: "/icons/qr-code.png",
+    };
+
+    return openWindows.map((windowName) => (
+      <img
+        key={windowName}
+        src={icons[windowName]}
+        alt={`${windowName} Icon`}
+        className={activeWindow === windowName ? 'active' : ''}
+        onClick={() => handleIconClickWithVisibility(windowName)}
+      />
+    ));
+  };
 
    const handleStartButtonClick = () => {
      setShowStartMenu(!showStartMenu);
@@ -29,21 +62,8 @@ const TaskBar = () => {
 
    const handleShutdownClick = () => {
     setShuttingDown(true);
-    setTimeout(() => {
-      navigate("/"); // Ana ekrana yönlendir
-    }, 2000); // 2 saniye gecikme
+    setTimeout(() => navigate("/"), 2000); // Ana ekrana yönlendir
   };
-
-   
-  const [wifiname, setwifiname] = useState('');
-  const pass = "1234";
-
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showWifiList, setShowWifiList] = useState(false);
-  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
-  const [selectedWifi, setSelectedWifi] = useState('');
-
-  const [showAlert, setShowAlert] = useState(false);
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
@@ -60,7 +80,6 @@ const TaskBar = () => {
       //şifresiz wifi baglantı saglanır
       setIsWificonnected(true);
       setwifiname(wifiName);
-      console.log(`Connecting to ${wifiName}`);
       // WiFi bağlantı işlemleri olabilir
     }
   };
@@ -112,67 +131,72 @@ const TaskBar = () => {
 
   //zindex şişmemesi için bütün pencereler kapatıldığında 100 e çek
   useEffect(() => {
-    if(openWindows.length === 0) {
+    if (openWindows.length === 0) {
       setZindex(100);
     }
   }, [openWindows]);
 
+
   useEffect(() => {
     setActiveWindow(visibleWindows[visibleWindows.length - 1]);
-  }, [activeWindow]);
+  }, [visibleWindows]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-
+    const interval = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  let antivirusIcon;
-  let antivirusTooltip;
-  let wifiIcon;
-  let wifiTooltip;
-
-  if (updating_antivirus) {
-    antivirusIcon = <img src="/icons/antivirus_in_progress.png" alt="Antivirus Update Icon" />;
-    antivirusTooltip = (
-      <div className="tooltip tooltip-visible">
-        Antivirus güncelleniyor...
-        <div className="loading-bar">
-          <div className="loading-bar-progress"></div>
-        </div>
-      </div>
-    );
-  } else if (isantivirusuptodate) {
-    antivirusIcon = <img src="/icons/antivirus_latest.png" alt="Antivirus Icon" />;
-    antivirusTooltip = (
-      <div className="tooltip">
-        Antivirus güncel!
-      </div>
-    )
-  } else {
-    antivirusIcon = <img src="/icons/antivirus_update.png" alt="Antivirus Warning Icon" />;
-    antivirusTooltip = (
-      <div className="tooltip">
-        Antivirus güncellemesi gerekli!
-      </div>
-    );
-  }
-
-  if (isWificonnected) {
-    wifiIcon = <img src="/icons/wifi.png" alt="Wifi Connected Icon" />;
-    wifiTooltip = ( 
-      <>
-        <b>{wifiname}</b>
-        <br />
-        Internet erişimi
-      </>
-     );
-  } else {
-    wifiIcon = <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />;
-    wifiTooltip = "WiFi Bağlı Değil";
-  }
+  const setAntivirus = () => {
+    if (updating_antivirus) {
+      return {
+        icon: <img src="/icons/antivirus_in_progress.png" alt="Antivirus Updating Icon" />,
+        tooltip: (
+          <div className="tooltip tooltip-visible">
+            Antivirus güncelleniyor...
+            <div className="loading-bar">
+              <div className="loading-bar-progress"></div>
+            </div>
+          </div>
+        )
+      };
+    } else if (isantivirusuptodate) {
+      return {
+        icon: <img src="/icons/antivirus_latest.png" alt="Antivirus Latest Icon" />,
+        tooltip: (
+          <div className="tooltip">
+            Antivirus güncel!
+          </div>
+        )
+      };
+    } else {
+      return {
+        icon: <img src="/icons/antivirus_update.png" alt="Antivirus Warning Icon" />,
+        tooltip: (
+          <div className="tooltip">
+            Antivirus güncellemesi gerekli!
+          </div>
+        )
+      };
+    }
+  };
+  
+  // Antivirüs Durumu ve Tooltip İçeriği
+  const { icon: antivirusIcon, tooltip: antivirusTooltip } = setAntivirus();
+  
+  // WiFi Durumu
+  const wifiIcon = isWificonnected 
+    ? <img src="/icons/wifi.png" alt="Wifi Connected Icon" /> 
+    : <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />;
+  
+  const wifiTooltip = isWificonnected
+    ? (
+        <>
+          <b>{wifiname}</b>
+          <br />
+          Internet erişimi
+        </>
+      )
+    : "WiFi Bağlı Değil";
 
   return (
 
@@ -185,7 +209,7 @@ const TaskBar = () => {
       <img src="/icons/menu (1).png" alt="Start Button" />
     </div>
 
-    {/* Başlat Menüsü Penceresi */}
+      {/* Başlat Menüsü Penceresi */}
       {showStartMenu && (
         <div className="start-menu-window">
           <h2>Başlat Menüsü</h2>
@@ -211,51 +235,18 @@ const TaskBar = () => {
         </div>
       )}
     
-    <div className="taskbar-icons">
-        {openWindows.includes('browser') && (
-          <img
-            src="/icons/internet.png"
-            alt="Browser Icon"
-            className={activeWindow === 'browser' ? 'active' : ''}
-            onClick={() => handleIconClickWithVisibility('browser')}
-          />
-        )}
-        {openWindows.includes('itsupport') && (
-          <img
-            src="/icons/helpdesk.png"
-            alt="IT Support Icon"
-            className={activeWindow === 'itsupport' ? 'active' : ''}
-            onClick={() => handleIconClickWithVisibility('itsupport')}
-          />
-        )}
-        {openWindows.includes('todolist') && (
-          <img
-            src="/icons/to-do-list.png"
-            alt="Todolist Icon"
-            className={activeWindow === 'todolist' ? 'active' : ''}
-            onClick={() => handleIconClickWithVisibility('todolist')}
-          />
-        )}
-        {openWindows.includes('mailbox') && (
-          <img
-            src="/icons/mail.png"
-            alt="Mailbox Icon"
-            className={activeWindow === 'mailbox' ? 'active' : ''}
-            onClick={() => handleIconClickWithVisibility('mailbox')}
-          />
-        )}
-        {openWindows.includes('folder') && (
-          <img
-            src="/icons/folder.png"
-            alt="Folder Icon"
-            className={activeWindow === 'folder' ? 'active' : ''}
-            onClick={() => handleIconClickWithVisibility('folder')}
-          />
-        )}
-    </div>
+      {/* Dinamik Pencere İkonları */}
+      <div className="taskbar-icons">{renderIcons()}</div>
       
       {/* Görev Çubuğu Sağ Tarafı */}
     <div className="taskbar-right">
+
+      {isantivirusinstalled && (
+      <div className="taskbar-antivirus">
+          {antivirusIcon}
+          {antivirusTooltip}
+      </div>
+      )}
 
       <div className="taskbar-wifi" onClick={toggleWifiList}>
           {wifiIcon}
@@ -274,13 +265,6 @@ const TaskBar = () => {
             </div>
           )}
       </div>
-
-      {isantivirusinstalled &&
-        <div className="taskbar-antivirus">
-          {antivirusIcon}
-          {antivirusTooltip}
-        </div>
-      }
 
       <div className="taskbar-status">
             {/* Saat */}

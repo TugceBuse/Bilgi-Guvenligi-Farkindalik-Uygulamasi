@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Notifications.css';
-import { useGameContext } from '../Context';
+import { useGameContext } from '../Context/GameContext';
 
 const Notification = () => {
   const [showNotification, setShowNotification] = useState(false);

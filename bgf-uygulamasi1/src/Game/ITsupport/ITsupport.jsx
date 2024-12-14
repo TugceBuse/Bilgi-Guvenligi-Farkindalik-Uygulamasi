@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import './ITsupport.css';
 import { MakeDraggable } from '../Draggable';
-import { useGameContext } from '../Context';
+import { useUIContext } from '../Context/UIContext';
 
 
 
 export const useITsupport = () => {
-    const { toggleWindow, setActiveWindow } = useGameContext();
+    const { toggleWindow } = useUIContext();
     
 
     const openITsupport = () => {
@@ -20,7 +20,7 @@ export const useITsupport = () => {
     return { openITsupport, closeITsupport };
     }
 
-const ITsupport = ({ closeITsupport, style }) => {
+const ITsupport = ({ closeHandler, style }) => {
 
     const ITsupportRef = useRef(null);
     MakeDraggable(ITsupportRef, '.itsupport-header');
@@ -29,7 +29,7 @@ const ITsupport = ({ closeITsupport, style }) => {
         <div className="itsupport-window" style={style} ref={ITsupportRef}>
             <div className="itsupport-header">
                 <h2>IT Support</h2>
-                <button className="itsupport-close" onClick={closeITsupport}>×</button>
+                <button className="itsupport-close" onClick={closeHandler}>×</button>
             </div>
         </div>
     );

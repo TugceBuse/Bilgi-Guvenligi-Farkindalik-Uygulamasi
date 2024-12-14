@@ -1,10 +1,12 @@
-import { useGameContext } from '../Context';
 import { useState } from 'react';
 import './Mailbox.css';
+import { useFileContext } from '../Context/FileContext';
+import { useGameContext } from '../Context/GameContext';
 
 //Manuel ayarlanmış RansomwareButton compenent'i
 const RansomwareButton = ({ label }) => {
-  const { setIsransomware, setFile1 } = useGameContext();
+  const { setIsransomware } = useGameContext();
+  const { updateFileStatus } = useFileContext();
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = () => {
@@ -12,7 +14,7 @@ const RansomwareButton = ({ label }) => {
     setTimeout(() => {
       setDownloading(false);
       setIsransomware(true);
-      setFile1(true);
+      updateFileStatus(label.split('.')[0], { downloaded: true });
     }, 3000); // 3 saniye sonra indirme işlemi tamamlanır ve ransomware tetiklenir
   };
 

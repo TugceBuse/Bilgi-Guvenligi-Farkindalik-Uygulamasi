@@ -1,12 +1,15 @@
 import Desktop from "./Desktop/Desktop.jsx";
 import TaskBar from "./TaskBar/TaskBar.jsx";
 import Notification from "./Notifications/Notifications.jsx";
-import { useState, useEffect } from 'react';
-import { GameContextProvider } from './Context';
+import { useEffect } from 'react';
+import { GameContextProvider } from './Context/GameContext';
+import { FileContextProvider } from './Context/FileContext';
+import { UIContextProvider } from './Context/UIContext';
+import { MailContextProvider } from './Context/MailContext.jsx';
 
 const Game = () => {
-   // Sağ tıklamayı engellemek ve sol click tetikleme
-   useEffect(() => {
+  // Sağ tıklamayı engellemek ve sol click tetikleme
+  useEffect(() => {
     const handleContextMenu = (event) => {
       event.preventDefault();
     };
@@ -19,9 +22,15 @@ const Game = () => {
   return (
     <GameContextProvider>
       <div className="game">
-        <TaskBar/>
-        <Desktop/>
-        <Notification/>
+        <Notification />
+        <UIContextProvider>
+          <FileContextProvider>
+            <TaskBar />
+            <MailContextProvider>
+              <Desktop />
+            </MailContextProvider>
+          </FileContextProvider>
+        </UIContextProvider>
       </div>
     </GameContextProvider>
   );

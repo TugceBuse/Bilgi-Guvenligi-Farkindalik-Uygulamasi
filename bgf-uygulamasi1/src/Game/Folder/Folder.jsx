@@ -1,14 +1,15 @@
 import React, { useState, useRef } from 'react';
 import './Folder.css';
 import { MakeDraggable } from '../Draggable';
-import { useGameContext } from '../Context';
+import { useFileContext } from '../Context/FileContext';
+import { useUIContext } from '../Context/UIContext';
 
 
 
 export const useFolder = () => {
     const { 
-        toggleWindow, setActiveWindow,
-     } = useGameContext();
+        toggleWindow
+     } = useUIContext();
     
 
     const openFolder = () => {
@@ -22,21 +23,18 @@ export const useFolder = () => {
     return { openFolder, closeFolder };
     }
 
-const Folder = ({ closeFolder, style }) => {
+const Folder = ({ closeHandler, style }) => {
 
     const FolderRef = useRef(null);
     MakeDraggable(FolderRef, '.folder-header');
 
    
 
-    const { 
-        file1,
-        antivirusexe,
-     } = useGameContext();
+    const { files,updateFileStatus } = useFileContext();
 
 
      //Folder içerisindeki view'ler
-     const VIEW_TYPES = {
+    const VIEW_TYPES = {
         DEFAULT: 'default',
         DOWNLOAD: 'download',
     };
@@ -54,14 +52,14 @@ const Folder = ({ closeFolder, style }) => {
                         <div className='folder-header-left'>
                             <img src="/icons/folder-home.png" alt="House Icon" />
                             <h2>Giriş</h2>
-                            <button className="folder-left-close" onClick={closeFolder}>×</button>
+                            <button className="folder-left-close" onClick={closeHandler}>×</button>
                         </div>
 
                         <span style={{fontSize:22, marginLeft:10, color:"#e4e4e4", opacity:0.9}}>+</span>
 
                     </div>
 
-                    <button className="folder-close" onClick={closeFolder}>×</button>
+                    <button className="folder-close" onClick={closeHandler}>×</button>
                 </div>
 
              
@@ -172,14 +170,14 @@ const Folder = ({ closeFolder, style }) => {
                             <div className="folder-content-right-inside">
                             {/* İndirilenler klasörünün içeriği burada */}
                                 
-                                {antivirusexe && (
+                                {files.antivirusexe.downloaded && (
                                     <div className='Icons'>
                                         <img src="/icons/antivirus.png" alt="Antivirus Icon" />
                                         <span>SetupAntivirus.exe</span>
                                     </div>
                                 )}
 
-                                {file1 && (
+                                {files.file1.downloaded && (
                                     <div className='Icons' >
                                         <img src="/icons/file.png" alt="File Icon" />
                                         <span>file1.pdf</span>

@@ -1,11 +1,11 @@
 import './Mailbox.css';
 import React, { useRef, useEffect, useState } from 'react';
 import { MakeDraggable } from '../Draggable';
-import { useGameContext } from '../Context';
-import { sentMails, spamMails } from './Mails';
+import { useUIContext } from '../Context/UIContext';
+import { useMailContext } from '../Context/MailContext';
 
 export const useMailbox = () => {
-  const { toggleWindow, setActiveWindow } = useGameContext();
+  const { toggleWindow } = useUIContext();
 
   const openMailbox = () => {
     toggleWindow('mailbox');
@@ -18,7 +18,7 @@ export const useMailbox = () => {
   return { openMailbox, closeMailbox };
 };
 
-const Mailbox = ({ closeMailbox, style }) => {
+const Mailbox = ({ closeHandler, style }) => {
 
   //seçilen maili ve indexi tutacak state'ler
   const [selectedMail, setSelectedMail] = useState(null);
@@ -34,7 +34,7 @@ const Mailbox = ({ closeMailbox, style }) => {
     mails, setMails,
     sentMails,setSentMails,
     spamMails, setSpamMails
-  } = useGameContext();
+  } = useMailContext();
 
  useEffect(() => {
     const count = mails.filter(mail => !mail.read).length;
@@ -93,7 +93,7 @@ const Mailbox = ({ closeMailbox, style }) => {
                   <img  src="./icons/undo-all.png" alt="Undo-All Icon"/>
                   <img  src="./icons/next.png" alt="Right-Arrow Icon"/>
                 </div>
-          <button className="mailbox-close" onClick={closeMailbox}>×</button>
+          <button className="mailbox-close" onClick={closeHandler}>×</button>
         </div>
         {/* headerden sonra soldan sağa dizilen iç pencere */}
         <div className="mailbox-inwindow">

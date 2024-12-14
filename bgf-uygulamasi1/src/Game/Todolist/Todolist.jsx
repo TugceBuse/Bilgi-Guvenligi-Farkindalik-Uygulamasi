@@ -1,11 +1,11 @@
 import "./Todolist.css";
 import React, { useState , useEffect, useRef} from "react";
 import { MakeDraggable } from '../Draggable';
-import { useGameContext } from '../Context';
+import { useUIContext } from "../Context/UIContext";
   
 
 export const useTodoList = () => {
-    const { toggleWindow, setActiveWindow } = useGameContext();
+    const { toggleWindow } = useUIContext();
 
     const openTodoList = () => {
         toggleWindow('todolist');
@@ -21,7 +21,7 @@ export const useTodoList = () => {
 
     
 
-const Todolist = ({closeTodoList, todos, setTodos, style}) => {
+const Todolist = ({closeHandler, todos, setTodos, style}) => {
 
   const todolistRef = useRef(null);
 
@@ -39,7 +39,7 @@ const Todolist = ({closeTodoList, todos, setTodos, style}) => {
         
         <div className="todolist-header">
             <h2>To-Do List</h2>
-            <button className="todolist-close" onClick={closeTodoList}>×</button>
+            <button className="todolist-close" onClick={closeHandler}>×</button>
         </div>
         <div className="todolist-content">
         <ul>

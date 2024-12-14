@@ -1,12 +1,13 @@
 import React, { useState,useEffect, useRef } from 'react';
 import './Browser.css';
 import { MakeDraggable } from '../Draggable';
-import { useGameContext } from '../Context';
 import BrowserBar from './BrowserBar';
-import { use } from 'react';
+import { useUIContext } from '../Context/UIContext';
+import { useFileContext } from '../Context/FileContext';
+import { useGameContext } from '../Context/GameContext';
   
 export const useBrowser = () => {
-  const { toggleWindow, setActiveWindow } = useGameContext();
+  const { toggleWindow } = useUIContext();
 
   const openBrowser = () => {
     toggleWindow('browser');
@@ -20,9 +21,10 @@ export const useBrowser = () => {
 };
 
 
-const Browser = ({ closeBrowser, style }) => {
+const Browser = ({ closeHandler, style }) => {
 
-  const { setAntivirusexe } = useGameContext();
+  const { files,updateFileStatus } = useFileContext();
+  const { setIsantivirusinstalled } = useGameContext();
 
   const [url, setUrl] = useState('https://www.google.com/');
   const [content, setContent] = useState('main');
@@ -116,7 +118,8 @@ const Browser = ({ closeBrowser, style }) => {
       setButtonLoading(false);
       setDownloadMessage('İndirme tamamlandı!');
       setShowPopup(true);
-      setAntivirusexe(true);
+      setIsantivirusinstalled(true);
+      updateFileStatus('antivirusexe', { downloaded: true });
       setTimeout(() => {
         setShowPopup(false);
         setDownloadMessage('');
@@ -178,7 +181,7 @@ const Browser = ({ closeBrowser, style }) => {
     <div className="browser-window" style={style} ref={browserRef}>
         <div className="browser-header">
           <h2>Browser</h2>
-          <button className="browser-close" onClick={closeBrowser}>×</button> 
+          <button className="browser-close" onClick={closeHandler}>×</button> 
         </div>
         <div className="browser-search">
         <img 

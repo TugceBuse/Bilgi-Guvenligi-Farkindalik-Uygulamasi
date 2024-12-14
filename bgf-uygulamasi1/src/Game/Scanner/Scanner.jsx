@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import './Scanner.css';
 import { MakeDraggable } from '../Draggable';
-import { useGameContext } from '../Context';
+import { useUIContext } from '../Context/UIContext';
 
 
 
 export const useScanner = () => {
-    const { toggleWindow, setActiveWindow } = useGameContext();
+    const { toggleWindow } = useUIContext();
     
 
     const openScanner = () => {
@@ -20,7 +20,7 @@ export const useScanner = () => {
     return { openScanner, closeScanner };
     }
 
-const Scanner = ({ closeScanner, style }) => {
+const Scanner = ({ closeHandler, style }) => {
 
     const ScannerRef = useRef(null);
     MakeDraggable(ScannerRef, '.scanner-header');
@@ -35,7 +35,7 @@ const Scanner = ({ closeScanner, style }) => {
         <div className="scanner-window" style={style} ref={ScannerRef}>
             <div className="scanner-header">
                 <h2>QR Scanner</h2>
-                <button className="scanner-close" onClick={closeScanner}>×</button>
+                <button className="scanner-close" onClick={closeHandler}>×</button>
             </div>
 
             <div className={`scanner-container`}>
