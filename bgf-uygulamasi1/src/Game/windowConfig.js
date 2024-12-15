@@ -53,7 +53,7 @@ const initialWindowConfig = {
     downloaded: true,
   },
   antivirus: {
-    icon: '/icons/setting.png',
+    icon: '/icons/shieldSecure.png',
     label: 'Antivirus',
     component: Antivirus,
     useComponent: useAntivirus,

@@ -26,7 +26,6 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
 
     const [step, setStep] = useState(1);
     const [buttonLoading, setButtonLoading] = useState(false);
-    const { setIsantivirusinstalled } = useGameContext();
 
     const handleNextStep = () => {
       setStep(step + 1);
@@ -37,8 +36,7 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
             setButtonLoading(false); 
             setStep(step + 1);
             updateDownloadedStatus('antivirus', true);
-            setIsantivirusinstalled(true);
-        }, 4000);
+        }, 5000);
        
     };
     const handlePreviousStep = () => {
@@ -119,8 +117,16 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
                         <div className="setup-buttons">
                             <button onClick={handlePreviousStep}>Geri</button>
                             <button className="download-button" onClick={handleFinish} disabled={buttonLoading} >Kurulumu Başlat</button>
-                            {buttonLoading ? <div className="progress-bar">Kuruluyor...</div> : ''}
                         </div>
+                        {buttonLoading ? <div className="progress-bar2">
+                            Kuruluyor...
+                                <div>
+                                    <img src="/icons/setting1.png" alt="Setup"/>
+                                    <img src="/icons/setting2.png" alt="Setup"/>
+                                    <img src="/icons/setting3.png" alt="Setup"/>
+                                </div>
+                                
+                            </div> : ''}
                         </div>
                     )}
                     {step === 4 && (
