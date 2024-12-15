@@ -6,6 +6,7 @@ import ITsupport, { useITsupport } from './ITsupport/ITsupport';
 import Folder, { useFolder } from './Folder/Folder';
 import Scanner, { useScanner } from './Scanner/Scanner';
 import Setup, { useSetup } from './Setup/Setup';
+import Antivirus, { useAntivirus } from './Antivirus/Antivirus';
 
 // Başlangıç windowConfig
 const initialWindowConfig = {
@@ -57,6 +58,13 @@ const initialWindowConfig = {
     component: Setup,
     useComponent: useSetup,
     downloaded: true,
+  },
+  antivirus: {
+    icon: '/icons/setting.png',
+    label: 'Antivirus',
+    component: Antivirus,
+    useComponent: useAntivirus,
+    downloaded: false,
   },
 };
 

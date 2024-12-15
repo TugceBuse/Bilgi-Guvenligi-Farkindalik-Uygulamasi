@@ -20,13 +20,13 @@ export const useSetup = () => {
     return { openHandler, closeHandler };
     }
 
-const Setup = ({ closeHandler}) => {
+const Setup = ({ closeHandler, updateDownloadedStatus }) => {
 
     const SetupRef = useRef(null);
     MakeDraggable(SetupRef, '.setup-header');
 
     const [step, setStep] = useState(1);
-      const [buttonLoading, setButtonLoading] = useState(false);
+    const [buttonLoading, setButtonLoading] = useState(false);
 
     const handleNextStep = () => {
       setStep(step + 1);
@@ -36,6 +36,7 @@ const Setup = ({ closeHandler}) => {
         setTimeout(() => {
             setButtonLoading(false); 
             setStep(step + 1);
+            updateDownloadedStatus('antivirus', true);
         }, 4000);
        
     };

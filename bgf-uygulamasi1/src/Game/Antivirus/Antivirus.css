@@ -1,4 +1,4 @@
-.itsupport-window {
+.antivirus-window {
     position: absolute;
     top: 10%;
     left: 10%;
@@ -13,7 +13,7 @@
     color: #ffffff;
   }
   
-  .itsupport-header {
+  .antivirus-header {
     background-color: #494949;
     padding: 10px;
     border-bottom: 1px solid #1a1919;
@@ -24,7 +24,7 @@
     height: 6%;
   }
   
-  .itsupport-close {
+  .antivirus-close {
     width: 30px;
     height: 100%;
     background-color: transparent;
@@ -42,7 +42,7 @@
     transition: transform 0.2s ease-in-out;
   }
   
-  .itsupport-close:hover {
+  .antivirus-close:hover {
     background-color: #ff0000;
     transform: scale(1.1);
   }

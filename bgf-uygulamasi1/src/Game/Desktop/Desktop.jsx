@@ -6,6 +6,7 @@ import { useGameContext } from '../Contexts/GameContext';
 import Alert from '../Notifications/Alert';
 import RansomScreen from '../Notifications/Ransom';
 import { TodoProvider } from '../Contexts/TodoContext';
+import Setup from '../Setup/Setup';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
@@ -24,6 +25,7 @@ const Desktop = () => {
     folder: windowConfig.folder.useComponent(),
     scanner: windowConfig.scanner.useComponent(),
     setup: windowConfig.setup.useComponent(),
+    antivirus: windowConfig.antivirus.useComponent(),
   };
 
   console.log(windowConfig);
@@ -101,9 +103,10 @@ const Desktop = () => {
             key={windowKey}
             closeHandler={closeHandler}
             style={calculateWindowPosition(index)}
-          />);
-        })
-      }
+            updateDownloadedStatus={updateDownloadedStatus} // Setup için prop gönderiliyor
+          />
+        );
+        })}
       </TodoProvider>
 
       <Alert

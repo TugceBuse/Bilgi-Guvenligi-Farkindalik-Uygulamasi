@@ -10,11 +10,11 @@ export const useAntivirus = () => {
     
 
     const openHandler = () => {
-        toggleWindow('itsupport');
+        toggleWindow('antivirus');
     };
     
     const closeHandler = () => {
-        toggleWindow('itsupport');
+        toggleWindow('antivirus');
     };
     
     return { openHandler, closeHandler };
@@ -22,14 +22,14 @@ export const useAntivirus = () => {
 
 const Antivirus = ({ closeHandler, style }) => {
 
-    const ITsupportRef = useRef(null);
-    MakeDraggable(ITsupportRef, '.itsupport-header');
+    const antivirusRef = useRef(null);
+    MakeDraggable(antivirusRef, '.antivirus-header');
 
     return (
-        <div className="itsupport-window" style={style} ref={ITsupportRef}>
-            <div className="itsupport-header">
-                <h2>IT Support</h2>
-                <button className="itsupport-close" onClick={closeHandler}>×</button>
+        <div className="antivirus-window" style={style} ref={antivirusRef}>
+            <div className="antivirus-header">
+                <h2>antivirus</h2>
+                <button className="antivirus-close" onClick={closeHandler}>×</button>
             </div>
         </div>
     );
