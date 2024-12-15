@@ -20,23 +20,31 @@ export const useSetup = () => {
     return { openHandler, closeHandler };
     }
 
-const Setup = ({ closeHandler, style }) => {
+const Setup = ({ closeHandler}) => {
 
     const SetupRef = useRef(null);
     MakeDraggable(SetupRef, '.setup-header');
 
     const [step, setStep] = useState(1);
+      const [buttonLoading, setButtonLoading] = useState(false);
 
     const handleNextStep = () => {
       setStep(step + 1);
     };
-  
+    const handleFinish = () => {
+        setButtonLoading(true);
+        setTimeout(() => {
+            setButtonLoading(false); 
+            setStep(step + 1);
+        }, 4000);
+       
+    };
     const handlePreviousStep = () => {
       setStep(step - 1);
     };
 
     return (
-        <div className="setup-window" style={style} ref={SetupRef}>
+        <div className="setup-window"  ref={SetupRef}>
             <div className="setup-header">
                 <div className="setup-header-left">
                     <img className='setup-img' src="/icons/setting.png" alt="Setup" />
@@ -104,10 +112,11 @@ const Setup = ({ closeHandler, style }) => {
                     {step === 3 && (
                         <div className="setup-step">
                         <h4>Adım 3: Kurulum</h4>
-                        <p>Kurulumu başlatmak için 'Kurulumu Başlat' butonuna tıklayın.</p>
+                        <p>Kurulumu başlatmak için butona tıklayın.</p>
                         <div className="setup-buttons">
                             <button onClick={handlePreviousStep}>Geri</button>
-                            <button onClick={handleNextStep}>Kurulumu Başlat</button>
+                            <button className="download-button" onClick={handleFinish} disabled={buttonLoading} >Kurulumu Başlat</button>
+                            {buttonLoading ? <div className="progress-bar">Kuruluyor...</div> : ''}
                         </div>
                         </div>
                     )}
@@ -116,7 +125,7 @@ const Setup = ({ closeHandler, style }) => {
                         <h4>Kurulum Tamamlandı</h4>
                         <p>Antivirüs uygulaması başarıyla kuruldu.</p>
                         <div className="setup-buttons">
-                            <button onClick={() => setStep(1)}>Tamam</button>
+                            <button onClick={closeHandler}>Tamam</button>
                         </div>
                         </div>
                     )}
