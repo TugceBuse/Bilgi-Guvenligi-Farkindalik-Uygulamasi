@@ -7,7 +7,6 @@ export const GameContextProvider = ({ children }) => {
   const [isWificonnected, setIsWificonnected] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
-  const [isantivirusinstalled, setIsantivirusinstalled] = useState(false);
   const [isransomware, setIsransomware] = useState(false);
 
   useEffect(() => {
@@ -19,7 +18,7 @@ export const GameContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <GameContext.Provider value={{ seconds, isWificonnected, setIsWificonnected, updating_antivirus, setUpdating_antivirus, isantivirusuptodate, setAntivirusisuptodate, isantivirusinstalled, setIsantivirusinstalled, isransomware, setIsransomware }}>
+    <GameContext.Provider value={{ seconds, isWificonnected, setIsWificonnected, updating_antivirus, setUpdating_antivirus, isantivirusuptodate, setAntivirusisuptodate, isransomware, setIsransomware }}>
       {children}
     </GameContext.Provider>
   );

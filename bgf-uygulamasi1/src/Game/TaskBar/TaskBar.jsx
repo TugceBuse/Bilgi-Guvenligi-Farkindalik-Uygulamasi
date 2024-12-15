@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from '../Contexts/GameContext';
 import { useUIContext } from '../Contexts/UIContext';
-import { useWindowConfigState } from '../windowConfig';
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 
-const TaskBar = () => {
+const TaskBar = ({windowConfig}) => {
   const [time, setTime] = useState(new Date());
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [shuttingDown, setShuttingDown] = useState(false);
@@ -17,14 +16,11 @@ const TaskBar = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [wifiname, setwifiname] = useState('');
 
-  const { windowConfig, updateDownloadedStatus } = useWindowConfigState();
-
   const pass = "1234";
   const navigate = useNavigate();
   const {
     isWificonnected, setIsWificonnected,
     updating_antivirus, isantivirusuptodate,
-    isantivirusinstalled
   } = useGameContext();
 
   const {
@@ -207,7 +203,7 @@ const TaskBar = () => {
       <div className="taskbar-icons">{renderIcons()}</div>
 
       <div className="taskbar-right">
-        {isantivirusinstalled && (
+        {windowConfig.antivirus.downloaded && (
           <div className="taskbar-antivirus">
             {antivirusIcon}
             {antivirusTooltip}

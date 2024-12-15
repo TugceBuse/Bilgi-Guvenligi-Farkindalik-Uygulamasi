@@ -3,6 +3,7 @@ import './Desktop.css';
 import { useWindowConfigState } from '../windowConfig';
 import { useUIContext } from '../Contexts/UIContext';
 import { useGameContext } from '../Contexts/GameContext';
+import TaskBar from '../TaskBar/TaskBar';
 import Alert from '../Notifications/Alert';
 import RansomScreen from '../Notifications/Ransom';
 import { TodoProvider } from '../Contexts/TodoContext';
@@ -82,7 +83,7 @@ const Desktop = () => {
   return (
     <div className="desktop">
       <div className="desktop-icons">
-      {Object.keys(windowConfig)
+        {Object.keys(windowConfig)
           .filter((key) => windowConfig[key].downloaded) // Sadece downloaded olanları göster
           .map((key) => (
             <div key={key} className="icon" onClick={() => handleDesktopClick(key)}>
@@ -91,20 +92,23 @@ const Desktop = () => {
             </div>
           ))}
       </div>
+
       <TodoProvider>
-      {openWindows.map((windowKey, index) => {
-        const { component: WindowComponent } = windowConfig[windowKey];
-        const { closeHandler } = handlers[windowKey];
-        return (
-          <WindowComponent
-            key={windowKey}
-            closeHandler={closeHandler}
-            style={calculateWindowPosition(index)}
-            updateDownloadedStatus={updateDownloadedStatus} // Setup için prop gönderiliyor
-          />
-        );
+        {openWindows.map((windowKey, index) => {
+          const { component: WindowComponent } = windowConfig[windowKey];
+          const { closeHandler } = handlers[windowKey];
+          return (
+            <WindowComponent
+              key={windowKey}
+              closeHandler={closeHandler}
+              style={calculateWindowPosition(index)}
+              updateDownloadedStatus={updateDownloadedStatus} // Setup için prop gönderiliyor
+            />
+          );
         })}
       </TodoProvider>
+
+      <TaskBar windowConfig={windowConfig} /> {/* Taskbar'ı alt bileşen olarak ekledik */}
 
       <Alert
         show={showAlert}

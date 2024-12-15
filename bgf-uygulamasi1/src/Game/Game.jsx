@@ -25,7 +25,6 @@ const Game = () => {
         <Notification />
         <UIContextProvider>
           <FileContextProvider>
-            <TaskBar />
             <MailContextProvider>
               <Desktop />
             </MailContextProvider>
