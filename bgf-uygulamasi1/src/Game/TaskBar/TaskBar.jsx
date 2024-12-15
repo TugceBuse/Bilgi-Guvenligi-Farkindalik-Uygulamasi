@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from '../Contexts/GameContext';
 import { useUIContext } from '../Contexts/UIContext';
-import { windowConfig } from '../windowConfig';
+import { useWindowConfigState } from '../windowConfig';
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 
@@ -16,6 +16,8 @@ const TaskBar = () => {
   const [selectedWifi, setSelectedWifi] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [wifiname, setwifiname] = useState('');
+
+  const { windowConfig, updateDownloadedStatus } = useWindowConfigState();
 
   const pass = "1234";
   const navigate = useNavigate();

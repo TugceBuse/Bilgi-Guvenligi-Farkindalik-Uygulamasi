@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Desktop.css';
-import { windowConfig } from '../windowConfig';
+import { useWindowConfigState } from '../windowConfig';
 import { useUIContext } from '../Contexts/UIContext';
 import { useGameContext } from '../Contexts/GameContext';
 import Alert from '../Notifications/Alert';
@@ -14,6 +14,8 @@ const Desktop = () => {
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  const { windowConfig, updateDownloadedStatus } = useWindowConfigState();
+
   const handlers = {
     todolist: windowConfig.todolist.useComponent(),
     mailbox: windowConfig.mailbox.useComponent(),
@@ -24,6 +26,7 @@ const Desktop = () => {
     setup: windowConfig.setup.useComponent(),
   };
 
+  console.log(windowConfig);
   useEffect(() => {
     document.body.classList.add('no-scroll');
     return () => {
@@ -80,16 +83,14 @@ const Desktop = () => {
   return (
     <div className="desktop">
       <div className="desktop-icons">
-        {Object.keys(windowConfig).map((key) => (
-          <div
-            key={key}
-            className="icon"
-            onClick={() => handleDesktopClick(key)}
-          >
-            <img src={windowConfig[key].icon} alt={`${windowConfig[key].label} Icon`} />
-            <span>{windowConfig[key].label}</span>
-          </div>
-        ))}
+      {Object.keys(windowConfig)
+          .filter((key) => windowConfig[key].downloaded) // Sadece downloaded olanları göster
+          .map((key) => (
+            <div key={key} className="icon" onClick={() => handleDesktopClick(key)}>
+              <img src={windowConfig[key].icon} alt={`${windowConfig[key].label} Icon`} />
+              <span>{windowConfig[key].label}</span>
+            </div>
+          ))}
       </div>
       <TodoProvider>
       {openWindows.map((windowKey, index) => {
