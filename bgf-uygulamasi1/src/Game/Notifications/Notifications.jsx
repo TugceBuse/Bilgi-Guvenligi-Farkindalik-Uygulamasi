@@ -35,10 +35,14 @@ const Notification = () => {
 
   useEffect(() => {
     // ilk bildirim gösterileceği süre ve daha sonra hatırlat durumunda süre
-    if ( (isantivirusinstalled && (remindTime === -1 || seconds === remindTime) ) && !isantivirusuptodate) {
+    if ( (isantivirusinstalled && (seconds === remindTime) ) && !isantivirusuptodate) {
       setShowNotification(true);
     }
   }, [seconds]);
+
+  useEffect(() => {
+    setRemindTime(seconds + 5); // 5 saniye sonra ilk bildirim gösterilecek
+  }, [isantivirusinstalled]);
 
   return (
     <>
