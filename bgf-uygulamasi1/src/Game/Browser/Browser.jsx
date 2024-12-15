@@ -118,7 +118,6 @@ const Browser = ({ closeHandler, style }) => {
       setButtonLoading(false);
       setDownloadMessage('İndirme tamamlandı!');
       setShowPopup(true);
-      setIsantivirusinstalled(true);
       updateFileStatus('antivirusexe', { downloaded: true });
       setTimeout(() => {
         setShowPopup(false);

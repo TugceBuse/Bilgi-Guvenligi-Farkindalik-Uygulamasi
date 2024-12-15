@@ -26,7 +26,6 @@ const Desktop = () => {
     antivirus: windowConfig.antivirus.useComponent(),
   };
 
-  console.log(windowConfig);
   useEffect(() => {
     document.body.classList.add('no-scroll');
     return () => {

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import './Setup.css';
 import { MakeDraggable } from '../Draggable';
 import { useUIContext } from '../Contexts/UIContext';
+import { useGameContext } from '../Contexts/GameContext';
 
 export const useSetup = () => {
     const { toggleWindow } = useUIContext();
@@ -25,6 +26,7 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
 
     const [step, setStep] = useState(1);
     const [buttonLoading, setButtonLoading] = useState(false);
+    const { setIsantivirusinstalled } = useGameContext();
 
     const handleNextStep = () => {
       setStep(step + 1);
@@ -35,6 +37,7 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
             setButtonLoading(false); 
             setStep(step + 1);
             updateDownloadedStatus('antivirus', true);
+            setIsantivirusinstalled(true);
         }, 4000);
        
     };

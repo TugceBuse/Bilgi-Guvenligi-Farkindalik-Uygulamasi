@@ -4,7 +4,7 @@ import { MakeDraggable } from '../Draggable';
 import { useFileContext } from '../Contexts/FileContext';
 import { useUIContext } from '../Contexts/UIContext';
 import Setup from "../Setup/Setup"; // Setup bileşenini içe aktar
-
+import { useWindowConfigState } from '../windowConfig';
 
 
 export const useFolder = () => {
@@ -22,12 +22,12 @@ export const useFolder = () => {
     return { openHandler, closeHandler };
     }
 
-const Folder = ({ closeHandler, style }) => {
+const Folder = ({ closeHandler, style, updateDownloadedStatus }) => {
 
     const FolderRef = useRef(null);
     MakeDraggable(FolderRef, '.folder-header');
 
-    const { files,updateFileStatus } = useFileContext();
+    const { files, updateFileStatus } = useFileContext();
 
      //Folder içerisindeki view'ler
     const VIEW_TYPES = {
@@ -180,7 +180,11 @@ const Folder = ({ closeHandler, style }) => {
                                         <span>ShieldSecure_Setup_v1.0.exe</span>
                                     </div>
                                 )}
-                                {showSetup && <Setup closeHandler={handleCloseSetup} />}
+                                {showSetup && 
+                                <Setup 
+                                closeHandler={handleCloseSetup} 
+                                updateDownloadedStatus={updateDownloadedStatus} 
+                                />}
                                 {files.file1.downloaded && (
                                     <div className='Icons' >
                                         <img src="/icons/file.png" alt="File Icon" />
