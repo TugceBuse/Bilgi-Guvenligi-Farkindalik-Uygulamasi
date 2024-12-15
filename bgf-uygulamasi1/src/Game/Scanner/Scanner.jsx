@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Scanner.css';
 import { MakeDraggable } from '../Draggable';
 import { useUIContext } from '../Contexts/UIContext';
@@ -31,8 +31,25 @@ const Scanner = ({ closeHandler, style }) => {
         setDimScreen(true);
       };
 
+      useEffect(() => {
+        const cursor = document.querySelector('.cursor');
+      
+        const handleMouseMove = (e) => {
+          if (cursor) {
+            cursor.style.left = `${e.clientX - cursor.offsetWidth / 2}px`;
+            cursor.style.top = `${e.clientY - cursor.offsetHeight / 2}px`;
+          }
+        };
+      
+        document.addEventListener('mousemove', handleMouseMove);
+      
+        return () => {
+          document.removeEventListener('mousemove', handleMouseMove);
+        };
+      }, []);
     return (
         <div className="scanner-window" style={style} ref={ScannerRef}>
+            <div class="cursor"></div>
             <div className="scanner-header">
                 <h2>QR Scanner</h2>
                 <button className="scanner-close" onClick={closeHandler}>×</button>
@@ -47,7 +64,6 @@ const Scanner = ({ closeHandler, style }) => {
             <div className={`scanning ${dimScreen ? "dimmed" : ""}`}></div>
         </div>
     );
-
 }
 
 export default Scanner;

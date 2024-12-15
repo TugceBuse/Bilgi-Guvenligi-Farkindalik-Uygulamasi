@@ -1,3 +1,15 @@
+.setup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; 
+}
 .setup-window {
     position: fixed;
     top: 50%;
@@ -8,7 +20,6 @@
     background-color: #2c2c2c;
     border: 1px solid #444;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.153);
-    z-index: 100;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,16 +64,14 @@
   .setup-header-left {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
   }
   
   .setup-img{
-    width: 25%;
-    height: 120%;
+    width: 22%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 3px;
   }
   .setup-header h2 {
     font-size: 1.5em;
@@ -147,22 +156,4 @@
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     gap: 40px;
-  }
-
-  .progress-bar {
-    position: absolute;
-    top: 280px;
-    left: 280px;
-    height: 8%;
-    background-color: rgba(112, 154, 108, 0.3);
-    animation: progress 10s linear forwards;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-  }
-  
-  @keyframes progress {
-    0% { width: 0; }
-    100% { width: 100%; }
   }

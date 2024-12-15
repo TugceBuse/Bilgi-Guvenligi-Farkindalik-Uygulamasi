@@ -6,7 +6,6 @@ import { useGameContext } from '../Contexts/GameContext';
 import Alert from '../Notifications/Alert';
 import RansomScreen from '../Notifications/Ransom';
 import { TodoProvider } from '../Contexts/TodoContext';
-import Setup from '../Setup/Setup';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
@@ -24,7 +23,6 @@ const Desktop = () => {
     itsupport: windowConfig.itsupport.useComponent(),
     folder: windowConfig.folder.useComponent(),
     scanner: windowConfig.scanner.useComponent(),
-    setup: windowConfig.setup.useComponent(),
     antivirus: windowConfig.antivirus.useComponent(),
   };
 

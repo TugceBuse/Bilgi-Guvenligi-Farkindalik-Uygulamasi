@@ -71,13 +71,22 @@
   }
 
   .dimmed{
-    width: 200vw;
-    height: 200vh;
-    top: -90px;
-    right: -90px;
-    z-index: -2000;
-    position: fixed;
-    opacity: 0.5;
-    background-color: #131415;
+    width: 100vw;
+    height: 100vh;
+
+  }
+
+  .cursor {
+    position: fixed; /* Sayfa üzerinde sabit pozisyon */
+    width: 30px; /* Yuvarlağın boyutu */
+    height: 30px;
+    background-color: rgba(70, 70, 70, 0.7);
+    border-radius: 50%; /* Yuvarlak şekil */
+    pointer-events: none; /* Tıklanabilirliği devre dışı bırak */
+    transform: translate(-50%, -50%);
+    z-index: 2000; /* Üstte görünmesini sağlar */
   }
   
+  .body{
+    cursor: none;
+  }

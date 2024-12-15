@@ -52,13 +52,6 @@ const initialWindowConfig = {
     useComponent: useScanner,
     downloaded: true,
   },
-  setup: {
-    icon: '/icons/setting.png',
-    label: 'Setup',
-    component: Setup,
-    useComponent: useSetup,
-    downloaded: true,
-  },
   antivirus: {
     icon: '/icons/setting.png',
     label: 'Antivirus',

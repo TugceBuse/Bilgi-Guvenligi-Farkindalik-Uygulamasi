@@ -3,8 +3,6 @@ import './Setup.css';
 import { MakeDraggable } from '../Draggable';
 import { useUIContext } from '../Contexts/UIContext';
 
-
-
 export const useSetup = () => {
     const { toggleWindow } = useUIContext();
     
@@ -23,7 +21,7 @@ export const useSetup = () => {
 const Setup = ({ closeHandler, updateDownloadedStatus }) => {
 
     const SetupRef = useRef(null);
-    MakeDraggable(SetupRef, '.setup-header');
+
 
     const [step, setStep] = useState(1);
     const [buttonLoading, setButtonLoading] = useState(false);
@@ -45,6 +43,7 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
     };
 
     return (
+    <div className="setup-overlay">
         <div className="setup-window"  ref={SetupRef}>
             <div className="setup-header">
                 <div className="setup-header-left">
@@ -133,6 +132,7 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
                 </div>
             </div>
         </div>
+    </div>
     );
 
 }

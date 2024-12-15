@@ -3,6 +3,7 @@ import './Folder.css';
 import { MakeDraggable } from '../Draggable';
 import { useFileContext } from '../Contexts/FileContext';
 import { useUIContext } from '../Contexts/UIContext';
+import Setup from "../Setup/Setup"; // Setup bileşenini içe aktar
 
 
 
@@ -26,10 +27,7 @@ const Folder = ({ closeHandler, style }) => {
     const FolderRef = useRef(null);
     MakeDraggable(FolderRef, '.folder-header');
 
-   
-
     const { files,updateFileStatus } = useFileContext();
-
 
      //Folder içerisindeki view'ler
     const VIEW_TYPES = {
@@ -40,7 +38,15 @@ const Folder = ({ closeHandler, style }) => {
     const handleViewChange = ( view ) => setCurrentView(view);
     
 
+    const [showSetup, setShowSetup] = useState(false);
 
+    const handleIconClick = () => {
+      setShowSetup(true);
+    };
+  
+    const handleCloseSetup = () => {
+      setShowSetup(false);
+    };
         return (
             <div className="folder-window" style={style} ref={FolderRef}>
 
@@ -169,12 +175,12 @@ const Folder = ({ closeHandler, style }) => {
                             {/* İndirilenler klasörünün içeriği burada */}
                                 
                                 {files.antivirusexe.downloaded && (
-                                    <div className='Icons'>
-                                        <img src="/icons/antivirus.png" alt="Antivirus Icon" />
-                                        <span>SetupAntivirus.exe</span>
+                                    <div className='Icons' onDoubleClick={handleIconClick}>
+                                        <img src="/icons/setting.png" alt="Antivirus Icon" />
+                                        <span>ShieldSecure_Setup_v1.0.exe</span>
                                     </div>
                                 )}
-
+                                {showSetup && <Setup closeHandler={handleCloseSetup} />}
                                 {files.file1.downloaded && (
                                     <div className='Icons' >
                                         <img src="/icons/file.png" alt="File Icon" />
