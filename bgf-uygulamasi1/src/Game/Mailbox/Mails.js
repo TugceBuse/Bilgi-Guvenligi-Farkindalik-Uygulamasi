@@ -343,6 +343,89 @@ export const mails = [
               </div>
             )
             },
+            /* 12.Mail Content*/
+          {Name:'ShieldSecure', from:'license@shieldsecure.com',
+            title: 'ShieldSecure', precontent: `-Lisans Aktivasyonu Tamamlandı`, readMail: false, 
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      ShieldSecure antivirüs yazılımını tercih ettiğiniz için teşekkür ederiz! Lisansınız başarıyla etkinleştirilmiştir ve artık tam koruma altındasınız.<br/><br/>
+                      
+                      <img style={{width:300, height:300, paddingTop:20, paddingBottom:20}} src="./icons/shieldSecure.png" alt="ShieldSecure Pic"></img><br/>
+
+                      <b>Lisans Detaylarınız:<br/><br/>
+                      <div className='dots' ></div> Ürün Adı:</b> ShieldSecure Antivirüs<br/>
+                      <div className='dots' ></div> <b>Lisans Süresi:</b> 1 Yıl<br/>
+                      <div className='dots' ></div> <b>Kullanıcı Sayısı:</b> 1 Cihaz<br/><br/>
+                      <div className='dots' ></div> <b>Lisans Anahtarı:</b> ABC1-DEF2-GHI3-JKL4-MNOP<br/><br/>
+
+                      Koruma hizmetinizi başlatmak için uygulamamızı açarak güncellemeleri kontrol edebilir ve ilk taramanızı başlatabilirsiniz.<br/><br/>
+        
+                      Eğer lisansınızla ilgili herhangi bir sorunuz olursa veya teknik destek almanız gerekirse, bizimle iletişime geçmekten çekinmeyin:<br/><br/>  
+        
+                      
+                    <b> Destek E-posta:</b> support@shieldsecure.com<br/>
+                      Telefon: +90 555 123 4567 <br/><br/>
+                      Güvende Kalmanız Dileğiyle!<br/>
+                      <b>ShieldSecure Ekibi</b>
+                    </pre>
+              </div>
+            )
+            },
+            /* 13.Mail Content*/
+          {Name:'DigitalBookShelf', from:'library@digitalbookshelf.com',
+            title: 'DigitalBookShelf', precontent: `-E-kitap Koleksiyonunuz Sizi Bekliyor!`, readMail: false, 
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      Son favorilerinizden ilham alarak sizin için yeni bir e-kitap koleksiyonu hazırladık. İşte önerilerimiz:<br/><br/>
+                      
+                      <p>  1. <b>Modern İş Hayatı ve Liderlik</b></p>
+                      <p>  2. <b>Veri Bilimi Temelleri</b></p>
+                      <p>  3. <b>Klasik Romanlar: Yeniden Keşif</b></p><br/><br/>
+
+                      Bu özel koleksiyonu yalnızca sınırlı bir süre için ücretsiz indirip okuyabilirsiniz. Koleksiyonunuzu keşfetmek için hemen tıklayın:
+                      
+                      <span 
+                      title='library@digitalbookshlef.com ' style={{color:"orange", cursor:"pointer"}}> Koleksiyonumu Görüntüle
+                      </span><br/><br/>
+                    
+                      Kitaplarla dolu bir gün dileriz!<br/>
+                      <b>DigitalBookshelf Ekibi</b>
+                    </pre>
+              </div>
+            )
+            },
+            /* 14.Mail Content*/
+          {Name:'ShieldSecure', from:'updates@shieldsecure.com',
+            title: 'ShieldSecure', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, 
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
+                      
+                      Daha hızlı tarama ve tehdit algılama<br/>
+                      <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
+                      <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
+                      <div className='lines' ></div>
+                      ShieldSecure 2.0’a yükseltmek için: 
+                      
+                      <span 
+                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
+                      </span><br/><br/>
+                    
+                      Sorunsuz bir dijital deneyim dileriz!<br/>
+                      <b>ShieldSecure Destek Ekibi</b>
+                    </pre>
+              </div>
+            )
+            },
   ];
 
 

@@ -254,7 +254,6 @@
     display: inline-block;
     opacity: 0.8;
   }
-
   /* Mail İçeriğindeki Ögeler İçin CSS */
 
   .verify-button {
@@ -362,3 +361,13 @@
   .claim-button:hover {
     background-color: darkorange;
   }
+
+  /* LINES Part For Mail.js */
+  .lines {
+    width: 50%;
+    height: 2px;
+    background-color: #ccc; /* Çizgi rengi */
+    margin: 10px 0; /* Üst ve alt boşluk */
+    position: relative;
+  }
+  
