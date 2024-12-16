@@ -186,6 +186,10 @@ const TaskBar = ({windowConfig}) => {
             <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/synchronize.png" alt="Synchronize Icon"/>
             <p style={{marginLeft:-12}}>Yedekle</p>
           </div>
+          <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
+            <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/firewall.png" alt="Firewall Icon"/>
+            <p style={{marginLeft:-12}}>Yedekle</p>
+          </div>
 
           <div className="shutdown-button" onClick={handleShutdownClick}>
             <img src="/icons/switch.png" alt="Switch Icon" />

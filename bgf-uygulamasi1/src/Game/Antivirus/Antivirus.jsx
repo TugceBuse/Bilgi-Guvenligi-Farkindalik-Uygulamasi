@@ -1,9 +1,20 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Antivirus.css';
 import { MakeDraggable } from '../Draggable';
 import { useUIContext } from '../Contexts/UIContext';
 
-
+const icons = [
+    "/icons/folder-home.png",
+    "/icons/gallery.png",
+    "/icons/desktop.png",
+    "/icons/download.png",
+    "/icons/docs.png",
+    "/icons/picture.png",
+    "/icons/music-player.png",
+    "/icons/video.png",
+    "/icons/computer.png",
+    "/icons/network.png"
+  ];
 
 export const useAntivirus = () => {
     const { toggleWindow } = useUIContext();
@@ -27,14 +38,28 @@ export const useAntivirus = () => {
 
         const [isScanning, setIsScanning] = useState(false);
         const [isAntivirusOn, setIsAntivirusOn] = useState(true);
+        const [currentIconIndex, setCurrentIconIndex] = useState(0);
+        const[scanComplete, setScanComplete] = useState(false);
+
+        useEffect(() => {
+            const interval = setInterval(() => {
+              setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
+            }, 1000); // Her 1 saniyede bir ikon değişir
+        
+            return () => clearInterval(interval);
+          }, []);
       
-        const handleScanClick = () => {
-          setIsScanning(true);
-          setTimeout(() => {
-            setIsScanning(false);
-            alert("Tarama tamamlandı. Herhangi bir tehdit bulunamadı.");
-          }, 5000); // 5 saniyelik tarama süresi
-        };
+          const handleScanClick = () => {
+            setIsScanning(true);
+            setScanComplete(false);
+            setTimeout(() => {
+              setIsScanning(false);
+              setScanComplete(true);
+              setTimeout(() => {
+                setScanComplete(false);
+              }, 2000);
+            }, 5000);
+          };
       
         const handleToggleAntivirus = () => {
           setIsAntivirusOn(!isAntivirusOn);
@@ -55,15 +80,12 @@ export const useAntivirus = () => {
                <h3>Bilgisayarınızı tarayarak zararlı yazılımları tespit eder ve sizi korur.</h3>
                <h4>Tarayın, Güvende Kalın!</h4>
               <div className="antivirus-controls">
-                <button onClick={handleScanClick} disabled={isScanning}>
-                  
-                  
+                <button onClick={handleScanClick} disabled={isScanning}>      
                   <img src="/icons/scanner.png" alt="Scanner Icon" />
-                  
                   <span class="now">ŞİMDİ!</span>
                   <span class="play">Taramayı başlat</span>
-                  {isScanning ? "Tarama Yapılıyor..." : ""}
                 </button>
+
                 <button onClick={handleToggleAntivirus}>
                   {isAntivirusOn ? "Antivirüsü Kapat" : "Antivirüsü Aç"}
                   <input
@@ -73,7 +95,18 @@ export const useAntivirus = () => {
                   />
                 </button>
               </div>
-              {isScanning && <div className="antivirus-scan-progress">Tarama Yapılıyor...</div>}
+              {isScanning && 
+                <div className="antivirus-scan-progress">Tarama Yapılıyor...
+                    <div className="antivirus-icons">
+                    <img src={icons[currentIconIndex]} alt="Icon" />
+                    </div>
+                </div>}
+                {scanComplete && (
+                <div className="antivirus-scan-complete">
+                    <img src="/icons/security.png" alt="Security Icon" />
+                    Tarama tamamlandı. Herhangi bir tehdit bulunamadı.
+                </div>
+                )}
             </div>
           </div>
         );
