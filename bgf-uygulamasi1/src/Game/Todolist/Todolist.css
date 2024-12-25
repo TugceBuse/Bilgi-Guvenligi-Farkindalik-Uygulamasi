@@ -1,0 +1,81 @@
+.todolist-window {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    height: 60%;
+    aspect-ratio: 3 / 4;
+    background-color: #2c2c2c; 
+    border: 1px solid #444; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    color: #f1f1f1;
+} 
+  
+  .todolist-header {
+    background-color: #333; 
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .todolist-close {
+    width: 30px;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    color: #e4e4e4;
+    font-size: 1.5em;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .todolist-close:hover {
+    background-color: #ff1c1c;
+    transform: scale(1.1);
+  }
+  
+  .todolist-content {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #222; 
+  }
+  
+  .todolist-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .todolist-content li {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+    color: #f1f1f1;
+  }
+  
+  /* .todolist-content li:hover {
+    background-color: #555;
+  }
+  
+  .todolist-content li.active {
+    background-color: #666;
+    font-weight: bold;
+  } */
+
+  .todolist-content input[type="checkbox"] {
+    margin-right: 10px;
+    width: 20px; 
+    height: 20px; 
+  }
