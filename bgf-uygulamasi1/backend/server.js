@@ -20,7 +20,7 @@ app.use(express.json());
 const mongoURI = process.env.MONGO_URI;
 
 // MongoDB'ye bağlan
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI)
   .then(() => console.log('MongoDB Bağlantısı Başarılı'))
   .catch((err) => console.log('MongoDB Bağlantı Hatası: ', err));
 
