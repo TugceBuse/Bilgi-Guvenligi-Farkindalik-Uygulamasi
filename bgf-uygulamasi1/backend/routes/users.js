@@ -8,10 +8,13 @@ router.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
 
     // Kullanıcıyı veritabanına ekle
-    const newUser = new User({ username, password, email });
+    await User.create({ username, password, email });
 
-    // Kullanıcıyı kaydet
-    await newUser.save();
+
+    // const newUser = new User({ username, password, email });
+
+    // // Kullanıcıyı kaydet
+    // await newUser.save();
 
     // Başarılı yanıt
     res.status(201).json({ message: 'Kullanıcı başarıyla oluşturuldu!' });
