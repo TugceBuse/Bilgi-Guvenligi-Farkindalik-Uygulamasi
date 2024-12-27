@@ -25,6 +25,26 @@ UserSchema.pre('save', async function(next) {
   }
 });
 
+
+
+// Kullanıcı silinmeden önce çalışacak fonksiyon
+UserSchema.pre('findOneAndDelete', async function (next) {
+  try {
+    // Silinmekte olan kullanıcının bilgilerini al
+    const user = await this.model.findOne(this.getFilter());
+    if (user) {
+      console.log(`User with ID "${user._id}" is being deleted.`);
+      
+      // Kullanıcıyla ilişkili verileri temizleme işlemi
+      // Örnek: İlgili modellerden verileri temizleyebilirsiniz
+      // await RelatedModel.deleteMany({ userId: user._id });
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Şifre doğrulama fonksiyonu (login sırasında kullanılacak)
 UserSchema.methods.comparePassword = async function(candidatePassword) {
   try {
