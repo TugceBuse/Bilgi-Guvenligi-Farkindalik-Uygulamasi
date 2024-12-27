@@ -49,4 +49,30 @@ router.delete('/register/:id', async (req, res) => {
   }
 });
 
+// Kullanıcı güncelleme
+router.put('/register/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // Güncellenecek kullanıcının ID'si
+    const { username, email, password } = req.body; // Güncellenecek alanlar
+
+    // Kullanıcıyı bul ve güncelle
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { username, email, password },
+      { new: true, runValidators: true } // Güncellenmiş belgeyi döndür ve doğrulama yap
+    );
+
+    // Eğer kullanıcı bulunamazsa
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    // Başarılı yanıt
+    res.status(200).json({ message: 'Kullanıcı başarıyla güncellendi!', user: updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Kullanıcı güncellenirken bir hata oluştu.' });
+  }
+});
+
 module.exports = router;
