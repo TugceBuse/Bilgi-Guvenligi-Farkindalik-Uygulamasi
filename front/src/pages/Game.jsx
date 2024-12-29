@@ -1,10 +1,10 @@
 import Desktop from "../components/Desktop/Desktop.jsx";
 import Notification from "../components/Notifications/Notifications.jsx";
 import { useEffect } from 'react';
-import { GameContextProvider } from '../Contexts/GameContext.jsx';
-import { FileContextProvider } from '../Contexts/FileContext.jsx';
-import { UIContextProvider } from '../Contexts/UIContext.jsx';
-import { MailContextProvider } from '../Contexts/MailContext.jsx';
+import { GameContextProvider } from '../Contexts/GameContext.js';
+import { FileContextProvider } from '../Contexts/FileContext.js';
+import { UIContextProvider } from '../Contexts/UIContext.js';
+import { MailContextProvider } from '../Contexts/MailContext.js';
 
 const Game = () => {
   // Sağ tıklamayı engellemek ve sol click tetikleme
