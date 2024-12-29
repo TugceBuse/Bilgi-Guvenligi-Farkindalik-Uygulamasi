@@ -61,29 +61,53 @@ exports.deleteUser = async (req, res) => {
 
 // Kullanıcı güncelleme
 exports.updateUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    let { username, email, password } = req.body;
+  const { userId } = req.params; // Güncellenmesi istenen kullanıcı ID'si
+  const { firstName, lastName, email, username, password } = req.body; // Güncellenecek alanlar
 
-    // Şifre hash'leme
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      password = await bcrypt.hash(password, salt);
+  try {
+    // Güncellenecek veriler
+    const updatedData = {};
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: 'Geçersiz kullanıcı ID.' });
     }
 
+    // Alanları kontrol ederek ekle
+    if (firstName) updatedData.firstName = firstName;
+    if (lastName) updatedData.lastName = lastName;
+    if (email) updatedData.email = email;
+    if (username) updatedData.username = username;
+
+    // Eğer şifre güncelleniyorsa hash işlemi yap
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      updatedData.password = await bcrypt.hash(password, salt);
+    }
+
+    // Kullanıcıyı bul ve güncelle
     const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { username, email, password },
-      { new: true, runValidators: true }
+      userId, 
+      updatedData, 
+      { new: true, runValidators: true } // Yeni belgeyi döndür ve validasyon uygula
     );
 
+    // Eğer kullanıcı bulunamazsa
     if (!updatedUser) {
       return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
 
-    res.status(200).json({ message: 'Kullanıcı başarıyla güncellendi!', user: updatedUser });
+    // Başarılı yanıt
+    res.status(200).json({
+      message: 'Kullanıcı başarıyla güncellendi!',
+      user: updatedUser,
+    });
   } catch (err) {
+    // Hata yönetimi
     console.error(err);
+    if (err.code === 11000) {
+      // Benzersizlik (unique) hatası
+      return res.status(400).json({ error: 'Email veya kullanıcı adı zaten kullanılıyor.' });
+    }
     res.status(500).json({ error: 'Kullanıcı güncellenirken bir hata oluştu.' });
   }
 };
