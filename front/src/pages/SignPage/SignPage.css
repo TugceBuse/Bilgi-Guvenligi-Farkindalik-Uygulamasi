@@ -1,23 +1,79 @@
-.textbox2{
-    display: flex;
-    flex-direction: row;
+/* Code with CSS for SignPage */
+
+.textbox2 input{
+  width: 300px;
+  height: 40px;
+  font-size: 20px;
+  color: rgb(36, 36, 36);
+  background-color: #d5f1f8;
+  box-sizing: border-box;
 }
+
+.textbox_signAd,
+.textbox_signSoyad,
+.textbox_signkullanıcıAdı,
+.textbox_email,
+.pswd {
+  margin-bottom: 15px; /* Alt boşluk ekler */
+}
+
 .textbox_signAd{
     overflow: hidden;
     box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
     border: 4px groove #92c0eb;
     border-radius: 4px;
     color: #000;
-    justify-self: left;
-    margin-right: 5%;
+    justify-self: center;
+    box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+    border: 4px groove #92c0eb;
+    border-radius: 4px;
 }
+
 .textbox_signSoyad{
     overflow: hidden;
     box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
     border: 4px groove #92c0eb;
     border-radius: 4px;
     color: #000;
-    justify-self: right;
+    justify-self: center;
+    box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+    border: 4px groove #92c0eb;
+    border-radius: 4px;
+}
+
+.textbox_signkullanıcıAdı{
+  overflow: hidden;
+  box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+  border: 4px groove #92c0eb;
+  border-radius: 4px;
+  color: #000;
+  justify-self: center;
+  box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+  border: 4px groove #92c0eb;
+  border-radius: 4px;
+}
+
+.textbox_email{
+    overflow: hidden;
+    box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+    border: 4px groove #92c0eb;
+    border-radius: 4px;
+    color: #000;
+    justify-self: center;
+    box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+    border: 4px groove #92c0eb;
+    border-radius: 4px;
+}
+  .pswd{
+    overflow: hidden;
+    box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+    border: 4px groove #92c0eb;
+    border-radius: 4px;
+    color: #000;
+    justify-self: center;
+    box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
+    border: 4px groove #92c0eb;
+    border-radius: 4px;
 }
 .inputPart2{
     border:1px solid #2a7897;
@@ -27,8 +83,7 @@
     text-align:center;
     box-shadow: 0 5px 10px rgba(9,0,0,0.5);
     align-content: center;
-    padding-bottom: 30%;
-  }
+}
 
   .inputPart2 img{
     width: 100px;
@@ -44,7 +99,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 26%;
-    height: 75%;
+    height: 85%;
     background: #626a9ca6;
     box-sizing: border-box;
     overflow: hidden;
