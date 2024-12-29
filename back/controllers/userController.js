@@ -2,11 +2,12 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 // Kullanıcı kaydı
 exports.registerUser = async (req, res) => {
     try {
-      const { username, password, email } = req.body;
+      const { firstName, lastName, username, password, email } = req.body;
   
       // Email veya username kontrolü
       const existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -15,9 +16,9 @@ exports.registerUser = async (req, res) => {
       }
   
       // Kullanıcı oluştur ve kaydet
-      const user = await User.create({ username, password, email });
+      const newUser = await User.create({ firstName, lastName, username, email, password });
   
-      res.status(201).json({ message: 'Kullanıcı başarıyla oluşturuldu!', user });
+      res.status(201).json({ message: 'Kullanıcı başarıyla oluşturuldu!', user: newUser });
     } catch (err) {
       if (err.name === 'ValidationError') {
         const errors = Object.values(err.errors).map((el) => el.message);
@@ -137,3 +138,65 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ error: 'Profil alınırken bir hata oluştu.' });
   }
 };
+
+
+//şifre sıfırlama ve mail gönderme işlemi ayarlanacak
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Kullanıcıyı email ile bul
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    // Token oluştur
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // Token'ı hash'le ve kullanıcıya kaydet
+    user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // Token 10 dakika geçerli
+
+    await user.save();
+
+    // Email gönderme işlemi (mock)
+    console.log(`Şifre sıfırlama bağlantısı: http://your-app.com/reset-password?token=${resetToken}`);
+
+    res.status(200).json({ message: 'Şifre sıfırlama bağlantısı gönderildi.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Bir hata oluştu.' });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+    const { token } = req.query; // URL'den token alınır
+    const { password } = req.body; // Yeni şifre alınır
+  
+    try {
+      // Token'ı hash'le ve veritabanında kontrol et
+      const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+  
+      const user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpires: { $gt: Date.now() }, // Token'ın süresi kontrol edilir
+      });
+  
+      if (!user) {
+        return res.status(400).json({ error: 'Token geçersiz veya süresi dolmuş.' });
+      }
+  
+      // Şifreyi güncelle ve token'ı sıfırla
+      user.password = password;
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+  
+      await user.save();
+  
+      res.status(200).json({ message: 'Şifre başarıyla güncellendi.' });
+    } catch (err) {
+      res.status(500).json({ error: 'Bir hata oluştu.' });
+    }
+  };
+  
+

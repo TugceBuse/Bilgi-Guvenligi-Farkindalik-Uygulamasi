@@ -4,30 +4,45 @@ const validator = require('validator');
 
 const UserSchema = new mongoose.Schema(
   {
+    // Ad
+    firstName: {
+      type: String,
+      required: [true, 'Ad gereklidir'],
+      trim: true, // Başında veya sonunda boşluk olmaması için
+    },
+    // Soyad
+    lastName: {
+      type: String,
+      required: [true, 'Soyad gereklidir'],
+      trim: true,
+    },
     // Kullanıcı adı
     username: {
       type: String,
       required: [true, 'Kullanıcı adı gereklidir'],
       unique: true, // Benzersizlik
-    },
-    // Şifre
-    password: {
-      type: String,
-      required: [true, 'Şifre gereklidir'],
-      minlength: [8, 'Minimum 8 karakter içermelidir'],// Minimum uzunluk
-      validate: {
-        validator: validator.isStrongPassword, // Güçlü şifre kontrolü
-        message: 'Şifre 1 büyük harf, 1 küçük harf, 1 sayı ve 1 özel karakter içermeli ve en az 8 karakter uzunluğunda olmalıdır',
-      },
+      trim: true,
     },
     // Email
     email: {
       type: String,
       required: [true, 'Email gereklidir'],
       unique: true,
+      lowercase: true, // Email küçük harfe dönüştürülür
       validate: {
         validator: validator.isEmail,
         message: 'Geçerli bir email adresi girin',
+      },
+    },
+    // Şifre
+    password: {
+      type: String,
+      required: [true, 'Şifre gereklidir'],
+      minlength: [8, 'Minimum 8 karakter içermelidir'], // Minimum uzunluk
+      validate: {
+        validator: validator.isStrongPassword, // Güçlü şifre kontrolü
+        message:
+          'Şifre 1 büyük harf, 1 küçük harf, 1 sayı ve 1 özel karakter içermeli ve en az 8 karakter uzunluğunda olmalıdır',
       },
     },
     // Puan
