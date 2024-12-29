@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./LoginPage.css";
-
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showRegister, setShowRegister] = useState(false);
+  
+
+  const navigate = useNavigate();
+
+  const handleLoginClick = (event) => {
+    event.preventDefault();
+    navigate('/sign-up'); // SignUpPage'e yönlendirir
+  };
+  
   useEffect(() => {
     document.body.classList.add('no-scroll');
     return () => {
@@ -18,10 +27,6 @@ const LoginPage = () => {
     console.log("Username:", username);
     console.log("Password:", password);};
 
-    const handleRegisterClick = (e) => {
-      e.preventDefault();
-      setShowRegister(true);
-    };
     // useEffect(() => {
     //     // Sayfa yenilendiğinde showRegister state'ini false olarak ayarla
     //     if (performance.navigation.type === 1) {
@@ -31,7 +36,7 @@ const LoginPage = () => {
 
     return (
       <div className="login_page">
-            <div className={`box ${showRegister ? "shift-left" : ""}`}>
+            <div className="box">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -41,8 +46,8 @@ const LoginPage = () => {
                         <div className="textbox">
                           <input
                             type="text"
-                            placeholder=" Kullanıcı Adı"
-                            name="username"
+                            placeholder=" Email"
+                            name="email"
                             required
                             value={username}
                             onChange={(e) => setUsername(e.target.value)} // State'e bağlama
@@ -61,7 +66,9 @@ const LoginPage = () => {
                         <input type="submit" className="btn" value="Giriş Yap"/>
                         <div className="signIn">
                             <p>Henüz hesabınız yok mu? </p>
-                            <a href="#" onClick={handleRegisterClick}>Kayıt Ol</a>
+                            <button onClick={handleLoginClick} className="link-button">
+                              Kayıt Ol
+                            </button>
                         </div>
                         <p style={{color:"white", marginTop:15}}>Şifremi Unuttum</p>
                   </form>

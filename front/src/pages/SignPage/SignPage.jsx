@@ -12,29 +12,27 @@ const SignPage = () => {
                 <form className="inputPart2">
                    <img src="./user (1).png" alt="user"/> 
                    <div className="textbox2">
-                    <div className="textbox_signAd">
-                                    <input type="text" placeholder=" AD" name="username" required/>
-                                </div>
+                        <div className="textbox_signAd">
+                            <input type="text" placeholder=" AD" name="ad" required/>
+                        </div>
 
-                                <div className="textbox_signSoyad">
-                                    <input type="text" placeholder=" SOYAD" name="username" required/>
-                                </div>
-                   </div>
-                                
+                        <div className="textbox_signSoyad">
+                            <input type="text" placeholder=" SOYAD" name="soyad" required/>
+                        </div>
 
+                        <div className="textbox_signkullanıcıAdı">  
+                            <input type="text" placeholder=" KULLANICI ADI" name="kullanıcıAdı" required/>
+                        </div>
+     
                         <div className="textbox_email">
-                            <input type="text" placeholder=" EMAİL" name="username" required/>
+                            <input type="text" placeholder=" EMAİL" name="email" required/>
                         </div>
                         
-                        <div className="textbox">
+                        <div className="pswd">
                             <input type="password" placeholder=" ŞİFRE" name="password" required/>
                         </div>
-                        <input type="submit" className="btn" value="Giriş Yap"/>
-                        <div className="signIn">
-                            <p>Henüz hesabınız yok mu? </p>
-                            <a href="https://www.w3schools.com/">Kayıt Ol</a>
-                        </div>
-                        <p style={{color:"white", marginTop:15}}>Şifremi Unuttum</p>
+                    </div>
+                    <input type="submit" className="btn" value="Kayıt Ol"/>
                 </form>
                
             </div> 
