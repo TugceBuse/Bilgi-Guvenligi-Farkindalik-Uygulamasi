@@ -76,8 +76,32 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "LOGOUT" });
   };
 
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/users/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.token}`, // Tokeni header'a ekle
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Profil bilgileri alınamadı.");
+      }
+  
+      const data = await response.json();
+      dispatch({ type: "FETCH_PROFILE_SUCCESS", payload: data.user });
+    } catch (error) {
+      console.error("Profil bilgileri çekilirken hata:", error.message);
+      dispatch({ type: "AUTH_ERROR", payload: error.message });
+      throw error;
+    }
+  };
+  
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, register }}>
+    <AuthContext.Provider value={{ ...state, login, logout, register, fetchUserProfile }}>
       {children}
     </AuthContext.Provider>
   );

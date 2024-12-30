@@ -4,41 +4,14 @@ import { useAuthContext } from "../../Contexts/AuthContext";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    username: "John Doe",
-    email: "johndoe@example.com",
-    avatar: "/user (1).png", // Varsayılan profil resmi
-  });
-
-  const { user } = useAuthContext();
+  const { user, fetchUserProfile } = useAuthContext(); // fetchUserProfile fonksiyonunu alın
 
   useEffect(() => {
-    // Kullanıcı bilgilerini yükle
-    if (user) {
-      setUserData({
-        username: user.username || "John",
-        email: user.email || "johndoe@example.com",
-        surname: user.surname || "Doe",
-        password: "******", // Şifreyi genelde göstermezsiniz
-      });
-    }
-  }, [user]);
-  
+    fetchUserProfile(); // Kullanıcı profil bilgilerini backend'den al
+  }, []);
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSave = () => {
-    // API veya veri kaydetme işlemi yapılabilir
-    setIsEditing(false);
   };
 
   return (
@@ -46,51 +19,38 @@ const ProfilePage = () => {
       <div className="profile-container">
         <h2>Profil Sayfası</h2>
         <div className="profile-avatar">
-            <img
-                src="/user (1).png"
-                alt="user"
-                className="avatar"
-            />
+          <img
+            src={/*user.avatar ||*/ "/user (1).png"}
+            alt="user"
+            className="avatar"
+          />
         </div>
-        {isEditing ? (
-          <div className="profile-edit">
-            <div className="profile-edits">
-                <p><strong>Ad:</strong></p>
-                <input
-                type="text"
-                name="username"
-                value={userData.username}
-                onChange={handleInputChange}
-                placeholder="Adınız"
-                />
-            </div>
-
-            <div className="profile-edits">
-                <p><strong>E-posta: </strong></p>
-                <input
-                type="email"
-                name="email"
-                value={userData.email}
-                onChange={handleInputChange}
-                placeholder="E-posta"
-                />
-            </div>
-                <button className="save-button" onClick={handleSave}>
-                Kaydet
-                </button>
-                
-          </div>
-        ) : (
+        {!isEditing ? (
           <div className="profile-info">
-            <p><strong>Ad:</strong></p>
-            <p>{user.firstName}</p>
+            <p><strong>Ad:</strong> {user.firstName}</p>
             <p><strong>Soyad:</strong> {user.lastName}</p>
-            <p><strong>Kullanıcı Adı:</strong></p>
-            <p>{user.username}</p>
+            <p><strong>Kullanıcı Adı:</strong> {user.username}</p>
             <p><strong>E-posta:</strong> {user.email}</p>
-            <p><strong>Şifre:</strong> {user.password}</p>
+            <p><strong>Toplam Puan:</strong> {user.score}</p>
+            <p><strong>Üyelik Tarihi:</strong>
+            {new Date(user.createdAt).toLocaleDateString('tr-TR', 
+            { day: '2-digit', month: '2-digit', year: 'numeric' })}
+            </p>
             <button className="edit-button" onClick={handleEditToggle}>
               Düzenle
+            </button>
+          </div>
+        ) : (
+          <div className="profile-edit">
+            <input
+              type="text"
+              name="firstName"
+              value={user.firstName || ""}
+              onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+            />
+            {/* Diğer düzenleme alanları */}
+            <button className="save-button" onClick={handleEditToggle}>
+              Kaydet
             </button>
           </div>
         )}

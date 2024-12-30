@@ -15,7 +15,7 @@ const {
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.delete('/:id', deleteUser);
-router.put('/:id', updateUser);
+router.put('/:id', protect, updateUser);
 router.get('/profile', protect, getUserProfile);
 
 module.exports = router;

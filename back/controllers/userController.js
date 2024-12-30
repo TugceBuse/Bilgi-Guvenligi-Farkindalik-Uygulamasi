@@ -62,15 +62,18 @@ exports.deleteUser = async (req, res) => {
 
 // Kullanıcı güncelleme
 exports.updateUser = async (req, res) => {
-  const { userId } = req.params; // Güncellenmesi istenen kullanıcı ID'si
+  const { id } = req.params; // Güncellenmesi istenen kullanıcı ID'si
   const { firstName, lastName, email, username, password } = req.body; // Güncellenecek alanlar
 
   try {
     // Güncellenecek veriler
     const updatedData = {};
 
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Geçersiz kullanıcı ID.' });
+    }
+    if (req.user.id !== id) {
+      return res.status(403).json({ error: 'Bu kullanıcıyı güncelleme yetkiniz yok.' });
     }
 
     // Alanları kontrol ederek ekle
@@ -81,13 +84,18 @@ exports.updateUser = async (req, res) => {
 
     // Eğer şifre güncelleniyorsa hash işlemi yap
     if (password) {
+      if (!validator.isStrongPassword(password)) {
+        return res.status(400).json({
+          error: 'Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.'
+        });
+      }
       const salt = await bcrypt.genSalt(10);
       updatedData.password = await bcrypt.hash(password, salt);
     }
 
     // Kullanıcıyı bul ve güncelle
     const updatedUser = await User.findByIdAndUpdate(
-      userId, 
+      id, 
       updatedData, 
       { new: true, runValidators: true } // Yeni belgeyi döndür ve validasyon uygula
     );
