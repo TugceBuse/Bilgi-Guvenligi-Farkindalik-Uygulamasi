@@ -37,13 +37,14 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error);
+        throw new Error(errorData.error || "Giriş başarısız."); // Hata fırlat
       }
 
       const data = await response.json();
       dispatch({ type: "LOGIN_SUCCESS", payload: { user: data.user, token: data.token } });
     } catch (error) {
       dispatch({ type: "AUTH_ERROR", payload: error.message });
+      throw error;
     }
   };
 
@@ -57,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error);
+        throw new Error(errorData.error) || "Kayıt başarısız."; // Hata fırlat
       }
 
       const data = await response.json();
@@ -65,6 +66,7 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: { user: data.user, token: data.token } });
     } catch (error) {
       dispatch({ type: "AUTH_ERROR", payload: error.message });
+      throw error;
     }
   };
 
