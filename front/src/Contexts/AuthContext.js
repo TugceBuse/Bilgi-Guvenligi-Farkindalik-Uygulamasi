@@ -4,7 +4,7 @@ import { useContext } from "react";
 
 // Başlangıç durumu
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: localStorage.getItem("isAuthenticated") || false,
   user: JSON.parse(localStorage.getItem("user")) || null,
   token: localStorage.getItem("token") || null,
   error: null,
@@ -19,9 +19,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (state.user && state.token) {
+      localStorage.setItem("isAuthenticated", state.isAuthenticated);
       localStorage.setItem("user", JSON.stringify(state.user));
       localStorage.setItem("token", state.token);
     } else {
+      localStorage.removeItem("isAuthenticated");
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     }
