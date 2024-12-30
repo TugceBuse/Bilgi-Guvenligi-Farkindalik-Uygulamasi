@@ -5,6 +5,7 @@ import Homepage from "./pages/Homepage/Homepage";
 import Game from "./pages/Game";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignPage from "./pages/SignPage/SignPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import { AuthProvider } from "../src/Contexts/AuthContext";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/game" element={<Game />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
