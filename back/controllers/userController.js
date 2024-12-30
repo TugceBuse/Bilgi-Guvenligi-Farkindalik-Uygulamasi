@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const validator = require('validator');
 
 // Kullanıcı kaydı
 exports.registerUser = async (req, res) => {
@@ -194,33 +195,40 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-    const { token } = req.query; // URL'den token alınır
-    const { password } = req.body; // Yeni şifre alınır
-  
-    try {
-      // Token'ı hash'le ve veritabanında kontrol et
-      const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-  
-      const user = await User.findOne({
-        resetPasswordToken: hashedToken,
-        resetPasswordExpires: { $gt: Date.now() }, // Token'ın süresi kontrol edilir
-      });
-  
-      if (!user) {
-        return res.status(400).json({ error: 'Token geçersiz veya süresi dolmuş.' });
-      }
-  
-      // Şifreyi güncelle ve token'ı sıfırla
-      user.password = password;
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpires = undefined;
-  
-      await user.save();
-  
-      res.status(200).json({ message: 'Şifre başarıyla güncellendi.' });
-    } catch (err) {
-      res.status(500).json({ error: 'Bir hata oluştu.' });
+  const { token } = req.query; // URL'den token alınır
+  const { password } = req.body; // Yeni şifre alınır
+
+  try {
+    // Token'ı hash'le ve veritabanında kontrol et
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }, // Token'ın süresi kontrol edilir
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Token geçersiz veya süresi dolmuş.' });
     }
-  };
+
+    // Güçlü şifre kontrolü
+    if (!validator.isStrongPassword(password)) {
+      return res.status(400).json({ 
+        error: 'Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.' 
+      });
+    }
+
+    // Şifreyi güncelle ve token'ı sıfırla
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: 'Şifre başarıyla güncellendi.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Bir hata oluştu.' });
+  }
+};
   
 

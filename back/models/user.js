@@ -8,8 +8,8 @@ const UserSchema = new mongoose.Schema(
     firstName: {
       type: String,
       required: [true, 'Ad gereklidir'],
-      uppercase: true, // Küçük harfe dönüştürülmez çünkü birden fazla kelime olabilir
-      trim: true, // Başında veya sonunda boşluk olmaması için
+      uppercase: true,
+      trim: true,
       validate: {
         validator: function (value) {
           // Birden fazla kelime arasında boşluk olabilir
@@ -40,7 +40,6 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (value) {
-          // Kullanıcı adında yalnızca harf, sayı, ve _ veya . gibi işaretler olabilir
           return /^[a-zA-Z0-9_]+$/.test(value);
         },
         message: 'Kullanıcı adı yalnızca harf, rakam veya alt çizgi (_) içerebilir',
@@ -51,7 +50,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Email gereklidir'],
       unique: true,
-      lowercase: true, // Email küçük harfe dönüştürülür
+      lowercase: true,
       validate: {
         validator: validator.isEmail,
         message: 'Geçerli bir email adresi girin',
@@ -61,7 +60,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Şifre gereklidir'],
-      minlength: [8, 'Minimum 8 karakter içermelidir'], // Minimum uzunluk
+      minlength: [8, 'Minimum 8 karakter içermelidir'],
       validate: {
         validator: validator.isStrongPassword, // Güçlü şifre kontrolü
         message:
@@ -76,14 +75,14 @@ const UserSchema = new mongoose.Schema(
     // Kullanıcı rolü
     role: {
       type: String,
-      enum: ['user', 'admin'], // Kullanıcı rolleri
-      default: 'user', // Varsayılan rol
+      enum: ['user', 'admin'],
+      default: 'user',
     },
     // Hesap durumu
     status: {
       type: String,
       enum: ['active', 'inactive', 'banned'], // Hesap durumları
-      default: 'active', // Varsayılan durum
+      default: 'active',
     },
     // Şifre kurtarma tokeni
     resetPasswordToken: {
@@ -113,7 +112,7 @@ UserSchema.pre('save', async function (next) {
 
   try {
     const salt = await bcrypt.genSalt(10); // Salt değeri oluştur
-    this.password = await bcrypt.hash(this.password, salt); // Şifreyi hash'le
+    this.password = bcrypt.hash(this.password, salt); // Şifreyi hash'le
     next();
   } catch (err) {
     next(err);
@@ -129,7 +128,7 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
   }
 };
 
-// Kullanıcı modeli oluştur
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
