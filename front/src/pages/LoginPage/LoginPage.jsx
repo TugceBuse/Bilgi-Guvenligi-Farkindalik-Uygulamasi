@@ -9,6 +9,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState(null); // Yerel hata durumunu yönetin
   const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false); // Pop-up mesajını kontrol eden state
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -23,7 +24,11 @@ const LoginPage = () => {
 
     try {
       await login(email, password); // AuthContext'teki login fonksiyonunu çağırın
-      navigate("/"); // Giriş başarılıysa ana sayfaya yönlendir
+      setShowPopup(true); // Pop-up mesajını göster
+      setTimeout(() => {
+        setShowPopup(false); // Pop-up mesajını gizle
+        navigate("/"); // Ana sayfaya yönlendir
+      }, 2000); // 5 saniye bekle
     } catch (err) {
       console.error("Login error:", err.message);
       setLocalError(err.message || "Bir hata oluştu."); // Hata mesajını göster
@@ -77,6 +82,14 @@ const LoginPage = () => {
           </div>
           <p style={{ color: "white", marginTop: 15 }}>Şifremi Unuttum</p>
         </form>
+
+        {/* Pop-up mesajı */}
+        {showPopup && (
+        <div className="popupLogin">
+          Giriş başarılı! Ana sayfaya yönlendiriliyorsunuz...
+        </div>
+        )}
+
       </div>
       <div className="circle1" />
       <div className="circle2" />

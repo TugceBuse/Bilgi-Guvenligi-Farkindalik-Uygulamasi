@@ -23,13 +23,20 @@ const SignPage = () => {
     }));
   };
 
+  // pop-up mesajı için const
+  const [showPopup, setShowPopup] = useState(false); // Pop-up mesajını kontrol eden state
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
       await register(formData); // AuthContext'teki register fonksiyonunu çağır
-      navigate("/login");
+      setShowPopup(true); // Pop-up mesajını göster
+      setTimeout(() => {
+        setShowPopup(false); // Pop-up mesajını gizle
+        navigate("/"); // Ana sayfaya yönlendir
+      }, 2000); // 5 saniye bekle
     } catch (err) {
       setError(err.message);
     }
@@ -99,6 +106,14 @@ const SignPage = () => {
           <input type="submit" className="btn" value="Kayıt Ol" />
           {error && <p className="error">{error}</p>}
         </form>
+
+         {/* Pop-up mesajı */}
+         {showPopup && (
+        <div className="popupRegister">
+          Kayıt başarılı! Ana sayfaya yönlendiriliyorsunuz...
+        </div>
+        )}
+
       </div>
       <squre className="circle1" />
       <squre className="circle2" />

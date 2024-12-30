@@ -65,10 +65,15 @@ const Navbar = () => {
             {isAuthenticated ? (
               <div className="user-info">
                 {/* Kullanıcı adı ve çıkış butonu */}
+                <img
+                  src="/user (1).png"
+                  alt="user"
+                  className="avatar"
+                />
                 <span className="username">{user.username}</span>
-                <button className="logout" onClick={logout}>
+                {/* <button className="logout" onClick={logout}>
                   Çıkış
-                </button>
+                </button> */}
               </div>
             ) : (
               <button className="login" onClick={handleLoginClick}>

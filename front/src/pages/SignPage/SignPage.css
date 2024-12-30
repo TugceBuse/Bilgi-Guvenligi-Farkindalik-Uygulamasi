@@ -173,3 +173,17 @@
       
     } 
   } 
+
+  /* Pop-up Message */
+.popupRegister {
+  position: fixed;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #007bff; /* Pop-up arka plan rengini mavi yapar */
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 10px 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}

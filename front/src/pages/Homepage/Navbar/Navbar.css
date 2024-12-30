@@ -198,4 +198,31 @@
     border-radius: 5px;
   }
 
+  .avatar{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    filter: grayscale(50%); 
+    background-color: #d3f1ff;
+  }
+  .username{
+    font-size: 22px;
+    text-shadow: 2px 2px 4px #000000;
+    border-radius: 3%;
+    color: #fffdfd;
+  }
+  .user-info{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user-info:hover{
+    transform: scale(1.02);
+    background-image: linear-gradient(to right, rgb(123, 156, 187),rgb(148, 185, 219));
+    border-radius: 5px;
+    cursor: pointer;
+  }
   
