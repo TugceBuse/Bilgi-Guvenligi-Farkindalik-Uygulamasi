@@ -7,15 +7,11 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthContext();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Scroll durumunu yönet
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -25,8 +21,18 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-
-  }, []);
+    if (menuOpen) {
+      const handleClickOutside = (event) => {
+        if (!event.target.closest(".user-info")) {
+          setMenuOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [menuOpen]);
 
   const handleLogoClick = () => {
     navigate("/game");
@@ -36,10 +42,9 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  // const handleLogout = () => {
-  //   logout(); // AuthContext'teki logout fonksiyonunu çağır
-  //   navigate("/"); // Ana sayfaya yönlendir
-  // };
+  const handleAvatarClick = () => {
+    setMenuOpen((prev) => !prev);
+  };
 
   return (
     <div>
@@ -63,17 +68,19 @@ const Navbar = () => {
 
           <div className="loginPart">
             {isAuthenticated ? (
-              <div className="user-info">
-                {/* Kullanıcı adı ve çıkış butonu */}
+              <div className="user-info" onClick={handleAvatarClick}>
                 <img
                   src="/user (1).png"
                   alt="user"
                   className="avatar"
                 />
                 <span className="username">{user.username}</span>
-                {/* <button className="logout" onClick={logout}>
-                  Çıkış
-                </button> */}
+                {menuOpen && (
+                  <div className="dropdown-menu">
+                    <a href="/profile">Profil</a>
+                    <button onClick={logout}>Çıkış</button>
+                  </div>
+                )}
               </div>
             ) : (
               <button className="login" onClick={handleLoginClick}>
