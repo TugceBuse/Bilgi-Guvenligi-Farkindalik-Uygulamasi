@@ -98,7 +98,7 @@ const ProfilePage = () => {
               )}
             
             {/* Diğer düzenleme alanları */}
-              <div style={{ display: "flex", justifyContent: "flex-start", alignItems:"end", gap: 15 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap:10 }}>
                 <button className="save-button" onClick={handleEditToggle}>
                   Kaydet
                 </button>
@@ -106,7 +106,9 @@ const ProfilePage = () => {
                   style={{
                   textDecoration:"underline", 
                   color:"royalblue", 
-                  cursor:"pointer"
+                  cursor:"pointer",
+                  width: 150,
+                  alignSelf: "end"
                   }}
                   onClick={() => setShowPasswordInput(!showPasswordInput)}
                   >Şifremi Değiştir

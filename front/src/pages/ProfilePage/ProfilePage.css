@@ -72,6 +72,7 @@ html, body {
   .profile-edit {
     display: flex;
     flex-direction: column;
+    align-items: center;
     background-color: rgb(215, 223, 243);
     padding: 20px;
     border-radius: 8px;
@@ -104,26 +105,13 @@ html, body {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 15%;
+    width: 50%;
   }
   
   .edit-button:hover, .save-button:hover {
     background-color: #021830;
   }
 
-  .profile-edits{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    margin-top: 20px;
-  }
-  .profile-edits p{
-    margin: 0 10px;
-  }
-  
   .profile-page label {
     font-weight: bold; /* Yazı tipini kalın yapar */
-    text-align: left;
   }
