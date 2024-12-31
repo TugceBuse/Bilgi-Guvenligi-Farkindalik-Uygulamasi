@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./ProfilePage.css";
 import { useAuthContext } from "../../Contexts/AuthContext";
 
@@ -6,6 +7,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { user, fetchUserProfile } = useAuthContext(); // fetchUserProfile fonksiyonunu alın
   const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserProfile(); // Kullanıcı profil bilgilerini backend'den al
@@ -19,6 +21,8 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
+        
+        <img src="/logo2.png" alt="SafeClicksLogo" className="backHome" title="www.safeClicks.com" onClick={() => navigate("/")}/>
         {isEditing && <h1>Düzenle</h1>}
         {!isEditing && <h1>Profil Sayfası</h1>}
         
@@ -96,7 +100,7 @@ const ProfilePage = () => {
                     onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
                   />
                 </p>
-                
+
                 <p><strong>Yeni Şifre </strong> <label>:</label>
                   <input
                     type="password"
