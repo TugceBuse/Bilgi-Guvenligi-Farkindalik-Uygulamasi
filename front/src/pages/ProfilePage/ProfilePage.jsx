@@ -5,7 +5,6 @@ import { useAuthContext } from "../../Contexts/AuthContext";
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { user, fetchUserProfile } = useAuthContext(); // fetchUserProfile fonksiyonunu alın
-  const [newPassword, setNewPassword] = useState('');
   const [showPasswordInput, setShowPasswordInput] = useState(false);
 
   useEffect(() => {
@@ -14,12 +13,9 @@ const ProfilePage = () => {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
+    setShowPasswordInput(false);
   };
 
-  const handlePasswordChange = () => {
-    // Şifre değiştirme işlemleri burada yapılacak
-    console.log('Yeni şifre:', newPassword);
-  };
   return (
     <div className="profile-page">
       <div className="profile-container">
@@ -49,59 +45,83 @@ const ProfilePage = () => {
             </button>
           </div>
         ) : (
-          <div className="profile-edit">
-            <p><strong>Ad </strong> <label>:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={user.firstName || ""}
-                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
-              />
-            </p>
-            
-            <p><strong>Soyad </strong> <label>:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={user.lastName || ""}
-                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
-              />
-            </p>
-
-            <p><strong>Kullanıcı Adı </strong> <label>:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={user.username || ""}
-                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
-              />
-            </p>
-
-            <p><strong>E-posta </strong> <label>:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={user.email || ""}
-                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
-              />
-            </p>
-
-              {showPasswordInput && (
-                <p><strong>Şifre </strong> <label>:</label>
+          <div >
+            {!showPasswordInput && (
+              <div className="profile-edit"> 
+                <p><strong>Ad </strong> <label>:</label>
                   <input
                     type="text"
                     name="firstName"
+                    value={user.firstName || ""}
                     onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
                   />
                 </p>
-              )}
+                
+                <p><strong>Soyad </strong> <label>:</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={user.lastName || ""}
+                    onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+                  />
+                </p>
+
+                <p><strong>Kullanıcı Adı </strong> <label>:</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={user.username || ""}
+                    onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+                  />
+                </p>
+
+                <p><strong>E-posta </strong> <label>:</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={user.email || ""}
+                    onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+                  />
+                </p>
+              </div>
+            )}
+            
+            
+            {showPasswordInput && (
+              <div className="profile-edit">
+                <p style={{justifyContent:"center", justifySelf:"center", alignContent:"center"}}><strong> Eski Şifre </strong> <label>:</label>
+                  <input
+                    type="password"
+                    name="eskiSifre"
+                    onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+                  />
+                </p>
+                
+                <p><strong>Yeni Şifre </strong> <label>:</label>
+                  <input
+                    type="password"
+                    name="yeniSifre"
+                    onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+                  />
+                </p>
+
+                <p><strong>Yeni Şifre Tekrar </strong> <label>:</label>
+                  <input
+                    type="password"
+                    name="yeniSifreTekrar"
+                    onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+                  />
+                </p>
+              </div>    
+            )}
             
             {/* Diğer düzenleme alanları */}
               <div style={{ display: "flex", justifyContent: "space-between", gap:10 }}>
                 <button className="save-button" onClick={handleEditToggle}>
                   Kaydet
                 </button>
-                <label 
+                {!showPasswordInput && (
+                  <label 
                   style={{
                   textDecoration:"underline", 
                   color:"royalblue", 
@@ -112,6 +132,8 @@ const ProfilePage = () => {
                   onClick={() => setShowPasswordInput(!showPasswordInput)}
                   >Şifremi Değiştir
                 </label>
+                )}
+                
               </div>
           </div>
         )}
