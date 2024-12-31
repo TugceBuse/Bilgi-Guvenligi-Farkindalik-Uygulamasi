@@ -4,7 +4,7 @@ html, body {
   }
 .profile-page {
     top: 3%;
-    right: 0.5%;
+    right: 26%;
     display: flex;
     position: absolute;
     justify-content: center;
@@ -14,7 +14,7 @@ html, body {
   }
   
   .profile-container {
-    width: 1900px;
+    width: 900px;
     height: 100%;
     align-content: center;
     justify-content: center;
@@ -24,7 +24,16 @@ html, body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
   }
-  
+  .profile-container h1 {
+    font-size: 30px; 
+    margin-bottom: 20px; 
+    color: #333; 
+    text-align: center; 
+    font-weight: bold; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1); 
+  }
   .profile-avatar img {
     width: 100px;
     height: 100px;
@@ -32,26 +41,60 @@ html, body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
   }
-  
-  .profile-info p {
-    font-size: 23px;
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    background-color: rgb(215, 223, 243);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .profile-page p {
+    font-size: 20px;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
     margin: 10px 0;
-    color: black;
+    gap: 10px;
+    border-bottom: 1px solid #b4b1c9; /* Alt çizgi ekler */
+    padding-bottom: 10px;
+  }
+
+  .profile-page strong {
+    width: 150px; /* Sabit genişlik */
+    text-align: left;
+  }
+  
+  .profile-edit {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(215, 223, 243);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+  }
+  .profile-edit p {
+    align-items: center;
+    padding: 10px;
+    border: 1px solid rgb(156, 166, 196);
+    border-radius: 4px;
+    display: flex;
+    justify-content: flex-start;
+    width: 50%;
+    margin: 9px 0;
+    gap: 10px;
   }
   
   .profile-edit input {
-    display: block;
-    width: 30%;
-    align-content: center;
-    justify-content: center;
-    align-self: center;
-    justify-self: center;
     padding: 10px;
-    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width: 100%;
   }
-  
   .edit-button, .save-button {
     padding: 10px 20px;
     font-size: 16px;
@@ -61,6 +104,7 @@ html, body {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 15%;
   }
   
   .edit-button:hover, .save-button:hover {
@@ -79,3 +123,7 @@ html, body {
     margin: 0 10px;
   }
   
+  .profile-page label {
+    font-weight: bold; /* Yazı tipini kalın yapar */
+    text-align: left;
+  }

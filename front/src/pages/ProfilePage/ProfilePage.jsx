@@ -5,6 +5,8 @@ import { useAuthContext } from "../../Contexts/AuthContext";
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { user, fetchUserProfile } = useAuthContext(); // fetchUserProfile fonksiyonunu alın
+  const [newPassword, setNewPassword] = useState('');
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
 
   useEffect(() => {
     fetchUserProfile(); // Kullanıcı profil bilgilerini backend'den al
@@ -14,10 +16,16 @@ const ProfilePage = () => {
     setIsEditing(!isEditing);
   };
 
+  const handlePasswordChange = () => {
+    // Şifre değiştirme işlemleri burada yapılacak
+    console.log('Yeni şifre:', newPassword);
+  };
   return (
     <div className="profile-page">
       <div className="profile-container">
-        <h2>Profil Sayfası</h2>
+        {isEditing && <h1>Düzenle</h1>}
+        {!isEditing && <h1>Profil Sayfası</h1>}
+        
         <div className="profile-avatar">
           <img
             src={/*user.avatar ||*/ "/user (1).png"}
@@ -27,13 +35,13 @@ const ProfilePage = () => {
         </div>
         {!isEditing ? (
           <div className="profile-info">
-            <p><strong>Ad:</strong> {user.firstName}</p>
-            <p><strong>Soyad:</strong> {user.lastName}</p>
-            <p><strong>Kullanıcı Adı:</strong> {user.username}</p>
-            <p><strong>E-posta:</strong> {user.email}</p>
-            <p><strong>Toplam Puan:</strong> {user.score}</p>
-            <p><strong>Üyelik Tarihi:</strong>
-            {new Date(user.createdAt).toLocaleDateString('tr-TR', 
+            <p><strong>Ad </strong> <label>:</label> {user.firstName}</p>
+            <p><strong>Soyad </strong> <label>:</label> {user.lastName}</p>
+            <p><strong>Kullanıcı Adı </strong> <label>:</label> {user.username}</p>
+            <p><strong>E-posta </strong> <label>:</label> {user.email}</p>
+            <p><strong>Toplam Puan </strong> <label>:</label> {user.score}</p>
+            <p><strong>Üyelik Tarihi </strong>
+            <label>:</label> {new Date(user.createdAt).toLocaleDateString('tr-TR', 
             { day: '2-digit', month: '2-digit', year: 'numeric' })}
             </p>
             <button className="edit-button" onClick={handleEditToggle}>
@@ -42,16 +50,68 @@ const ProfilePage = () => {
           </div>
         ) : (
           <div className="profile-edit">
-            <input
-              type="text"
-              name="firstName"
-              value={user.firstName || ""}
-              onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
-            />
+            <p><strong>Ad </strong> <label>:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={user.firstName || ""}
+                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+              />
+            </p>
+            
+            <p><strong>Soyad </strong> <label>:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={user.firstName || ""}
+                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+              />
+            </p>
+
+            <p><strong>Kullanıcı Adı </strong> <label>:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={user.firstName || ""}
+                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+              />
+            </p>
+
+            <p><strong>E-posta </strong> <label>:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={user.firstName || ""}
+                onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+              />
+            </p>
+
+              {showPasswordInput && (
+                <p><strong>Şifre </strong> <label>:</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={user.firstName || ""}
+                    onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
+                  />
+                </p>
+              )}
+            
             {/* Diğer düzenleme alanları */}
-            <button className="save-button" onClick={handleEditToggle}>
-              Kaydet
-            </button>
+              <div style={{ display: "flex", justifyContent: "flex-start", alignItems:"end", gap: 15 }}>
+                <button className="save-button" onClick={handleEditToggle}>
+                  Kaydet
+                </button>
+                <label 
+                  style={{
+                  textDecoration:"underline", 
+                  color:"royalblue", 
+                  cursor:"pointer"
+                  }}
+                  onClick={() => setShowPasswordInput(!showPasswordInput)}
+                  >Şifremi Değiştir
+                </label>
+              </div>
           </div>
         )}
       </div>
