@@ -63,7 +63,7 @@ const ProfilePage = () => {
               <input
                 type="text"
                 name="firstName"
-                value={user.firstName || ""}
+                value={user.lastName || ""}
                 onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
               />
             </p>
@@ -72,7 +72,7 @@ const ProfilePage = () => {
               <input
                 type="text"
                 name="firstName"
-                value={user.firstName || ""}
+                value={user.username || ""}
                 onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
               />
             </p>
@@ -81,7 +81,7 @@ const ProfilePage = () => {
               <input
                 type="text"
                 name="firstName"
-                value={user.firstName || ""}
+                value={user.email || ""}
                 onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
               />
             </p>
@@ -91,7 +91,6 @@ const ProfilePage = () => {
                   <input
                     type="text"
                     name="firstName"
-                    value={user.firstName || ""}
                     onChange={(e) => console.log(e.target.value)} // Düzenleme işlemi yapılacak
                   />
                 </p>

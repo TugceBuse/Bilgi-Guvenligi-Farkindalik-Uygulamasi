@@ -95,6 +95,7 @@ html, body {
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 100%;
+    font-size: 18px;
   }
   .edit-button, .save-button {
     padding: 10px 20px;
