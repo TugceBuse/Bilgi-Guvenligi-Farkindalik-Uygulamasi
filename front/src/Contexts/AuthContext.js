@@ -72,68 +72,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUser = async (userId, updatedData) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.token}`,
-        },
-        body: JSON.stringify(updatedData),
-      });
-      if (!response.ok) {
-        throw new Error("Güncelleme işlemi başarısız.");
-      }
-      const data = await response.json();
-      dispatch({ type: "UPDATE_USER_SUCCESS", payload: data.user });
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
-  
-  const changePassword = async (userId, newPassword) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.token}`,
-        },
-        body: JSON.stringify({ password: newPassword }),
-      });
-      if (!response.ok) {
-        throw new Error("Şifre değiştirilemedi.");
-      }
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
-  
-
   const logout = () => {
     dispatch({ type: "LOGOUT" });
   };
-
-  //geçici bir çözüm olabilir alternatifler araştırılabilir
-  // Token süresi dolduysa kullanıcıyı çıkış yap
-  const checkTokenExpiration = () => {
-    if (state.token) {
-      const tokenParts = JSON.parse(atob(state.token.split('.')[1]));
-      console.log("Token süresi:", new Date(tokenParts.exp * 1000).toLocaleString());
-      const now = Math.floor(Date.now() / 1000); // Şu anki zamanı al
-      console.log("Şu anki zaman:", new Date(now * 1000).toLocaleString());
-      if (tokenParts.exp && tokenParts.exp < now) {
-        console.log("Token süresi doldu. Çıkış yapılıyor...");
-        logout(); 
-      }
-      console.log("Token kontrol edildi. Geçerli");
-    }
-  };
-
-
 
   const fetchUserProfile = async () => {
     try {
@@ -144,10 +85,6 @@ export const AuthProvider = ({ children }) => {
           Authorization: `Bearer ${state.token}`, // Tokeni header'a ekle
         },
       });
-      if (response.status === 401) { // Token geçersiz
-        logout(); // Çıkış yap
-        throw new Error("Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.");
-      }
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Profil bilgileri alınamadı.");
@@ -161,18 +98,10 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
-
-  useEffect(() => {
-    console.log("Token kontrol ediliyor...");
-    checkTokenExpiration();
-    const interval = setInterval(checkTokenExpiration, 60000); // Her 1 dakikada bir kontrol
-    return () => clearInterval(interval); 
-  }, [state.token]);
   
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, register, fetchUserProfile, updateUser, changePassword }}>
+    <AuthContext.Provider value={{ ...state, login, logout, register, fetchUserProfile }}>
       {children}
     </AuthContext.Provider>
   );
