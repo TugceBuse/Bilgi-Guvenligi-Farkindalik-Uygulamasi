@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./ProfilePage.css";
 import { useAuthContext } from "../../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +15,6 @@ const ProfilePage = () => {
   const { user, fetchUserProfile, isAuthenticated, updateUser, changePassword } =
     useAuthContext();
   const [showPasswordInput, setShowPasswordInput] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,6 +77,8 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
+        
+        <img src="/logo2.png" alt="SafeClicksLogo" className="backHome" title="www.safeClicks.com" onClick={() => navigate("/")}/>
         {isEditing && <h1>Düzenle</h1>}
         {!isEditing && <h1>Profil Sayfası</h1>}
         <div className="profile-avatar">
