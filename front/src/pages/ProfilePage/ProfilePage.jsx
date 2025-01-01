@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import "./ProfilePage.css";
 import { useAuthContext } from "../../Contexts/AuthContext";
 
-
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
@@ -46,24 +45,26 @@ const ProfilePage = () => {
     setPasswords((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Kullanıcı bilgilerini kaydet
   const handleSave = async () => {
     try {
-      await updateUser(user._id, { ...editedUser, currentPassword: passwords.currentPassword }); // currentPassword'ü ekledik
+      await updateUser(editedUser); // user._id kaldırıldı
       alert("Bilgiler başarıyla güncellendi!");
       setIsEditing(false);
     } catch (error) {
       alert(error.message);
     }
-    passwords.currentPassword = "";
+    setPasswords((prev) => ({ ...prev, currentPassword: "" })); // Şifreyi sıfırla
   };
 
+  // Şifre değişikliklerini kaydet
   const handleChangePassword = async () => {
     if (passwords.newPassword !== passwords.confirmPassword) {
       alert("Yeni şifreler eşleşmiyor!");
       return;
     }
     try {
-      await changePassword(user._id, passwords.newPassword);
+      await changePassword(passwords.currentPassword, passwords.newPassword); // user._id kaldırıldı
       alert("Şifre başarıyla değiştirildi!");
       setPasswords({
         currentPassword: "",
@@ -79,7 +80,6 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
-        
         <img src="/logo2.png" alt="SafeClicksLogo" className="backHome" title="www.safeClicks.com" onClick={() => navigate("/")}/>
         {isEditing && <h1>Düzenle</h1>}
         {!isEditing && <h1>Profil Sayfası</h1>}
@@ -135,15 +135,6 @@ const ProfilePage = () => {
                   onChange={handleInputChange}
                 />
                 </p>
-                <p><strong>Mevcut Şifre </strong> <label>:</label>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={passwords.currentPassword}
-                  onChange={handlePasswordChange}
-                  required
-                />
-                </p>
                 <button className="save-button" onClick={handleSave}>
                   Kaydet
                 </button>
@@ -159,15 +150,14 @@ const ProfilePage = () => {
                   >Şifremi Değiştir
                 </label>
               </div>
-              
             )}
 
             {showPasswordInput && (
               <div className="profile-edit">
-                 <p style={{justifyContent:"center", justifySelf:"center", alignContent:"center"}}><strong> Eski Şifre </strong> <label>:</label>
+                <p style={{justifyContent:"center", justifySelf:"center", alignContent:"center"}}><strong> Eski Şifre </strong> <label>:</label>
                   <input
                     type="password"
-                    name="eskiSifre"
+                    name="currentPassword"
                     placeholder="Eski Şifre"
                     value={passwords.currentPassword}
                     onChange={handlePasswordChange}
@@ -197,8 +187,6 @@ const ProfilePage = () => {
                 <button className="cancel-button" onClick={() => setShowPasswordInput(false)}>         
                   İptal
                 </button>
-                <br/>
-                
               </div>
             )}
           </div>

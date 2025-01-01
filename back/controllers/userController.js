@@ -45,7 +45,7 @@ exports.registerUser = async (req, res) => {
 // Kullanıcı silme
 exports.deleteUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user.id; // Token'den alınan kullanıcı kimliği
 
     // ID doğrulama
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -66,78 +66,40 @@ exports.deleteUser = async (req, res) => {
 
 // Kullanıcı güncelleme
 exports.updateUser = async (req, res) => {
-  const { id } = req.params; // Kullanıcı ID'si
-  const { currentPassword, password, ...updateFields } = req.body; // Mevcut şifre, yeni şifre ve diğer alanlar
+  const userId = req.user.id; // Token'dan alınan kullanıcı kimliği
+  const { firstName, lastName, email, username } = req.body; // Güncellenmek istenen alanlar
 
   try {
-    // Kullanıcı ID doğrulama
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Geçersiz kullanıcı ID.' });
-    }
-
     // Kullanıcıyı bul
-    const user = await User.findById(id);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
 
-    // Mevcut şifre doğrulama
-    if (!currentPassword) {
-      return res.status(400).json({ error: 'Mevcut şifre gerekli.' });
-    }
-
-    const isMatch = await user.comparePassword(currentPassword);
-    if (!isMatch) {
-      return res.status(400).json({ error: 'Mevcut şifre yanlış.' });
-    }
-
-    // Yeni şifre mevcut şifreyle aynı mı kontrol et
-    if (password && (await user.comparePassword(password))) {
-      return res.status(400).json({ error: 'Yeni şifre, mevcut şifre ile aynı olamaz.' });
-    }
-
-    // Güncellenmesi gereken alanları belirle
+    // Güncellenmek istenen alanları belirle
     const updatedData = {};
-    if (password) {
-      // Yeni şifre hashleme
-      const salt = await bcrypt.genSalt(10);
-      console.log("update hash çalıştı:",password);
-      updatedData.password = await bcrypt.hash(password, salt);
-    }
-
-    // Diğer alanları güncelle
-    Object.keys(updateFields).forEach((key) => {
-      updatedData[key] = updateFields[key];
-    });
+    if (firstName) updatedData.firstName = firstName;
+    if (lastName) updatedData.lastName = lastName;
+    if (email) updatedData.email = email;
+    if (username) updatedData.username = username;
 
     // Kullanıcıyı güncelle
     const updatedUser = await User.findByIdAndUpdate(
-      id,
+      userId,
       updatedData,
-      { new: true, runValidators: true } // Yeni belgeyi döndür ve validasyon uygula
+      { new: true, runValidators: true } // Yeni veriyi döndür ve validasyon yap
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ error: 'Kullanıcı güncellenemedi.' });
-    }
-
-    // Başarılı yanıt
     res.status(200).json({
       message: 'Kullanıcı başarıyla güncellendi!',
       user: updatedUser,
     });
   } catch (err) {
     console.error(err);
-
-    // Unique hatalarını yakala
-    if (err.code === 11000) {
-      const field = Object.keys(err.keyValue)[0];
-      return res.status(400).json({ error: `Bu ${field} zaten kullanılıyor.` });
-    }
-
     res.status(500).json({ error: 'Kullanıcı güncellenirken bir hata oluştu.' });
   }
 };
+
 
 exports.updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;

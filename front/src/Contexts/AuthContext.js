@@ -75,50 +75,51 @@ export const AuthProvider = ({ children }) => {
   };
   
 
-  const updateUser = async (userId, updatedData) => {
-    const { password, ...filteredData } = updatedData; // Şifreyi filtrele
-    console.log("UptadeUser:",updatedData);
-    console.log("UptadeUser AuthContext çalıştı :", userId, filteredData);
+  const updateUser = async (updatedData) => {
+  const { password, ...filteredData } = updatedData; // Şifreyi filtrele
+  console.log("UptadeUser:", updatedData);
+  console.log("UptadeUser AuthContext çalıştı:", filteredData);
 
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.token}`,
-        },
-        body: JSON.stringify(filteredData),
-      });
-      if (!response.ok) {
-        throw new Error("Güncelleme işlemi başarısız.");
-      }
-      const data = await response.json();
-      dispatch({ type: "UPDATE_USER_SUCCESS", payload: data.user });
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
+  try {
+    const response = await fetch("http://localhost:5000/api/users/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.token}`, // Token ile kimlik doğrulama
+      },
+      body: JSON.stringify(filteredData),
+    });
+    if (!response.ok) {
+      throw new Error("Güncelleme işlemi başarısız.");
     }
-  };
+    const data = await response.json();
+    dispatch({ type: "UPDATE_USER_SUCCESS", payload: data.user });
+  } catch (error) {
+    console.error("Hata:", error);
+    throw error;
+  }
+};
   
-  const changePassword = async (userId, newPassword) => {
-    console.log("ChangePassword AuthContext çalıştı :",userId,newPassword);
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.token}`,
-        },
-        body: JSON.stringify({ password: newPassword }),
-      });
-      if (!response.ok) {
-        throw new Error("Şifre değiştirilemedi.");
-      }
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
+const changePassword = async (currentPassword, newPassword) => {
+  console.log("ChangePassword AuthContext çalıştı:", currentPassword, newPassword);
+  try {
+    const response = await fetch("http://localhost:5000/api/users/update-password", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.token}`, // Token ile kimlik doğrulama
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    if (!response.ok) {
+      throw new Error("Şifre değiştirilemedi.");
     }
-  };
+    alert("Şifre başarıyla değiştirildi.");
+  } catch (error) {
+    console.error("Hata:", error);
+    throw error;
+  }
+};
   
 
   const logout = () => {

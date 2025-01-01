@@ -8,14 +8,16 @@ const {
   deleteUser,
   updateUser,
   loginUser,
-  getUserProfile
+  getUserProfile,
+  updatePassword
 } = require('../controllers/userController'); // userController içe aktar
 
 // Kullanıcı işlemleri
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.delete('/:id', deleteUser);
-router.put('/:id', protect, updateUser);
+router.delete('/delete',protect, deleteUser);
+router.put('/update', protect, updateUser);
+router.put('/update-password', protect, updatePassword);
 router.get('/profile', protect, getUserProfile);
 
 module.exports = router;
