@@ -12,7 +12,6 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (value) {
-          // Birden fazla kelime arasında boşluk olabilir
           return /^[a-zA-ZğüşöçİĞÜŞÖÇ]+(\s[a-zA-ZğüşöçİĞÜŞÖÇ]+)*$/.test(value);
         },
         message: 'Ad yalnızca harflerden oluşmalı ve aralarında birer boşluk bulunmalıdır',
@@ -26,7 +25,6 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (value) {
-          // Tek kelime ve boşluk içeremez
           return /^[a-zA-ZğüşöçİĞÜŞÖÇ]+$/.test(value);
         },
         message: 'Soyad yalnızca tek bir kelimeden oluşmalı ve boşluk içermemelidir',
@@ -36,7 +34,7 @@ const UserSchema = new mongoose.Schema(
     username: {
       type: String,
       required: [true, 'Kullanıcı adı gereklidir'],
-      unique: true, // Benzersizliği doğrula
+      unique: true,
       minlength: [4, 'Kullanıcı adı minimum 4 karakter içermelidir'],
       trim: true,
       validate: {
@@ -45,6 +43,11 @@ const UserSchema = new mongoose.Schema(
         },
         message: 'Kullanıcı adı yalnızca harf, rakam veya alt çizgi (_) içerebilir',
       },
+    },
+    usernameLowerCase: {
+      type: String,
+      unique: true,
+      select: false, // API yanıtlarında görünmesin
     },
     // Email
     email: {
@@ -63,9 +66,8 @@ const UserSchema = new mongoose.Schema(
       required: [true, 'Şifre gereklidir'],
       minlength: [8, 'Şifre minimum 8 karakter içermelidir'],
       validate: {
-        validator: validator.isStrongPassword, // Güçlü şifre kontrolü
-        message:
-          'Şifre 1 büyük harf, 1 küçük harf, 1 sayı ve 1 özel karakter içermeli ve en az 8 karakter uzunluğunda olmalıdır',
+        validator: validator.isStrongPassword,
+        message: 'Şifre 1 büyük harf, 1 küçük harf, 1 sayı ve 1 özel karakter içermeli ve en az 8 karakter uzunluğunda olmalıdır',
       },
     },
     // Puan
@@ -82,7 +84,7 @@ const UserSchema = new mongoose.Schema(
     // Hesap durumu
     status: {
       type: String,
-      enum: ['active', 'inactive', 'banned'], // Hesap durumları
+      enum: ['active', 'inactive', 'banned'],
       default: 'active',
     },
     // Şifre kurtarma tokeni
@@ -90,42 +92,45 @@ const UserSchema = new mongoose.Schema(
       type: String,
     },
     resetPasswordExpires: {
-      type: Date, // Şifre kurtarma tokeni için süre
+      type: Date,
     },
   },
-  { timestamps: true } // Oluşturulma ve güncellenme zamanı için otomatik alanlar
+  { timestamps: true }
 );
 
 // Kullanıcı adı doğrulaması, büyük/küçük harf fark etmeksizin unique
 UserSchema.path('username').validate(async function (value) {
-  const existingUser = await mongoose.models.User.findOne({ username: value.toLowerCase() });
-  // Eğer başka bir kullanıcı varsa ve bu kullanıcı mevcut kullanıcı değilse hata döndür
+  const existingUser = await mongoose.models.User.findOne({ usernameLowerCase: value.toLowerCase() });
   if (existingUser && existingUser._id.toString() !== this._id.toString()) {
     return false;
   }
   return true;
 }, 'Bu kullanıcı adı zaten alınmış.');
 
-// Şifreyi kaydetmeden önce hash'leme işlemi ve username normalize
-UserSchema.pre('save', async function (next) {
-  console.log("Pre-save middleware çalışıyor...");
-  if (this.isModified('password')) {
-    try {
-      const salt = await bcrypt.genSalt(10);
-      console.log("Şifre: ", this.password, " hashleniyor...");
-      this.password = await bcrypt.hash(this.password, salt);
-    } catch (err) {
-      console.error("Şifre hashleme sırasında hata:", err);
-      return next(err);
-    }
-  }
+// Kaydetmeden önce usernameLowerCase alanını güncelle
+UserSchema.pre('save', function (next) {
   if (this.isModified('username')) {
-    this.usernameLowerCase = this.username.toLowerCase(); // Lowercase alanı güncelleniyor
+    this.usernameLowerCase = this.username.toLowerCase(); // Benzersizlik kontrolü için normalize et
   }
   next();
 });
 
-// Şifre doğrulama fonksiyonu (login sırasında kullanılacak)
+// Şifre hashleme
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Şifre doğrulama fonksiyonu
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);

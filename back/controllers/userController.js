@@ -82,7 +82,7 @@ exports.updateUser = async (req, res) => {
 
     // Username benzersizliği kontrolü
     if (username && username.toLowerCase() !== user.username.toLowerCase()) {
-      const existingUser = await User.findOne({ username: username.toLowerCase() });
+      const existingUser = await User.findOne({ usernameLowerCase: username.toLowerCase() });
       if (existingUser && existingUser._id.toString() !== userId) {
         return res.status(400).json({ error: "Bu kullanıcı adı zaten alınmış." });
       }
@@ -92,7 +92,7 @@ exports.updateUser = async (req, res) => {
     // Kullanıcı bilgilerini güncelle
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      updatedData,
+      { ...updatedData, usernameLowerCase: username ? username.toLowerCase() : user.usernameLowerCase }, // usernameLowerCase'i güncelle
       { new: true, runValidators: true }
     );
 
@@ -105,6 +105,7 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: "Kullanıcı güncellenirken bir hata oluştu." });
   }
 };
+
 
 
 
