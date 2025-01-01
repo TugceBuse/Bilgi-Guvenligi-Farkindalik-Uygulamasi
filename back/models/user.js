@@ -37,6 +37,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Kullanıcı adı gereklidir'],
       unique: true, // Benzersizliği doğrula
+      minlength: [4, 'Şifre minimum 4 karakter içermelidir'],
       trim: true,
       validate: {
         validator: function (value) {
@@ -60,7 +61,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Şifre gereklidir'],
-      minlength: [8, 'Minimum 8 karakter içermelidir'],
+      minlength: [8, 'Şifre minimum 8 karakter içermelidir'],
       validate: {
         validator: validator.isStrongPassword, // Güçlü şifre kontrolü
         message:

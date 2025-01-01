@@ -25,6 +25,11 @@ const AuthReducer = (state, action) => {
           token: null,
           error: action.payload,
         };
+      case 'UPDATE_USER_SUCCESS':
+        return {
+        ...state,
+        user: { ...state.user, ...action.payload }, // Kullanıcı bilgilerini güncelle
+      };
       case 'FETCH_PROFILE_SUCCESS':
         return {
           ...state,

@@ -48,7 +48,7 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     try {
-      await updateUser(user._id, editedUser);
+      await updateUser(user._id, { ...editedUser, currentPassword: passwords.currentPassword }); // currentPassword'ü ekledik
       alert("Bilgiler başarıyla güncellendi!");
       setIsEditing(false);
     } catch (error) {
@@ -134,6 +134,15 @@ const ProfilePage = () => {
                   onChange={handleInputChange}
                 />
                 </p>
+                <p><strong>Mevcut Şifre </strong> <label>:</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwords.currentPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
+                </p>
                 <button className="save-button" onClick={handleSave}>
                   Kaydet
                 </button>
@@ -154,6 +163,16 @@ const ProfilePage = () => {
 
             {showPasswordInput && (
               <div className="profile-edit">
+                 <p style={{justifyContent:"center", justifySelf:"center", alignContent:"center"}}><strong> Eski Şifre </strong> <label>:</label>
+                  <input
+                    type="password"
+                    name="eskiSifre"
+                    placeholder="Eski Şifre"
+                    value={passwords.currentPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  </p>
+                <p><strong>Yeni Şifre </strong> <label>:</label>
                 <input
                   type="password"
                   name="newPassword"
@@ -161,6 +180,8 @@ const ProfilePage = () => {
                   value={passwords.newPassword}
                   onChange={handlePasswordChange}
                 />
+                </p>
+                <p><strong>Yeni Şifre Tekrar </strong> <label>:</label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -168,9 +189,15 @@ const ProfilePage = () => {
                   value={passwords.confirmPassword}
                   onChange={handlePasswordChange}
                 />
+                </p>
                 <button className="save-button" onClick={handleChangePassword}>
                   Şifreyi Kaydet
                 </button>
+                <button className="cancel-button" onClick={() => setShowPasswordInput(false)}>         
+                  İptal
+                </button>
+                <br/>
+                
               </div>
             )}
           </div>

@@ -97,7 +97,7 @@ html, body {
     width: 100%;
     font-size: 18px;
   }
-  .edit-button, .save-button {
+  .edit-button, .save-button{
     padding: 10px 20px;
     font-size: 16px;
     color: white;
@@ -108,9 +108,23 @@ html, body {
     transition: background-color 0.3s;
     width: 20%;
   }
+  .cancel-button{
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: darkred;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 20%;
+  }
   
   .edit-button:hover, .save-button:hover {
     background-color: #021830;
+  }
+  .cancel-button:hover{
+    background-color: #300202;
   }
 
   .profile-page label {

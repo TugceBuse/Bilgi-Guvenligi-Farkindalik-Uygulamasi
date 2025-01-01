@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     }
-  }, [state.user, state.token]);
+  }, [state.user, state.token,state.isAuthenticated]);
 
   const login = async (email, password) => {
     try {

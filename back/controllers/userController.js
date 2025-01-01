@@ -66,47 +66,58 @@ exports.deleteUser = async (req, res) => {
 
 // Kullanıcı güncelleme
 exports.updateUser = async (req, res) => {
-  const { id } = req.params; // Güncellenmesi istenen kullanıcı ID'si
-  const { firstName, lastName, email, username, password } = req.body; // Güncellenecek alanlar
+  const { id } = req.params; // Kullanıcı ID'si
+  const { currentPassword, password, ...updateFields } = req.body; // Mevcut şifre, yeni şifre ve diğer alanlar
 
   try {
-    // Güncellenecek veriler
-    const updatedData = {};
-
+    // Kullanıcı ID doğrulama
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Geçersiz kullanıcı ID.' });
     }
-    if (req.user.id !== id) {
-      return res.status(403).json({ error: 'Bu kullanıcıyı güncelleme yetkiniz yok.' });
+
+    // Kullanıcıyı bul
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
 
-    // Alanları kontrol ederek ekle
-    if (firstName) updatedData.firstName = firstName;
-    if (lastName) updatedData.lastName = lastName;
-    if (email) updatedData.email = email;
-    if (username) updatedData.username = username;
+    // Mevcut şifre doğrulama
+    if (!currentPassword) {
+      return res.status(400).json({ error: 'Mevcut şifre gerekli.' });
+    }
 
-    // Eğer şifre güncelleniyorsa hash işlemi yap
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Mevcut şifre yanlış.' });
+    }
+
+    // Yeni şifre mevcut şifreyle aynı mı kontrol et
+    if (password && (await user.comparePassword(password))) {
+      return res.status(400).json({ error: 'Yeni şifre, mevcut şifre ile aynı olamaz.' });
+    }
+
+    // Güncellenmesi gereken alanları belirle
+    const updatedData = {};
     if (password) {
-      if (!validator.isStrongPassword(password)) {
-        return res.status(400).json({
-          error: 'Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.'
-        });
-      }
+      // Yeni şifre hashleme
       const salt = await bcrypt.genSalt(10);
       updatedData.password = await bcrypt.hash(password, salt);
     }
 
-    // Kullanıcıyı bul ve güncelle
+    // Diğer alanları güncelle
+    Object.keys(updateFields).forEach((key) => {
+      updatedData[key] = updateFields[key];
+    });
+
+    // Kullanıcıyı güncelle
     const updatedUser = await User.findByIdAndUpdate(
-      id, 
-      updatedData, 
+      id,
+      updatedData,
       { new: true, runValidators: true } // Yeni belgeyi döndür ve validasyon uygula
     );
 
-    // Eğer kullanıcı bulunamazsa
     if (!updatedUser) {
-      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+      return res.status(404).json({ error: 'Kullanıcı güncellenemedi.' });
     }
 
     // Başarılı yanıt
@@ -115,15 +126,18 @@ exports.updateUser = async (req, res) => {
       user: updatedUser,
     });
   } catch (err) {
-    // Hata yönetimi
     console.error(err);
+
+    // Unique hatalarını yakala
     if (err.code === 11000) {
-      // Benzersizlik (unique) hatası
-      return res.status(400).json({ error: 'Email veya kullanıcı adı zaten kullanılıyor.' });
+      const field = Object.keys(err.keyValue)[0];
+      return res.status(400).json({ error: `Bu ${field} zaten kullanılıyor.` });
     }
+
     res.status(500).json({ error: 'Kullanıcı güncellenirken bir hata oluştu.' });
   }
 };
+
 
 // Kullanıcı girişi
 exports.loginUser = async (req, res) => {
