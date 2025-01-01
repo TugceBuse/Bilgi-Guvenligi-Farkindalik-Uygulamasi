@@ -57,20 +57,23 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error) || "Kayıt başarısız."; // Hata fırlat
+        throw new Error(errorData.error || "Kayıt başarısız.");
       }
+  
+    //vvvvvvvv Kayıttan sonra otomatik login sağlayan kısım vvvvvvvvvvv NOT: userController Register'a token eklenmeli
 
-      const data = await response.json();
-      // İsterseniz kayıt işleminden sonra oturum açabilirsiniz
-      dispatch({ type: "LOGIN_SUCCESS", payload: { user: data.user, token: data.token } });
+    // const data = await response.json();
+    // dispatch({ type: "LOGIN_SUCCESS", payload: { user: data.user, token: data.token } });
+
     } catch (error) {
       dispatch({ type: "AUTH_ERROR", payload: error.message });
       throw error;
     }
   };
+  
 
   const updateUser = async (userId, updatedData) => {
     try {

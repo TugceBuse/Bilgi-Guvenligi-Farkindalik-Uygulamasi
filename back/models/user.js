@@ -105,16 +105,17 @@ UserSchema.path('username').validate(async function (value) {
 
 // Şifreyi kaydetmeden önce hash'leme işlemi
 UserSchema.pre('save', async function (next) {
-  // Eğer şifre değiştirilmişse veya yeni kullanıcı ekleniyorsa hash'le
+  console.log("Pre-save middleware çalışıyor...");
   if (!this.isModified('password')) {
     return next();
   }
 
   try {
-    const salt = await bcrypt.genSalt(10); // Salt değeri oluştur
-    this.password = bcrypt.hash(this.password, salt); // Şifreyi hash'le
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (err) {
+    console.error("Şifre hashleme sırasında hata:", err);
     next(err);
   }
 });

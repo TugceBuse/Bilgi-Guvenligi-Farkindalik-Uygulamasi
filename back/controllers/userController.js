@@ -4,6 +4,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const validator = require('validator');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 // Kullanıcı kaydı
 exports.registerUser = async (req, res) => {
@@ -17,7 +20,8 @@ exports.registerUser = async (req, res) => {
       }
   
       // Kullanıcı oluştur ve kaydet
-      const newUser = await User.create({ firstName, lastName, username, email, password });
+      const newUser = new User({ firstName, lastName, username, email, password });
+      await newUser.save(); // Şifre burada hashlenir
   
       res.status(201).json({ message: 'Kullanıcı başarıyla oluşturuldu!', user: newUser });
     } catch (err) {
@@ -141,7 +145,7 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+      { expiresIn: process.env.JWT_EXPIRE || '1h' }
     );
 
     res.status(200).json({
