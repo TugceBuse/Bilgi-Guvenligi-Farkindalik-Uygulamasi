@@ -66,44 +66,43 @@ exports.deleteUser = async (req, res) => {
 
 // Kullanıcı güncelleme
 exports.updateUser = async (req, res) => {
-  const userId = req.user.id; // Token'dan alınan kullanıcı kimliği
-  const { firstName, lastName, email, username } = req.body; // Güncellenmek istenen alanlar
+  const userId = req.user.id; // Middleware'den gelen kullanıcı kimliği
+  const { currentPassword, ...updatedData } = req.body;
 
   try {
-    // Kullanıcıyı bul
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+      return res.status(404).json({ error: "Kullanıcı bulunamadı." });
     }
 
-    // Güncellenmek istenen alanları belirle
-    const updatedData = {};
-    if (firstName) updatedData.firstName = firstName;
-    if (lastName) updatedData.lastName = lastName;
-    if (email) updatedData.email = email;
-    if (username) updatedData.username = username;
+    // Mevcut şifre kontrolü
+    if (!currentPassword || !(await user.comparePassword(currentPassword))) {
+      return res.status(400).json({ error: "Mevcut şifre yanlış." });
+    }
 
-    // Kullanıcıyı güncelle
+    // Kullanıcı bilgilerini güncelle
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       updatedData,
-      { new: true, runValidators: true } // Yeni veriyi döndür ve validasyon yap
+      { new: true, runValidators: true }
     );
 
     res.status(200).json({
-      message: 'Kullanıcı başarıyla güncellendi!',
+      message: "Kullanıcı başarıyla güncellendi!",
       user: updatedUser,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Kullanıcı güncellenirken bir hata oluştu.' });
+    res.status(500).json({ error: "Kullanıcı güncellenirken bir hata oluştu." });
   }
 };
+
 
 
 exports.updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   const userId = req.user.id; // Token'den gelen kullanıcı ID
+  console.log("updatePassword çalıştı:", currentPassword, newPassword, userId);
 
   try {
     // Kullanıcıyı bul
@@ -130,9 +129,8 @@ exports.updatePassword = async (req, res) => {
       });
     }
 
-    // Yeni şifre hashleme ve kaydetme
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
+    // Yeni şifreyi doğrudan kaydet (hashleme işlemini pre('save') yapacak)
+    user.password = newPassword;
     await user.save();
 
     res.status(200).json({ message: 'Şifre başarıyla güncellendi.' });

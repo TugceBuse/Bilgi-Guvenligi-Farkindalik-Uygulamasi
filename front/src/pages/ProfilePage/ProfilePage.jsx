@@ -47,14 +47,18 @@ const ProfilePage = () => {
 
   // Kullanıcı bilgilerini kaydet
   const handleSave = async () => {
+    if (!passwords.currentPassword) {
+      alert("Mevcut şifre gereklidir!");
+      return;
+    }
     try {
-      await updateUser(editedUser); // user._id kaldırıldı
+      await updateUser({ ...editedUser, currentPassword: passwords.currentPassword });
       alert("Bilgiler başarıyla güncellendi!");
       setIsEditing(false);
     } catch (error) {
       alert(error.message);
     }
-    setPasswords((prev) => ({ ...prev, currentPassword: "" })); // Şifreyi sıfırla
+    setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" }); // Şifreyi sıfırla
   };
 
   // Şifre değişikliklerini kaydet
@@ -64,8 +68,7 @@ const ProfilePage = () => {
       return;
     }
     try {
-      await changePassword(passwords.currentPassword, passwords.newPassword); // user._id kaldırıldı
-      alert("Şifre başarıyla değiştirildi!");
+      await changePassword(passwords.currentPassword, passwords.newPassword);
       setPasswords({
         currentPassword: "",
         newPassword: "",
@@ -135,6 +138,15 @@ const ProfilePage = () => {
                   onChange={handleInputChange}
                 />
                 </p>
+                <p><strong>Mevcut Şifre </strong> <label>:</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwords.currentPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
+              </p>
                 <button className="save-button" onClick={handleSave}>
                   Kaydet
                 </button>
