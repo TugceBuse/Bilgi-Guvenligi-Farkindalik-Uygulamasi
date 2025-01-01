@@ -108,11 +108,13 @@ UserSchema.path('username').validate(async function (value) {
 UserSchema.pre('save', async function (next) {
   console.log("Pre-save middleware çalışıyor...");
   if (!this.isModified('password')) {
+    console.log("Şifre değişmediği için hashleme yapılmayacak.");
     return next();
   }
 
   try {
     const salt = await bcrypt.genSalt(10);
+    console.log("Şifre: ", this.password, " hashleniyor...");
     this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (err) {

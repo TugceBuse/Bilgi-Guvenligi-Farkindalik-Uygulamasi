@@ -101,6 +101,7 @@ exports.updateUser = async (req, res) => {
     if (password) {
       // Yeni şifre hashleme
       const salt = await bcrypt.genSalt(10);
+      console.log("update hash çalıştı:",password);
       updatedData.password = await bcrypt.hash(password, salt);
     }
 
@@ -135,6 +136,47 @@ exports.updateUser = async (req, res) => {
     }
 
     res.status(500).json({ error: 'Kullanıcı güncellenirken bir hata oluştu.' });
+  }
+};
+
+exports.updatePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.id; // Token'den gelen kullanıcı ID
+
+  try {
+    // Kullanıcıyı bul
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    // Mevcut şifre kontrolü
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Mevcut şifre yanlış.' });
+    }
+
+    // Yeni şifre eski şifreyle aynı mı kontrol et
+    if (await user.comparePassword(newPassword)) {
+      return res.status(400).json({ error: 'Yeni şifre mevcut şifreyle aynı olamaz.' });
+    }
+
+    // Yeni şifre güçlü mü kontrol et
+    if (!validator.isStrongPassword(newPassword)) {
+      return res.status(400).json({
+        error: 'Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.',
+      });
+    }
+
+    // Yeni şifre hashleme ve kaydetme
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    res.status(200).json({ message: 'Şifre başarıyla güncellendi.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Şifre güncellenirken bir hata oluştu.' });
   }
 };
 

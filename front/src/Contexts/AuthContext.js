@@ -76,6 +76,10 @@ export const AuthProvider = ({ children }) => {
   
 
   const updateUser = async (userId, updatedData) => {
+    const { password, ...filteredData } = updatedData; // Şifreyi filtrele
+    console.log("UptadeUser:",updatedData);
+    console.log("UptadeUser AuthContext çalıştı :", userId, filteredData);
+
     try {
       const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
         method: "PUT",
@@ -83,7 +87,7 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${state.token}`,
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(filteredData),
       });
       if (!response.ok) {
         throw new Error("Güncelleme işlemi başarısız.");
@@ -97,6 +101,7 @@ export const AuthProvider = ({ children }) => {
   };
   
   const changePassword = async (userId, newPassword) => {
+    console.log("ChangePassword AuthContext çalıştı :",userId,newPassword);
     try {
       const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
         method: "PUT",

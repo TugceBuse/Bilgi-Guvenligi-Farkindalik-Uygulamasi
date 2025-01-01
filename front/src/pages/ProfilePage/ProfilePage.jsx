@@ -54,6 +54,7 @@ const ProfilePage = () => {
     } catch (error) {
       alert(error.message);
     }
+    passwords.currentPassword = "";
   };
 
   const handleChangePassword = async () => {
