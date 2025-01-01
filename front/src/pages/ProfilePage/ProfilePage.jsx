@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./ProfilePage.css";
 import { useAuthContext } from "../../Contexts/AuthContext";
-
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -15,7 +15,6 @@ const ProfilePage = () => {
   const { user, fetchUserProfile, isAuthenticated, updateUser, changePassword } =
     useAuthContext();
   const [showPasswordInput, setShowPasswordInput] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
