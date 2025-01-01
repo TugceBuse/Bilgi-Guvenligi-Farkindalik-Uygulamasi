@@ -80,31 +80,36 @@ exports.updateUser = async (req, res) => {
       return res.status(400).json({ error: "Mevcut şifre yanlış." });
     }
 
-    // Username benzersizliği kontrolü
-    if (username && username.toLowerCase() !== user.username.toLowerCase()) {
-      const existingUser = await User.findOne({ usernameLowerCase: username.toLowerCase() });
+    const existingUser = await User.findOne({ usernameLowerCase: username.toLowerCase() });
       if (existingUser && existingUser._id.toString() !== userId) {
         return res.status(400).json({ error: "Bu kullanıcı adı zaten alınmış." });
       }
-      updatedData.username = username; // Yeni username'i ekle
+    
+    //Kullanıcı adı harf büyük-küçük değişikliği olursa
+    if (username && username.toLowerCase() === user.username.toLowerCase()) {
+      user.username = username;
+      user.usernameLowerCase = username.toLowerCase();
     }
+    // Diğer alanları güncelle
+    Object.keys(updatedData).forEach((key) => {
+      user[key] = updatedData[key];
+    });
 
-    // Kullanıcı bilgilerini güncelle
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { ...updatedData, usernameLowerCase: username ? username.toLowerCase() : user.usernameLowerCase }, // usernameLowerCase'i güncelle
-      { new: true, runValidators: true }
-    );
+    // Kullanıcıyı kaydet
+    await user.save();
 
     res.status(200).json({
       message: "Kullanıcı başarıyla güncellendi!",
-      user: updatedUser,
+      user,
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Kullanıcı güncellenirken bir hata oluştu." });
   }
 };
+
+
+
 
 
 
