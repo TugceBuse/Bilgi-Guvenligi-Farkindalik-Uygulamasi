@@ -67,7 +67,7 @@ exports.deleteUser = async (req, res) => {
 // Kullanıcı güncelleme
 exports.updateUser = async (req, res) => {
   const userId = req.user.id; // Middleware'den gelen kullanıcı kimliği
-  const { currentPassword, ...updatedData } = req.body;
+  const { currentPassword, username, ...updatedData } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -78,6 +78,15 @@ exports.updateUser = async (req, res) => {
     // Mevcut şifre kontrolü
     if (!currentPassword || !(await user.comparePassword(currentPassword))) {
       return res.status(400).json({ error: "Mevcut şifre yanlış." });
+    }
+
+    // Username benzersizliği kontrolü
+    if (username && username.toLowerCase() !== user.username.toLowerCase()) {
+      const existingUser = await User.findOne({ username: username.toLowerCase() });
+      if (existingUser && existingUser._id.toString() !== userId) {
+        return res.status(400).json({ error: "Bu kullanıcı adı zaten alınmış." });
+      }
+      updatedData.username = username; // Yeni username'i ekle
     }
 
     // Kullanıcı bilgilerini güncelle
@@ -96,6 +105,7 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: "Kullanıcı güncellenirken bir hata oluştu." });
   }
 };
+
 
 
 

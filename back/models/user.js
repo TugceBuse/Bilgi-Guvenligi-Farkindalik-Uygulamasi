@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Kullanıcı adı gereklidir'],
       unique: true, // Benzersizliği doğrula
-      minlength: [4, 'Şifre minimum 4 karakter içermelidir'],
+      minlength: [4, 'Kullanıcı adı minimum 4 karakter içermelidir'],
       trim: true,
       validate: {
         validator: function (value) {
@@ -96,31 +96,33 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true } // Oluşturulma ve güncellenme zamanı için otomatik alanlar
 );
 
-// Kullanıcı adı doğrulaması, büyük-küçük harf fark etmeksizin unique
+// Kullanıcı adı doğrulaması, büyük/küçük harf fark etmeksizin unique
 UserSchema.path('username').validate(async function (value) {
-  const count = await mongoose.models.User.countDocuments({
-    username: value.toLowerCase(),
-  });
-  return count === 0;
+  const existingUser = await mongoose.models.User.findOne({ username: value.toLowerCase() });
+  // Eğer başka bir kullanıcı varsa ve bu kullanıcı mevcut kullanıcı değilse hata döndür
+  if (existingUser && existingUser._id.toString() !== this._id.toString()) {
+    return false;
+  }
+  return true;
 }, 'Bu kullanıcı adı zaten alınmış.');
 
-// Şifreyi kaydetmeden önce hash'leme işlemi
+// Şifreyi kaydetmeden önce hash'leme işlemi ve username normalize
 UserSchema.pre('save', async function (next) {
   console.log("Pre-save middleware çalışıyor...");
-  if (!this.isModified('password')) {
-    console.log("Şifre değişmediği için hashleme yapılmayacak.");
-    return next();
+  if (this.isModified('password')) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      console.log("Şifre: ", this.password, " hashleniyor...");
+      this.password = await bcrypt.hash(this.password, salt);
+    } catch (err) {
+      console.error("Şifre hashleme sırasında hata:", err);
+      return next(err);
+    }
   }
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    console.log("Şifre: ", this.password, " hashleniyor...");
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (err) {
-    console.error("Şifre hashleme sırasında hata:", err);
-    next(err);
+  if (this.isModified('username')) {
+    this.usernameLowerCase = this.username.toLowerCase(); // Lowercase alanı güncelleniyor
   }
+  next();
 });
 
 // Şifre doğrulama fonksiyonu (login sırasında kullanılacak)
@@ -131,7 +133,6 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
     throw err;
   }
 };
-
 
 const User = mongoose.model('User', UserSchema);
 
