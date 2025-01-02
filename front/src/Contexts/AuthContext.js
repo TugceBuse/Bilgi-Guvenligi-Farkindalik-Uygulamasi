@@ -10,6 +10,7 @@ const initialState = {
   error: null,
 };
 
+
 // Context oluştur
 export const AuthContext = createContext(initialState);
 
@@ -73,7 +74,10 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-  
+
+  const clearError = () => {
+    dispatch({ type: "CLEAR_ERROR" });
+  };
 
   const updateUser = async (updatedData) => {
   const { password, ...filteredData } = updatedData; // Şifreyi filtrele
@@ -202,7 +206,7 @@ const changePassword = async (currentPassword, newPassword) => {
   
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, register, fetchUserProfile, updateUser, changePassword }}>
+    <AuthContext.Provider value={{ ...state, login, logout, register, fetchUserProfile, updateUser, changePassword, clearError }}>
       {children}
     </AuthContext.Provider>
   );

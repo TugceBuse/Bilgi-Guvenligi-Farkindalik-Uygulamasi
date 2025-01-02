@@ -4,15 +4,21 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../Contexts/AuthContext";
 
 const LoginPage = () => {
-  const { login, error } = useAuthContext(); // AuthContext'teki login fonksiyonunu alın
+  const { login, error, clearError } = useAuthContext(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [localError, setLocalError] = useState(null); // Yerel hata durumunu yönetin
+  const [localError, setLocalError] = useState(null); 
   const navigate = useNavigate();
-  const [showPopup, setShowPopup] = useState(false); // Pop-up mesajını kontrol eden state
+  const [showPopup, setShowPopup] = useState(false);
+
+   useEffect(() => {
+      clearError(); 
+      setLocalError(null); 
+    }, []);
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
+    setLocalError(null); 
     return () => {
       document.body.classList.remove("no-scroll");
     };
@@ -20,23 +26,25 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLocalError(null); // Yerel hatayı sıfırla
+    setLocalError(null); 
 
     try {
       await login(email, password); // AuthContext'teki login fonksiyonunu çağırın
-      setShowPopup(true); // Pop-up mesajını göster
+      setShowPopup(true);
+      clearError();
       setTimeout(() => {
-        setShowPopup(false); // Pop-up mesajını gizle
-        navigate("/"); // Ana sayfaya yönlendir
-      }, 2000); // 5 saniye bekle
+        setShowPopup(false); 
+        navigate("/"); 
+      }, 2000);
     } catch (err) {
       console.error("Login error:", err.message);
-      setLocalError(err.message || "Bir hata oluştu."); // Hata mesajını göster
+      setLocalError(err.message || "Bir hata oluştu."); 
     }
   };
 
   const handleRegisterClick = () => {
-    navigate("/sign-up"); // Kayıt sayfasına yönlendirme
+    navigate("/sign-up");
+    setLocalError(null); 
   };
 
   return (
