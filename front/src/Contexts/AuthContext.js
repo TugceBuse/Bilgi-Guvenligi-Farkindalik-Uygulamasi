@@ -126,6 +126,29 @@ const changePassword = async (currentPassword, newPassword) => {
     dispatch({ type: "LOGOUT" });
   };
 
+  const verifyEmail = async (token) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/verify-email?token=${token}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Authcontext verifymail response:", response);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "E-posta doğrulama işlemi başarısız.");
+      }
+  
+      const data = await response.json();
+      console.log("E-posta doğrulandı:", data.message);
+      return data.message; // Başarı mesajını döndür
+    } catch (error) {
+      console.error("E-posta doğrulama hatası:", error.message);
+      throw error;
+    }
+  };
+
   //geçici bir çözüm olabilir alternatifler araştırılabilir
   // Token süresi dolduysa kullanıcıyı çıkış yap
   const checkTokenExpiration = () => {
@@ -181,7 +204,16 @@ const changePassword = async (currentPassword, newPassword) => {
   
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, register, fetchUserProfile, updateUser, changePassword }}>
+    <AuthContext.Provider value={{
+       ...state,
+        login,
+         logout,
+          register,
+           fetchUserProfile,
+            updateUser,
+             changePassword,
+              verifyEmail
+              }}>
       {children}
     </AuthContext.Provider>
   );

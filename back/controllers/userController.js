@@ -1,44 +1,54 @@
 const User = require('../models/user');
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const validator = require('validator');
+const { sendEmail } = require('../services/emailService');
+
 const dotenv = require('dotenv');
 
 dotenv.config();
 
 // Kullanıcı kaydı
 exports.registerUser = async (req, res) => {
-    try {
-      const { firstName, lastName, username, password, email } = req.body;
-  
-      // Email veya username kontrolü
-      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-      if (existingUser) {
-        return res.status(400).json({ error: 'Bu email veya kullanıcı adı zaten kullanılıyor.' });
-      }
-  
-      // Kullanıcı oluştur ve kaydet
-      const newUser = new User({ firstName, lastName, username, email, password });
-      await newUser.save(); // Şifre burada hashlenir
-  
-      res.status(201).json({ message: 'Kullanıcı başarıyla oluşturuldu!', user: newUser });
-    } catch (err) {
-      if (err.name === 'ValidationError') {
-        const errors = Object.values(err.errors).map((el) => el.message);
-        return res.status(400).json({ error: errors.join(', ') });
-      }
-  
-      if (err.code === 11000) {
-        const field = Object.keys(err.keyValue)[0];
-        return res.status(400).json({ error: `Bu ${field} zaten kullanılıyor.` });
-      }
-  
-      console.error(err); // Diğer hataları logla
-      res.status(500).json({ error: 'Sunucu hatası.' });
+  try {
+    const { firstName, lastName, username, password, email } = req.body;
+
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Bu email veya kullanıcı adı zaten kullanılıyor.' });
     }
-  };
+
+    const newUser = new User({ 
+      firstName, 
+      lastName, 
+      username, 
+      email, 
+      password, 
+      isEmailVerified: false 
+    });
+    await newUser.save();
+
+    const activationToken = jwt.sign(
+      { userId: newUser._id },
+      process.env.EMAIL_VERIFICATION_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    const activationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${activationToken}`;
+
+    await sendEmail(email, 'Aktivasyon', { firstName, activationUrl });
+
+    res.status(201).json({ 
+      message: 'Kullanıcı başarıyla oluşturuldu! Aktivasyon e-postası gönderildi.', 
+      user: newUser 
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+};
+
   
   
 
@@ -107,14 +117,6 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: "Kullanıcı güncellenirken bir hata oluştu." });
   }
 };
-
-
-
-
-
-
-
-
 exports.updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   const userId = req.user.id; // Token'den gelen kullanıcı ID
@@ -155,8 +157,6 @@ exports.updatePassword = async (req, res) => {
     res.status(500).json({ error: 'Şifre güncellenirken bir hata oluştu.' });
   }
 };
-
-
 // Kullanıcı girişi
 exports.loginUser = async (req, res) => {
   try {
@@ -194,7 +194,7 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ error: 'Sunucu hatası.' });
   }
 };
-// Korunan bir route (örnek)
+// User bilgileri getirme (protected)
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password'); // Şifre hariç tüm alanlar
@@ -205,6 +205,36 @@ exports.getUserProfile = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Profil alınırken bir hata oluştu.' });
+  }
+};
+
+// Email doğrulama
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query; // URL'den token alınır
+
+    // Token'ı doğrula
+    const decoded = jwt.verify(token, process.env.EMAIL_VERIFICATION_SECRET);
+    // Kullanıcıyı bul
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    // Zaten doğrulanmış mı?
+    if (user.isEmailVerified) {
+      console.log('E-posta zaten doğrulandı.');
+      return res.status(400).json({ message: 'E-posta zaten doğrulandı.' });
+    }
+
+    // Hesabı aktif hale getir
+    user.isEmailVerified = true;
+    await user.save();
+
+    res.status(200).json({ message: 'E-posta başarıyla doğrulandı!' });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: 'Geçersiz veya süresi dolmuş token.' });
   }
 };
 

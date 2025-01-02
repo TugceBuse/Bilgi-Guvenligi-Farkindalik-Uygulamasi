@@ -9,7 +9,8 @@ const {
   updateUser,
   loginUser,
   getUserProfile,
-  updatePassword
+  updatePassword,
+  verifyEmail
 } = require('../controllers/userController'); // userController içe aktar
 
 // Kullanıcı işlemleri
@@ -19,5 +20,6 @@ router.delete('/delete',protect, deleteUser);
 router.put('/update', protect, updateUser);
 router.put('/update-password', protect, updatePassword);
 router.get('/profile', protect, getUserProfile);
+router.get('/verify-email', verifyEmail);
 
 module.exports = router;

@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import SignPage from "./pages/SignPage/SignPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import { AuthProvider } from "../src/Contexts/AuthContext";
+import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

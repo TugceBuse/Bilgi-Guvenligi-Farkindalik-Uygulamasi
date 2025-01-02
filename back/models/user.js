@@ -70,6 +70,11 @@ const UserSchema = new mongoose.Schema(
         message: 'Şifre 1 büyük harf, 1 küçük harf, 1 sayı ve 1 özel karakter içermeli ve en az 8 karakter uzunluğunda olmalıdır',
       },
     },
+    // Email aktivasyonu için
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
     // Puan
     score: {
       type: Number,
