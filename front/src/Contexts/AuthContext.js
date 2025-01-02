@@ -123,9 +123,19 @@ const changePassword = async (currentPassword, newPassword) => {
       body: JSON.stringify({ currentPassword, newPassword }),
     });
     if (!response.ok) {
-      throw new Error("Şifre değiştirilemedi.");
+      switch (response.status) {
+        case 401:
+          throw new Error("Yeni şifre mevcut şifreyle aynı olamaz.");
+        case 400:
+          throw new Error("Mevcut şifre yanlış.");
+        case 403: 
+          throw new Error("Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.");
+        case 404:
+          throw new Error("Kullanıcı bulunamadı.");
+        default:
+          break;
+      }
     }
-    alert("Şifre başarıyla değiştirildi.");
   } catch (error) {
     console.error("Hata:", error);
     throw error;

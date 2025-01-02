@@ -29,6 +29,12 @@ const ProfilePage = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  const handleCancel = () => {
+    setShowPasswordInput(false); // Şifre değiştirme alanını kapat
+    setLocalError(null); // Hata mesajını sıfırla
+    setSuccessMessage(null); // Başarı mesajını sıfırla
+  };
+
   const handleEditToggle = () => {
     setSuccessMessage(null); // Başarı mesajını temizle
     setIsEditing(!isEditing);
@@ -74,7 +80,7 @@ const ProfilePage = () => {
   // Şifre değişikliklerini kaydet
   const handleChangePassword = async () => {
     if (passwords.newPassword !== passwords.confirmPassword) {
-      alert("Yeni şifreler eşleşmiyor!");
+      setLocalError( "Yeni şifreler eşleşmiyor!" );
       return;
     }
     try {
@@ -84,9 +90,14 @@ const ProfilePage = () => {
         newPassword: "",
         confirmPassword: "",
       });
-      setShowPasswordInput(false);
+      
+      setSuccessMessage("Şifre başarıyla güncellendi!");
+      setTimeout(() => {
+        setSuccessMessage(null);
+        setShowPasswordInput(false);
+      }, 2500);
     } catch (error) {
-      alert(error.message);
+      setLocalError( error.message );
     }
   };
 
@@ -210,10 +221,18 @@ const ProfilePage = () => {
                   onChange={handlePasswordChange}
                 />
                 </p>
+
+                {(localError || error) && <span className="error-message">{localError || error}</span>}
+                
+                {isEditing && successMessage && (
+                  <div className="success-message">
+                    {successMessage}
+                  </div>
+                )}
                 <button className="save-button" onClick={handleChangePassword}>
                   Şifreyi Kaydet
                 </button>
-                <button className="cancel-button" onClick={() => setShowPasswordInput(false)}>         
+                <button className="cancel-button" onClick={handleCancel}>         
                   İptal
                 </button>
               </div>

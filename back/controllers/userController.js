@@ -150,12 +150,12 @@ exports.updatePassword = async (req, res) => {
 
     // Yeni şifre eski şifreyle aynı mı kontrol et
     if (await user.comparePassword(newPassword)) {
-      return res.status(400).json({ error: 'Yeni şifre mevcut şifreyle aynı olamaz.' });
+      return res.status(401).json({ error: 'Yeni şifre mevcut şifreyle aynı olamaz.' });
     }
 
     // Yeni şifre güçlü mü kontrol et
     if (!validator.isStrongPassword(newPassword)) {
-      return res.status(400).json({
+      return res.status(403).json({
         error: 'Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.',
       });
     }
