@@ -6,12 +6,14 @@ import { useAuthContext } from "../../Contexts/AuthContext";
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
+  const [localError, setLocalError] = useState(null); // Yerel hata durumunu yönetin
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-  const { user, fetchUserProfile, isAuthenticated, updateUser, changePassword } =
+  const [successMessage, setSuccessMessage] = useState(null);
+  const { user, fetchUserProfile, isAuthenticated, updateUser, changePassword, error } =
     useAuthContext();
   const [showPasswordInput, setShowPasswordInput] = useState(false);
 
@@ -28,6 +30,7 @@ const ProfilePage = () => {
   }, [isAuthenticated, navigate]);
 
   const handleEditToggle = () => {
+    setSuccessMessage(null); // Başarı mesajını temizle
     setIsEditing(!isEditing);
     setShowPasswordInput(false);
     if (!isEditing) {
@@ -47,16 +50,23 @@ const ProfilePage = () => {
 
   // Kullanıcı bilgilerini kaydet
   const handleSave = async () => {
+    setLocalError(null); // Yerel hatayı sıfırla
+    setSuccessMessage(null); // Eski başarı mesajını temizle
+
     if (!passwords.currentPassword) {
-      alert("Mevcut şifre gereklidir!");
+      setLocalError("Mevcut şifreyi girin.");
       return;
     }
     try {
       await updateUser({ ...editedUser, currentPassword: passwords.currentPassword });
-      alert("Bilgiler başarıyla güncellendi!");
-      setIsEditing(false);
+      setSuccessMessage("Bilgiler başarıyla güncellendi!");
+      setTimeout(() => {
+      setSuccessMessage(null); // Mesajı 3 saniye sonra temizle
+      setIsEditing(false); // Başarı mesajı gösterildikten sonra bilgi kısmına dön
+    }, 2500);
+      
     } catch (error) {
-      alert(error.message);
+      setLocalError( error.message );
     }
     setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" }); // Şifreyi sıfırla
   };
@@ -146,7 +156,14 @@ const ProfilePage = () => {
                   onChange={handlePasswordChange}
                   required
                 />
-              </p>
+              </p>    
+
+              {isEditing && successMessage && (
+                <div className="success-message">
+                  {successMessage}
+                </div>
+              )}
+                {(localError || error) && <span className="error-message">{localError || error}</span>}
                 <button className="save-button" onClick={handleSave}>
                   Kaydet
                 </button>

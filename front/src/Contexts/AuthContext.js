@@ -90,7 +90,18 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify(filteredData),
     });
     if (!response.ok) {
-      throw new Error("Güncelleme işlemi başarısız.");
+      switch (response.status) {
+        case 401:
+          throw new Error("Bu kullanıcı adı veya e-posta zaten kullanılıyor.");
+        case 400:
+          throw new Error("Mevcut şifrenizi yanlış girdiniz.");
+        case 403: 
+          throw new Error("Geçerli bir e-posta adresi girin.");
+        case 404:
+          throw new Error("Kullanıcı bulunamadı.");
+        default:
+          break;
+      }
     }
     const data = await response.json();
     dispatch({ type: "UPDATE_USER_SUCCESS", payload: data.user });

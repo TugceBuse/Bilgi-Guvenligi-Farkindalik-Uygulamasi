@@ -80,16 +80,37 @@ exports.updateUser = async (req, res) => {
       return res.status(400).json({ error: "Mevcut şifre yanlış." });
     }
 
-    const existingUser = await User.findOne({ usernameLowerCase: username.toLowerCase() });
-      if (existingUser && existingUser._id.toString() !== userId) {
-        return res.status(400).json({ error: "Bu kullanıcı adı zaten alınmış." });
-      }
-    
-    //Kullanıcı adı harf büyük-küçük değişikliği olursa
-    if (username && username.toLowerCase() === user.username.toLowerCase()) {
+    // E-posta kontrolü
+    if (updatedData.email && !validator.isEmail(updatedData.email)) {
+      return res.status(403).json({ error: "Geçerli bir e-posta adresi girin." });
+    }
+
+    const email = updatedData.email?.toLowerCase();
+    const usernameLowerCase = username?.toLowerCase();
+
+    // Var olan kullanıcıyı kontrol et
+    const existingUser = await User.findOne({
+      $or: [{ email }, { usernameLowerCase }],
+      _id: { $ne: userId }, // Güncellenen kullanıcı hariç
+    });
+
+    if (existingUser) {
+      return res.status(401).json({
+        error: "Bu kullanıcı adı veya e-posta zaten kullanılıyor.",
+      });
+    }
+
+    // Kullanıcı adı güncelleme
+    if (username) {
       user.username = username;
       user.usernameLowerCase = username.toLowerCase();
     }
+
+    // E-posta güncelleme
+    if (email) {
+      user.email = email;
+    }
+
     // Diğer alanları güncelle
     Object.keys(updatedData).forEach((key) => {
       user[key] = updatedData[key];
@@ -103,16 +124,10 @@ exports.updateUser = async (req, res) => {
       user,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Kullanıcı güncellenirken bir hata oluştu." });
+    console.error("Hata oluştu:", err);
+    res.status(500).json({ error: "Bir hata oluştu." });
   }
 };
-
-
-
-
-
-
 
 
 exports.updatePassword = async (req, res) => {

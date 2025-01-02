@@ -128,5 +128,30 @@ html, body {
   }
 
   .profile-page label {
-    font-weight: bold; /* Yazı tipini kalın yapar */
+    font-weight: bold; 
+  }
+
+  .error-message {
+    color: #4b1318;
+    background-color: #f3d9db; 
+    border: 1px solid #f5c6cb; 
+    font-size: 18px; 
+    margin-top: 10px; 
+    text-align: center; 
+    padding: 15px; 
+    border-radius: 8px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    text-decoration: none; 
+    margin: 10px;
+  }
+
+  .success-message {
+    color: green;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #c3e6cb;
   }
