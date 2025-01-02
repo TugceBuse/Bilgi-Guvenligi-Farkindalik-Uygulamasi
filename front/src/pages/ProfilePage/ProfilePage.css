@@ -142,16 +142,19 @@ html, body {
     border-radius: 8px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
     text-decoration: none; 
-    margin: 10px;
+    margin: 15px;
   }
 
   .success-message {
-    color: green;
-    font-size: 14px;
-    margin-bottom: 10px;
-    text-align: center;
-    background-color: #d4edda;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #c3e6cb;
+    color: #155724; /* Koyu yeşil renk */
+    background-color: #d4edda; /* Açık yeşil arka plan */
+    border: 1px solid #c3e6cb; /* Kenarlık */
+    font-size: 18px; /* Yazı tipi boyutu */
+    margin-top: 10px; /* Üst boşluk */
+    text-align: center; /* Metni ortalar */
+    padding: 15px; /* İç boşluk */
+    border-radius: 8px; /* Yuvarlatılmış köşeler */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Gölge */
+    text-decoration: none; /* Alt çizgi kaldırılır */
+    margin: 15px;
   }
