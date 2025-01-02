@@ -2,10 +2,8 @@ body.no-scroll {
   overflow: hidden;
 }
 
-
 body, html{
     background-color: #1c1f4b;
-  
 }
 
 .box{
@@ -14,7 +12,7 @@ body, html{
     left: 50%;
     transform: translate(-50%, -50%);
     width: 26%;
-    height: 75%;
+    height: 85%;
     background: #626a9ca6;
     box-sizing: border-box;
     overflow: hidden;
@@ -64,13 +62,14 @@ body, html{
     padding-bottom: 30%;
   }
 
-  .inputPart img{
+  .userLogin{
     width: 100px;
     height: 100px;
     border-radius: 50%;
     margin-top: -60px;
     margin-bottom: 20px;
     opacity: 0.7;
+    margin: 5px;
 }
   
   .box span{
@@ -321,6 +320,7 @@ body, html{
   z-index: 1000;
   width: 80%;
   text-align: center;
+  margin-top: 25px;
 }
 
 /* Errors */
@@ -332,12 +332,22 @@ body, html{
 /* Back to home icon */
 .backHome{
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 30px;
+  left: 30px;
   color: white;
   font-size: 20px;
   cursor: pointer;
   width: 50px;
   height: 50px;
   border-radius: 20px;
+}
+
+.inputPart h1{
+    font-size: 25px; 
+    margin-bottom: 20px; 
+    color: #1c0033; 
+    text-align: center; 
+    font-weight: bold;  
+    letter-spacing: 1px; 
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1); 
 }

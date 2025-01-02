@@ -10,6 +10,7 @@ const initialState = {
   error: null,
 };
 
+
 // Context oluştur
 export const AuthContext = createContext(initialState);
 
@@ -73,7 +74,10 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-  
+
+  const clearError = () => {
+    dispatch({ type: "CLEAR_ERROR" });
+  };
 
   const updateUser = async (updatedData) => {
   const { password, ...filteredData } = updatedData; // Şifreyi filtrele
@@ -90,7 +94,18 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify(filteredData),
     });
     if (!response.ok) {
-      throw new Error("Güncelleme işlemi başarısız.");
+      switch (response.status) {
+        case 401:
+          throw new Error("Bu kullanıcı adı veya e-posta zaten kullanılıyor.");
+        case 400:
+          throw new Error("Mevcut şifrenizi yanlış girdiniz.");
+        case 403: 
+          throw new Error("Geçerli bir e-posta adresi girin.");
+        case 404:
+          throw new Error("Kullanıcı bulunamadı.");
+        default:
+          break;
+      }
     }
     const data = await response.json();
     dispatch({ type: "UPDATE_USER_SUCCESS", payload: data.user });
@@ -112,9 +127,19 @@ const changePassword = async (currentPassword, newPassword) => {
       body: JSON.stringify({ currentPassword, newPassword }),
     });
     if (!response.ok) {
-      throw new Error("Şifre değiştirilemedi.");
+      switch (response.status) {
+        case 401:
+          throw new Error("Yeni şifre mevcut şifreyle aynı olamaz.");
+        case 400:
+          throw new Error("Mevcut şifre yanlış.");
+        case 403: 
+          throw new Error("Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.");
+        case 404:
+          throw new Error("Kullanıcı bulunamadı.");
+        default:
+          break;
+      }
     }
-    alert("Şifre başarıyla değiştirildi.");
   } catch (error) {
     console.error("Hata:", error);
     throw error;
@@ -212,7 +237,8 @@ const changePassword = async (currentPassword, newPassword) => {
            fetchUserProfile,
             updateUser,
              changePassword,
-              verifyEmail
+              verifyEmail,
+               clearError
               }}>
       {children}
     </AuthContext.Provider>

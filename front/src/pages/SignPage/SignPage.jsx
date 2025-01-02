@@ -1,10 +1,11 @@
 import "./SignPage.css";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 
 const SignPage = () => {
-  const { register } = useContext(AuthContext);
+  const { register, error, clearError } = useContext(AuthContext);
+  const [localError, setLocalError] = useState(null); // Yerel hata durumunu yönetin
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -12,8 +13,15 @@ const SignPage = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.classList.add("no-scroll");
+    setLocalError(null); 
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,22 +31,30 @@ const SignPage = () => {
     }));
   };
 
+  useEffect(() => {
+    clearError(); 
+    setLocalError(null); 
+  }, []);
+  
+  
   // pop-up mesajı için const
-  const [showPopup, setShowPopup] = useState(false); // Pop-up mesajını kontrol eden state
+  const [showPopup, setShowPopup] = useState(false); 
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setLocalError(null);
 
     try {
-      await register(formData); // AuthContext'teki register fonksiyonunu çağır
-      setShowPopup(true); // Pop-up mesajını göster
+      await register(formData); 
+      setShowPopup(true); 
+      clearError();
       setTimeout(() => {
-        setShowPopup(false); // Pop-up mesajını gizle
-        navigate("/"); // Ana sayfaya yönlendir
-      }, 2000); // 5 saniye bekle
+        setShowPopup(false); 
+        setLocalError(null); 
+        navigate("/"); 
+      }, 2000); 
     } catch (err) {
-      setError(err.message);
+      setLocalError(err.message || "Bir hata oluştu."); 
     }
   };
 
@@ -50,7 +66,9 @@ const SignPage = () => {
         <span></span>
         <span></span>
         <form className="inputPart2" onSubmit={handleSubmit}>
-          <img src="./user (1).png" alt="user" />
+          <img className="backLogin" src="./icons/left-arrow.png" alt="Back To Login Page" onClick={() => navigate("/login")} />
+          <h1>KAYIT SAYFASI</h1>
+          <img className="userImg" src="./user (1).png" alt="user" />
           <div className="textbox2">
             <div className="textbox_signAd">
               <input
@@ -104,7 +122,7 @@ const SignPage = () => {
             </div>
           </div>
           <input type="submit" className="btn" value="Kayıt Ol" />
-          {error && <p className="error">{error}</p>}
+          {(error || localError) && <p className="error">{error || localError}</p>}
         </form>
 
          {/* Pop-up mesajı */}

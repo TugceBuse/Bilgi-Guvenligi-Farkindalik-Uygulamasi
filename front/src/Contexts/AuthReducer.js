@@ -35,6 +35,9 @@ const AuthReducer = (state, action) => {
           ...state,
           user: action.payload, // Backend'den gelen kullanıcı bilgilerini güncelle
         };
+
+      case "CLEAR_ERROR":
+        return { ...state, error: null }; // Hata durumunu sıfırla
   
       default:
         return state;
