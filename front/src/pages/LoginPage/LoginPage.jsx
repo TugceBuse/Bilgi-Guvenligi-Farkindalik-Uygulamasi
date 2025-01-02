@@ -55,6 +55,7 @@ const LoginPage = () => {
         <span></span>
         <span></span>
         <form className="inputPart" onSubmit={handleLogin}>
+          <h1>GİRİŞ SAYFASI</h1>
           <img src="./user (1).png" alt="user" />
           <div className="textbox">
             <input

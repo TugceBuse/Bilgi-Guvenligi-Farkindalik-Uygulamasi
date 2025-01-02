@@ -15,6 +15,14 @@ const SignPage = () => {
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.body.classList.add("no-scroll");
+    setLocalError(null); 
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -58,7 +66,9 @@ const SignPage = () => {
         <span></span>
         <span></span>
         <form className="inputPart2" onSubmit={handleSubmit}>
-          <img src="./user (1).png" alt="user" />
+          <img className="backLogin" src="./icons/left-arrow.png" alt="Back To Login Page" onClick={() => navigate("/login")} />
+          <h1>KAYIT SAYFASI</h1>
+          <img className="userImg" src="./user (1).png" alt="user" />
           <div className="textbox2">
             <div className="textbox_signAd">
               <input
