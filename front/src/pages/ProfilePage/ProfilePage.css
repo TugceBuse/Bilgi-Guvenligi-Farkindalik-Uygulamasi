@@ -158,3 +158,12 @@ html, body {
     text-decoration: none; 
     margin: 15px;
   }
+
+  .editting-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 15px;
+  }

@@ -30,13 +30,19 @@ const ProfilePage = () => {
   }, [isAuthenticated, navigate]);
 
   const handleCancel = () => {
-    setShowPasswordInput(false); // Şifre değiştirme alanını kapat
-    setLocalError(null); // Hata mesajını sıfırla
-    setSuccessMessage(null); // Başarı mesajını sıfırla
+    setShowPasswordInput(false); 
+    setLocalError(null); 
+    setSuccessMessage(null); 
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false); 
+    setLocalError(null); 
+    setSuccessMessage(null); 
   };
 
   const handleEditToggle = () => {
-    setSuccessMessage(null); // Başarı mesajını temizle
+    setSuccessMessage(null); 
     setIsEditing(!isEditing);
     setShowPasswordInput(false);
     if (!isEditing) {
@@ -175,9 +181,17 @@ const ProfilePage = () => {
                 </div>
               )}
                 {(localError || error) && <span className="error-message">{localError || error}</span>}
-                <button className="save-button" onClick={handleSave}>
-                  Kaydet
-                </button>
+                
+                {/* Editting Buttons */}
+                <div className="editting-buttons">
+                  <button className="save-button" onClick={handleSave}>
+                    Kaydet
+                  </button>
+                  <button className="cancel-button" onClick={handleCancelEdit}>         
+                    İptal
+                  </button>
+                </div>
+                
                 <label 
                   style={{
                   textDecoration:"underline", 
@@ -229,12 +243,14 @@ const ProfilePage = () => {
                     {successMessage}
                   </div>
                 )}
-                <button className="save-button" onClick={handleChangePassword}>
-                  Şifreyi Kaydet
-                </button>
-                <button className="cancel-button" onClick={handleCancel}>         
-                  İptal
-                </button>
+                <div className="editting-buttons">
+                  <button className="save-button" onClick={handleSave}>
+                    Kaydet
+                  </button>
+                  <button className="cancel-button" onClick={handleCancel}>         
+                    İptal
+                  </button>
+                </div>
               </div>
             )}
           </div>
