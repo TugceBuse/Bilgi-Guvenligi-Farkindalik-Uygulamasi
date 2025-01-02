@@ -107,16 +107,15 @@ body, html{
     align-self: center;
     justify-self: center;
     color: white;
-    padding: 4px;
-    border-radius: 5px;
+    border-radius: 50%;
     text-decoration: none;
-    box-shadow: 8px 8px 15px rgba(9,0,0,0.5);
+    box-shadow: 1px 1px 5px rgba(9,0,0,0.5);
     position: absolute; 
     top: 30px; 
     left: 30px;
 }
 .backLogin:hover{
-    background-color: #136d91;
+    background-color: #00161f;
     cursor: pointer;
 }
 .box2{

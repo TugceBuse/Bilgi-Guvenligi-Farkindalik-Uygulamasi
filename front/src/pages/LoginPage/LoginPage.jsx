@@ -55,8 +55,9 @@ const LoginPage = () => {
         <span></span>
         <span></span>
         <form className="inputPart" onSubmit={handleLogin}>
+          <img src="/logo2.png" alt="SafeClicksLogo" className="backHome" title="www.safeClicks.com" onClick={() => navigate("/")}/>
           <h1>GİRİŞ SAYFASI</h1>
-          <img src="./user (1).png" alt="user" />
+          <img className="userLogin" src="./user (1).png" alt="user" />
           <div className="textbox">
             <input
               type="email"

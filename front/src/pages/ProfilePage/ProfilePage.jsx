@@ -110,7 +110,7 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
-        <img src="/logo2.png" alt="SafeClicksLogo" className="backHome" title="www.safeClicks.com" onClick={() => navigate("/")}/>
+        <img src="/logo2.png" alt="SafeClicksLogo" className="backHomeProfile" title="www.safeClicks.com" onClick={() => navigate("/")}/>
         {isEditing && <h1>Düzenle</h1>}
         {!isEditing && <h1>Profil Sayfası</h1>}
         <div className="profile-avatar">
