@@ -325,8 +325,8 @@ body, html{
 
 /* Errors */
 .error {
-  color: red;
-  font-size: 14px;
+  color: rgb(255, 64, 0);
+  font-size: 15px;
 }
 
 /* Back to home icon */

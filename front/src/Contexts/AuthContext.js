@@ -81,8 +81,6 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = async (updatedData) => {
   const { password, ...filteredData } = updatedData; // Şifreyi filtrele
-  console.log("UptadeUser:", updatedData);
-  console.log("UptadeUser AuthContext çalıştı:", filteredData);
 
   try {
     const response = await fetch("http://localhost:5000/api/users/update", {
@@ -116,7 +114,6 @@ export const AuthProvider = ({ children }) => {
 };
   
 const changePassword = async (currentPassword, newPassword) => {
-  console.log("ChangePassword AuthContext çalıştı:", currentPassword, newPassword);
   try {
     const response = await fetch("http://localhost:5000/api/users/update-password", {
       method: "PUT",

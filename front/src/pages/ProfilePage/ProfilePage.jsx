@@ -62,8 +62,8 @@ const ProfilePage = () => {
 
   // Kullanıcı bilgilerini kaydet
   const handleSave = async () => {
-    setLocalError(null); // Yerel hatayı sıfırla
-    setSuccessMessage(null); // Eski başarı mesajını temizle
+    setLocalError(null);
+    setSuccessMessage(null);
 
     if (!passwords.currentPassword) {
       setLocalError("Mevcut şifreyi girin.");
@@ -85,6 +85,8 @@ const ProfilePage = () => {
 
   // Şifre değişikliklerini kaydet
   const handleChangePassword = async () => {
+    setLocalError(null);
+    setSuccessMessage(null);
     if (passwords.newPassword !== passwords.confirmPassword) {
       setLocalError( "Yeni şifreler eşleşmiyor!" );
       return;
@@ -157,14 +159,6 @@ const ProfilePage = () => {
                   onChange={handleInputChange}
                 />
                 </p>
-                <p><strong>E-posta </strong> <label>:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={editedUser?.email || ""}
-                  onChange={handleInputChange}
-                />
-                </p>
                 <p><strong>Mevcut Şifre </strong> <label>:</label>
                 <input
                   type="password"
@@ -173,8 +167,8 @@ const ProfilePage = () => {
                   onChange={handlePasswordChange}
                   required
                 />
-              </p>    
-
+                </p>
+              
               {isEditing && successMessage && (
                 <div className="success-message">
                   {successMessage}
@@ -244,7 +238,7 @@ const ProfilePage = () => {
                   </div>
                 )}
                 <div className="editting-buttons">
-                  <button className="save-button" onClick={handleSave}>
+                  <button className="save-button" onClick={handleChangePassword}>
                     Kaydet
                   </button>
                   <button className="cancel-button" onClick={handleCancel}>         

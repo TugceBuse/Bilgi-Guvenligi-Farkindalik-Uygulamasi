@@ -189,6 +189,10 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ error: 'Kullanıcı bulunamadı!' });
     }
 
+    if (!user.isEmailVerified) {
+      return res.status(403).json({ error: 'Hesabınız henüz aktif edilmedi. Lütfen e-posta adresinizi doğrulayın.' });
+    }
+
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ error: 'Yanlış şifre!' });
