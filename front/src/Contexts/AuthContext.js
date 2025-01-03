@@ -192,6 +192,28 @@ const changePassword = async (currentPassword, newPassword) => {
     }
   };
 
+  const resetPassword = async (token, password) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/reset-password?token=${token}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+      });
+  
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Bir hata oluştu.");
+      }
+  
+      return "Şifre başarıyla güncellendi.";
+    } catch (error) {
+      throw error; // Hata mesajını yukarıya ilet
+    }
+  };
+  
+
   //geçici bir çözüm olabilir alternatifler araştırılabilir
   // Token süresi dolduysa kullanıcıyı çıkış yap
   const checkTokenExpiration = () => {
@@ -247,18 +269,20 @@ const changePassword = async (currentPassword, newPassword) => {
   
 
   return (
-    <AuthContext.Provider value={{
-       ...state,
+    <AuthContext.Provider 
+      value={{
+        ...state,
         login,
-         logout,
-          register,
-           fetchUserProfile,
-            updateUser,
-             changePassword,
-              verifyEmail,
-               clearError,
-                forgotPassword
-              }}>
+        logout,
+        register,
+        fetchUserProfile,
+        updateUser,
+        changePassword,
+        verifyEmail,
+        clearError,
+        forgotPassword,
+        resetPassword,
+      }}>
       {children}
     </AuthContext.Provider>
   );

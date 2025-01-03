@@ -19,6 +19,12 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ error: 'Bu email veya kullanıcı adı zaten kullanılıyor.' });
     }
 
+    if (!validator.isStrongPassword(password)) {
+      return res.status(403).json({
+        error: 'Şifre en az 8 karakter uzunluğunda, bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.',
+      });
+    }
+
     const newUser = new User({ 
       firstName, 
       lastName, 
@@ -281,14 +287,16 @@ exports.forgotPassword = async (req, res) => {
     // Token'ı hash'le ve kullanıcıya kaydet
     user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // Token 10 dakika geçerli
-
     await user.save();
 
+
     const resetURL = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-    console.log(`Şifre sıfırlama bağlantısı: ${resetURL}`);
+
+    await sendEmail(user.email, 'Şifre Sıfırlama', { resetUrl: resetURL });
 
     res.status(200).json({ message: 'Şifre sıfırlama bağlantısı email adresinize gönderildi.' });
   } catch (err) {
+    console.error('Şifre sıfırlama isteği sırasında hata:', err.message);
     res.status(500).json({ error: 'Bir hata oluştu.' });
   }
 };

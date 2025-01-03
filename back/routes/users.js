@@ -11,7 +11,8 @@ const {
   getUserProfile,
   updatePassword,
   verifyEmail,
-  forgotPassword
+  forgotPassword,
+  resetPassword
 } = require('../controllers/userController'); // userController içe aktar
 
 // Kullanıcı işlemleri
@@ -23,5 +24,6 @@ router.put('/update-password', protect, updatePassword);
 router.get('/profile', protect, getUserProfile);
 router.get('/verify-email', verifyEmail);
 router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 module.exports = router;
