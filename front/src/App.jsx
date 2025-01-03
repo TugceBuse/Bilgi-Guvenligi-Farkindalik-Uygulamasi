@@ -8,6 +8,7 @@ import SignPage from "./pages/SignPage/SignPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import { AuthProvider } from "../src/Contexts/AuthContext";
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           <Route path="/sign-up" element={<SignPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
