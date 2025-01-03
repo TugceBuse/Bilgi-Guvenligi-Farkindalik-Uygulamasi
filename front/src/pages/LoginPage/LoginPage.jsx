@@ -90,7 +90,12 @@ const LoginPage = () => {
               Kayıt Ol
             </button>
           </div>
-          <p style={{ color: "white", marginTop: 15 }}>Şifremi Unuttum</p>
+          <p
+            style={{ color: "white", marginTop: 15, cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => navigate("/forgot-password")}
+          >
+            Şifremi Unuttum
+          </p>
         </form>
 
         {/* Pop-up mesajı */}

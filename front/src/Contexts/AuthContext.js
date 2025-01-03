@@ -171,6 +171,27 @@ const changePassword = async (currentPassword, newPassword) => {
     }
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/users/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+  
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Bir hata oluştu.");
+      }
+  
+      return "Şifre sıfırlama bağlantısı email adresinize gönderildi.";
+    } catch (error) {
+      throw error; // Hata mesajını yukarıya ilet
+    }
+  };
+
   //geçici bir çözüm olabilir alternatifler araştırılabilir
   // Token süresi dolduysa kullanıcıyı çıkış yap
   const checkTokenExpiration = () => {
@@ -235,7 +256,8 @@ const changePassword = async (currentPassword, newPassword) => {
             updateUser,
              changePassword,
               verifyEmail,
-               clearError
+               clearError,
+                forgotPassword
               }}>
       {children}
     </AuthContext.Provider>

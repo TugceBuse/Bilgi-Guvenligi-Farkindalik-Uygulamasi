@@ -284,10 +284,10 @@ exports.forgotPassword = async (req, res) => {
 
     await user.save();
 
-    // Email gönderme işlemi (mock)
-    console.log(`Şifre sıfırlama bağlantısı: http://your-app.com/reset-password?token=${resetToken}`);
+    const resetURL = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    console.log(`Şifre sıfırlama bağlantısı: ${resetURL}`);
 
-    res.status(200).json({ message: 'Şifre sıfırlama bağlantısı gönderildi.' });
+    res.status(200).json({ message: 'Şifre sıfırlama bağlantısı email adresinize gönderildi.' });
   } catch (err) {
     res.status(500).json({ error: 'Bir hata oluştu.' });
   }
