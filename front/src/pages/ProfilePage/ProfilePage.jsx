@@ -2,11 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./ProfilePage.css";
 import { useAuthContext } from "../../Contexts/AuthContext";
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from "react-icons-kit/feather/eyeOff";
+import {eye} from "react-icons-kit/feather/eye";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
   const [localError, setLocalError] = useState(null); // Yerel hata durumunu yönetin
+
+  const [type, setType] = useState('password');
+  const [icon, setIcon] = useState(eyeOff);
+
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -34,6 +41,16 @@ const ProfilePage = () => {
     setLocalError(null); 
     setSuccessMessage(null); 
   };
+
+  const handleToggle = () => {
+    if (type==='password'){
+        setIcon(eye);
+        setType('text')
+    } else {
+        setIcon(eyeOff)
+        setType('password')
+    }
+  }
 
   const handleCancelEdit = () => {
     setIsEditing(false); 
@@ -161,12 +178,15 @@ const ProfilePage = () => {
                 </p>
                 <p><strong>Mevcut Şifre </strong> <label>:</label>
                 <input
-                  type="password"
+                  type={type}
                   name="currentPassword"
                   value={passwords.currentPassword}
                   onChange={handlePasswordChange}
                   required
                 />
+                <div className="password-toggle" onClick={handleToggle}>
+                  <Icon icon={icon} size={20} />
+                </div>
                 </p>
               
               {isEditing && successMessage && (

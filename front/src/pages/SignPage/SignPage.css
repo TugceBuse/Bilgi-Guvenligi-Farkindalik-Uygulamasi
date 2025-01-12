@@ -24,6 +24,23 @@ body, html{
   margin-bottom: 15px; /* Alt boşluk ekler */
 }
 
+.password-toggle {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+  z-index:2
+}
+.password-toggle:hover {
+  color: #000; /* Hover durumunda renk değişimi */
+}
+
 .textbox_signAd{
     overflow: hidden;
     box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
@@ -72,6 +89,7 @@ body, html{
     border-radius: 4px;
 }
   .pswd{
+    position : relative;
     overflow: hidden;
     box-sizing: border-box; /* İçerik ve kenarlık dahil boyut hesaplaması */
     border: 4px groove #92c0eb;

@@ -2,10 +2,15 @@ import "./SignPage.css";
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from "react-icons-kit/feather/eyeOff";
+import {eye} from "react-icons-kit/feather/eye";
 
 const SignPage = () => {
   const { register, error, clearError } = useContext(AuthContext);
-  const [localError, setLocalError] = useState(null); // Yerel hata durumunu yönetin
+  const [localError, setLocalError] = useState(null);
+  const [type, setType] = useState('password');
+  const [icon, setIcon] = useState(eyeOff);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -17,7 +22,6 @@ const SignPage = () => {
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
-    setLocalError(null); 
     return () => {
       document.body.classList.remove("no-scroll");
     };
@@ -30,6 +34,16 @@ const SignPage = () => {
       [name]: value,
     }));
   };
+
+  const handleToggle = () => {
+    if (type==='password'){
+        setIcon(eye);
+        setType('text')
+    } else {
+        setIcon(eyeOff)
+        setType('password')
+      }
+  }
 
   useEffect(() => {
     clearError(); 
@@ -112,13 +126,16 @@ const SignPage = () => {
             </div>
             <div className="pswd">
               <input
-                type="password"
+                type={type}
                 placeholder="Şifre"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
+              <div className="password-toggle" onClick={handleToggle}>
+                <Icon icon={icon} size={20} />
+              </div>
             </div>
           </div>
           <input type="submit" className="btn" value="Kayıt Ol" />

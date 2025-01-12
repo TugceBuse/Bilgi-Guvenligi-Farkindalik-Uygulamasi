@@ -79,6 +79,7 @@ html, body {
     box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
   }
   .profile-edit p {
+    position: relative;
     align-items: center;
     padding: 10px;
     border: 1px solid rgb(156, 166, 196);
@@ -89,9 +90,27 @@ html, body {
     margin: 9px 0;
     gap: 10px;
   }
+
+  .password-toggle {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 17px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+    z-index:2
+  }
+  .password-toggle:hover {
+    color: #000; /* Hover durumunda renk değişimi */
+  }
   
   .profile-edit input {
     padding: 10px;
+    padding-right: 40px;
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 100%;
