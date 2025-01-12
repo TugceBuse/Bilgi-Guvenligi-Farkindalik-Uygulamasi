@@ -55,17 +55,13 @@ const Model = () => {
 const ComputerCanvas= () =>{
   
   return(
-
-
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "76vh" }}>
       <Canvas 
       className="canvas"
       style={{height: "600px", width: "100vw"}}
       shadows
       camera={{position:[34,20,15], fov: 28}}
       gl={{preserveDrawingBuffer: true}}
-      
-
       >
         
         <Suspense fallback={null}>
