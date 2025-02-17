@@ -60,7 +60,7 @@
     background-size: cover; /* Resmin boyutunu ayarlayın */
     background-position: center; /* Resmi ortalayın */
     justify-self: center;
-    cursor: progress;
+    cursor: pointer;
   }
 
   .navbar.scrolled .login span{

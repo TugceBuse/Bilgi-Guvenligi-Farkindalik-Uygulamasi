@@ -132,6 +132,7 @@ const ProfilePage = () => {
         <img src="/logo2.png" alt="SafeClicksLogo" className="backHomeProfile" title="www.safeClicks.com" onClick={() => navigate("/")}/>
         {isEditing && <h1>Düzenle</h1>}
         {!isEditing && <h1>Profil Sayfası</h1>}
+        {showPasswordInput && <h2>Kullanıcı Şifre Değişikliği</h2>}
         <div className="profile-avatar">
           <img src="/user (1).png" alt="user" className="avatar" />
         </div>

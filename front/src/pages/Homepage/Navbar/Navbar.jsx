@@ -35,7 +35,7 @@ const Navbar = () => {
   }, [menuOpen]);
 
   const handleLogoClick = () => {
-    navigate("/game");
+    window.location.reload(); // Sayfayı yeniler
   };
 
   const handleLoginClick = () => {
