@@ -10,8 +10,8 @@ export const useBrowser = () => {
 };
 
 const Browser = ({ closeHandler, style }) => {
-  const [url, setUrl] = useState("google.com"); // Başlangıçta Google sayfası açılacak
-  const [content, setContent] = useState("main");
+  const [url, setUrl] = useState("google.com");
+  const [currentUrl, setCurrentUrl] = useState("google.com");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState(["google.com"]);
   const [matchedSites, setMatchedSites] = useState([]);
@@ -24,32 +24,40 @@ const Browser = ({ closeHandler, style }) => {
   const loadComponent = (componentName) => lazy(() => import(`../sites/${componentName}.jsx`));
 
   const handleUrlChange = (e) => setUrl(e.target.value);
+  const handleKeyDown = (e) => e.key === "Enter" && handleGoClick(e.target.value);
+
+  const handleGoogleSearch = (searchText) => {
+    if (!searchText.trim()) return;
+
+    // Eğer zaten "google.com/search?q=" ile başlıyorsa, tekrar ekleme!
+    let searchUrl = searchText.startsWith("google.com/search?q=")
+      ? searchText
+      : `google.com/search?q=${encodeURIComponent(searchText)}`;
+
+    setUrl(searchUrl);
+    handleGoClick(searchUrl);
+  };
 
   const handleGoClick = (newUrl = url, addToHistory = true) => {
     setLoading(true);
     setTimeout(() => {
       const normalizedUrl = newUrl.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
-
       if (normalizedUrl.startsWith("google.com/search?q=")) {
-        const searchQuery = decodeURIComponent(normalizedUrl.split("search?q=")[1]);
-        setMatchedSites(sites.filter(site => site.searchKeys.includes(searchQuery)));
-        setContent("search-results");
-        setUrl(newUrl);
+        const searchQuery = decodeURIComponent(normalizedUrl.split("search?q=")[1]).toLowerCase();
+        setCurrentUrl(`google.com/search?q=${searchQuery}`);
+        setUrl(`google.com/search?q=${searchQuery}`);
+
         if (addToHistory) {
-          setHistory([...history.slice(0, currentIndex + 1), newUrl]);
+          setHistory([...history.slice(0, currentIndex + 1), `google.com/search?q=${searchQuery}`]);
           setCurrentIndex(currentIndex + 1);
         }
         setLoading(false);
         return;
       }
 
-      const matchedSite = sites.find(site => site.url === normalizedUrl);
-      if (!matchedSite) {
-        setContent("404");
-      } else {
-        setContent(matchedSite.clickable ? matchedSite.contentComponent : "404");
-        setUrl(matchedSite.url);
-      }
+      const matchedSite = sites[normalizedUrl];
+      setCurrentUrl(matchedSite ? normalizedUrl : "404");
+      setUrl(normalizedUrl);
 
       if (addToHistory) {
         setHistory([...history.slice(0, currentIndex + 1), newUrl]);
@@ -60,22 +68,98 @@ const Browser = ({ closeHandler, style }) => {
     }, 1000);
   };
 
-  const handleGoogleSearch = (searchText) => {
-    const searchUrl = `google.com/search?q=${encodeURIComponent(searchText)}`;
-    setUrl(searchUrl);
-    handleGoClick(searchUrl);
+  useEffect(() => {
+    if (currentUrl.startsWith("google.com/search?q=")) {
+      const searchQuery = decodeURIComponent(currentUrl.split("search?q=")[1]).toLowerCase();
+      const filteredSites = Object.entries(sites).filter(([key, site]) => 
+        site.searchKeys && site.searchKeys.includes(searchQuery)
+      );
+      setMatchedSites(filteredSites);
+    }
+  }, [currentUrl]);
+
+  const handleBackClick = () => {
+    if (currentIndex > 0) {
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+      setUrl(history[newIndex]); 
+      setCurrentUrl(history[newIndex]); 
+    }
   };
 
-  const handleBackClick = () => currentIndex > 0 && setCurrentIndex(currentIndex - 1);
-  const handleForwardClick = () => currentIndex < history.length - 1 && setCurrentIndex(currentIndex + 1);
-  const handleKeyDown = (e) => e.key === "Enter" && handleGoClick();
-
-  useEffect(() => {
-    if (prevIndexRef.current !== currentIndex && currentIndex >= 0 && currentIndex < history.length) {
-      handleGoClick(history[currentIndex], false);
+  const handleForwardClick = () => {
+    if (currentIndex < history.length - 1) {
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
+      setUrl(history[newIndex]); 
+      setCurrentUrl(history[newIndex]); 
     }
-    prevIndexRef.current = currentIndex;
-  }, [currentIndex]);
+  };
+
+  const renderContent = () => {
+    if (currentUrl.startsWith("google.com/search?q=")) {
+      return (
+        <div className="download-pages">
+          <h2>Arama Sonuçları</h2>
+          {matchedSites.length > 0 ? (
+            matchedSites.map(([key, site]) => (
+              <div key={key} className="link-part">
+                <div className="top-of-the-link">
+                  <div className="image-div">{site.title.charAt(0)}</div>
+                  <div>
+                    <h3>{site.title}</h3>
+                    <p>{site.statement}</p>
+                  </div>
+                </div>
+                <h2 
+                  onClick={() => site.clickable && handleGoClick(key)} 
+                  style={{ 
+                    cursor: site.clickable ? "pointer" : "default",
+                    color: site.clickable ? "white" : "gray" 
+                  }}
+                >
+                  {site.title} | {site.statement}
+                </h2>
+              </div>
+            ))
+          ) : (
+            <p>Aradığınız terimleri içeren hiçbir web sayfası bulunamadı.</p>
+          )}
+        </div>
+      );
+    }
+
+    if (currentUrl === "google.com") {
+      return (
+        <div className="firstPartOfBrowser">
+          <h1>Google</h1>
+          <div className="searchPart">
+            <img src="./icons/search.png" alt="Search Logo" />
+            <input 
+              type="text" 
+              placeholder="Google'da Ara" 
+              onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
+            />
+            <div className="searchPart_right">
+              <img src="./icons/keyboard.png" alt="Keyboard Logo" />
+              <img src="./icons/google-voice.png" alt="Voice Logo" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const site = sites[currentUrl];
+    if (!site) return <div className="not-found">404 - Sayfa Bulunamadı</div>;
+
+    switch (site.type) {
+      case "component":
+        const SiteComponent = loadComponent(site.component);
+        return <Suspense fallback={<div>Yükleniyor...</div>}><SiteComponent /></Suspense>;
+      default:
+        return <div className="not-found">404 - Sayfa Bulunamadı</div>;
+    }
+  };
 
   return (
     <div className="browser-window" style={style} ref={browserRef}>
@@ -83,56 +167,14 @@ const Browser = ({ closeHandler, style }) => {
         <h2>Browser</h2>
         <button className="browser-close" onClick={closeHandler}>×</button>
       </div>
-
       <div className="browser-search">
         <img className="nav-arrow" src="./icons/arrow.png" alt="Back" onClick={handleBackClick} />
         <img className="nav-arrow" src="./icons/right-arrow.png" alt="Forward" onClick={handleForwardClick} />
         <img className="home-icon" src="./icons/home.png" alt="Home" onClick={() => handleGoClick("google.com")} />
         <input className="browser-url-input" type="text" value={url} onChange={handleUrlChange} onKeyDown={handleKeyDown} placeholder="Enter URL" />
-        <button className="browser-go-button" onClick={handleGoClick}>Go</button>
+        <button className="browser-go-button" onClick={() => handleGoClick(url)}>Go</button>
       </div>
-
-      <div className="browser-content">
-        {loading ? <div className="browser-loading">Yükleniyor...</div> : (
-          content === "main" ? (
-            <div className="firstPartOfBrowser">
-              <h1>Google</h1>
-              <div className="searchPart">
-                <img src="./icons/search.png" alt="Search Logo" />
-                <input type="text" placeholder="Google'da Ara" onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} />
-                <div className="searchPart_right">
-                  <img src="./icons/keyboard.png" alt="Keyboard Logo" />
-                  <img src="./icons/google-voice.png" alt="Voice Logo" />
-                </div>
-              </div>
-            </div>
-          ) : content === "search-results" ? (
-            <div className="download-pages">
-              {matchedSites.map((site) => (
-                <div key={site.url} className="link-part">
-                  <div className="top-of-the-link">
-                    <div className="image-div">{site.title.charAt(0)}</div>
-                    <div>
-                      {site.title}
-                      <p>{site.url}</p>
-                    </div>
-                  </div>
-                  <h2 onClick={() => site.clickable && handleGoClick(site.url)} style={{ cursor: "pointer" }}>
-                    {site.title} | {site.statement}
-                  </h2>
-                  <p>{site.statement}</p>
-                </div>
-              ))}
-            </div>
-          ) : content === "404" ? (
-            <div className="not-found">404 - Sayfa Bulunamadı</div>
-          ) : (
-            <Suspense fallback={<div>Yükleniyor...</div>}>
-              {React.createElement(loadComponent(content))}
-            </Suspense>
-          )
-        )}
-      </div>
+      <div className="browser-content">{renderContent()}</div>
     </div>
   );
 };
