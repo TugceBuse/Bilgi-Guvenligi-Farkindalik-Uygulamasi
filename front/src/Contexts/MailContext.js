@@ -7,9 +7,10 @@ export const MailContextProvider = ({ children }) => {
   const [mails, setMails] = useState(initialMails);
   const [sentMails, setSentMails] = useState(initialSentMails);
   const [spamMails, setSpamMails] = useState(initialSpamMails);
+  const [selectedMail, setSelectedMail] = useState(null);
 
   return (
-    <MailContext.Provider value={{ mails, setMails, sentMails, setSentMails, spamMails, setSpamMails }}>
+    <MailContext.Provider value={{ mails, setMails, sentMails, setSentMails, spamMails, setSpamMails, selectedMail, setSelectedMail }}>
       {children}
     </MailContext.Provider>
   );

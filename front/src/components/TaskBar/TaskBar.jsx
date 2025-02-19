@@ -4,6 +4,8 @@ import { useGameContext } from '../../Contexts/GameContext';
 import { useUIContext } from '../../Contexts/UIContext';
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
+import { useMailContext } from '../../Contexts/MailContext'; 
+import { use } from 'react';
 
 const TaskBar = ({windowConfig}) => {
   const [time, setTime] = useState(new Date());
@@ -15,6 +17,14 @@ const TaskBar = ({windowConfig}) => {
   const [selectedWifi, setSelectedWifi] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [wifiname, setwifiname] = useState('');
+  const { toggleWindow } = useUIContext();
+  const { mails, setMails, setSelectedMail } = useMailContext(); 
+  const [unreadMails, setUnreadMails] = useState([]);
+
+
+  useEffect(() => {
+    setUnreadMails(mails.filter(mail => !mail.readMail));
+  },[mails]);
 
   const pass = "1234";
   const navigate = useNavigate();
@@ -40,6 +50,29 @@ const TaskBar = ({windowConfig}) => {
       />
     ));
   };
+
+  const handleOpenMailbox = (mail) => {
+    setSelectedMail(mail);
+
+    setMails(prevMails =>
+      prevMails.map(m =>
+        m.title === mail.title ? { ...m, readMail: true } : m
+      )
+    );
+
+    if(!openWindows.includes('mailbox')) {
+      toggleWindow('mailbox');
+    }
+  
+    setShowNotifications(false);
+  };
+
+
+  const handleDeleteNotification = (mail) => {
+    setUnreadMails(prevUnreadMails => prevUnreadMails.filter(m => m.title !== mail.title));
+};
+
+
 
   const handleStartButtonClick = () => {
     setShowStartMenu(!showStartMenu);
@@ -173,95 +206,127 @@ const TaskBar = ({windowConfig}) => {
     : "WiFi Bağlı Değil";
 
   return (
-    <div className="taskbar">
-      <div className="taskbar-icons" onClick={handleStartButtonClick}>
-        <img src="/icons/menu (1).png" alt="Start Button" />
-      </div>
+  <div className="taskbar">
+    <div className="taskbar-icons" onClick={handleStartButtonClick}>
+      <img src="/icons/menu (1).png" alt="Start Button" />
+    </div>
 
-      {showStartMenu && (
-        <div className="start-menu-window">
-          <h2>Başlat Menüsü</h2>
+    {showStartMenu && (
+      <div className="start-menu-window">
+        <h2>Başlat Menüsü</h2>
 
-          <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
-            <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/synchronize.png" alt="Synchronize Icon"/>
-            <p style={{marginLeft:-12}}>Yedekle</p>
-          </div>
-          <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
-            <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/firewall.png" alt="Firewall Icon"/>
-            <p style={{marginLeft:-12}}>Yedekle</p>
-          </div>
-
-          <div className="shutdown-button" onClick={handleShutdownClick}>
-            <img src="/icons/switch.png" alt="Switch Icon" />
-            Bilgisayarı Kapat
-          </div>
-
-          {shuttingDown && (
-            <div className="shutdown-screen">
-              <p className="shutdown-text">Kapanıyor...</p>
-            </div>
-          )}
+        <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
+          <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/synchronize.png" alt="Synchronize Icon"/>
+          <p style={{marginLeft:-12}}>Yedekle</p>
         </div>
-      )}
+        <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
+          <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/firewall.png" alt="Firewall Icon"/>
+          <p style={{marginLeft:-12}}>Yedekle</p>
+        </div>
 
-      <div className="taskbar-icons">{renderIcons()}</div>
+        <div className="shutdown-button" onClick={handleShutdownClick}>
+          <img src="/icons/switch.png" alt="Switch Icon" />
+          Bilgisayarı Kapat
+        </div>
 
-      <div className="taskbar-right">
-        {windowConfig.antivirus.downloaded && (
-          <div className="taskbar-antivirus">
-            {antivirusIcon}
-            {antivirusTooltip}
+        {shuttingDown && (
+          <div className="shutdown-screen">
+            <p className="shutdown-text">Kapanıyor...</p>
           </div>
         )}
+      </div>
+    )}
 
-        <div className="taskbar-wifi" onClick={toggleWifiList}>
-          {wifiIcon}
-          <div className="tooltip">
-            {wifiTooltip}
+    <div className="taskbar-icons">{renderIcons()}</div>
+
+    <div className="taskbar-right">
+      {windowConfig.antivirus.downloaded && (
+        <div className="taskbar-antivirus">
+          {antivirusIcon}
+          {antivirusTooltip}
+        </div>
+      )}
+
+      <div className="taskbar-wifi" onClick={toggleWifiList}>
+        {wifiIcon}
+        <div className="tooltip">
+          {wifiTooltip}
+        </div>
+        {showWifiList && (
+          <div className="wifi-list">
+            <ul>
+              <li onClick={() => handleWifiClick('WiFi Network 1', true)}>
+                XYZCompany Network 1 <img src="/icons/lock.png" alt="Lock Icon" />
+              </li>
+              <li onClick={() => handleWifiClick('WiFi Network 2', false)}>WiFi Network 2</li>
+              <li onClick={() => handleWifiClick('WiFi Network 3', false)}>WiFi Network 3</li>
+            </ul>
           </div>
-          {showWifiList && (
-            <div className="wifi-list">
-              <ul>
-                <li onClick={() => handleWifiClick('WiFi Network 1', true)}>
-                  XYZCompany Network 1 <img src="/icons/lock.png" alt="Lock Icon" />
-                </li>
-                <li onClick={() => handleWifiClick('WiFi Network 2', false)}>WiFi Network 2</li>
-                <li onClick={() => handleWifiClick('WiFi Network 3', false)}>WiFi Network 3</li>
-              </ul>
+        )}
+      </div>
+
+      <div className="taskbar-status">
+        <div className="taskbar-clock">
+          <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' ,hour12: false })}</div>
+          <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
+        </div>
+
+        <div className="taskbar-notifications" onClick={toggleNotifications}>
+          <img src="/icons/notification_blck.png" alt="Notification Icon" />
+          {unreadMails.length > 0 && <span className="notification-count">{unreadMails.length}</span>}
+
+          {showNotifications && (
+            <div className="notifications-window">
+              <h3>
+                Bildirimler 
+                
+              </h3>
+                  
+                  {unreadMails.length > 0 ? (
+                unreadMails.map((mail, index) => (
+                  <div key={index} className="notification-item" onClick={() => handleOpenMailbox(mail)}>
+                    <strong>
+                      <div style={{display: "flex", gap: 10, alignItems: "center", position: "relative"}}>
+                        <img style={{width:30, height:30}} src="/icons/mail.png" alt="Mail Icon" />
+                        {mail.title}
+                        
+                        <p className='mail-notification-close'  onClick={(e) => { 
+                        e.stopPropagation();
+                        handleDeleteNotification(mail);
+                        }}>x</p>     
+
+                      </div>   
+                      
+                    </strong>
+                    
+                    <p>{mail.precontent}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="non-notification">
+                  <p>Henüz bir bildiriminiz yok.</p>
+                  <img className='sad-face' src="/anxiety.png" alt="Sad Face Icon" />
+                </div>
+              )}
+              
             </div>
           )}
         </div>
-
-        <div className="taskbar-status">
-          <div className="taskbar-clock">
-            <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' ,hour12: false })}</div>
-            <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
-          </div>
-
-          <div className="taskbar-notifications" onClick={toggleNotifications}>
-            <img src="/icons/notification_blck.png" alt="Notification Icon" />
-            {showNotifications && (
-              <div className="notifications-window">
-                <h3>Bildirimler</h3>
-                <p>Henüz bir bildiriminiz yok.</p>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
-
-      {showPasswordPrompt && (
-        <div className="password-prompt">
-          <form onSubmit={handlePasswordSubmit}>
-            <h3>{selectedWifi} için şifre girin:</h3>
-            <input type="password" name="password" required />
-            <button type="submit">Bağlan</button>
-            <button type="cancel" onClick={() => setShowPasswordPrompt(false)}>İptal</button>
-          </form>
-        </div>
-      )}
-      <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Şifre yanlış'}></Alert>
     </div>
+
+    {showPasswordPrompt && (
+      <div className="password-prompt">
+        <form onSubmit={handlePasswordSubmit}>
+          <h3>{selectedWifi} için şifre girin:</h3>
+          <input type="password" name="password" required />
+          <button type="submit">Bağlan</button>
+          <button type="cancel" onClick={() => setShowPasswordPrompt(false)}>İptal</button>
+        </form>
+      </div>
+    )}
+    <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Şifre yanlış'}></Alert>
+  </div>
   );
 };
 

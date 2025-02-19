@@ -21,28 +21,35 @@ export const useMailbox = () => {
 const Mailbox = ({ closeHandler, style }) => {
 
   //seçilen maili ve indexi tutacak state'ler
-  const [selectedMail, setSelectedMail] = useState(null);
+  const {selectedMail, setSelectedMail} = useMailContext();
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeTab, setActiveTab] = useState('inbox');
 
   const [unreadCountMail, setUnreadCountMail] = useState(0);
   const [unreadCountSpam, setUnreadCountSpam] = useState(0);
 
- 
+  // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
+  useEffect(() => {
+  if (selectedMail) {
+    const selectedIndex = mails.findIndex(mail => mail.title === selectedMail.title);
+    setActiveIndex(selectedIndex);
+  }
+  console.log("çalıştı", selectedMail);
+  }, [selectedMail]);
 
   const {
     mails, setMails,
-    sentMails,setSentMails,
+    sentMails, setSentMails,
     spamMails, setSpamMails
   } = useMailContext();
 
  useEffect(() => {
-    const count = mails.filter(mail => !mail.read).length;
+    const count = mails.filter(mail => !mail.readMail).length;
     setUnreadCountMail(count);
   }, [mails]); 
 
   useEffect(() => {
-    const count = spamMails.filter(mail => !mail.read).length;
+    const count = spamMails.filter(mail => !mail.readMail).length;
     setUnreadCountSpam(count);
   }, [spamMails]); 
 
@@ -56,14 +63,14 @@ const Mailbox = ({ closeHandler, style }) => {
     if (mail.hasOwnProperty('readMail')) {
       setMails((prevMails) =>
         prevMails.map((m, i) =>
-          i === index ? { ...m, read: true } : m
+          i === index ? { ...m, readMail: true } : m
         )
       );
     }
     else if (mail.hasOwnProperty('readSpam')) {
       setSpamMails((prevMails) =>
         prevMails.map((m, i) =>
-          i === index ? { ...m, read: true } : m
+          i === index ? { ...m, readMail: true } : m
         )
       );
     }
@@ -77,7 +84,7 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const resetReadMails = () => {
     setMails((prevMails) =>
-      prevMails.map((m) => ({ ...m, read: false }))
+      prevMails.map((m) => ({ ...m, readMail: false }))
     );
   };
 
@@ -169,7 +176,7 @@ const Mailbox = ({ closeHandler, style }) => {
                     className={activeIndex === index ? 'active' : ''}
                   >
                     <div style={{display:"flex", flexDirection:"row"}}>        
-                      {!mail.read && <div className="dot"></div>}
+                      {!mail.readMail && <div className="dot"></div>}
                       <h3>{mail.title}</h3>
                     </div>
                     <p>{/* mail contentin uzunlugunu belirler*/}
@@ -202,7 +209,7 @@ const Mailbox = ({ closeHandler, style }) => {
                     className={activeIndex === index ? 'active' : ''}
                   >
                     <div style={{display:"flex", flexDirection:"row"}}>        
-                      {!mail.read && <div className="dot"></div>}
+                      {!mail.readMail && <div className="dot"></div>}
                       <h3>{mail.title}</h3>
                     </div>
                     <p>{/* mail contentin uzunlugunu belirler*/}
