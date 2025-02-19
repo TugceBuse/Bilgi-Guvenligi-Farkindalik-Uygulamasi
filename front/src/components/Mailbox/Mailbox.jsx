@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useMailContext } from '../../Contexts/MailContext';
+import { useGameContext } from '../../Contexts/GameContext';
 
 export const useMailbox = () => {
   const { toggleWindow } = useUIContext();
@@ -21,27 +22,31 @@ export const useMailbox = () => {
 const Mailbox = ({ closeHandler, style }) => {
 
   //seçilen maili ve indexi tutacak state'ler
-  const {selectedMail, setSelectedMail} = useMailContext();
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeTab, setActiveTab] = useState('inbox');
 
   const [unreadCountMail, setUnreadCountMail] = useState(0);
   const [unreadCountSpam, setUnreadCountSpam] = useState(0);
 
-  // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
-  useEffect(() => {
-  if (selectedMail) {
-    const selectedIndex = mails.findIndex(mail => mail.title === selectedMail.title);
-    setActiveIndex(selectedIndex);
-  }
-  console.log("çalıştı", selectedMail);
-  }, [selectedMail]);
-
+  // Context Değişkenler
   const {
     mails, setMails,
     sentMails, setSentMails,
-    spamMails, setSpamMails
+    spamMails, setSpamMails,
+    selectedMail, setSelectedMail
   } = useMailContext();
+
+  const {isWificonnected} = useGameContext();
+
+  
+  // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
+  useEffect(() => {
+    if (selectedMail) {
+      const selectedIndex = mails.findIndex(mail => mail.title === selectedMail.title);
+      setActiveIndex(selectedIndex);
+    }
+    console.log("çalıştı", selectedMail);
+    }, [selectedMail]);
 
  useEffect(() => {
     const count = mails.filter(mail => !mail.readMail).length;
@@ -57,6 +62,9 @@ const Mailbox = ({ closeHandler, style }) => {
   MakeDraggable(mailboxRef, '.mailbox-header');//mailboxi sürüklemek için kullanılan fonksiyon
 
   const handleMailClick = (mail,index) => {
+    if(!isWificonnected) {
+      return;
+    }
     setSelectedMail(mail);
     setActiveIndex(index);
     // Maili okundu olarak işaretle
