@@ -146,9 +146,11 @@
     background-color: #5f5f5f;
   }
   
-  .mailbox-maillist li:active {
+  .mailbox-maillist li.active {
     background-color: #777;
+    font-weight: bold;
   }
+
   .mailbox-maillist p{
     font-size: 16px;
   }

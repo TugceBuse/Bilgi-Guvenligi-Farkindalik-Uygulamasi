@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from '../../Contexts/GameContext';
 import { useUIContext } from '../../Contexts/UIContext';
@@ -20,7 +20,10 @@ const TaskBar = ({windowConfig}) => {
   const [wifiname, setwifiname] = useState('');
   const { toggleWindow } = useUIContext();
   const { mails, setMails, setSelectedMail } = useMailContext(); 
-  const [unreadMails, setUnreadMails] = useState([]);
+  const [popupNotification, setPopupNotification] = useState(null); // 📌 Pop-up bildirimi yöneten state
+  const [notifiedMails, setNotifiedMails] = useState([]); // 📌 Bildirim kutusuna düşen mailleri takip eder.
+  const popupTimeout = useRef(null);
+
   const pass = "1234";
   const navigate = useNavigate();
   const {
@@ -52,24 +55,30 @@ const TaskBar = ({windowConfig}) => {
       setShowWifiAlert(true);
       return;
     }
+
+    if (popupTimeout.current) {
+      clearTimeout(popupTimeout.current); // 📌 Kullanıcı tıklarsa timeout'u iptal et
+    }
+
     setSelectedMail(mail);
 
     setMails(prevMails =>
       prevMails.map(m =>
-        m.title === mail.title ? { ...m, readMail: true } : m
+        m.title === mail.title ? { ...m, readMail: true, notified: true } : m
       )
     );
 
     if(!openWindows.includes('mailbox')) {
       toggleWindow('mailbox');
     }
-    
+    setNotifiedMails(prevNotifiedMails => prevNotifiedMails.filter(m => m.title !== mail.title));
     setShowNotifications(false);
+    setPopupNotification(null); // 📌 Pop-up bildirimi kapat
   };
 
   // Bildirim Silme Fonksiyonu
   const handleDeleteNotification = (mail) => {
-    setUnreadMails(prevUnreadMails => prevUnreadMails.filter(m => m.title !== mail.title));
+    setNotifiedMails(prevNotifiedMails => prevNotifiedMails.filter(m => m.title !== mail.title));
 };
 
   const handleStartButtonClick = () => {
@@ -140,9 +149,37 @@ const TaskBar = ({windowConfig}) => {
     }
   };
 
+   // 📌 **Rastgele Zamanlarda Bildirim Çıkartma**
   useEffect(() => {
-    setUnreadMails(mails.filter(mail => !mail.readMail));
-  },[]);
+    const showRandomNotification = () => {
+      const unread = mails.filter(mail => !mail.readMail && !mail.notified);
+      if (unread.length > 0) {
+        const randomMail = unread[Math.floor(Math.random() * unread.length)];
+        setPopupNotification(randomMail);
+
+        // 📌 Eğer kullanıcı 8 saniye içinde bildirime basmazsa bildirim kutusuna ekle
+        popupTimeout.current = setTimeout(() => {
+          setMails(prevMails =>
+            prevMails.map(m =>
+              m.title === randomMail.title ? { ...m, notified: true } : m
+            )
+          );
+
+          setNotifiedMails(prev => [randomMail, ...prev]);
+          setPopupNotification(null);
+        }, 8000);
+      }
+    };
+
+    // 📌 Rastgele 30-90 saniye arasında bir süre belirle
+    const interval = setInterval(showRandomNotification, Math.floor(Math.random() * 5 + 8) * 1000);
+
+    return () => clearInterval(interval);
+  }, [mails]);
+
+  useEffect(() => {
+      setNotifiedMails((mails.filter(mail => !mail.readMail && mail.notified)));
+    }, []);
 
   useEffect(() => {
     if (openWindows.length === 0) {
@@ -209,6 +246,14 @@ const TaskBar = ({windowConfig}) => {
 
   return (
   <div className="taskbar">
+      {popupNotification && (
+        <div className="popup-notification" onClick={() => handleOpenMailbox(popupNotification)}>
+          <img style={{width:30, height:30}} src="/icons/mail.png" alt="Mail Icon" />
+          <h4>{popupNotification.title}</h4>
+          <p>{popupNotification.precontent}</p>
+        </div>
+      )}
+      
     <div className="taskbar-icons" onClick={handleStartButtonClick}>
       <img src="/icons/menu (1).png" alt="Start Button" />
     </div>
@@ -275,32 +320,25 @@ const TaskBar = ({windowConfig}) => {
 
         <div className="taskbar-notifications" onClick={toggleNotifications}>
           <img src="/icons/notification_blck.png" alt="Notification Icon" />
-          {unreadMails.length > 0 && <span className="notification-count">{unreadMails.length}</span>}
+          {notifiedMails.length > 0 && <span className="notification-count">{notifiedMails.length}</span>}
 
           {showNotifications && (
             <div className="notifications-window">
-              <h3>
-                Bildirimler 
-                
-              </h3>
-                  
-                  {unreadMails.length > 0 ? (
-                unreadMails.map((mail, index) => (
-                  <div key={index} className="notification-item" onClick={() => handleOpenMailbox(mail)}>
+              <h3>Bildirimler</h3>
+              {notifiedMails.length > 0 ? (
+                notifiedMails.map((mail, index) => (
+                  <div key={index} className="notification-item">
                     <strong>
-                      <div style={{display: "flex", gap: 10, alignItems: "center", position: "relative"}}>
-                        <img style={{width:30, height:30}} src="/icons/mail.png" alt="Mail Icon" />
+                      <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
+                        <img style={{ width: 30, height: 30 }} src="/icons/mail.png" alt="Mail Icon" />
                         {mail.title}
-                        
-                        <p className='mail-notification-close'  onClick={(e) => { 
-                        e.stopPropagation();
-                        handleDeleteNotification(mail);
-                        }}>x</p>     
-
-                      </div>   
-                      
+                        {/* 📌 X Butonu ile Bildirimi Kaldır */}
+                        <p className='mail-notification-close' onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteNotification(mail);
+                        }}>x</p>
+                      </div>
                     </strong>
-                    
                     <p>{mail.precontent}</p>
                   </div>
                 ))

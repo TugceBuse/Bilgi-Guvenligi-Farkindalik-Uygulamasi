@@ -38,7 +38,11 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const {isWificonnected} = useGameContext();
 
-  
+  // En başta okunmamış ve notified özelliği true olan mailleri filtrele
+  useEffect(() => {
+        setMails((mails.filter(mail => !mail.readMail && mail.notified)));
+      }, []);
+
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
   useEffect(() => {
     if (selectedMail) {
@@ -238,7 +242,7 @@ const Mailbox = ({ closeHandler, style }) => {
                   <div className="mailbox-mailcontentheader">
                     <img src="./icons/user (2).png" alt="Mail Pic" className="mail-image"/>
                         <div style={{display:"flex", flexDirection:"column", gap:10}}>
-                          <h3>{selectedMail?.Name}</h3>
+                          <h3>{selectedMail?.title}</h3>
                           <h3>&lt;{selectedMail?.from}&gt;</h3>
                           <h3 style={{paddingTop:8}}>Bugün</h3>
                         </div>
