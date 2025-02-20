@@ -15,17 +15,12 @@ const TaskBar = ({windowConfig}) => {
   const [showWifiList, setShowWifiList] = useState(false);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [selectedWifi, setSelectedWifi] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
+  const [showPassAlert, setShowPassAlert] = useState(false);
+  const [showWifiAlert, setShowWifiAlert] = useState(false);
   const [wifiname, setwifiname] = useState('');
   const { toggleWindow } = useUIContext();
   const { mails, setMails, setSelectedMail } = useMailContext(); 
   const [unreadMails, setUnreadMails] = useState([]);
-
-
-  useEffect(() => {
-    setUnreadMails(mails.filter(mail => !mail.readMail));
-  },[mails]);
-
   const pass = "1234";
   const navigate = useNavigate();
   const {
@@ -51,7 +46,12 @@ const TaskBar = ({windowConfig}) => {
     ));
   };
 
+  // Mailbox Açma Fonksiyonu
   const handleOpenMailbox = (mail) => {
+    if(!isWificonnected) {
+      setShowWifiAlert(true);
+      return;
+    }
     setSelectedMail(mail);
 
     setMails(prevMails =>
@@ -63,16 +63,14 @@ const TaskBar = ({windowConfig}) => {
     if(!openWindows.includes('mailbox')) {
       toggleWindow('mailbox');
     }
-  
+    
     setShowNotifications(false);
   };
 
-
+  // Bildirim Silme Fonksiyonu
   const handleDeleteNotification = (mail) => {
     setUnreadMails(prevUnreadMails => prevUnreadMails.filter(m => m.title !== mail.title));
 };
-
-
 
   const handleStartButtonClick = () => {
     setShowStartMenu(!showStartMenu);
@@ -109,7 +107,7 @@ const TaskBar = ({windowConfig}) => {
     if (password === pass) {
       setIsWificonnected(true);
     } else {
-      setShowAlert(true);
+      setShowPassAlert(true);
       setIsWificonnected(false);
     }
   };
@@ -139,6 +137,16 @@ const TaskBar = ({windowConfig}) => {
       handleIconClick(windowName);
     }
   };
+
+  useEffect(() => {
+    if (openWindows.length === 0) {
+      setZindex(100);
+    }
+  }, [openWindows]);
+
+  useEffect(() => {
+    setActiveWindow(visibleWindows[visibleWindows.length - 1]);
+  }, [visibleWindows]);
 
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 1000);
@@ -313,7 +321,8 @@ const TaskBar = ({windowConfig}) => {
         </form>
       </div>
     )}
-    <Alert show={showAlert} handleClose={() => setShowAlert(false)} message={'Şifre yanlış'}></Alert>
+    <Alert show={showPassAlert} handleClose={() => setShowPassAlert(false)} message={'Şifre yanlış'}></Alert>
+    <Alert show={showWifiAlert} handleClose={() => setShowWifiAlert(false)} message={'İnternet bağlantısı bulunamadı'}></Alert>
   </div>
   );
 };
