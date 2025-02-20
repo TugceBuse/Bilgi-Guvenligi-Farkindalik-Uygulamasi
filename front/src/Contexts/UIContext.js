@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const UIContext = createContext();
 
@@ -7,6 +7,25 @@ export const UIContextProvider = ({ children }) => {
   const [visibleWindows, setVisibleWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
   const [zindex, setZindex] = useState(100);
+
+
+  useEffect(() => {
+    if (openWindows.length === 0) {
+      setZindex(100);
+    } else {
+      setActiveWindow(visibleWindows[visibleWindows.length - 1]);
+      updateZindex(); // Kapatılan pencere sonrası z-index sıralamasını yenile
+    }
+  }, [openWindows]);
+  
+
+  useEffect(() => {
+    console.log(`OpenWindows: ${openWindows}`, `VisibleWindows: ${visibleWindows}`, `ActiveWindow: ${activeWindow}`);
+  }, [openWindows, visibleWindows, activeWindow]);
+
+  useEffect(() => {
+    console.log(`Zindex: ${zindex}`);
+  }, [zindex]);
 
   const toggleWindow = (windowName) => {
     setOpenWindows((prevOpenWindows) =>
@@ -29,6 +48,21 @@ export const UIContextProvider = ({ children }) => {
       setActiveWindow(windowName);
     }
   };
+
+  const updateZindex = () => {
+    setZindex((prevZindex) => {
+      let newZindex = prevZindex;
+      visibleWindows.forEach((window, index) => {
+        const element = document.querySelector(`.${window}-window`);
+        if (element) {
+          element.style.zIndex = 100 + index;  // Z-index değerlerini güncelle
+        }
+      });
+  
+      return newZindex; // Eğer pencere kapandıysa z-index aynı kalmalı
+    });
+  };
+  
 
   return (
     <UIContext.Provider 

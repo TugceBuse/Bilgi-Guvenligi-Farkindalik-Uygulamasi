@@ -116,17 +116,16 @@ const TaskBar = ({windowConfig}) => {
 
   const handleIconClickWithVisibility = (windowName) => {
     const element = document.querySelector(`.${windowName}-window`);
+    if(!element) return;
+
     if (activeWindow === windowName) {
-      if (element) {
         element.style.visibility = 'hidden';
         setVisibleWindows((prevVisibleWindows) => {
           const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
           return [...filteredWindows];
         });
-      }
       handleIconClick(windowName);
     } else {
-      if (element) {
         if (zindex < 9999) {
           let newZindex = zindex + 1;
           setZindex(newZindex);
@@ -136,21 +135,10 @@ const TaskBar = ({windowConfig}) => {
             const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
             return [...filteredWindows, windowName];
           });
-        }
       }
       handleIconClick(windowName);
     }
   };
-
-  useEffect(() => {
-    if (openWindows.length === 0) {
-      setZindex(100);
-    }
-  }, [openWindows]);
-
-  useEffect(() => {
-    setActiveWindow(visibleWindows[visibleWindows.length - 1]);
-  }, [visibleWindows]);
 
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 1000);
