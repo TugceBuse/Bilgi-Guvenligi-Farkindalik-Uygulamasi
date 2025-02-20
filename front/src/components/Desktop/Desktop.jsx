@@ -10,7 +10,7 @@ import { TodoProvider } from '../../Contexts/TodoContext';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, handleIconClick, zindex, setZindex } = useUIContext();
+  const { openWindows, handleIconClick, zindex, setZindex,setActiveWindow } = useUIContext();
 
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -49,12 +49,6 @@ const Desktop = () => {
       return () => audio.pause();
     }
   }, [showRansom]);
-
-  useEffect(() => {
-    if (openWindows.length === 0) {
-      setZindex(100);
-    }
-  }, [openWindows]);
 
   const calculateWindowPosition = (index) => ({
     left: `${window.innerWidth / 10 + index * 30}px`,
