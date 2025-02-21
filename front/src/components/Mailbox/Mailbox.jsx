@@ -4,6 +4,7 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useMailContext } from '../../Contexts/MailContext';
 import { useGameContext } from '../../Contexts/GameContext';
+import { use } from 'react';
 
 export const useMailbox = () => {
   const { toggleWindow } = useUIContext();
@@ -30,26 +31,33 @@ const Mailbox = ({ closeHandler, style }) => {
 
   // Context Değişkenler
   const {
-    mails, setMails,
+    initMail,
     sentMails, setSentMails,
     spamMails, setSpamMails,
     selectedMail, setSelectedMail
   } = useMailContext();
 
   const {isWificonnected} = useGameContext();
-
-  // En başta okunmamış ve notified özelliği true olan mailleri filtrele
+  const [mails, setMails] = useState(initMail);
+  
+  // Okunmamış ve notified özelliği true olan mailleri filtrele
   useEffect(() => {
-        setMails((mails.filter(mail => !mail.readMail && mail.notified)));
-      }, []);
+    setMails(prevMails => {
+        const filteredMails = initMail.filter(mail => !mail.readMail && mail.notified); // 📌 İlk gelen mailler
+        const newMails = filteredMails.filter(mail => !prevMails.includes(mail)); // 📌 Önceki mailler içinde olmayanları al
+        
+        return [...newMails, ...prevMails]; // 📌 Yeni mailleri en üste ekle, tekrar edenleri engelle
+    });
+}, [initMail]);
 
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
   useEffect(() => {
     if (selectedMail) {
       const selectedIndex = mails.findIndex(mail => mail.title === selectedMail.title);
-      setActiveIndex(selectedIndex);
+      if(!selectedIndex===-1) {
+        setActiveIndex(selectedIndex);
+      }
     }
-    console.log("çalıştı", selectedMail);
     }, [selectedMail]);
 
  useEffect(() => {
@@ -71,6 +79,7 @@ const Mailbox = ({ closeHandler, style }) => {
     }
     setSelectedMail(mail);
     setActiveIndex(index);
+    
     // Maili okundu olarak işaretle
     if (mail.hasOwnProperty('readMail')) {
       setMails((prevMails) =>
@@ -91,6 +100,7 @@ const Mailbox = ({ closeHandler, style }) => {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     setSelectedMail(null);
+    setActiveIndex(null);
   };
 
 

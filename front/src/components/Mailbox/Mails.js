@@ -453,6 +453,86 @@ export const mails = [
               </div>
             )
             },
+
+            /* 16.Mail Content*/
+          {id: 18, from:'updates@shieldsecure.com',
+            title: 'test2', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false,
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
+                      
+                      Daha hızlı tarama ve tehdit algılama<br/>
+                      <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
+                      <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
+                      <div className='lines' ></div>
+                      ShieldSecure 2.0’a yükseltmek için: 
+                      
+                      <span 
+                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
+                      </span><br/><br/>
+                    
+                      Sorunsuz bir dijital deneyim dileriz!<br/>
+                      <b>ShieldSecure Destek Ekibi</b>
+                    </pre>
+              </div>
+            )
+            },
+            /* 17.Mail Content*/
+          {id: 16, from:'updates@shieldsecure.com',
+            title: 'test3', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false,
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
+                      
+                      Daha hızlı tarama ve tehdit algılama<br/>
+                      <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
+                      <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
+                      <div className='lines' ></div>
+                      ShieldSecure 2.0’a yükseltmek için: 
+                      
+                      <span 
+                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
+                      </span><br/><br/>
+                    
+                      Sorunsuz bir dijital deneyim dileriz!<br/>
+                      <b>ShieldSecure Destek Ekibi</b>
+                    </pre>
+              </div>
+            )
+            },
+
+            /* 18.Mail Content*/
+          {id: 17, from:'updates@shieldsecure.com',
+            title: 'test4', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false,
+            content: 
+            (
+              <div className="mail-content">
+                  <pre>
+                      <b>Merhaba,</b><br/><br/>
+                      Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
+                      
+                      Daha hızlı tarama ve tehdit algılama<br/>
+                      <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
+                      <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
+                      <div className='lines' ></div>
+                      ShieldSecure 2.0’a yükseltmek için: 
+                      
+                      <span 
+                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
+                      </span><br/><br/>
+                    
+                      Sorunsuz bir dijital deneyim dileriz!<br/>
+                      <b>ShieldSecure Destek Ekibi</b>
+                    </pre>
+              </div>
+            )
+            },
   ];
 
 

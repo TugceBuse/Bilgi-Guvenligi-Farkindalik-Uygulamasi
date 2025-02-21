@@ -130,7 +130,7 @@
   }
 
   .mailbox-maillist {
-    height:100%;
+    height: 100%;
   }
   .mailbox-maillist li {
     padding: 15px;
@@ -147,8 +147,10 @@
   }
   
   .mailbox-maillist li.active {
-    background-color: #777;
+    background-color: #777 !important;
     font-weight: bold;
+    border: 2px solid #f3ad81;
+    transition: background-color 0.2s ease-in-out;
   }
 
   .mailbox-maillist p{

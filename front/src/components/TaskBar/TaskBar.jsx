@@ -19,7 +19,7 @@ const TaskBar = ({windowConfig}) => {
   const [showWifiAlert, setShowWifiAlert] = useState(false);
   const [wifiname, setwifiname] = useState('');
   const { toggleWindow } = useUIContext();
-  const { mails, setMails, setSelectedMail } = useMailContext(); 
+  const { initMail, setInitMail, setSelectedMail } = useMailContext(); 
   const [popupNotification, setPopupNotification] = useState(null); // 📌 Pop-up bildirimi yöneten state
   const [notifiedMails, setNotifiedMails] = useState([]); // 📌 Bildirim kutusuna düşen mailleri takip eder.
   const popupTimeout = useRef(null);
@@ -55,14 +55,14 @@ const TaskBar = ({windowConfig}) => {
       setShowWifiAlert(true);
       return;
     }
-
+    
     if (popupTimeout.current) {
       clearTimeout(popupTimeout.current); // 📌 Kullanıcı tıklarsa timeout'u iptal et
     }
 
     setSelectedMail(mail);
 
-    setMails(prevMails =>
+    setInitMail(prevMails =>
       prevMails.map(m =>
         m.title === mail.title ? { ...m, readMail: true, notified: true } : m
       )
@@ -150,19 +150,18 @@ const TaskBar = ({windowConfig}) => {
    // 📌 **Rastgele Zamanlarda Bildirim Çıkartma**
   useEffect(() => {
     const showRandomNotification = () => {
-      const unread = mails.filter(mail => !mail.readMail && !mail.notified);
+      const unread = initMail.filter(mail => !mail.readMail && !mail.notified);
       if (unread.length > 0) {
         const randomMail = unread[Math.floor(Math.random() * unread.length)];
-        setPopupNotification(randomMail);
 
+        setPopupNotification(randomMail);
+        setInitMail(prevMails =>
+          prevMails.map(m =>
+            m.title === randomMail.title ? { ...m, notified: true } : m
+          )
+        );
         // 📌 Eğer kullanıcı 8 saniye içinde bildirime basmazsa bildirim kutusuna ekle
         popupTimeout.current = setTimeout(() => {
-          setMails(prevMails =>
-            prevMails.map(m =>
-              m.title === randomMail.title ? { ...m, notified: true } : m
-            )
-          );
-
           setNotifiedMails(prev => [randomMail, ...prev]);
           setPopupNotification(null);
         }, 8000);
@@ -173,10 +172,10 @@ const TaskBar = ({windowConfig}) => {
     const interval = setInterval(showRandomNotification, Math.floor(Math.random() * 5 + 8) * 1000);
 
     return () => clearInterval(interval);
-  }, [mails]);
+  }, [initMail]);
 
   useEffect(() => {
-      setNotifiedMails((mails.filter(mail => !mail.readMail && mail.notified)));
+      setNotifiedMails((initMail.filter(mail => !mail.readMail && mail.notified)));
     }, []);
 
   useEffect(() => {
@@ -316,16 +315,17 @@ const TaskBar = ({windowConfig}) => {
           <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
         </div>
 
-        <div className="taskbar-notifications" onClick={toggleNotifications}>
-          <img src="/icons/notification_blck.png" alt="Notification Icon" />
+        <div className="taskbar-notifications" >
+          <img src="/icons/notification_blck.png" alt="Notification Icon" onClick={toggleNotifications} />
           {notifiedMails.length > 0 && <span className="notification-count">{notifiedMails.length}</span>}
 
           {showNotifications && (
             <div className="notifications-window">
               <h3>Bildirimler</h3>
+
               {notifiedMails.length > 0 ? (
                 notifiedMails.map((mail, index) => (
-                  <div key={index} className="notification-item">
+                  <div key={index} className="notification-item" onClick={() => handleOpenMailbox(mail)}>
                     <strong>
                       <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
                         <img style={{ width: 30, height: 30 }} src="/icons/mail.png" alt="Mail Icon" />

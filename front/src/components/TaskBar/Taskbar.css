@@ -38,7 +38,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 5px;
-  margin-right: 10px;
+  padding: 10px;
 }
 /* Wifi kısmı*/
 .taskbar-wifi {
@@ -202,7 +202,11 @@
 .taskbar-status {
   display: flex;
   align-items: center;
-  margin-left: 10px;
+  padding: 20px;
+}
+.taskbar-status:hover{
+  border-right: 1px solid #3d3d3d;
+  height: 30px;
 }
 /* clock kısmı*/
 .taskbar-clock {
@@ -224,6 +228,10 @@
   cursor: pointer;
 }
 
+.taskbar-notifications img:hover{
+  
+}
+
 .notifications-window {
   position: absolute;
   right: 10px;
@@ -240,6 +248,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   max-height: 500px;
   overflow-y: auto;
+  cursor: default;
 }
 
 .notifications-window h3 {
