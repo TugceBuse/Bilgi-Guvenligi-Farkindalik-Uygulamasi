@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense, memo } from "react";
 import "./Browser.css";
 import { MakeDraggable } from "../../utils/Draggable";
 import { useUIContext } from "../../Contexts/UIContext";
@@ -8,6 +8,8 @@ export const useBrowser = () => {
   const { toggleWindow } = useUIContext();
   return { openHandler: () => toggleWindow("browser"), closeHandler: () => toggleWindow("browser") };
 };
+
+const CachedComponents = {}; // 📌 Bileşenleri cachelemek için bir obje oluşturduk
 
 const Browser = ({ closeHandler, style }) => {
   const [url, setUrl] = useState("google.com");
@@ -20,8 +22,6 @@ const Browser = ({ closeHandler, style }) => {
   const browserRef = useRef(null);
 
   MakeDraggable(browserRef, ".browser-header");
-
-  const loadComponent = (componentName) => lazy(() => import(`../sites/${componentName}.jsx`));
 
   const handleUrlChange = (e) => setUrl(e.target.value);
   const handleKeyDown = (e) => e.key === "Enter" && handleGoClick(e.target.value);
@@ -154,8 +154,17 @@ const Browser = ({ closeHandler, style }) => {
 
     switch (site.type) {
       case "component":
-        const SiteComponent = loadComponent(site.component);
-        return <Suspense fallback={<div>Yükleniyor...</div>}><SiteComponent /></Suspense>;
+        if (!CachedComponents[site.component]) {
+          CachedComponents[site.component] = lazy(() => import(`../sites/${site.component}.jsx`));
+        }
+
+        const SiteComponent = CachedComponents[site.component];
+
+        return (
+           <Suspense /*fallback={<div className="loading-spinner">Yükleniyor...</div>} */>
+            <SiteComponent />
+          </Suspense>
+        );
       default:
         return <div className="not-found">404 - Sayfa Bulunamadı</div>;
     }
