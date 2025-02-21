@@ -17,15 +17,6 @@ export const UIContextProvider = ({ children }) => {
       updateZindex(); // Kapatılan pencere sonrası z-index sıralamasını yenile
     }
   }, [openWindows]);
-  
-
-  useEffect(() => {
-    console.log(`OpenWindows: ${openWindows}`, `VisibleWindows: ${visibleWindows}`, `ActiveWindow: ${activeWindow}`);
-  }, [openWindows, visibleWindows, activeWindow]);
-
-  useEffect(() => {
-    console.log(`Zindex: ${zindex}`);
-  }, [zindex]);
 
   const toggleWindow = (windowName) => {
     setOpenWindows((prevOpenWindows) =>

@@ -1,8 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './Setup.css';
-import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
-import { useGameContext } from '../../Contexts/GameContext';
 
 export const useSetup = () => {
     const { toggleWindow } = useUIContext();

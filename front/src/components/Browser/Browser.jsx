@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense, memo } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense} from "react";
 import "./Browser.css";
 import { MakeDraggable } from "../../utils/Draggable";
 import { useUIContext } from "../../Contexts/UIContext";
@@ -18,7 +18,6 @@ const Browser = ({ closeHandler, style }) => {
   const [history, setHistory] = useState(["google.com"]);
   const [matchedSites, setMatchedSites] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const prevIndexRef = useRef(currentIndex);
   const browserRef = useRef(null);
 
   MakeDraggable(browserRef, ".browser-header");

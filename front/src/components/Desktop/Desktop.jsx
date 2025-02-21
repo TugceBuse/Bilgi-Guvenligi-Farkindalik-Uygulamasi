@@ -10,7 +10,7 @@ import { TodoProvider } from '../../Contexts/TodoContext';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, handleIconClick, zindex, setZindex,setActiveWindow } = useUIContext();
+  const { openWindows, handleIconClick,setZindex} = useUIContext();
 
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -69,7 +69,6 @@ const Desktop = () => {
       } else {
         openHandler();
         handleIconClick(windowKey);
-        setZindex((prevZIndex) => prevZIndex + 1);
       }
     }
   };

@@ -4,7 +4,6 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useMailContext } from '../../Contexts/MailContext';
 import { useGameContext } from '../../Contexts/GameContext';
-import { use } from 'react';
 
 export const useMailbox = () => {
   const { toggleWindow } = useUIContext();
