@@ -23,38 +23,45 @@ const Browser = ({ closeHandler, style }) => {
 
   MakeDraggable(browserRef, ".browser-header");
 
+  // 📌 Yükleme fonksiyonu: 1 saniye bekletir, sonra devam eder
+  const startLoading = async () => {
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 📌 1 saniye beklet
+    setLoading(false);
+  };
+
   const handleUrlChange = (e) => setUrl(e.target.value);
   const handleKeyDown = (e) => e.key === "Enter" && handleGoClick(e.target.value);
 
-  const handleGoogleSearch = (searchText) => {
+  const handleGoogleSearch = async (searchText) => {
     if (!searchText.trim()) return;
 
-    // Eğer zaten "google.com/search?q=" ile başlıyorsa, tekrar ekleme!
     let searchUrl = searchText.startsWith("google.com/search?q=")
       ? searchText
       : `google.com/search?q=${encodeURIComponent(searchText)}`;
 
     setUrl(searchUrl);
+
+    await startLoading(); // 📌 1 saniye beklet
     handleGoClick(searchUrl);
   };
 
-  const handleGoClick = (newUrl = url, addToHistory = true) => {
-    setLoading(true);
-    setTimeout(() => {
-      const normalizedUrl = newUrl.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
-      if (normalizedUrl.startsWith("google.com/search?q=")) {
-        const searchQuery = decodeURIComponent(normalizedUrl.split("search?q=")[1]).toLowerCase();
-        setCurrentUrl(`google.com/search?q=${searchQuery}`);
-        setUrl(`google.com/search?q=${searchQuery}`);
+  const handleGoClick = async (newUrl = url, addToHistory = true) => {
+    await startLoading(); // 📌 1 saniye beklet
 
-        if (addToHistory) {
-          setHistory([...history.slice(0, currentIndex + 1), `google.com/search?q=${searchQuery}`]);
-          setCurrentIndex(currentIndex + 1);
-        }
-        setLoading(false);
-        return;
+    const normalizedUrl = newUrl.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
+
+    if (normalizedUrl.startsWith("google.com/search?q=")) {
+      const searchQuery = decodeURIComponent(normalizedUrl.split("search?q=")[1]).toLowerCase();
+      setCurrentUrl(`google.com/search?q=${searchQuery}`);
+      setUrl(`google.com/search?q=${searchQuery}`);
+
+      if (addToHistory) {
+        setHistory([...history.slice(0, currentIndex + 1), `google.com/search?q=${searchQuery}`]);
+        setCurrentIndex(currentIndex + 1);
       }
-
+    } 
+    else {
       const matchedSite = sites[normalizedUrl];
       setCurrentUrl(matchedSite ? normalizedUrl : "404");
       setUrl(normalizedUrl);
@@ -63,9 +70,7 @@ const Browser = ({ closeHandler, style }) => {
         setHistory([...history.slice(0, currentIndex + 1), newUrl]);
         setCurrentIndex(currentIndex + 1);
       }
-
-      setLoading(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
@@ -78,7 +83,8 @@ const Browser = ({ closeHandler, style }) => {
     }
   }, [currentUrl]);
 
-  const handleBackClick = () => {
+  const handleBackClick = async () => {
+    await startLoading(); // 📌 1 saniye beklet
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
@@ -87,7 +93,8 @@ const Browser = ({ closeHandler, style }) => {
     }
   };
 
-  const handleForwardClick = () => {
+  const handleForwardClick = async () => {
+    await startLoading(); // 📌 1 saniye beklet
     if (currentIndex < history.length - 1) {
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
@@ -97,6 +104,25 @@ const Browser = ({ closeHandler, style }) => {
   };
 
   const renderContent = () => {
+    if (loading) {
+      return <div className="browser-loading">
+                <div className="lds-default">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+            </div>
+    }
+
     if (currentUrl.startsWith("google.com/search?q=")) {
       return (
         <div className="download-pages">
@@ -161,7 +187,7 @@ const Browser = ({ closeHandler, style }) => {
         const SiteComponent = CachedComponents[site.component];
 
         return (
-           <Suspense /*fallback={<div className="loading-spinner">Yükleniyor...</div>} */>
+          <Suspense fallback={<div className="loading-spinner">Yükleniyor...</div>}>
             <SiteComponent />
           </Suspense>
         );
