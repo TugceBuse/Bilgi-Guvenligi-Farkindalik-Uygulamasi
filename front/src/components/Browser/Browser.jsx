@@ -83,8 +83,8 @@ const Browser = ({ closeHandler, style }) => {
   }, [currentUrl]);
 
   const handleBackClick = async () => {
-    await startLoading(); // 📌 1 saniye beklet
     if (currentIndex > 0) {
+      await startLoading(); // 1 saniye beklet
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
       setUrl(history[newIndex]); 
@@ -93,8 +93,8 @@ const Browser = ({ closeHandler, style }) => {
   };
 
   const handleForwardClick = async () => {
-    await startLoading(); // 📌 1 saniye beklet
     if (currentIndex < history.length - 1) {
+      await startLoading(); // 📌 1 saniye beklet
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
       setUrl(history[newIndex]); 
@@ -124,14 +124,21 @@ const Browser = ({ closeHandler, style }) => {
 
     if (currentUrl.startsWith("google.com/search?q=")) {
       return (
+
         <div className="download-pages">
           <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
-              <img src="./icons/search.png" alt="Search Logo"/>
-              <input onChange={handleUrlChange} onKeyDown={handleKeyDown} type="text" placeholder="Google'da Ara" />
-              <div className='searchPart_right'>
-                <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
-                <img src="./icons/google-voice.png" alt="Voice Logo"/>
-              </div>
+
+            <img src="./icons/search.png" alt="Search Logo"/>
+            <input 
+              type="text" 
+              placeholder="Google'da Ara" 
+              onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
+            />
+
+            <div className='searchPart_right'>
+              <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
+              <img src="./icons/google-voice.png" alt="Voice Logo"/>
+            </div>
           </div>
 
           <div className= 'searchPart_bottom'>
@@ -226,9 +233,10 @@ const Browser = ({ closeHandler, style }) => {
         />
 
         <img 
-          className="nav-arrow"
-          src="./icons/right-arrow (1).png" alt="Right Arrow Logo" 
-          onClick={handleForwardClick}
+          className={`nav-arrow ${currentIndex < history.length - 1 ? "" : "disabled"}`}
+          src="./icons/right-arrow (1).png" 
+          alt="Right Arrow Logo" 
+          onClick={currentIndex < history.length - 1 ? handleForwardClick : null}
         />
            
         <img 

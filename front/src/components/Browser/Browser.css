@@ -101,7 +101,13 @@
   filter: invert(1);
   transition: opacity 0.2s ease-in-out;
 }
-
+.nav-arrow.disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.nav-arrow.disabled:hover {
+  opacity: 0.5;
+}
 .nav-arrow:hover, .home-icon:hover {
   opacity: 0.7;
 }
