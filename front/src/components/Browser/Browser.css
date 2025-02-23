@@ -120,17 +120,6 @@
   overflow-y: auto;
 }
 
-/* Yükleme Ekranı */
-.loading-screen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffffff;
-}
-
 /* Google Ana Sayfası */
 .firstPartOfBrowser {
   display: flex;
@@ -253,17 +242,6 @@
 .link-part h2[style*="gray"] {
   color: gray;
   cursor: default;
-}
-
-/* Yükleme İkonu */
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffffff;
 }
 
 .searchPart_bottom {

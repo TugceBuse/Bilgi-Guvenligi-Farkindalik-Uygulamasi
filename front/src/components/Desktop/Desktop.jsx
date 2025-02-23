@@ -15,7 +15,7 @@ const Desktop = () => {
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const { windowConfig, updateDownloadedStatus } = useWindowConfigState();
+  const { windowConfig, updateAvailableStatus } = useWindowConfigState();
 
   const handlers = {
     todolist: windowConfig.todolist.useComponent(),
@@ -25,6 +25,7 @@ const Desktop = () => {
     folder: windowConfig.folder.useComponent(),
     scanner: windowConfig.scanner.useComponent(),
     antivirus: windowConfig.antivirus.useComponent(),
+    setup: windowConfig.setup.useComponent(),
   };
 
   useEffect(() => {
@@ -77,7 +78,7 @@ const Desktop = () => {
     <div className="desktop">
       <div className="desktop-icons">
         {Object.keys(windowConfig)
-          .filter((key) => windowConfig[key].downloaded) // Sadece downloaded olanları göster
+          .filter((key) => windowConfig[key].available&&windowConfig[key].location==='desktop') // Sadece desktop konumunda available olanlar
           .map((key) => (
             <div key={key} className="icon" onClick={() => handleDesktopClick(key)}>
               <img src={windowConfig[key].icon} alt={`${windowConfig[key].label} Icon`} />
@@ -95,7 +96,7 @@ const Desktop = () => {
               key={windowKey}
               closeHandler={closeHandler}
               style={calculateWindowPosition(index)}
-              updateDownloadedStatus={updateDownloadedStatus} // Setup için prop gönderiliyor
+              updateAvailableStatus={updateAvailableStatus} // Setup için prop gönderiliyor -> Folder.jsx -> Setup.jsx -> Antivirus available oluyor
             />
           );
         })}

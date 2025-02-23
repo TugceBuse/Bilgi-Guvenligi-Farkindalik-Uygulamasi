@@ -17,9 +17,10 @@ export const useSetup = () => {
     return { openHandler, closeHandler };
     }
 
-const Setup = ({ closeHandler, updateDownloadedStatus }) => {
+const Setup = ({ closeHandler, updateAvailableStatus }) => {
 
     const SetupRef = useRef(null);
+    console.log(updateAvailableStatus)
 
 
     const [step, setStep] = useState(1);
@@ -33,7 +34,7 @@ const Setup = ({ closeHandler, updateDownloadedStatus }) => {
         setTimeout(() => {
             setButtonLoading(false); 
             setStep(step + 1);
-            updateDownloadedStatus('antivirus', true);
+            updateAvailableStatus('antivirus', true);
         }, 5000);
        
     };

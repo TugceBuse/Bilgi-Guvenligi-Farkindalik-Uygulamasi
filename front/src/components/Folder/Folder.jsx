@@ -20,7 +20,9 @@ export const useFolder = () => {
     return { openHandler, closeHandler };
     }
 
-const Folder = ({ closeHandler, style, updateDownloadedStatus }) => {
+const Folder = ({ closeHandler, style, updateAvailableStatus }) => {
+
+    const { toggleWindow } = useUIContext();
 
     const FolderRef = useRef(null);
     MakeDraggable(FolderRef, '.folder-header');
@@ -45,6 +47,11 @@ const Folder = ({ closeHandler, style, updateDownloadedStatus }) => {
     const handleCloseSetup = () => {
       setShowSetup(false);
     };
+
+    const opensetup = () => {
+        toggleWindow('setup');
+        setShowSetup(false);
+    }
         return (
             <div className="folder-window" style={style} ref={FolderRef}>
 
@@ -172,18 +179,20 @@ const Folder = ({ closeHandler, style, updateDownloadedStatus }) => {
                             <div className="folder-content-right-inside">
                             {/* İndirilenler klasörünün içeriği burada */}
                                 
-                                {files.antivirusexe.downloaded && (
+                                {files.antivirusexe.available && (
                                     <div className='Icons' onDoubleClick={handleIconClick}>
                                         <img src="/icons/setting.png" alt="Antivirus Icon" />
                                         <span>ShieldSecure_Setup_v1.0.exe</span>
                                     </div>
                                 )}
                                 {showSetup && 
-                                <Setup 
-                                closeHandler={handleCloseSetup} 
-                                updateDownloadedStatus={updateDownloadedStatus} 
-                                />}
-                                {files.file1.downloaded && (
+                                // <Setup 
+                                // closeHandler={handleCloseSetup} 
+                                // updateAvailableStatus={updateAvailableStatus} 
+                                // />
+                                opensetup()
+                                }
+                                {files.file1.available && (
                                     <div className='Icons' >
                                         <img src="/icons/file.png" alt="File Icon" />
                                         <span>file1.pdf</span>

@@ -19,6 +19,7 @@ const Browser = ({ closeHandler, style }) => {
   const [matchedSites, setMatchedSites] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const browserRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   MakeDraggable(browserRef, ".browser-header");
 
@@ -33,7 +34,7 @@ const Browser = ({ closeHandler, style }) => {
   const handleKeyDown = (e) => e.key === "Enter" && handleGoClick(e.target.value);
 
   const handleGoogleSearch = async (searchText) => {
-    if (!searchText.trim()) return;
+    if (!searchText || !searchText.trim()) return;
 
     let searchUrl = searchText.startsWith("google.com/search?q=")
       ? searchText
@@ -127,11 +128,11 @@ const Browser = ({ closeHandler, style }) => {
 
         <div className="download-pages">
           <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
-
-            <img src="./icons/search.png" alt="Search Logo"/>
+            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
             <input 
               type="text" 
-              placeholder="Google'da Ara" 
+              placeholder="Google'da Ara"
+              ref={searchInputRef}
               onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
             />
 
@@ -182,11 +183,12 @@ const Browser = ({ closeHandler, style }) => {
       return (
         <div className="firstPartOfBrowser">
           <h1>Google</h1>
-          <div className="searchPart">
-            <img src="./icons/search.png" alt="Search Logo" />
+          <div className="searchPart"> 
+            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
             <input 
               type="text" 
-              placeholder="Google'da Ara" 
+              placeholder="Google'da Ara"
+              ref={searchInputRef}
               onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
             />
             <div className="searchPart_right">
@@ -197,7 +199,8 @@ const Browser = ({ closeHandler, style }) => {
         </div>
       );
     }
-
+    // 📌 Eğer sitenin tipi "component" ise, ilgili bileşeni yükle
+    // 📌 Farklı site tipleri eklenirse buraya kod parçası eklenecek
     const site = sites[currentUrl];
     if (!site) return <div className="not-found">404 - Sayfa Bulunamadı</div>;
 
@@ -210,7 +213,7 @@ const Browser = ({ closeHandler, style }) => {
         const SiteComponent = CachedComponents[site.component];
 
         return (
-          <Suspense fallback={<div className="loading-spinner">Yükleniyor...</div>}>
+          <Suspense /*fallback={<div className="browser-loading">Yükleniyor...</div>}*/>
             <SiteComponent />
           </Suspense>
         );
