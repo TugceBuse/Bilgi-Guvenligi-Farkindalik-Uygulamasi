@@ -125,6 +125,23 @@ const Browser = ({ closeHandler, style }) => {
     if (currentUrl.startsWith("google.com/search?q=")) {
       return (
         <div className="download-pages">
+          <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
+                          <img src="./icons/search.png" alt="Search Logo"/>
+                          <input onChange={handleUrlChange} onKeyDown={handleKeyDown} type="text" placeholder="Google'da Ara" />
+                        <div className='searchPart_right'>
+                          <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
+                          <img src="./icons/google-voice.png" alt="Voice Logo"/>
+                        </div>
+                      </div>
+
+                        <div className= 'searchPart_bottom'>
+                          <h3 className='tümü'>Tümü</h3>
+                          <h3>Görseller</h3>
+                          <h3>Videolar</h3>
+                          <h3>Yer siteleri</h3>
+                          <h3>Haberler</h3>
+                          <h3>Web</h3>
+                        </div>
           <h2>Arama Sonuçları</h2>
           {matchedSites.length > 0 ? (
             matchedSites.map(([key, site]) => (
@@ -202,12 +219,28 @@ const Browser = ({ closeHandler, style }) => {
         <button className="browser-close" onClick={closeHandler}>×</button>
       </div>
       <div className="browser-search">
-        <img className="nav-arrow" src="./icons/arrow.png" alt="Back" onClick={handleBackClick} />
-        <img className="nav-arrow" src="./icons/right-arrow.png" alt="Forward" onClick={handleForwardClick} />
-        <img className="home-icon" src="./icons/home.png" alt="Home" onClick={() => handleGoClick("google.com")} />
+        <img 
+          className="nav-arrow"
+          src="./icons/arrow.png" alt="Arrow Logo" 
+          onClick={handleBackClick}
+        />
+
+        <img 
+          className="nav-arrow"
+          src="./icons/right-arrow (1).png" alt="Right Arrow Logo" 
+          onClick={handleForwardClick}
+        />
+           
+        <img 
+        className="home-icon"
+        src="./icons/home.png" alt="Home" 
+        onClick={() => handleGoClick("google.com")}
+        />
+        
         <input className="browser-url-input" type="text" value={url} onChange={handleUrlChange} onKeyDown={handleKeyDown} placeholder="Enter URL" />
         <button className="browser-go-button" onClick={() => handleGoClick(url)}>Go</button>
       </div>
+     
       <div className="browser-content">{renderContent()}</div>
     </div>
   );
