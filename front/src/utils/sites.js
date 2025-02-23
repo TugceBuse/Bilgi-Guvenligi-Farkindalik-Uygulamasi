@@ -17,7 +17,8 @@ const sites = {
     component: "ShieldSecure",
     statement: "Cihazlarınızı antivirüs ile güvenle koruyun.",
     searchKeys: ["antivirus", "security", "vpn"],
-    clickable: true
+    clickable: true,
+    color: "green"
   },
   "cybersentinel.com": { 
     title: "CyberSentinel", 
@@ -25,14 +26,16 @@ const sites = {
     component: "CyberSentinel",
     statement: "Kurumsal güvenlik ve antivirüs hizmetleri sunuyoruz.",
     searchKeys: ["antivirus", "firewall", "malware"],
-    clickable: true
+    clickable: true,
+    color: "red"
   },
   "safebrowsing.com": { 
     title: "SafeBrowsing", 
     type: "info",
     statement: "Güvenli internet gezinme hakkında bilgiler.",
     searchKeys: ["safe browsing", "web security", "privacy","antivirus"],
-    clickable: false
+    clickable: false,
+    color: "blue"
   }
 };
 
