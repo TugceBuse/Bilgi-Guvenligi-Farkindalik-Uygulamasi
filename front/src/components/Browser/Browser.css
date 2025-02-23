@@ -273,6 +273,29 @@
   margin-bottom: 2px;
 }
 
+.image-div {
+  background-image: linear-gradient(135deg, #8ffc6b 25%, #bfddc2 50%, #8fc949 75%, #54f651 100%);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: #2c2c2c;
+  text-align: center;
+  align-content: center;
+  font-size: 23px;
+  font-weight: bold;
+  text-decoration: solid;
+  text-shadow: #000000;
+  display: inline-block; /* Satır içi blok öğesi */
+  vertical-align: middle; /* Orta hizalama */
+  margin-right: 10px; /* Sağ boşluk */
+}
+
+.top-of-the-link{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 /* Loading Animation */
 
 .browser-loading {
