@@ -147,7 +147,7 @@ const Browser = ({ closeHandler, style }) => {
             matchedSites.map(([key, site]) => (
               <div key={key} className="link-part">
                 <div className="top-of-the-link">
-                  <div className="image-div">{site.title.charAt(0)}</div>
+                  <div style={{backgroundColor: site.color}} className="image-div">{site.title.charAt(0)}</div>
                   <div>
                     <h3>{site.title}</h3>
                     <p>{site.statement}</p>
