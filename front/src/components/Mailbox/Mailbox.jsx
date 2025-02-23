@@ -42,12 +42,16 @@ const Mailbox = ({ closeHandler, style }) => {
   // Okunmamış ve notified özelliği true olan mailleri filtrele
   useEffect(() => {
     setMails(prevMails => {
-        const filteredMails = initMail.filter(mail => !mail.readMail && mail.notified); // 📌 İlk gelen mailler
-        const newMails = filteredMails.filter(mail => !prevMails.includes(mail)); // 📌 Önceki mailler içinde olmayanları al
+        const filteredMails = initMail.filter(mail => !mail.readMail && mail.notified); 
         
-        return [...newMails, ...prevMails]; // 📌 Yeni mailleri en üste ekle, tekrar edenleri engelle
+        const newMails = filteredMails.filter(mail => 
+            !prevMails.some(prevMail => prevMail.title === mail.title)
+        );
+
+        return [...newMails, ...prevMails.filter(mail => mail.notified)];
     });
 }, [initMail]);
+
 
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
   useEffect(() => {
