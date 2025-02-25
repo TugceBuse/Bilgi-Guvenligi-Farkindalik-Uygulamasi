@@ -36,7 +36,16 @@ const sites = {
     searchKeys: ["safe browsing", "web security", "privacy","antivirus"],
     clickable: false,
     color: "blue"
-  }
+  },
+  "procareerhub.com": {
+    title: "ProCareerHub",
+    type: "component",
+    component: "ProCareerHub",
+    statement: "İş fırsatlarını keşfet ve profesyonel ağını genişlet.",
+    searchKeys: ["kariyer", "iş ilanları", "profesyonel ağ"],
+    clickable: true,
+    color: "blue"
+  },
 };
 
 export default sites;
