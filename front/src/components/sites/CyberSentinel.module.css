@@ -1,0 +1,185 @@
+/* Genel Stil */
+:global(body) {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Ana Konteyner */
+.downloadContainer {
+  width: 95%;
+  padding: 25px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  text-align: center;
+  justify-self: center;
+}
+
+/* Üst Bilgi */
+h2 {
+  color: #00e676;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* Kampanya Kutusu */
+.promoBox {
+  background: #ff4081;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.promoBox h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.promoBox p {
+  color: #fff;
+  font-size: 14px;
+}
+
+.upgradeBtn {
+  background: #ffffff;
+  color: #ff4081;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.upgradeBtn:hover {
+  background: #f1f1f1;
+}
+
+/* İçerik Alanı */
+.contentBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px;
+  background: #252525;
+  border-radius: 8px;
+}
+
+/* Bilgi Bölümü */
+.infoSection {
+  background: #2c2c2c;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.infoSection h2 {
+  font-size: 20px;
+  color: #00e676;
+}
+
+.infoSection p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.infoSection ul {
+  list-style: none;
+  padding: 0;
+}
+
+.infoSection li {
+  font-size: 16px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+}
+
+.infoSection li::before {
+  content: "✔";
+  color: #00e676;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* İndirme Bölümü */
+.downloadSection {
+  background: #333;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.downloadSection h3 {
+  color: #ffeb3b;
+}
+
+.downloadBtn {
+  background: #00e676;
+  color: black;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  margin: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.downloadBtn:hover {
+  background: #00c853;
+}
+
+/* İndirme İlerleme Çubuğu */
+.progress {
+  width: 100px;
+  height: 8px;
+  background: linear-gradient(90deg, #00e676, #ffeb3b);
+  animation: loading 1.5s infinite linear;
+}
+
+@keyframes loading {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+.downloadSection{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start; /* İçeriği sola hizalar */
+  text-align: left;
+}
+.downloadSection li{
+  align-self: center; /* Butonu ortalar */
+  margin-left: 10px;
+}
+/* İndirme Mesajı */
+.downloadSection p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ffeb3b;
+}
+
+/* Popup */
+.popup {
+  background: #4caf50;
+  color: white;
+  padding: 12px;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}

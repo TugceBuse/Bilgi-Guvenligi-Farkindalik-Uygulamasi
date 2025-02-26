@@ -1,0 +1,239 @@
+/* Genel Stil */
+:global(body) {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Ana Konteyner */
+.careerContainer {
+  background: rgb(161, 172, 175);
+  width: 50%;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+  justify-self: center;
+}
+/* Kullanıcı Paneli (Sağ Üst Köşe) */
+.userPanel {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, #426180, #00c6ff);
+  color: #0073e6;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border: 2px solid #0073e6;
+}
+
+/* Kullanıcı Adı */
+.userName {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+  padding-bottom: 5px;
+}
+
+/* Çıkış Butonu */
+.logoutButton {
+  background: #ff3b3b;
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.logoutButton:hover {
+  background: #d63030;
+  transform: scale(1.05);
+}
+/* Çıkış Butonu */
+.logoutButton {
+  background: #ff3b3b;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.logoutButton:hover {
+  background: #d63030;
+}
+
+/* Fade-In Animasyonu */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #0073e6, #00c6ff);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Giriş/Kayıt Alanı */
+.authBox {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease-in-out;
+}
+
+.authBox:hover {
+  transform: scale(1.02);
+}
+
+.authBox input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.2s ease-in-out;
+}
+
+.authBox input:focus {
+  border-color: #0073e6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+}
+
+.authBox button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #0073e6, #005bb5);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  transition: 0.3s ease-in-out;
+}
+
+.authBox button:hover {
+  background: linear-gradient(135deg, #005bb5, #003d80);
+  transform: scale(1.05);
+}
+
+.authBox p {
+  cursor: pointer;
+  color: #0073e6;
+  font-size: 14px;
+}
+
+.authBox p:hover {
+  text-decoration: underline;
+}
+
+/* İş İlanları Bölümü */
+.jobListings {
+  background: #e3f2fd;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.jobListings ul {
+  list-style: none;
+  padding: 0;
+  color: #003d80;
+}
+
+.jobListings li {
+  padding: 8px;
+  border-bottom: 1px solid #b3e5fc;
+  font-size: 15px;
+  transition: 0.3s ease-in-out;
+}
+
+.jobListings li:hover {
+  background: #bbdefb;
+  transform: scale(1.02);
+}
+
+/* CV Hazırlama Bölümü */
+.cvTips {
+  background: #f8f1d8;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 15px;
+  color: #125544;
+}
+.cvTips li{
+  padding: 8px;
+  border-bottom: 1px solid #b3e5fc;
+  font-size: 15px;
+  transition: 0.3s ease-in-out;
+  margin-left: 15px;
+}
+
+/* Röportaj Rehberi */
+.interviewTips {
+  background: #f2fde5;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 15px;
+  color: #18490c;
+}
+.interviewTips li{
+  padding: 8px;
+  border-bottom: 1px solid #b3e5fc;
+  font-size: 15px;
+  transition: 0.3s ease-in-out;
+  margin-left: 15px;
+}
+
+/* Maaş ve İş Detayı */
+.salary {
+  color: #0073e6;
+  font-weight: bold;
+}
+
+/* Footer */
+.footer {
+  font-size: 12px;
+  color: #2b2b2b;
+  margin-top: 10px;
+}
