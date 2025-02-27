@@ -159,6 +159,9 @@
   color: #0073e6;
   font-size: 14px;
 }
+.authBox h2{
+  color: #003d80;
+}
 
 .authBox p:hover {
   text-decoration: underline;

@@ -1,0 +1,322 @@
+/* Genel Stil */
+:global(body) {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Ana Konteyner */
+  .skillContainer {
+    background: rgb(255, 225, 141);
+    width: 100%;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    justify-self: center;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  /* Fade-In Animasyonu */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #ff6f00, #ff8f00);
+    color: white;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  .infoSection{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Skill Bölümü */
+  .popularSkills {
+    background: #ffecb3;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  .popularSkills h2 {
+    color: #e65100;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .popularSkills ul {
+    list-style: none;
+    padding: 0;
+    font-size: 16px;
+    color: #bf360c;
+  }
+  
+  .popularSkills li {
+    padding: 8px;
+    border-bottom: 1px solid #ffb74d;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .popularSkills li:hover {
+    background: #ffcc80;
+    transform: scale(1.02);
+  }
+  /* Öğrenme Araçları ve Topluluk Alanı */
+.learningTools, .communitySection {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Başlık Renkleri */
+  .learningTools h2 {
+    color: #ff6f00;
+  }
+  
+  .communitySection h2 {
+    color: #0277bd;
+  }
+  .learningTools p{
+    color: #002f6c;
+    font-size: 16px;
+    padding: 10px;
+  }
+  .communitySection p{
+    color: #002f6c;
+    font-size: 16px;
+    padding: 10px;
+  }
+  /* Liste Tasarımı */
+  .learningList, .communityList {
+    list-style: none;
+    padding: 0;
+    font-size: 15px;
+    color: #ff8f00;
+  }
+  .learningList li, .communityList li {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    transition: 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+  }
+  
+  .learningList li:hover, .communityList li:hover {
+    background: #f9f9f9;
+    transform: scale(1.02);
+  }
+  
+  /* Buton Tasarımları */
+  .exploreButton, .joinButton {
+    background: #006eff;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+    display: block;
+    margin-top: 15px;
+  }
+  
+  .exploreButton:hover, .joinButton:hover {
+    background: #e65100;
+    transform: scale(1.05);
+  }
+
+  /* Kullanıcı Paneli */
+  .userPanel {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    color: #ff6f00;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    border: 2px solid #ff6f00;
+  }
+  
+  /* Kullanıcı Adı */
+  .userName {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff6f00;
+  }
+  
+  /* Çıkış Butonu */
+  .logoutButton {
+    background: #e65100;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .logoutButton:hover {
+    background: #bf360c;
+    transform: scale(1.05);
+  }
+  
+  /* Footer */
+  .footer {
+    font-size: 12px;
+    color: #555;
+    margin-top: 15px;
+    text-align: center;
+    padding: 10px;
+    background: #4b3513;
+    border-radius: 8px;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Giriş / Kayıt Paneli */
+.authBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: none;
+    z-index: 1000;
+  }
+  
+  /* Açıldığında Görünür Hale Getirme */
+  .authBox.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  /* Başlık */
+  .authBox h2 {
+    font-size: 22px;
+    color: #ff6f00;
+    margin-bottom: 15px;
+  }
+  
+  /* Input Alanları */
+  .authBox input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .authBox input:focus {
+    border-color: #ff6f00;
+    box-shadow: 0 0 5px rgba(255, 111, 0, 0.5);
+    outline: none;
+  }
+  
+  /* Butonlar */
+  .authBox button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #ff6f00, #ff8f00);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .authBox button:hover {
+    background: linear-gradient(135deg, #e65100, #ff6f00);
+    transform: scale(1.03);
+  }
+  
+  /* Kapatma Butonu */
+  .authBox button:last-child {
+    background: #e65100;
+    margin-top: 15px;
+  }
+  
+  .authBox button:last-child:hover {
+    background: #bf360c;
+  }
+  
+  /* Açılış Animasyonu */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -55%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }  
+  
+  /* Giriş Yap Butonu */
+  .loginButton {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: #ff8f00;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .loginButton:hover {
+    background: #e65100;
+    transform: scale(1.05);
+  }
