@@ -30,58 +30,74 @@ const Browser = ({ closeHandler, style }) => {
     setLoading(false);
   };
 
+  const normalizeText = (text) => {
+    return text
+      .toLowerCase()
+      .replace(/ğ/g, "g")
+      .replace(/ü/g, "u")
+      .replace(/ş/g, "s")
+      .replace(/ı/g, "i")
+      .replace(/ö/g, "o")
+      .replace(/ç/g, "c");
+  };
+
   const handleUrlChange = (e) => setUrl(e.target.value);
   const handleKeyDown = (e) => e.key === "Enter" && handleGoClick(e.target.value);
 
-  const handleGoogleSearch = async (searchText) => {
+  const handleGoogleSearch = async (searchText, addToHistory = true) => {
     if (!searchText || !searchText.trim()) return;
-
-    let searchUrl = searchText.startsWith("google.com/search?q=")
-      ? searchText
-      : `google.com/search?q=${encodeURIComponent(searchText)}`;
-
+  
+    const searchQuery = normalizeText(searchText.trim());  // Normalizasyonu uygula
+    const searchUrl = `google.com/search?q=${encodeURIComponent(searchQuery)}`;
+  
     setUrl(searchUrl);
+    await startLoading();
+    setCurrentUrl(searchUrl);
 
-    await startLoading(); // 📌 1 saniye beklet
-    handleGoClick(searchUrl);
+    if (addToHistory) {
+      setHistory([...history.slice(0, currentIndex + 1), searchUrl]);
+      setCurrentIndex(currentIndex + 1);
+    }
   };
+  
 
   const handleGoClick = async (newUrl = url, addToHistory = true) => {
-    await startLoading(); // 📌 1 saniye beklet
-
-    const normalizedUrl = newUrl.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
-
+    await startLoading(); 
+  
+    const normalizedUrl = normalizeText(newUrl.trim().replace(/^(https?:\/\/)?(www\.)?|\/$/g, ''));
+  
     if (normalizedUrl.startsWith("google.com/search?q=")) {
-      const searchQuery = decodeURIComponent(normalizedUrl.split("search?q=")[1]).toLowerCase();
-      setCurrentUrl(`google.com/search?q=${searchQuery}`);
-      setUrl(`google.com/search?q=${searchQuery}`);
-
-      if (addToHistory) {
-        setHistory([...history.slice(0, currentIndex + 1), `google.com/search?q=${searchQuery}`]);
-        setCurrentIndex(currentIndex + 1);
-      }
-    } 
-    else {
-      const matchedSite = sites[normalizedUrl];
+      setCurrentUrl(normalizedUrl);
+      setUrl(normalizedUrl);
+    } else {
+      const matchedSite = sites[normalizedUrl] || null;
       setCurrentUrl(matchedSite ? normalizedUrl : "404");
       setUrl(normalizedUrl);
-
-      if (addToHistory) {
-        setHistory([...history.slice(0, currentIndex + 1), newUrl]);
-        setCurrentIndex(currentIndex + 1);
-      }
+    }
+  
+    if (addToHistory) {
+      setHistory([...history.slice(0, currentIndex + 1), newUrl]);
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
   useEffect(() => {
+    console.log("History updated:", history);
+  }, [history]);
+
+  useEffect(() => {
     if (currentUrl.startsWith("google.com/search?q=")) {
-      const searchQuery = decodeURIComponent(currentUrl.split("search?q=")[1]).toLowerCase();
-      const filteredSites = Object.entries(sites).filter(([key, site]) => 
-        site.searchKeys && site.searchKeys.includes(searchQuery)
+      const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
+  
+      const filteredSites = Object.entries(sites).filter(([key, site]) =>
+        site.searchKeys &&
+        site.searchKeys.some((keyword) => normalizeText(keyword).includes(searchQuery)) // Normalizasyon tüm listeye uygulandı
       );
+  
       setMatchedSites(filteredSites);
     }
   }, [currentUrl]);
+  
 
   const handleBackClick = async () => {
     if (currentIndex > 0) {
