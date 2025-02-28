@@ -20,6 +20,7 @@ const Browser = ({ closeHandler, style }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const browserRef = useRef(null);
   const searchInputRef = useRef(null);
+  const [searchedText, setSearchedText] = useState("");
 
   MakeDraggable(browserRef, ".browser-header");
 
@@ -140,13 +141,15 @@ const Browser = ({ closeHandler, style }) => {
     }
 
     if (currentUrl.startsWith("google.com/search?q=")) {
+      const searchedText = decodeURIComponent(currentUrl.split("search?q=")[1]);
       return (
-
+        
         <div className="download-pages">
           <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
             <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
             <input 
-              type="text" 
+              type="text"
+              defaultValue={searchedText}
               placeholder="Google'da Ara"
               ref={searchInputRef}
               onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
@@ -158,7 +161,7 @@ const Browser = ({ closeHandler, style }) => {
             </div>
           </div>
 
-          <div className= 'searchPart_bottom'>
+          <div className='searchPart_bottom'>
             <h3 className='tümü'>Tümü</h3>
             <h3>Görseller</h3>
             <h3>Videolar</h3>
@@ -166,31 +169,34 @@ const Browser = ({ closeHandler, style }) => {
             <h3>Haberler</h3>
             <h3>Web</h3>
           </div>
-          <h2>Arama Sonuçları</h2>
+          {/* <h2>Arama Sonuçları</h2> */}
           {matchedSites.length > 0 ? (
-            matchedSites.map(([key, site]) => (
-              <div key={key} className="link-part">
-                <div className="top-of-the-link">
-                  <div style={{backgroundColor: site.color, backgroundImage: site.backgroundImage, backgroundRepeat: "no-repeat", backgroundSize: "cover"}} className="image-div">{site.title.charAt(0)}</div>
-                  <div>
-                    <h3>{site.title}</h3>
-                    <p>{site.statement}</p>
-                  </div>
-                </div>
-                <h2 
-                  onClick={() => site.clickable && handleGoClick(key)} 
-                  style={{ 
+            matchedSites.map(([key, site]) => {
+              return (
+                <div key={key} className="link-part"onClick={() => site.clickable && handleGoClick(key)}
+                  style={{
                     cursor: site.clickable ? "pointer" : "default",
-                    color: site.clickable ? "white" : "gray" 
-                  }}
-                >
-                  {site.title} | {site.statement}
-                </h2>
-              </div>
-            ))
+                    color: site.clickable ? "white" : "gray",
+                  }}>
+                  <div className="top-of-the-link">
+                    <div className={`image-div site-${key.split(".")[0]}`}>
+                      {site.title.charAt(0)}
+                    </div>
+                    <div>
+                      <h3>{site.title}</h3>
+                      <p>{site.statement}</p>
+                    </div>
+                  </div>
+                  <h2>
+                    {site.title} | {site.statement}
+                  </h2>
+                </div>
+              );
+            })
           ) : (
-            <p>Aradığınız terimleri içeren hiçbir web sayfası bulunamadı.</p>
+            <p>Aradığınız - <strong>{searchedText}</strong> - ile ilgili hiçbir arama sonucu mevcut değil.</p>
           )}
+
         </div>
       );
     }

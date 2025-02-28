@@ -208,11 +208,22 @@
 }
 
 .link-part {
-  position: relative;
+  width: 80%;
   display: flex;
   flex-direction: column;
   gap: 3px;
-  margin-bottom: 60px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.05); /* Hafif saydam bir arka plan */
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  border: 2px solid transparent; /* Normalde çerçeve olmasın */
+}
+
+.link-part:hover {
+  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4);
+  transform: translateY(-3px); /* Hover edildiğinde hafif yukarı kalksın */
 }
 
 .link-part p:first-child {
@@ -233,7 +244,7 @@
   transition: color 0.2s ease-in-out;
 }
 
-.link-part h2:hover {
+.link-part:hover h2 {
   color: #ffb84d;
   text-decoration: underline;
 }
@@ -248,7 +259,7 @@
   display: flex;
   flex-direction: row;
   border-bottom: 3px solid #444;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
 
 .searchPart_bottom h3 {
@@ -257,7 +268,7 @@
   margin-bottom: 2px;
 }
 
-.image-div {
+/* .image-div {
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -268,14 +279,63 @@
   font-weight: bold;
   text-decoration: solid;
   text-shadow: #000000;
-  display: inline-block; /* Satır içi blok öğesi */
-  vertical-align: middle; /* Orta hizalama */
-  margin-right: 10px; /* Sağ boşluk */
+  display: inline-block; 
+  vertical-align: middle; 
+  margin-right: 10px;
+} */
+.image-div {
+  border-radius: 50%;
+  width: 60px; /* Biraz daha büyük yaparak daha iyi görünmesini sağladım */
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5), /* İç kısımdan hafif parıltı */
+              0px 4px 10px rgba(0, 0, 0, 0.3); /* Hafif dış gölge */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid black;
 }
+
+.link-part:hover .image-div {
+  transform: scale(1.15);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.9),
+              0px 6px 14px rgba(0, 0, 0, 0.5);
+}
+
+/* 📌 ↓↓↓↓↓↓↓↓↓ Sitelere özel arka plan renkleri ↓↓↓↓↓↓↓↓↓ 📌*/
+.site-google {
+  background: linear-gradient(to right, #4285f4, #ffffff33);
+}
+
+.site-shieldsecure {
+  background: linear-gradient(to right, #4caf50, #ffffff33);
+}
+
+.site-cybersentinel {
+  background: linear-gradient(to right, #ff5722, #ffffff33);
+}
+
+.site-safebrowsing {
+  background: linear-gradient(to right, #03a9f4, #ffffff33);
+}
+
+.site-procareerhub {
+  background: linear-gradient(to right, #0073e6, #ffffff33);
+}
+
+.site-skillforgehub {
+  background: linear-gradient(to right, #ff6f00, #ffffff33);
+}
+
+/* 📌 ↑↑↑↑↑↑↑↑↑ Sitelere özel arka plan renkleri ↑↑↑↑↑↑↑↑↑ 📌 */
 
 .top-of-the-link{
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
 }
 
