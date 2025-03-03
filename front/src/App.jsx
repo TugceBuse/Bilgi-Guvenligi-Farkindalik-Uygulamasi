@@ -10,11 +10,13 @@ import { AuthProvider } from "../src/Contexts/AuthContext";
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
+import ScrollToTop from './utils/ScrollToTop';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop/>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/game" element={<Game />} />

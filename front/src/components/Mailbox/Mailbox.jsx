@@ -4,6 +4,7 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useMailContext } from '../../Contexts/MailContext';
 import { useGameContext } from '../../Contexts/GameContext';
+import { resetScroll } from '../../utils/resetScroll';
 
 export const useMailbox = () => {
   const { toggleWindow } = useUIContext();
@@ -27,6 +28,7 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const [unreadCountMail, setUnreadCountMail] = useState(0);
   const [unreadCountSpam, setUnreadCountSpam] = useState(0);
+  const contentRef = useRef(null);
 
   // Context Değişkenler
   const {
@@ -52,6 +54,10 @@ const Mailbox = ({ closeHandler, style }) => {
     });
 }, [initMail]);
 
+useEffect(() => {
+  console.log('Mails değişikliği oldu,UseEffect çalıştı ve sentMails:',mails);
+}, [mails]);
+
 
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
   useEffect(() => {
@@ -61,6 +67,7 @@ const Mailbox = ({ closeHandler, style }) => {
         setActiveIndex(selectedIndex);
       }
     }
+    resetScroll(contentRef);//yeni mail seçildiğinde scrollu sıfırlar -- util import
     }, [selectedMail]);
 
  useEffect(() => {
@@ -73,8 +80,8 @@ const Mailbox = ({ closeHandler, style }) => {
     setUnreadCountSpam(count);
   }, [spamMails]); 
 
-  const mailboxRef = useRef(null);//mailbox referansı
-  MakeDraggable(mailboxRef, '.mailbox-header');//mailboxi sürüklemek için kullanılan fonksiyon
+  const mailboxRef = useRef(null);
+  MakeDraggable(mailboxRef, '.mailbox-header');
 
   const handleMailClick = (mail,index) => {
     if(!isWificonnected) {
@@ -174,14 +181,8 @@ const Mailbox = ({ closeHandler, style }) => {
              
              </div>
             </ul>
-
-          
-
           </div>
-          {/* vvvvvvvvvvvvv mail listesi vvvvvvvvvvvvv
-          - Mailler dinamik eklenebilir hale gelmeli
-          - bir maile tıklandığında içeriği mailbox-mailcontent e gelmeli
-        */}
+          {/* mail listesi */}
           <div className="mailbox-mails">
             <div style={{display:"flex", flexDirection:"column"}}>
             <h2>{activeTab === 'inbox' ? 'Inbox' : 'Sent'}</h2>
@@ -248,9 +249,8 @@ const Mailbox = ({ closeHandler, style }) => {
               <div style={{height:3}}></div>
             </ul>
           </div>
-          {/* mail içeriği --> Bu kısma Header falan eklenerek
-          mailin kimden ne zaman geldiği tarzında bilgiler eklenmeli */}
-          <div className="mailbox-mailcontent">
+          {/* mail içeriği*/}
+          <div className="mailbox-mailcontent" ref={contentRef}>
                 {selectedMail ? (               
                   <div className="mailbox-mailcontentheader">
                     <img src="./icons/user (2).png" alt="Mail Pic" className="mail-image"/>
