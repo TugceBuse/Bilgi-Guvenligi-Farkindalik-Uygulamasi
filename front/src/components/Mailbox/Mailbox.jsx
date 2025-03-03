@@ -39,7 +39,8 @@ const Mailbox = ({ closeHandler, style }) => {
   } = useMailContext();
 
   const {isWificonnected} = useGameContext();
-  const [mails, setMails] = useState(initMail);
+  const [mails, setMails] = useState(initMail.filter(mail => mail.notified));
+  // 📌 mailcontext e taşınmalı bi kere doldurulup getirilmeli burda useEffect ile doldurulmalı 📌
   
   // Okunmamış ve notified özelliği true olan mailleri filtrele
   useEffect(() => {
@@ -50,7 +51,7 @@ const Mailbox = ({ closeHandler, style }) => {
             !prevMails.some(prevMail => prevMail.title === mail.title)
         );
 
-        return [...newMails, ...prevMails.filter(mail => mail.notified)];
+        return [...newMails, ...prevMails];
     });
 }, [initMail]);
 
