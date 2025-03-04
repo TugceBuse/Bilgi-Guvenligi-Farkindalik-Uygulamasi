@@ -339,6 +339,30 @@
   gap: 10px;
 }
 
+/* İnternet Yok Sayfası */
+.no-internet {
+  text-align: center;
+  padding: 50px;
+  color: white;
+}
+
+.no-internet h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.no-internet p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.no-internet img {
+  width: 80px;
+  height: auto;
+  filter: invert(1);
+  opacity: 0.7;
+}
+
 /* Loading Animation */
 
 .browser-loading {

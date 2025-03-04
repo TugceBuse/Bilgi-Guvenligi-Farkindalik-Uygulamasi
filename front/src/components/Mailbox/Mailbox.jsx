@@ -42,8 +42,6 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const {isWificonnected} = useGameContext();
   
-  // 📌 mailcontext e taşınmalı bi kere doldurulup getirilmeli burda useEffect ile doldurulmalı 📌
-  
   // Okunmamış ve notified özelliği true olan mailleri filtrele
   useEffect(() => {
     setInboxMails(prevMails => {

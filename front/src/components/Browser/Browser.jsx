@@ -3,6 +3,7 @@ import "./Browser.css";
 import { MakeDraggable } from "../../utils/Draggable";
 import { useUIContext } from "../../Contexts/UIContext";
 import sites from "../../utils/sites";
+import { useGameContext } from "../../Contexts/GameContext";
 
 export const useBrowser = () => {
   const { toggleWindow } = useUIContext();
@@ -20,9 +21,10 @@ const Browser = ({ closeHandler, style }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const browserRef = useRef(null);
   const searchInputRef = useRef(null);
-  const [searchedText, setSearchedText] = useState("");
 
   MakeDraggable(browserRef, ".browser-header");
+
+  const { isWificonnected } = useGameContext();
 
   // 📌 Yükleme fonksiyonu: 1 saniye bekletir, sonra devam eder
   const startLoading = async () => {
@@ -83,10 +85,6 @@ const Browser = ({ closeHandler, style }) => {
   };
 
   useEffect(() => {
-    console.log("History updated:", history);
-  }, [history]);
-
-  useEffect(() => {
     if (currentUrl.startsWith("google.com/search?q=")) {
       const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
   
@@ -121,6 +119,18 @@ const Browser = ({ closeHandler, style }) => {
   };
 
   const renderContent = () => {
+
+    if (!isWificonnected) {
+      return (
+        <div className="no-internet">
+          <h2>İnternet Bağlantısı Bulunamadı</h2>
+          <p>Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.</p>
+          <img src="./icons/no-wifi.png" alt="No Internet" />
+        </div>
+      );
+    }
+    
+
     if (loading) {
       return <div className="browser-loading">
                 <div className="lds-default">
