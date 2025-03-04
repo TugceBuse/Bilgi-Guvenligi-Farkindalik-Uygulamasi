@@ -33,18 +33,20 @@ const Mailbox = ({ closeHandler, style }) => {
   // Context Değişkenler
   const {
     initMail,
-    sentMails, setSentMails,
-    spamMails, setSpamMails,
+    inboxMails, setInboxMails,
+    initsentMails, setInitSentMails,
+    // initspamMails, setInitSpamMails,
+    spamboxMails, setSpamboxMails,
     selectedMail, setSelectedMail
   } = useMailContext();
 
   const {isWificonnected} = useGameContext();
-  const [mails, setMails] = useState(initMail.filter(mail => mail.notified));
+  
   // 📌 mailcontext e taşınmalı bi kere doldurulup getirilmeli burda useEffect ile doldurulmalı 📌
   
   // Okunmamış ve notified özelliği true olan mailleri filtrele
   useEffect(() => {
-    setMails(prevMails => {
+    setInboxMails(prevMails => {
         const filteredMails = initMail.filter(mail => !mail.readMail && mail.notified); 
         
         const newMails = filteredMails.filter(mail => 
@@ -56,14 +58,14 @@ const Mailbox = ({ closeHandler, style }) => {
 }, [initMail]);
 
 useEffect(() => {
-  console.log('Mails değişikliği oldu,UseEffect çalıştı ve sentMails:',mails);
-}, [mails]);
+  console.log('Mails değişikliği oldu,UseEffect çalıştı ve sentMails:',inboxMails);
+}, [inboxMails]);
 
 
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
   useEffect(() => {
     if (selectedMail) {
-      const selectedIndex = mails.findIndex(mail => mail.title === selectedMail.title);
+      const selectedIndex = inboxMails.findIndex(mail => mail.title === selectedMail.title);
       if(!selectedIndex===-1) {
         setActiveIndex(selectedIndex);
       }
@@ -72,14 +74,14 @@ useEffect(() => {
     }, [selectedMail]);
 
  useEffect(() => {
-    const count = mails.filter(mail => !mail.readMail).length;
+    const count = inboxMails.filter(mail => !mail.readMail).length;
     setUnreadCountMail(count);
-  }, [mails]); 
+  }, [inboxMails]); 
 
   useEffect(() => {
-    const count = spamMails.filter(mail => !mail.readMail).length;
+    const count = spamboxMails.filter(mail => !mail.readMail).length;
     setUnreadCountSpam(count);
-  }, [spamMails]); 
+  }, [spamboxMails]); 
 
   const mailboxRef = useRef(null);
   MakeDraggable(mailboxRef, '.mailbox-header');
@@ -93,14 +95,14 @@ useEffect(() => {
     
     // Maili okundu olarak işaretle
     if (mail.hasOwnProperty('readMail')) {
-      setMails((prevMails) =>
+      setInboxMails((prevMails) =>
         prevMails.map((m, i) =>
           i === index ? { ...m, readMail: true } : m
         )
       );
     }
     else if (mail.hasOwnProperty('readSpam')) {
-      setSpamMails((prevMails) =>
+      setSpamboxMails((prevMails) =>
         prevMails.map((m, i) =>
           i === index ? { ...m, readMail: true } : m
         )
@@ -116,7 +118,7 @@ useEffect(() => {
 
 
   const resetReadMails = () => {
-    setMails((prevMails) =>
+    setInboxMails((prevMails) =>
       prevMails.map((m) => ({ ...m, readMail: false }))
     );
   };
@@ -196,7 +198,7 @@ useEffect(() => {
             
             <ul className="mailbox-maillist">
               { activeTab === 'inbox' ?
-                (mails.map((mail, index) => (
+                (inboxMails.map((mail, index) => (
                   <li
                     key={index}
                     onClick={() => handleMailClick(mail, index)}
@@ -213,7 +215,7 @@ useEffect(() => {
                     </p> 
                   </li>
                 ))) : activeTab === 'sent' ?
-                (sentMails.map((mail, index) => (
+                (initsentMails.map((mail, index) => (
                   <li
                     key={index}
                     onClick={() => handleMailClick(mail, index)}
@@ -229,7 +231,7 @@ useEffect(() => {
                     </p>
                   </li>
                 ))) : activeTab === 'spam' ?
-                (spamMails.map((mail, index) => (
+                (spamboxMails.map((mail, index) => (
                   <li
                     key={index}
                     onClick={() => handleMailClick(mail, index)}
@@ -255,26 +257,23 @@ useEffect(() => {
                 {selectedMail ? (               
                   <div className="mailbox-mailcontentheader">
                     <img src="./icons/user (2).png" alt="Mail Pic" className="mail-image"/>
-                        <div style={{display:"flex", flexDirection:"column", gap:10}}>
-                          <h3>{selectedMail?.title}</h3>
-                          <h3>&lt;{selectedMail?.from}&gt;</h3>
-                          <h3 style={{paddingTop:8}}>Bugün</h3>
-                        </div>
-                        <div style={{position: 'absolute', top:20, right:30, display:"flex", flexDirection:"row", gap:20}}>
+                      <div style={{display:"flex", flexDirection:"column", gap:10}}>
+                        <h3>{selectedMail?.title}</h3>
+                        <h3>&lt;{selectedMail?.from}&gt;</h3>
+                        <h3 style={{paddingTop:8}}>Bugün</h3>
+                      </div>
+                      <div style={{position: 'absolute', top:20, right:30, display:"flex", flexDirection:"row", gap:20}}>
                         <img  src="./icons/undo.png" alt="Undo Icon"/>
                         <img  src="./icons/undo-all.png" alt="Undo-All Icon"/>
                         <img  src="./icons/next.png" alt="Right-Arrow Icon"/>
-                        </div>
-                        
+                      </div>      
                   </div>
                 ) : (
                   <p></p>
                 )} 
                 {selectedMail ? (
                   <div className="mailbox-mailcontenttext">
-                    <p>
-                    { selectedMail.content }
-                      </p>
+                    { selectedMail?.content }
                   </div>
                 ) : (
                 <div style={{ 

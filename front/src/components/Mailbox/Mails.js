@@ -244,7 +244,7 @@ export const mails = [
            content: 
            (
              <div className="mail-content">
-                
+                <pre>  
                     <b>Merhaba,</b><br/><br/>
                     Hesap güvenliğinizi artırmak için BankOnline olarak şifre politikasında önemli bir güncelleme yaptık. 
                     Bu kapsamda, hesabınızın güvende kalmasını sağlamak için yeni bir şifre oluşturmanız gerekmektedir.<br/><br/>
@@ -263,7 +263,7 @@ export const mails = [
   
                     <b>Teşekkürler,<br/>
                     BankOnline Güvenlik Ekibi</b><br/>
-                    
+                </pre>
               </div>
            )
           },

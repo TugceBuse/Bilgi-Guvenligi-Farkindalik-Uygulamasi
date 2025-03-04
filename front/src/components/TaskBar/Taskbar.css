@@ -204,10 +204,10 @@
   align-items: center;
   padding: 20px;
 }
-.taskbar-status:hover{
+/* .taskbar-status:hover{
   border-right: 1px solid #3d3d3d;
   height: 30px;
-}
+} */
 /* clock kısmı*/
 .taskbar-clock {
   display : flex;
