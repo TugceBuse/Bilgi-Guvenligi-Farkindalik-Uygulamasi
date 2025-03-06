@@ -8,6 +8,9 @@ export const UIContextProvider = ({ children }) => {
   const [activeWindow, setActiveWindow] = useState(null);
   const [zindex, setZindex] = useState(100);
 
+  useEffect(() => {
+    console.log('zindex >> ', zindex);
+  }, [zindex]);
 
   useEffect(() => {
     if (openWindows.length === 0) {

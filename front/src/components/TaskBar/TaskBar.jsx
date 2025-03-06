@@ -133,16 +133,18 @@ const TaskBar = ({windowConfig}) => {
         });
       handleIconClick(windowName);
     } else {
-        if (zindex < 9999) {
-          let newZindex = zindex + 1;
-          setZindex(newZindex);
-          element.style.visibility = 'visible';
-          element.style.zIndex = `${newZindex}`;
-          setVisibleWindows((prevVisibleWindows) => {
-            const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
-            return [...filteredWindows, windowName];
-          });
-      }
+      setZindex((prevZindex) => {
+        let newZindex = prevZindex + 1;
+        element.style.visibility = 'visible';
+        element.style.zIndex = `${newZindex}`;
+        return newZindex;
+      });
+  
+      setVisibleWindows((prevVisibleWindows) => {
+        const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
+        return [...filteredWindows, windowName];
+      });
+  
       handleIconClick(windowName);
     }
   };

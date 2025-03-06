@@ -10,12 +10,15 @@ import { TodoProvider } from '../../Contexts/TodoContext';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, handleIconClick,setZindex} = useUIContext();
+  const { openWindows, handleIconClick, zindex, setZindex} = useUIContext();
 
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const { windowConfig, updateAvailableStatus } = useWindowConfigState();
+
+  // Yeni pencere konumlarını tutacak state
+  const [windowPositions, setWindowPositions] = useState({});
 
   const handlers = {
     todolist: windowConfig.todolist.useComponent(),
@@ -51,11 +54,21 @@ const Desktop = () => {
     }
   }, [showRansom]);
 
-  const calculateWindowPosition = (index) => ({
-    left: `${window.innerWidth / 10 + index * 30}px`,
-    top: `${window.innerHeight / 10 + index * 30}px`,
-    zIndex: 100 + index,
-  });
+  // Yeni açılan pencereler için rastgele konum ayarlıyoruz
+  const getNewWindowPosition = (windowKey) => {
+    if (windowPositions[windowKey]) {
+      return windowPositions[windowKey]; // Eğer zaten konumu varsa, aynı konumu koru
+    }
+    const newPos = {
+      left: `${window.innerWidth / 10 + Object.keys(windowPositions).length * 30}px`,
+      top: `${window.innerHeight / 10 + Object.keys(windowPositions).length * 30}px`,
+      zIndex: zindex + Object.keys(windowPositions).length,
+    };
+    setZindex(zindex + 1);
+    console.log('newPos >> ', newPos);
+    setWindowPositions((prev) => ({ ...prev, [windowKey]: newPos }));
+    return newPos;
+  };
 
   const handleDesktopClick = (windowKey) => {
     const { openHandler } = handlers[windowKey];
@@ -88,21 +101,21 @@ const Desktop = () => {
       </div>
 
       <TodoProvider>
-        {openWindows.map((windowKey, index) => {
+      {openWindows.map((windowKey) => {
           const { component: WindowComponent } = windowConfig[windowKey];
           const { closeHandler } = handlers[windowKey];
           return (
             <WindowComponent
               key={windowKey}
               closeHandler={closeHandler}
-              style={calculateWindowPosition(index)}
-              updateAvailableStatus={updateAvailableStatus} // Setup için prop gönderiliyor -> Folder.jsx -> Setup.jsx -> Antivirus available oluyor
+              style={getNewWindowPosition(windowKey)} // Yeni pozisyon yönetimi
+              updateAvailableStatus={updateAvailableStatus}
             />
           );
         })}
       </TodoProvider>
 
-      <TaskBar windowConfig={windowConfig} /> {/* Taskbar'ı alt bileşen olarak ekledik */}
+      <TaskBar windowConfig={windowConfig} />
 
       <Alert
         show={showAlert}
