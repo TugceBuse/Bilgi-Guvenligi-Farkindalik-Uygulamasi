@@ -219,14 +219,14 @@ const changePassword = async (currentPassword, newPassword) => {
   const checkTokenExpiration = () => {
     if (state.token) {
       const tokenParts = JSON.parse(atob(state.token.split('.')[1]));
-      console.log("Token süresi:", new Date(tokenParts.exp * 1000).toLocaleString());
+      // console.log("Token süresi:", new Date(tokenParts.exp * 1000).toLocaleString());
       const now = Math.floor(Date.now() / 1000); // Şu anki zamanı al
-      console.log("Şu anki zaman:", new Date(now * 1000).toLocaleString());
+      // console.log("Şu anki zaman:", new Date(now * 1000).toLocaleString());
       if (tokenParts.exp && tokenParts.exp < now) {
-        console.log("Token süresi doldu. Çıkış yapılıyor...");
+        // console.log("Token süresi doldu. Çıkış yapılıyor...");
         logout(); 
       }
-      console.log("Token kontrol edildi. Geçerli");
+      // console.log("Token kontrol edildi. Geçerli");
     }
   };
 
@@ -261,7 +261,7 @@ const changePassword = async (currentPassword, newPassword) => {
 
 
   useEffect(() => {
-    console.log("Token kontrol ediliyor...");
+    // console.log("Token kontrol ediliyor...");
     checkTokenExpiration();
     const interval = setInterval(checkTokenExpiration, 60000); // Her 1 dakikada bir kontrol
     return () => clearInterval(interval); 

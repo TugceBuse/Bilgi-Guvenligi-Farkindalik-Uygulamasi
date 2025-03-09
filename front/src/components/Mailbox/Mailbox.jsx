@@ -41,6 +41,9 @@ const Mailbox = ({ closeHandler, style }) => {
     selectedMail, setSelectedMail
   } = useMailContext();
 
+  const prevInboxLength = useRef(inboxMails.length); // Önceki mail sayısını sakla
+  const prevSpamLength = useRef(spamboxMails.length); // Önceki mail sayısını sakla
+
   const {isWificonnected} = useGameContext();
   
   // used özelliği false olan ve bildirim olarak gösterilen mailleri inbox'a ekler
@@ -54,48 +57,79 @@ const Mailbox = ({ closeHandler, style }) => {
 
         return [...newMails, ...prevMails];
     });
-}, [initMail]);
+  }, [initMail]);
 
 
-useEffect(() => {
-  setSpamboxMails(prevMails => {
-      // `used: true` olan spam mailleri filtrele
-      const spamMails = initspamMails.filter(mail => mail.used);
+  useEffect(() => {
+    setSpamboxMails(prevMails => {
+        // `used: true` olan spam mailleri filtrele
+        const spamMails = initspamMails.filter(mail => mail.used);
 
-      // Yeni spam maillerini daha önce eklenmiş olanlarla karşılaştır
-      const newSpamMails = spamMails.filter(mail => 
-          !prevMails.some(prevMail => prevMail.title === mail.title)
-      );
+        // Yeni spam maillerini daha önce eklenmiş olanlarla karşılaştır
+        const newSpamMails = spamMails.filter(mail => 
+            !prevMails.some(prevMail => prevMail.title === mail.title)
+        );
 
-      return [...newSpamMails, ...prevMails];
-  });
-}, [initspamMails]);
-
-
-useEffect(() => {
-  console.log('Mails değişikliği oldu,UseEffect çalıştı ve sentMails:',inboxMails);
-}, [inboxMails]);
+        return [...newSpamMails, ...prevMails];
+    });
+  }, [initspamMails]);
 
 
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
   useEffect(() => {
     if (selectedMail) {
-      const selectedIndex = inboxMails.findIndex(mail => mail.title === selectedMail.title);
-      console.log('selectedIndex:', selectedIndex);
-      setActiveIndex(selectedIndex);
-      if(!selectedIndex===-1) {
-        setActiveIndex(selectedIndex);
+      let selectedIndex = -1; // Varsayılan olarak seçili index bulunamazsa -1 bırak
+      
+      if (activeTab === 'inbox') {
+        selectedIndex = inboxMails.findIndex(mail => mail.id === selectedMail.id);
+      } else if (activeTab === 'spam') {
+        selectedIndex = spamboxMails.findIndex(mail => mail.id === selectedMail.id);
+      } else if (activeTab === 'sent') {
+        selectedIndex = initsentMails.findIndex(mail => mail.id === selectedMail.id);
       }
-      console.log('selectedMail: ',selectedMail, 'selectedIndex:', selectedIndex, 'activeIndex:', activeIndex);
+
+      setActiveIndex(selectedIndex); // Güncellenmiş index'i set et
     }
-    resetScroll(contentRef);//yeni mail seçildiğinde scrollu sıfırlar -- util import
-    }, [selectedMail]);
 
-    useEffect(() => {
-      console.log('activeIndex: ',activeIndex);
-    }, [activeIndex]);
+    resetScroll(contentRef); // Yeni mail seçildiğinde scrollu sıfırlar -- util import
+  }, [selectedMail]); //
 
- useEffect(() => {
+    // **inboxMails değiştiğinde activeIndex'i güncelle**
+  useEffect(() => {
+    if (activeTab === "inbox") {
+      const prevLength = prevInboxLength.current;
+      const newLength = inboxMails.length;
+  
+      if (newLength > prevLength) {// Yeni Inbox mail eklendiğinde
+        console.log('Inbox: Yeni mail eklendi, activeIndex artırıldı');
+        setActiveIndex((prevIndex) => (prevIndex !== null ? prevIndex + 1 : prevIndex));
+      } else if (newLength < prevLength) {// Inbox mail silindiğinde
+        console.log('Inbox: Mail silindi, activeIndex azaltıldı');
+        setActiveIndex((prevIndex) => (prevIndex !== null ? Math.max(prevIndex - 1, 0) : prevIndex));
+      }
+      
+      prevInboxLength.current = newLength; // Yeni uzunluğu sakla
+    } else if (activeTab === "spam") {
+      const prevLength = prevSpamLength.current;
+      const newLength = spamboxMails.length;
+  
+      if (newLength > prevLength) {// Yeni Spam mail eklendiğinde
+        console.log('Spam: Yeni mail eklendi, activeIndex artırıldı');
+        setActiveIndex((prevIndex) => (prevIndex !== null ? prevIndex + 1 : prevIndex));
+      } else if (newLength < prevLength) {// Spam mail silindiğinde
+        console.log('Spam: Mail silindi, activeIndex azaltıldı');
+        setActiveIndex((prevIndex) => (prevIndex !== null ? Math.max(prevIndex - 1, 0) : prevIndex));
+      }
+  
+      prevSpamLength.current = newLength; // Yeni uzunluğu sakla
+    }
+  }, [inboxMails, spamboxMails, activeTab]); // 📌 Hem inbox, hem spam hem de activeTab değişiminde çalışır
+
+  useEffect(() => {
+    console.log('activeIndex: ',activeIndex);
+  }, [activeIndex]);
+
+  useEffect(() => {
     const count = inboxMails.filter(mail => !mail.readMail).length;
     setUnreadCountMail(count);
   }, [inboxMails]); 
