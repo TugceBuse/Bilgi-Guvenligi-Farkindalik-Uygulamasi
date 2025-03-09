@@ -19,7 +19,6 @@ const TaskBar = ({windowConfig}) => {
   const [showWifiAlert, setShowWifiAlert] = useState(false);
   const [wifiname, setwifiname] = useState('');
   const { toggleWindow } = useUIContext();
-  const { initMail, setInitMail, setSelectedMail } = useMailContext(); 
   const [popupNotification, setPopupNotification] = useState(null); // 📌 Pop-up bildirimi yöneten state
   const [notifiedMails, setNotifiedMails] = useState([]); // 📌 Bildirim kutusuna düşen mailleri takip eder.
   const popupTimeout = useRef(null);
@@ -30,6 +29,8 @@ const TaskBar = ({windowConfig}) => {
     isWificonnected, setIsWificonnected,
     updating_antivirus, isantivirusuptodate,
   } = useGameContext();
+
+  const { initMail, setInitMail, setSelectedMail, setInboxMails } = useMailContext(); 
 
   const {
     openWindows, activeWindow, setActiveWindow,
@@ -61,12 +62,11 @@ const TaskBar = ({windowConfig}) => {
     }
 
     setSelectedMail(mail);
-
-    setInitMail(prevMails =>
-      prevMails.map(m =>
-        m.title === mail.title ? { ...m, readMail: true, notified: true } : m
+    setInboxMails(prevMails =>
+      prevMails.map(m => 
+        m.id === mail.id ? { ...m, readMail: true } : m
       )
-    );
+    );    
 
     if(!openWindows.includes('mailbox')) {
       toggleWindow('mailbox');
@@ -157,11 +157,14 @@ const TaskBar = ({windowConfig}) => {
         const randomMail = unread[Math.floor(Math.random() * unread.length)];
 
         setPopupNotification(randomMail);
+
+        // Seçilen rastgele mail bildirim olarak gösterilmiş sayılacak
         setInitMail(prevMails =>
           prevMails.map(m =>
-            m.title === randomMail.title ? { ...m, notified: true } : m
+            m.title === randomMail.title ? { ...m, notified: true, used: true } : m
           )
         );
+        setInboxMails(prevMails => [{ ...randomMail }, ...prevMails]);
         // 📌 Eğer kullanıcı 8 saniye içinde bildirime basmazsa bildirim kutusuna ekle
         popupTimeout.current = setTimeout(() => {
           setNotifiedMails(prev => [randomMail, ...prev]);

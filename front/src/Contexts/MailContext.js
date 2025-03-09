@@ -5,10 +5,10 @@ const MailContext = createContext();
 
 export const MailContextProvider = ({ children }) => {
   const [initMail, setInitMail] = useState(initialMails);
-  const [inboxMails, setInboxMails] = useState(initialMails.filter(mail => mail.notified));
+  const [inboxMails, setInboxMails] = useState(initialMails.filter(mail => mail.used));
   const [initsentMails, setInitSentMails] = useState(initialSentMails);
   const [initspamMails, setInitSpamMails] = useState(initialSpamMails);
-  const [spamboxMails, setSpamboxMails] = useState(initialSpamMails.filter(mail => !mail.readSpam));
+  const [spamboxMails, setSpamboxMails] = useState(initialSpamMails.filter(mail => !mail.used));
   const [selectedMail, setSelectedMail] = useState(null);
 
   return (

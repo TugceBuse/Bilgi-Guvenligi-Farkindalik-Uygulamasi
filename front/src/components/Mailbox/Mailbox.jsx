@@ -5,6 +5,7 @@ import { useUIContext } from '../../Contexts/UIContext';
 import { useMailContext } from '../../Contexts/MailContext';
 import { useGameContext } from '../../Contexts/GameContext';
 import { resetScroll } from '../../utils/resetScroll';
+import { use } from 'react';
 
 export const useMailbox = () => {
   const { toggleWindow } = useUIContext();
@@ -35,17 +36,17 @@ const Mailbox = ({ closeHandler, style }) => {
     initMail,
     inboxMails, setInboxMails,
     initsentMails, setInitSentMails,
-    // initspamMails, setInitSpamMails,
+    initspamMails, setInitSpamMails,
     spamboxMails, setSpamboxMails,
     selectedMail, setSelectedMail
   } = useMailContext();
 
   const {isWificonnected} = useGameContext();
   
-  // Okunmamış ve notified özelliği true olan mailleri filtrele
+  // used özelliği false olan ve bildirim olarak gösterilen mailleri inbox'a ekler
   useEffect(() => {
     setInboxMails(prevMails => {
-        const filteredMails = initMail.filter(mail => !mail.readMail && mail.notified); 
+        const filteredMails = initMail.filter(mail => !mail.used && mail.notified); 
         
         const newMails = filteredMails.filter(mail => 
             !prevMails.some(prevMail => prevMail.title === mail.title)
@@ -54,6 +55,22 @@ const Mailbox = ({ closeHandler, style }) => {
         return [...newMails, ...prevMails];
     });
 }, [initMail]);
+
+
+useEffect(() => {
+  setSpamboxMails(prevMails => {
+      // `used: true` olan spam mailleri filtrele
+      const spamMails = initspamMails.filter(mail => mail.used);
+
+      // Yeni spam maillerini daha önce eklenmiş olanlarla karşılaştır
+      const newSpamMails = spamMails.filter(mail => 
+          !prevMails.some(prevMail => prevMail.title === mail.title)
+      );
+
+      return [...newSpamMails, ...prevMails];
+  });
+}, [initspamMails]);
+
 
 useEffect(() => {
   console.log('Mails değişikliği oldu,UseEffect çalıştı ve sentMails:',inboxMails);
@@ -64,12 +81,19 @@ useEffect(() => {
   useEffect(() => {
     if (selectedMail) {
       const selectedIndex = inboxMails.findIndex(mail => mail.title === selectedMail.title);
+      console.log('selectedIndex:', selectedIndex);
+      setActiveIndex(selectedIndex);
       if(!selectedIndex===-1) {
         setActiveIndex(selectedIndex);
       }
+      console.log('selectedMail: ',selectedMail, 'selectedIndex:', selectedIndex, 'activeIndex:', activeIndex);
     }
     resetScroll(contentRef);//yeni mail seçildiğinde scrollu sıfırlar -- util import
     }, [selectedMail]);
+
+    useEffect(() => {
+      console.log('activeIndex: ',activeIndex);
+    }, [activeIndex]);
 
  useEffect(() => {
     const count = inboxMails.filter(mail => !mail.readMail).length;

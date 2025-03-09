@@ -7,16 +7,37 @@ const ProCareerHub = () => {
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem("loggedInUser") || null);
+
+  const isPasswordStrong = (password) => {
+    const minLength = password.length >= 8;
+    const hasNumber = /\d/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasSpecialChar = /[@$!%*?&.]/.test(password);
+  
+    return minLength && hasNumber && hasUpperCase && hasLowerCase && hasSpecialChar;
+  };
+  
 
   const handleAuth = () => {
-    if (!isLogin && !name) {
-      alert("Lütfen adınızı girin!");
+    if (!isLogin && (!name || !surname)) {
+      alert("Lütfen adınızı ve soyadınızı girin!");
       return;
     }
-    setLoggedInUser(name || email.split("@")[0]); // Eğer ad girildiyse onu, yoksa email'in @ öncesini gösterir
+
+    localStorage.setItem("loggedInUser", name || email.split("@")[0]);
+    localStorage.setItem(`password_${email}`, password);
+
+    const strongPassword = isPasswordStrong(password);
+    console.log(strongPassword);
+    localStorage.setItem(`passwordStrength_${email}`, strongPassword ? "Güçlü" : "Zayıf");
+
+    setLoggedInUser(name || email.split("@")[0]);
   };
+
   const handleLogout = () => {
+    localStorage.removeItem("loggedInUser");
     setLoggedInUser(null);
     setName("");
     setSurname("");
@@ -45,34 +66,10 @@ const ProCareerHub = () => {
       {!loggedInUser && (
         <div className={styles.authBox}>
           <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
-          {!isLogin && (
-            <input
-              type="text"
-              placeholder="Ad"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          )}
-          {!isLogin && (
-            <input
-              type="text"
-              placeholder="Soyad"
-              value={surname}
-              onChange={(e) => setSurname(e.target.value)}
-            />
-          )}
-          <input
-            type="email"
-            placeholder="E-posta adresiniz"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Şifreniz"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {!isLogin && <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />}
+          {!isLogin && <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />}
+          <input type="email" placeholder="E-posta adresiniz" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
           <p onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
