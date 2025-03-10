@@ -152,6 +152,9 @@ const TaskBar = ({windowConfig}) => {
    // 📌 **Rastgele Zamanlarda Bildirim Çıkartma**
   useEffect(() => {
     const showRandomNotification = () => {
+
+      if(!isWificonnected) return;
+      
       const unread = initMail.filter(mail => !mail.readMail && !mail.notified && !mail.used);
       if (unread.length > 0) {
         const randomMail = unread[Math.floor(Math.random() * unread.length)];
@@ -180,7 +183,7 @@ const TaskBar = ({windowConfig}) => {
     const interval = setInterval(showRandomNotification, Math.floor(Math.random() * 5 + 10) * 1000);
 
     return () => clearInterval(interval);
-  }, [ initMail ]);
+  }, [ initMail, isWificonnected ]);
 
   useEffect(() => {
       setNotifiedMails((initMail.filter(mail => !mail.readMail && mail.notified && mail.used)));
