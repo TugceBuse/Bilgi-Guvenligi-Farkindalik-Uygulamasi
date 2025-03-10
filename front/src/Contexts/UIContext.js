@@ -9,10 +9,6 @@ export const UIContextProvider = ({ children }) => {
   const [zindex, setZindex] = useState(100);
 
   useEffect(() => {
-    console.log('zindex >> ', zindex);
-  }, [zindex]);
-
-  useEffect(() => {
     if (openWindows.length === 0 || visibleWindows.length === 0 ) return;
 
       setActiveWindow(visibleWindows[visibleWindows.length - 1]);

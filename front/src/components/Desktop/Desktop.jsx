@@ -20,16 +20,11 @@ const Desktop = () => {
   // Yeni pencere konumlarını tutacak state
   const [windowPositions, setWindowPositions] = useState({});
 
-  const handlers = {
-    todolist: windowConfig.todolist.useComponent(),
-    mailbox: windowConfig.mailbox.useComponent(),
-    browser: windowConfig.browser.useComponent(),
-    itsupport: windowConfig.itsupport.useComponent(),
-    folder: windowConfig.folder.useComponent(),
-    scanner: windowConfig.scanner.useComponent(),
-    antivirus: windowConfig.antivirus.useComponent(),
-    setup: windowConfig.setup.useComponent(),
-  };
+  // handlers nesnesini dinamik oluşturma
+  const handlers = Object.keys(windowConfig).reduce((acc, key) => {
+    acc[key] = windowConfig[key].useComponent();
+    return acc;
+  }, {});
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
@@ -67,12 +62,14 @@ const Desktop = () => {
             zIndex: 100 + index,
           };
           console.log('windowpositions:', updatedPositions[windowKey], 'zindex:', 100 + index);
-          setZindex(zindex + 1);
+          
         }
       });
+      
       return updatedPositions;
     });
-  }, [visibleWindows]); // ✅ Sadece **visibleWindows değiştiğinde** çalışacak.
+    setZindex((prevZindex) => prevZindex + 1);
+  }, [visibleWindows]);
 
   useEffect(() => {
     if(openWindows.length === 0){
@@ -80,10 +77,6 @@ const Desktop = () => {
       setZindex(100);
     }
   }, [openWindows]);
-
-  useEffect(() => {
-    console.log('Window Positions:', windowPositions);
-  }, [visibleWindows]);
 
   const handleDesktopClick = (windowKey) => {
     const { openHandler } = handlers[windowKey];
@@ -106,7 +99,7 @@ const Desktop = () => {
     <div className="desktop">
       <div className="desktop-icons">
         {Object.keys(windowConfig)
-          .filter((key) => windowConfig[key].available&&windowConfig[key].location==='desktop') // Sadece desktop konumunda available olanlar
+          .filter((key) => windowConfig[key].available && windowConfig[key].location==='desktop') // Sadece desktop konumunda available olanlar
           .map((key) => (
             <div key={key} className="icon" onClick={() => handleDesktopClick(key)}>
               <img src={windowConfig[key].icon} alt={`${windowConfig[key].label} Icon`} />
