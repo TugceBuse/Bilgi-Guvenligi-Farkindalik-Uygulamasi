@@ -89,8 +89,7 @@ const Browser = ({ closeHandler, style }) => {
       const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
   
       const filteredSites = Object.entries(sites).filter(([key, site]) =>
-        site.searchKeys &&
-        site.searchKeys.some((keyword) => normalizeText(keyword).includes(searchQuery)) // Normalizasyon tüm listeye uygulandı
+        site.searchKeys.some((key) => normalizeText(key) === (searchQuery))
       );
   
       setMatchedSites(filteredSites);
