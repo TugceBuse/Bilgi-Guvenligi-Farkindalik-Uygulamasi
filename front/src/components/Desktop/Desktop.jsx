@@ -10,7 +10,7 @@ import { TodoProvider } from '../../Contexts/TodoContext';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, handleIconClick, zindex, setZindex} = useUIContext();
+  const { openWindows, visibleWindows, handleIconClick, zindex, setZindex} = useUIContext();
 
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -54,21 +54,36 @@ const Desktop = () => {
     }
   }, [showRansom]);
 
-  // Yeni açılan pencereler için rastgele konum ayarlıyoruz
-  const getNewWindowPosition = (windowKey) => {
-    if (windowPositions[windowKey]) {
-      return windowPositions[windowKey]; // Eğer zaten konumu varsa, aynı konumu koru
+  // ✅ Açık olan pencere sırasına göre pozisyon belirleme
+  useEffect(() => {
+    setWindowPositions((prevPositions) => {
+      let updatedPositions = { ...prevPositions };
+
+      visibleWindows.forEach((windowKey, index) => {
+        if (!updatedPositions[windowKey]) {
+          updatedPositions[windowKey] = {
+            left: `${window.innerWidth / 10 + index * 30}px`,
+            top: `${window.innerHeight / 10 + index * 30}px`,
+            zIndex: 100 + index,
+          };
+          console.log('windowpositions:', updatedPositions[windowKey], 'zindex:', 100 + index);
+          setZindex(zindex + 1);
+        }
+      });
+      return updatedPositions;
+    });
+  }, [visibleWindows]); // ✅ Sadece **visibleWindows değiştiğinde** çalışacak.
+
+  useEffect(() => {
+    if(openWindows.length === 0){
+      setWindowPositions({});
+      setZindex(100);
     }
-    const newPos = {
-      left: `${window.innerWidth / 10 + Object.keys(windowPositions).length * 30}px`,
-      top: `${window.innerHeight / 10 + Object.keys(windowPositions).length * 30}px`,
-      zIndex: zindex + Object.keys(windowPositions).length,
-    };
-    setZindex(zindex + 1);
-    console.log('newPos >> ', newPos);
-    setWindowPositions((prev) => ({ ...prev, [windowKey]: newPos }));
-    return newPos;
-  };
+  }, [openWindows]);
+
+  useEffect(() => {
+    console.log('Window Positions:', windowPositions);
+  }, [visibleWindows]);
 
   const handleDesktopClick = (windowKey) => {
     const { openHandler } = handlers[windowKey];
@@ -108,7 +123,7 @@ const Desktop = () => {
             <WindowComponent
               key={windowKey}
               closeHandler={closeHandler}
-              style={getNewWindowPosition(windowKey)} // Yeni pozisyon yönetimi
+              style={windowPositions[windowKey] || {}}
               updateAvailableStatus={updateAvailableStatus}
             />
           );

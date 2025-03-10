@@ -13,12 +13,11 @@ export const UIContextProvider = ({ children }) => {
   }, [zindex]);
 
   useEffect(() => {
-    if (openWindows.length === 0) {
-      setZindex(100);
-    } else {
+    if (openWindows.length === 0 || visibleWindows.length === 0 ) return;
+
       setActiveWindow(visibleWindows[visibleWindows.length - 1]);
       updateZindex(); // Kapatılan pencere sonrası z-index sıralamasını yenile
-    }
+    
   }, [openWindows]);
 
   const toggleWindow = (windowName) => {
