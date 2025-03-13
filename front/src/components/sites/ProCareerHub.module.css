@@ -158,6 +158,7 @@
   cursor: pointer;
   color: #0073e6;
   font-size: 14px;
+  padding: 10px;
 }
 .authBox h2{
   color: #003d80;
@@ -174,6 +175,10 @@
   border-radius: 8px;
   text-align: left;
   margin-bottom: 15px;
+}
+
+.jobListings h2{
+  color: #003d80;
 }
 
 .jobListings ul {
@@ -239,4 +244,195 @@
   font-size: 12px;
   color: #2b2b2b;
   margin-top: 10px;
+}
+
+.errorMessage {
+  color: rgb(223, 66, 66);
+  font-size: 0.9rem;
+  margin-top: 10px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
+/* 🔧 Ayarlar Butonu */
+.settingsButton {
+  background: #ffb74d;
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-weight: bold;
+}
+
+.settingsButton:hover {
+  background: #ff9800;
+  transform: scale(1.05);
+}
+
+/* ⚙ Ayarlar Menüsü */
+.settingsMenu {
+  position: absolute;
+  top: 150px;
+  right: 15px;
+  width: 18.25%;
+  background: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.settingsMenu h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+/* 📧 E-posta ve Şifre Bilgisi */
+.settingsMenu p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* 🔐 2FA Butonu */
+.twoFAButton {
+  display: block;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.twoFAButton:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+/* Ayarlar Menüsü */
+.settingsMenu input[type="text"] {
+  width: calc(100% - 22px);
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.settingsMenu button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.settingsMenu button:hover {
+  background-color: #0056b3;
+}
+
+/* Profil Fotoğrafı Değiştir Butonu */
+.profilePictureButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profilePictureButton:hover {
+  background-color: #218838;
+}
+
+/* Tema Değiştir Butonu */
+.themeToggleButton {
+  background-color: #ffc107;
+  color: black;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.themeToggleButton:hover {
+  background-color: #e0a800;
+}
+
+/* Hata Mesajları (Genel) */
+.successMessage {
+  color: #225c17; /* Kırmızı tonunda hata mesajı */
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+  background: #badbaf; /* Hafif kırmızı arka plan */
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #075c2a;
+}
+
+/* Çift Faktörlü Doğrulama Hata Mesajı */
+.twoFAError {
+  color: #ff5722; /* Turuncu tonu (önemli ama kritik değil) */
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+  background: #fff3e0;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ff5722;
+}
+
+/* Parola Başarı Mesajı */
+.successPassword {
+  color: #248111;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  background: #86d383;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #d32f2f;
+}
+
+/* Hata Mesajlarının Görünme Animasyonu */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.successMessage,
+.twoFAError,
+.successPassword {
+  animation: fadeIn 0.3s ease-in-out;
 }
