@@ -5,35 +5,41 @@ const ProCareerHub = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("hilal.kaya@oriontech.colum");
   const [password, setPassword] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState(sessionStorage.getItem("loggedInUser") || null);
+  const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem("loggedInUser") || null);
   const [errorMessage, setErrorMessage] = useState("");
   const [showSettings, setShowSettings] = useState(false);
   const [is2FAEnabled, setIs2FAEnabled] = useState(JSON.parse(localStorage.getItem("is2FAEnabled")) || false);
   const [error2FA, setError2FA] = useState("");
+  const [successPassword, setSuccessPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("phoneNumber") || "");
   const [profilePicture, setProfilePicture] = useState(localStorage.getItem("profilePicture") || "Varsayılan");
-
-  const [successPassword, setSuccessPassword] = useState("");
-
-  const [registeredUser, setRegisteredUser] = useState(localStorage.getItem("registeredUser") || null);
-  const [registeredPassword, setRegisteredPassword] = useState(localStorage.getItem("registeredPassword") || null);
   const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem("notifications")) || true);
+
+  const email = "hilal.kaya@oriontech.colum";
+  const [registeredUser, setRegisteredUser] = useState(sessionStorage.getItem("registeredUser") || null);
+  const [registeredPassword, setRegisteredPassword] = useState(sessionStorage.getItem("registeredPassword") || null);
+
+  const [showAd, setShowAd] = useState(false); // Reklam gösterme kontrolü
+  useEffect(() => {
+    const adTimer = setTimeout(() => {
+      setShowAd(true);
+    }, 8000); 
+  
+    return () => clearTimeout(adTimer);
+  }, []);
 
   useEffect(() => {
     if (!sessionStorage.getItem("sessionActive")) {
-      localStorage.removeItem("registeredUser");
-      localStorage.removeItem("registeredPassword");
+      sessionStorage.removeItem("registeredUser");
+      sessionStorage.removeItem("registeredPassword");
     }
-    sessionStorage.setItem("sessionActive", "true");
-
   }, []);
 
   useEffect(() => {
     if (registeredUser) {
-      localStorage.setItem("registeredUser", registeredUser);
-      localStorage.setItem("registeredPassword", registeredPassword);
+      sessionStorage.setItem("registeredUser", registeredUser);
+      sessionStorage.setItem("registeredPassword", registeredPassword);
     }
   }, [registeredUser, registeredPassword]);
 
@@ -73,7 +79,6 @@ const ProCareerHub = () => {
     setSurname("");
     setPassword("");
     sessionStorage.removeItem("loggedInUser");
-
     setShowSettings(false);
   };
 
@@ -106,15 +111,11 @@ const ProCareerHub = () => {
 
   const updatePassword = () => {
     const newPassword = prompt("Yeni şifrenizi girin:");
-
     setRegisteredPassword(newPassword);
     localStorage.setItem("registeredPassword", newPassword);
     
     setSuccessPassword("Şifreniz başarıyla güncellendi!");
-
-    setTimeout(() => {
-      setSuccessPassword("");
-    }, 2000);
+    setTimeout(() => setSuccessPassword(""), 2000);
   };
 
   const toggleNotifications = () => {
@@ -122,21 +123,68 @@ const ProCareerHub = () => {
     localStorage.setItem("notifications", JSON.stringify(!notifications));
   };
 
+
+  const [showWarning, setShowWarning] = useState(false);
+  const [showFakeBrowser, setShowFakeBrowser] = useState(false);
+
+  const handleAdClick = () => {
+    setShowFakeBrowser(true);
+    setShowAd(false);
+
+    // 3 saniye sonra sahte siteyi kapat
+    setTimeout(() => {
+      setShowFakeBrowser(false);
+    }, 3000);
+  };
+
+
   return (
     <div className={styles.careerContainer}>
       {loggedInUser && (
         <div className={styles.userPanel}>
           <p className={styles.userName}>👤 {loggedInUser}</p>
-          <button className={styles.settingsButton} onClick={toggleSettings}>
-            ⚙ Ayarlar
-          </button>
-          <button className={styles.logoutButton} onClick={handleLogout}>
-            Çıkış Yap
-          </button>
+          <button className={styles.settingsButton} onClick={toggleSettings}>⚙ Ayarlar</button>
+          <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
         </div>
       )}
 
-{showSettings && (
+      {/* Reklam Pop-up (2 saniye sonra açılacak) */}
+      {showAd && (
+        <div className={`${styles.adPopup} ${showAd ? styles.show : ""}`} onClick={handleAdClick}>
+          <h2>🚀 Kariyerinde Bir Adım Öne Geç!</h2>
+          <p>📢 Yeni iş ilanları, uzmanlık kursları ve networking fırsatları seni bekliyor!</p>
+          <ul>
+            <li>✔ Ücretsiz CV Analizi</li>
+            <li>✔ Günlük Yeni İş Fırsatları</li>
+            <li>✔ Profesyonel Kariyer Koçluğu</li>
+            <li>✔ Özel Web Seminerlerine Katıl</li>
+          </ul>
+          <button onClick={(e) => e.stopPropagation() || setShowAd(false)}>Kapat</button>
+        </div>
+      )}
+
+      {/* Sahte Tarayıcı Penceresi */}
+      {showFakeBrowser && (
+        <div className={styles.fakeBrowser}>
+          <div className={styles.fakeBrowserHeader}>
+            <span className={styles.fakeCloseButton} onClick={() => setShowFakeBrowser(false)}>✖</span>
+            <span className={styles.fakeUrlBar}>https://job-career-offers.com</span>
+          </div>
+          <div className={styles.fakeBrowserContent}>
+            <h1>⚠ Dikkat!</h1>
+            <p>Bu site güvenli değil! Kişisel bilgilerinizi paylaşmayın.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Güvenlik Uyarısı Bildirimi */}
+      {showWarning && (
+        <div className={styles.warningNotification}>
+          ⚠ Dikkat! Güvensiz bir bağlantıya tıklamış olabilirsiniz. Bilinmeyen bağlantılara tıklamayın!
+        </div>
+      )}
+
+      {showSettings && (
         <div className={styles.settingsMenu}>
           <h3>⚙ Kullanıcı Ayarları</h3>
           <p>📧 E-posta: {email}</p>
@@ -148,11 +196,12 @@ const ProCareerHub = () => {
           {successPassword && <p className={styles.successMessage}>{successPassword}</p>}
 
           <p>📢 Bildirimler: {notifications ? "Açık" : "Kapalı"} <button onClick={toggleNotifications}>Değiştir</button></p>
-          <p>🌙 Tema: {"Açık Mod"} <button>Değiştir</button></p>
+
           <button className={styles.twoFAButton} onClick={toggle2FA}>{is2FAEnabled ? "2FA Kapat" : "2FA Aç"}</button>
           {error2FA && <p className={styles.errorMessage}>{error2FA}</p>}
         </div>
       )}
+
       <header className={styles.header}>
         <h1>🚀 ProCareerHub</h1>
         <p>Kariyerini geliştirmek ve iş fırsatlarını yakalamak için doğru yerdesin!</p>
@@ -171,14 +220,11 @@ const ProCareerHub = () => {
           <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
-          <p onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
-          </p>
         </div>
       )}
 
-{/* İş İlanları Bölümü */}
-<div className={styles.jobListings}>
+      {/* İş İlanları Bölümü */}
+      <div className={styles.jobListings}>
         <h2>📌 Güncel İş İlanları</h2>
         <ul>
           <li><strong>Yazılım Geliştirici</strong> - ABC Teknoloji | İstanbul | <span className={styles.salary}>75.000₺/yıl</span></li>
