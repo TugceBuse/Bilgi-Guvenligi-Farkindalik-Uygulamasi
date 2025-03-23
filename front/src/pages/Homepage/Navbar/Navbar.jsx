@@ -53,7 +53,7 @@ const Navbar = () => {
           <div className="logo" onClick={handleLogoClick}></div>
         </div>
 
-        <h1 className="h1">SafeClicks</h1>
+        <h1 className="h1">PhishVille</h1>
 
         <div className="rightPart">
           <a href="https://www.w3schools.com/" className="a">

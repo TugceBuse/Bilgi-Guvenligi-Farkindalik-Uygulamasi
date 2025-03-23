@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ProCareerHub.module.css";
+import { useGameContext } from "../../Contexts/GameContext";
 
 const ProCareerHub = () => {
+
+  const { ProCareerHubInfo, setProCareerHubInfo} = useGameContext();
+
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+
   const [password, setPassword] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem("loggedInUser") || null);
+  const isPasswordStrongEnough = (password) => {
+    return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
+  };
+  const passwordStrong = isPasswordStrongEnough(password);
+
   const [errorMessage, setErrorMessage] = useState("");
-  const [showSettings, setShowSettings] = useState(false);
-  const [is2FAEnabled, setIs2FAEnabled] = useState(JSON.parse(localStorage.getItem("is2FAEnabled")) || false);
-  const [error2FA, setError2FA] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [successPassword, setSuccessPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("phoneNumber") || "");
-  const [profilePicture, setProfilePicture] = useState(localStorage.getItem("profilePicture") || "Varsayılan");
-  const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem("notifications")) || true);
 
-  const email = "hilal.kaya@oriontech.colum";
-  const [registeredUser, setRegisteredUser] = useState(sessionStorage.getItem("registeredUser") || null);
-  const [registeredPassword, setRegisteredPassword] = useState(sessionStorage.getItem("registeredPassword") || null);
+  const email = ProCareerHubInfo.email;
 
+  const [showSettings, setShowSettings] = useState(false);
   const [showAd, setShowAd] = useState(false); // Reklam gösterme kontrolü
+  const [showWarning, setShowWarning] = useState(false);
+  const [showFakeBrowser, setShowFakeBrowser] = useState(false);
+
   useEffect(() => {
     const adTimer = setTimeout(() => {
       setShowAd(true);
@@ -29,23 +35,9 @@ const ProCareerHub = () => {
     return () => clearTimeout(adTimer);
   }, []);
 
-  useEffect(() => {
-    if (!sessionStorage.getItem("sessionActive")) {
-      sessionStorage.removeItem("registeredUser");
-      sessionStorage.removeItem("registeredPassword");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (registeredUser) {
-      sessionStorage.setItem("registeredUser", registeredUser);
-      sessionStorage.setItem("registeredPassword", registeredPassword);
-    }
-  }, [registeredUser, registeredPassword]);
-
   const handleAuth = () => {
     if (!isLogin) {
-      if (registeredUser === email) {
+      if (ProCareerHubInfo.isRegistered && ProCareerHubInfo.email === email) {
         setErrorMessage("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
         return;
       }
@@ -53,32 +45,45 @@ const ProCareerHub = () => {
         setErrorMessage("Lütfen tüm alanları doldurun!");
         return;
       }
-      setRegisteredUser(email);
-      setRegisteredPassword(password);
-      setLoggedInUser(name);
-      sessionStorage.setItem("loggedInUser", name);
+  
+      setProCareerHubInfo({
+        ...ProCareerHubInfo,
+        name,
+        surname,
+        password,
+        phone: "05416494438",
+        is2FAEnabled: false,
+        isRegistered: true,
+        isLoggedIn: true,
+        isPasswordStrong: passwordStrong,
+      });
       setErrorMessage("");
     } else {
-      if (!registeredUser || registeredUser !== email) {
+      if (!ProCareerHubInfo.isRegistered || ProCareerHubInfo.email !== email) {
         setErrorMessage("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
         return;
       }
-      if (!password || password !== registeredPassword) {
+      if (!password || password !== ProCareerHubInfo.password) {
         setErrorMessage("Hatalı şifre! Lütfen tekrar deneyin.");
         return;
       }
-      setLoggedInUser(email);
-      sessionStorage.setItem("loggedInUser", email);
+  
+      setProCareerHubInfo({
+        ...ProCareerHubInfo,
+        isLoggedIn: true,
+      });
       setErrorMessage("");
     }
   };
 
   const handleLogout = () => {
-    setLoggedInUser(null);
+    setProCareerHubInfo({
+      ...ProCareerHubInfo,
+      isLoggedIn: false,
+    });
     setName("");
     setSurname("");
     setPassword("");
-    sessionStorage.removeItem("loggedInUser");
     setShowSettings(false);
   };
 
@@ -87,45 +92,29 @@ const ProCareerHub = () => {
   };
 
   const toggle2FA = () => {
-    if (!phoneNumber) {
-      setError2FA("Çift faktörlü doğrulamayı açmak için telefon numarası girmeniz gerekiyor.");
-      return;
-    }
-    setError2FA("");
-    setIs2FAEnabled(!is2FAEnabled);
-    localStorage.setItem("is2FAEnabled", JSON.stringify(!is2FAEnabled));
+    console.log(ProCareerHubInfo.is2FAEnabled);
+    setProCareerHubInfo({
+      ...ProCareerHubInfo,
+      is2FAEnabled: !ProCareerHubInfo.is2FAEnabled,
+    });
   };
 
-  const updatePhoneNumber = (e) => {
-    setPhoneNumber(e.target.value);
-    localStorage.setItem("phoneNumber", e.target.value);
-  };
+  const handlePasswordUpdate = () => {
+    if (!newPassword) return;
+  
+    const passwordStrong = isPasswordStrongEnough(newPassword);
 
-  const updateProfilePicture = () => {
-    const newPicture = prompt("Yeni profil fotoğrafı ismi girin:");
-    if (newPicture) {
-      setProfilePicture(newPicture);
-      localStorage.setItem("profilePicture", newPicture);
-    }
-  };
-
-  const updatePassword = () => {
-    const newPassword = prompt("Yeni şifrenizi girin:");
-    setRegisteredPassword(newPassword);
-    localStorage.setItem("registeredPassword", newPassword);
-    
+    setProCareerHubInfo({
+      ...ProCareerHubInfo,
+      password: newPassword,
+      isPasswordStrong: passwordStrong,
+    });
+    console.log(passwordStrong);
     setSuccessPassword("Şifreniz başarıyla güncellendi!");
+    setNewPassword("");
+  
     setTimeout(() => setSuccessPassword(""), 2000);
   };
-
-  const toggleNotifications = () => {
-    setNotifications(!notifications);
-    localStorage.setItem("notifications", JSON.stringify(!notifications));
-  };
-
-
-  const [showWarning, setShowWarning] = useState(false);
-  const [showFakeBrowser, setShowFakeBrowser] = useState(false);
 
   const handleAdClick = () => {
     setShowFakeBrowser(true);
@@ -140,9 +129,9 @@ const ProCareerHub = () => {
 
   return (
     <div className={styles.careerContainer}>
-      {loggedInUser && (
+      {ProCareerHubInfo.isLoggedIn && (
         <div className={styles.userPanel}>
-          <p className={styles.userName}>👤 {loggedInUser}</p>
+          <p className={styles.userName}>👤 {ProCareerHubInfo.name}</p>
           <button className={styles.settingsButton} onClick={toggleSettings}>⚙ Ayarlar</button>
           <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
         </div>
@@ -187,18 +176,26 @@ const ProCareerHub = () => {
       {showSettings && (
         <div className={styles.settingsMenu}>
           <h3>⚙ Kullanıcı Ayarları</h3>
-          <p>📧 E-posta: {email}</p>
-          <p>📷 Profil Fotoğrafı: {profilePicture} <button onClick={updateProfilePicture}>Değiştir</button></p>
+          <p>📧 E-posta: {ProCareerHubInfo.email}</p>
+          <p>📷 Profil Fotoğrafı:  <button>Değiştir</button></p>
           <p>📱 Telefon Numarası:</p>
-          <input type="text" value={phoneNumber} onChange={updatePhoneNumber} placeholder="Telefon numarası girin" />
+          <input type="text" value={ProCareerHubInfo.phone} disabled/>
 
-          <p>🔐 Parola: ******** <button onClick={updatePassword}>Değiştir</button></p>
+          <div>
+            <p>🔐 Parola Güncelle:</p>
+            <input
+              type="password"
+              placeholder="Yeni şifrenizi giriniz:"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <button onClick={handlePasswordUpdate}>Güncelle</button>
+          </div>
           {successPassword && <p className={styles.successMessage}>{successPassword}</p>}
 
-          <p>📢 Bildirimler: {notifications ? "Açık" : "Kapalı"} <button onClick={toggleNotifications}>Değiştir</button></p>
+          <p>📢 Bildirimler: <button>Değiştir</button></p>
 
-          <button className={styles.twoFAButton} onClick={toggle2FA}>{is2FAEnabled ? "2FA Kapat" : "2FA Aç"}</button>
-          {error2FA && <p className={styles.errorMessage}>{error2FA}</p>}
+          <button className={styles.twoFAButton} onClick={toggle2FA}>{ProCareerHubInfo.is2FAEnabled ? "2FA Kapat" : "2FA Aç"}</button>
         </div>
       )}
 
@@ -207,7 +204,7 @@ const ProCareerHub = () => {
         <p>Kariyerini geliştirmek ve iş fırsatlarını yakalamak için doğru yerdesin!</p>
       </header>
 
-      {!loggedInUser && (
+      {!ProCareerHubInfo.isLoggedIn && (
         <div className={styles.authBox}>
           <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
           {!isLogin && (
@@ -220,6 +217,10 @@ const ProCareerHub = () => {
           <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+
+          <p onClick={() => setIsLogin(!isLogin)}>
+            {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
+          </p>
         </div>
       )}
 
