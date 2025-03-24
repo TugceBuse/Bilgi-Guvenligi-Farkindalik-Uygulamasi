@@ -158,22 +158,36 @@
   /* Kullanıcı Paneli */
   .userPanel {
     position: absolute;
+    display: flex;
+    flex-direction: column;
     top: 15px;
     right: 15px;
-    background: white;
+    background: rgb(255, 244, 229);
     color: #ff6f00;
     padding: 12px;
     border-radius: 10px;
     font-weight: bold;
     font-size: 14px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-items: center;
     gap: 5px;
     border: 2px solid #ff6f00;
   }
-  
+  .settingsButton {
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    margin-top: 5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
   /* Kullanıcı Adı */
   .userName {
     font-size: 16px;
@@ -233,7 +247,7 @@
     display: block;
     animation: fadeIn 0.5s ease-in-out;
   }
-  
+
   /* Başlık */
   .authBox h2 {
     font-size: 22px;
@@ -287,7 +301,12 @@
   .authBox button:last-child:hover {
     background: #bf360c;
   }
-  
+  .authBox p{
+    color: #ff6f00;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
   /* Açılış Animasyonu */
   @keyframes fadeIn {
     from {
@@ -320,3 +339,143 @@
     background: #e65100;
     transform: scale(1.05);
   }
+
+  /* Ayarlar Menüsü */
+.settingsMenu {
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #ff6f00;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.settingsMenu.active {
+  display: block;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.settingsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.settingsHeader h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0;
+}
+
+.closeIcon {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d32f2f;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: 0.2s ease-in-out;
+}
+
+.closeIcon:hover {
+  background-color: #fddede;
+  transform: scale(1.1);
+}
+.settingsMenu p {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.settingsMenu input[type="text"],
+.settingsMenu input[type="password"] {
+  width: calc(100% - 22px);
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.settingsMenu button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.settingsMenu button:hover {
+  background-color: #0056b3;
+}
+
+/* 2FA Butonu */
+.twoFAButton {
+  display: block;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.twoFAButton:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+/* Profil Fotoğrafı Değiştir Butonu */
+.profilePictureButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profilePictureButton:hover {
+  background-color: #218838;
+}
+
+/* Şifre Güncelleme Başarısı */
+.successMessage {
+  color: #248111;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  background: #86d383;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #075c2a;
+  text-align: center;
+}
+
+.errorMessage {
+  color: rgb(223, 66, 66);
+  font-size: 0.9rem;
+  margin-top: 10px;
+  font-weight: bold;
+  text-decoration: none;
+}

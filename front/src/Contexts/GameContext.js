@@ -25,6 +25,19 @@ export const GameContextProvider = ({ children }) => {
     isPasswordStrong: false,
   });
 
+  // Kullanıcı bilgileri (sadece context içinde tutuluyor)
+  const [SkillForgeHubInfo, setSkillForgeHubInfo] = useState({
+    name: '',
+    surname: '',
+    email: email,
+    password: '',
+    phone: phone,
+    is2FAEnabled: false,
+    isRegistered: false,
+    isLoggedIn: false,
+    isPasswordStrong: false,
+  });
+
   useEffect(() => {
     const interval = setInterval(() => {
       setSeconds((prevSeconds) => prevSeconds + 1);
@@ -46,7 +59,9 @@ export const GameContextProvider = ({ children }) => {
         isransomware, 
         setIsransomware,
         ProCareerHubInfo,
-        setProCareerHubInfo
+        setProCareerHubInfo,
+        SkillForgeHubInfo,
+        setSkillForgeHubInfo
       }}
     >
       {children}
