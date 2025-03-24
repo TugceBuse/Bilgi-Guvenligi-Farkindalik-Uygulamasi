@@ -54,7 +54,28 @@ const sites = {
     searchKeys: ["kariyer", "iş ilanları", "profesyonel ağ", "cv hazırlama", "mülakat teknikleri", "beceri geliştirme", "mentorluk", "online kurslar", "kariyer planlama", "başarı hikayeleri"],
     clickable: true,
     color: "#FF6F00"
-}
+},
+  "postify.com": {
+    title: "Postify",
+    type: "component",
+    component: "PostifyAuth",
+    statement: "Bağlantı kur, paylaşım yap, sosyal çevrenle etkileşimde kal!",
+    searchKeys: [
+      "postify",
+      "sosyal medya",
+      "arkadaşlar",
+      "paylaşım",
+      "mesajlaşma",
+      "etkileşim",
+      "ofis içi iletişim",
+      "sosyal mühendislik",
+      "kurumsal sosyal ağ",
+      "bildirimler",
+      "profil"
+    ],
+    clickable: true,
+    color: "#3b5998"
+  }
 
 };
 

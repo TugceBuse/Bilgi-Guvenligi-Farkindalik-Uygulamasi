@@ -1,0 +1,247 @@
+/* SocialMediaPage.module.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e45c5c;
+    color: white;
+    padding: 10px 20px;
+  }
+  
+  .logo {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .search {
+    width: 40%;
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+  }
+  
+  .menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  .body {
+    display: flex;
+    flex: 1;
+    background-color: #f0f2f5;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #dd9797;
+    padding: 15px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+    color: #4b1010;
+    font-size: 14px;
+    border: 1.5px solid #4b1010;
+    border-radius: 4px;
+    padding: 10px;
+  }
+  .sidebar li:hover{
+    background-color: #4b1010;
+    color: white;
+  }
+  .sidebar h4{
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  .groups{
+    display: flex;
+    flex-direction: column;
+  }
+  .groups label{
+    cursor: pointer;
+    width: 100%;
+    color: #4b1010;
+    font-size: 14px;
+    border-bottom: #440f0f 1px solid;
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+  .feed {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .shareBox {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: #440f0f 2px solid;
+  }
+  .shareBox textarea {
+    border-bottom: #440f0f 1px solid;
+  }
+  
+  .input {
+    width: 100%;
+    border: none;
+    resize: none;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+  
+  .button {
+    background-color: #b95d5d;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .button:hover{
+    background-color: #7c3030;
+  }
+  
+  .card {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: #440f0f 0px 0px 10px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .name {
+    font-weight: bold;
+    color: #440f0f;
+    padding-left: 10px;
+  }
+  
+  .time {
+    font-size: 12px;
+    color: rgb(77, 77, 77);
+    padding-left: 10px;
+  }
+  
+  .content {
+    color: #440f0f;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  .actions button{
+    background-color: #b95d5d;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .actions button:hover{
+    background-color: #7c3030;
+    scale: 1.05;
+  }
+  
+  .maliciousLink {
+    color: red;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .phishingLink {
+    color: orange;
+    font-style: italic;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+ /* Right Extras */
+ .rightExtras {
+  width: 250px;
+  background-color: #a05b5b;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.securityTips ul,
+.trending ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.securityTips li,
+.trending li {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #ffffff;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  border-bottom: 1px dashed #ffffff;
+}
+
+.onlineUsers .userList {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.onlineUsers img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.rightExtras h4 {
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+/* Beğeni Kısımları */
+.metaInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 4px 0 8px 0;
+  font-size: 14px;
+  color: #555;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 5px;
+}

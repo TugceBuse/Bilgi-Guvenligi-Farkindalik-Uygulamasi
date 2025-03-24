@@ -73,22 +73,6 @@
   background: #d63030;
   transform: scale(1.05);
 }
-/* Çıkış Butonu */
-.logoutButton {
-  background: #ff3b3b;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-}
-
-.logoutButton:hover {
-  background: #d63030;
-}
-
 /* Fade-In Animasyonu */
 @keyframes fadeIn {
   from {
@@ -372,22 +356,6 @@
   background-color: #218838;
 }
 
-/* Tema Değiştir Butonu */
-.themeToggleButton {
-  background-color: #ffc107;
-  color: black;
-  border: none;
-  padding: 6px 10px;
-  margin-left: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.themeToggleButton:hover {
-  background-color: #e0a800;
-}
-
 /* Hata Mesajları (Genel) */
 .successMessage {
   color: #225c17; /* Kırmızı tonunda hata mesajı */
@@ -515,22 +483,6 @@
 .adPopup button:hover {
   background: #b71c1c;
   transform: scale(1.05);
-}
-
-/* Bildirim (Sağ Üstte Gözüken Uyarı) */
-.warningNotification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #d32f2f;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 6px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-size: 16px;
-  font-weight: bold;
-  z-index: 2000;
-  animation: fadeIn 0.3s ease-in-out, fadeOut 0.3s ease-in-out 2.7s forwards;
 }
 
 @keyframes fadeOut {
