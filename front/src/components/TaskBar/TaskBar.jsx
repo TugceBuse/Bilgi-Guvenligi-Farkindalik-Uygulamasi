@@ -59,8 +59,8 @@ const TaskBar = ({windowConfig}) => {
 
         return (
             <img
-                key={appConfig ? `app-${windowName}` : `file-${windowName}`} // ✅ Aynı isimde çakışmayı önler
-                src={appConfig?.icon || fileConfig?.icon || "/icons/file.png"} // ✅ Doğru ikon kullanılıyor
+                key={appConfig ? `app-${windowName}` : `file-${windowName}`} // Aynı isimde çakışmayı önler
+                src={appConfig?.icon || fileConfig?.icon || "/icons/file.png"} // Doğru ikon kullanılıyor
                 alt={`${windowName} Icon`}
                 className={activeWindow === classKey ? 'active' : ''}
                 onClick={() => handleIconClickWithVisibility(classKey)}
@@ -122,8 +122,14 @@ const TaskBar = ({windowConfig}) => {
     return;
     }
 
+    // İlk çalışmada orijinal display değerini kaydet
+    if (!element.dataset.originalDisplay) {
+      const computedDisplay = getComputedStyle(element).display;
+      element.dataset.originalDisplay = computedDisplay;
+    }
+
     if (activeWindow === windowName) {
-        element.style.visibility = 'hidden';
+        element.style.display = 'none';
         setVisibleWindows((prevVisibleWindows) => {
           const filteredWindows = prevVisibleWindows.filter(name => name !== windowName);
           return [...filteredWindows];
@@ -132,7 +138,7 @@ const TaskBar = ({windowConfig}) => {
     } else {
       setZindex((prevZindex) => {
         let newZindex = prevZindex + 1;
-        element.style.visibility = 'visible';
+        element.style.display = element.dataset.originalDisplay || 'flex';
         element.style.zIndex = `${newZindex}`;
         return newZindex;
       });
