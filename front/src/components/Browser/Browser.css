@@ -15,6 +15,10 @@
   flex-direction: column;
 }
 
+.browser-window.hidden {
+  display: none;
+}
+
 /* Tarayıcı Başlığı */
 .browser-header {
   background-color: #494949;
@@ -114,7 +118,6 @@
 
 /* Tarayıcı İçeriği */
 .browser-content {
-  position: relative;
   flex: 1;
   padding: 20px;
   overflow-y: auto;
@@ -122,6 +125,7 @@
 
 /* Google Ana Sayfası */
 .firstPartOfBrowser {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -216,13 +220,15 @@
   margin-bottom: 20px;
   background: rgba(255, 255, 255, 0.05); /* Hafif saydam bir arka plan */
   border-radius: 12px;
-  transition: all 0.3s ease-in-out;
+  /* transition: all 0.3s ease-in-out; */
+  transition: none; /* Hover edildiğinde hızlı olması için geçişleri iptal ettim */
   cursor: pointer;
   border: 2px solid transparent; /* Normalde çerçeve olmasın */
 }
 
 .link-part:hover {
   box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease-in-out; /* Sadece hover’da animasyon çalışsın */
   transform: translateY(-3px); /* Hover edildiğinde hafif yukarı kalksın */
 }
 

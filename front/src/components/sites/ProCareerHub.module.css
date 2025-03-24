@@ -10,6 +10,13 @@
   height: 100vh;
 }
 
+
+.careerContainer.hidden .fakeBrowser,
+.careerContainer.hidden .adPopup,
+.careerContainer.hidden .warningNotification {
+  display: none !important;
+}
+
 /* Ana Konteyner */
 .careerContainer {
   background: rgb(161, 172, 175);
