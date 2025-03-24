@@ -15,10 +15,10 @@ const ProCareerHub = () => {
     return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
   };
   const passwordStrong = isPasswordStrongEnough(password);
-
-  const [errorMessage, setErrorMessage] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [successPassword, setSuccessPassword] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   const email = ProCareerHubInfo.email;
 
@@ -92,7 +92,6 @@ const ProCareerHub = () => {
   };
 
   const toggle2FA = () => {
-    console.log(ProCareerHubInfo.is2FAEnabled);
     setProCareerHubInfo({
       ...ProCareerHubInfo,
       is2FAEnabled: !ProCareerHubInfo.is2FAEnabled,
