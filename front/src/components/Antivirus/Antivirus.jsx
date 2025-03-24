@@ -82,8 +82,8 @@ export const useAntivirus = () => {
               <div className="antivirus-controls">
                 <button onClick={handleScanClick} disabled={isScanning}>      
                   <img src="/icons/scanner.png" alt="Scanner Icon" />
-                  <span class="now">ŞİMDİ!</span>
-                  <span class="play">Taramayı başlat</span>
+                  <span className="now">ŞİMDİ!</span>
+                  <span className="play">Taramayı başlat</span>
                 </button>
 
                 <button onClick={handleToggleAntivirus}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import Mailbox, { useMailbox } from '../components/Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../components/Todolist/Todolist';
 import Browser, { useBrowser } from '../components/Browser/Browser';
@@ -6,9 +6,9 @@ import ITsupport, { useITsupport } from '../components/ITsupport/ITsupport';
 import Folder, { useFolder } from '../components/Folder/Folder';
 import Scanner, { useScanner } from '../components/Scanner/Scanner';
 import Antivirus, { useAntivirus } from '../components/Antivirus/Antivirus';
-import Setup,{ useSetup } from '../components/Setup/Setup';
 
-// Başlangıç windowConfig
+const WindowConfigContext = createContext();
+
 const initialWindowConfig = {
   todolist: {
     icon: '/icons/to-do-list.png',
@@ -66,21 +66,11 @@ const initialWindowConfig = {
     location: 'desktop',
     available: false,
   },
-  setup: {
-    icon: '/icons/setting.png',
-    label: 'Antivirus Setup',
-    component: Setup,
-    useComponent: useSetup,
-    location: 'downloads',
-    available: true,
-  }
 };
 
-// windowConfig'i state olarak yönetmek için hook
-export const useWindowConfigState = () => {
+export const WindowConfigProvider = ({ children }) => {
   const [windowConfig, setWindowConfig] = useState(initialWindowConfig);
 
-  // Belirli bir pencerenin available durumunu güncelle
   const updateAvailableStatus = (windowName, available) => {
     setWindowConfig((prevConfig) => ({
       ...prevConfig,
@@ -91,5 +81,11 @@ export const useWindowConfigState = () => {
     }));
   };
 
-  return { windowConfig, updateAvailableStatus };
+  return (
+    <WindowConfigContext.Provider value={{ windowConfig, updateAvailableStatus }}>
+      {children}
+    </WindowConfigContext.Provider>
+  );
 };
+
+export const useWindowConfig = () => useContext(WindowConfigContext);

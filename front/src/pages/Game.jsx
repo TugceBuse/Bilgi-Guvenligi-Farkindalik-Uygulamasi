@@ -5,6 +5,8 @@ import { GameContextProvider } from '../Contexts/GameContext.js';
 import { FileContextProvider } from '../Contexts/FileContext.js';
 import { UIContextProvider } from '../Contexts/UIContext.js';
 import { MailContextProvider } from '../Contexts/MailContext.js';
+import { VirusProvider } from '../Contexts/VirusContext.js';
+import { WindowConfigProvider } from '../Contexts/WindowConfigContext.js';
 
 const Game = () => {
   // Sağ tıklamayı engellemek ve sol click tetikleme
@@ -25,7 +27,11 @@ const Game = () => {
         <UIContextProvider>
           <FileContextProvider>
             <MailContextProvider>
-              <Desktop />
+              <VirusProvider>
+                <WindowConfigProvider>
+                  <Desktop />
+                </WindowConfigProvider>
+              </VirusProvider>
             </MailContextProvider>
           </FileContextProvider>
         </UIContextProvider>

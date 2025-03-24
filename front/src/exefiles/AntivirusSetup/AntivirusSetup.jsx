@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
-import './Setup.css';
+import React, { useState, useRef, useEffect} from 'react';
+import './AntivirusSetup.css';
 import { useUIContext } from '../../Contexts/UIContext';
+import { useFileContext } from '../../Contexts/FileContext';
+import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 
 export const useSetup = () => {
     const { toggleWindow } = useUIContext();
@@ -17,19 +19,30 @@ export const useSetup = () => {
     return { openHandler, closeHandler };
     }
 
-const Setup = ({ closeHandler, updateAvailableStatus }) => {
+const AntivirusSetup = ({ file, fileName }) => {
 
     const SetupRef = useRef(null);
-    console.log(updateAvailableStatus)
-
 
     const [step, setStep] = useState(1);
     const [buttonLoading, setButtonLoading] = useState(false);
+    const { closeFile } = useFileContext();
+    const { updateAvailableStatus } = useWindowConfig();
+    const { windowConfig } = useWindowConfig();
 
     const handleNextStep = () => {
-      setStep(step + 1);
+        if (windowConfig.antivirus.available) {
+            setStep(0); // Antivirüs zaten kuruluysa step'i 0 yap
+        } 
+        else {
+            setStep(step + 1);
+        }
     };
+
     const handleFinish = () => {
+        if(windowConfig.antivirus.available){
+            setStep(0);
+            return;
+        }
         setButtonLoading(true);
         setTimeout(() => {
             setButtonLoading(false); 
@@ -42,23 +55,36 @@ const Setup = ({ closeHandler, updateAvailableStatus }) => {
       setStep(step - 1);
     };
 
+    const handleClose = () => {
+        closeFile(fileName); // ✅ Dosyayı kapat
+    };
+
     return (
-    <div className="setup-overlay">
-        <div className="setup-window"  ref={SetupRef}>
-            <div className="setup-header">
-                <div className="setup-header-left">
-                    <img className='setup-img' src="/icons/setting.png" alt="Setup" />
+    <div className="antivirussetup-overlay">
+        <div className="antivirussetup-window"  ref={SetupRef}>
+            <div className="antivirussetup-header">
+                <div className="antivirussetup-header-left">
+                    <img className='antivirussetup-img' src="/icons/setting.png" alt="Setup" />
                     <h2>Setup</h2>
                 </div>
-                <button className="setup-close" onClick={closeHandler}>×</button>
+                <button className="antivirussetup-close" onClick={handleClose}>×</button>
             </div>
 
-            <div className="setup-content">
-                <div className='setup-content-left'></div>
-                <div className="setup-container">
+            <div className="antivirussetup-content">
+                <div className='antivirussetup-content-left'></div>
+                <div className="antivirussetup-container">
                     <h3>Antivirüs Kurulumu</h3>
+                    {step === 0 && (
+                    <div className="antivirussetup-step">
+                        <h4>Antivirüs Zaten Kurulu</h4>
+                        <p>Bu bilgisayarda antivirüs yazılımı zaten kurulu.</p>
+                        <div className="antivirussetup-buttons">
+                            <button onClick={handleClose}>Tamam</button>
+                        </div>
+                    </div>
+                    )}
                     {step === 1 && (
-                        <div className="setup-step">
+                        <div className="antivirussetup-step">
                         <h4>Adım 1: Lisans Sözleşmesi</h4>
                         <p>Lisans sözleşmesini okuyun ve kabul edin.</p>
                         <textarea 
@@ -92,48 +118,50 @@ const Setup = ({ closeHandler, updateAvailableStatus }) => {
 
                         Kabul Ediyorum
                         Kullanıcı olarak bu sözleşmenin şartlarını kabul ettiğinizi onaylıyorsunuz." />
-                        <div className="setup-buttons">
+                        <div className="antivirussetup-buttons">
                             <button onClick={handleNextStep}>Kabul Ediyorum</button>
                         </div>
                         </div>
                     )}
                     {step === 2 && (
-                        <div className="setup-step">
+                        <div className="antivirussetup-step">
                         <h4>Adım 2: Kurulum Yeri Seçimi</h4>
                         <p>Antivirüs uygulamasının kurulum yeri:</p>
                         <div style={{width:300, height:40, fontSize:13, backgroundColor:"#1a2837", color:"white", alignContent:"center"}}>
                         C:\Users\AppData\Local\Programs\ShieldSecure</div>
-                        <div className="setup-buttons">
+                        <div className="antivirussetup-buttons">
                             <button onClick={handlePreviousStep}>Geri</button>
                             <button onClick={handleNextStep}>İleri</button>
                         </div>
                         </div>
                     )}
                     {step === 3 && (
-                        <div className="setup-step">
+                    <div className="antivirussetup-step">
                         <h4>Adım 3: Kurulum</h4>
                         <p>Kurulumu başlatmak için butona tıklayın.</p>
-                        <div className="setup-buttons">
+                        <div className="antivirussetup-buttons">
                             <button onClick={handlePreviousStep}>Geri</button>
                             <button className="download-button" onClick={handleFinish} disabled={buttonLoading} >Kurulumu Başlat</button>
                         </div>
-                        {buttonLoading ? <div className="progress-bar2">
-                            Kuruluyor...
+
+                        {buttonLoading && (
+                            <div className="progress-bar2">
+                                Kuruluyor...
                                 <div>
                                     <img src="/icons/setting1.png" alt="Setup"/>
                                     <img src="/icons/setting2.png" alt="Setup"/>
                                     <img src="/icons/setting3.png" alt="Setup"/>
                                 </div>
-                                
-                            </div> : ''}
-                        </div>
+                            </div>
+                        )}
+                    </div>
                     )}
                     {step === 4 && (
-                        <div className="setup-step">
+                        <div className="antivirussetup-step">
                         <h4>Kurulum Tamamlandı</h4>
                         <p>Antivirüs uygulaması başarıyla kuruldu.</p>
-                        <div className="setup-buttons">
-                            <button onClick={closeHandler}>Tamam</button>
+                        <div className="antivirussetup-buttons">
+                            <button onClick={handleClose}>Tamam</button>
                         </div>
                         </div>
                     )}
@@ -145,4 +173,4 @@ const Setup = ({ closeHandler, updateAvailableStatus }) => {
 
 }
 
-export default Setup;
+export default AntivirusSetup;

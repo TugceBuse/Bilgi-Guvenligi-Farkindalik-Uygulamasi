@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import './Desktop.css';
-import { useWindowConfigState } from '../../config/windowConfig';
+import { useWindowConfig }  from '../../Contexts/WindowConfigContext'
 import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
+import { useFileContext } from '../../Contexts/FileContext';
 import TaskBar from '../TaskBar/TaskBar';
 import Alert from '../Notifications/Alert';
 import RansomScreen from '../Notifications/Ransom';
+import FileOpener from '../../viewers/FileOpener';
 import { TodoProvider } from '../../Contexts/TodoContext';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, visibleWindows, handleIconClick, zindex, setZindex} = useUIContext();
+  const { openWindows, visibleWindows, handleIconClick, zindex, setZindex } = useUIContext();
+  const { openedFiles, closeFile, files } = useFileContext();
 
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const { windowConfig, updateAvailableStatus } = useWindowConfigState();
+  const { windowConfig } = useWindowConfig();
 
   // Yeni pencere konumlarını tutacak state
   const [windowPositions, setWindowPositions] = useState({});
@@ -65,18 +68,18 @@ const Desktop = () => {
           
         }
       });
-      
+
       return updatedPositions;
     });
     setZindex((prevZindex) => prevZindex + 1);
   }, [visibleWindows]);
 
   useEffect(() => {
-    if(openWindows.length === 0){
+    if (openWindows.length === 0 && openedFiles.length === 0) {
       setWindowPositions({});
       setZindex(100);
     }
-  }, [openWindows]);
+  }, [openWindows, openedFiles]);
 
   const handleDesktopClick = (windowKey) => {
     const { openHandler } = handlers[windowKey];
@@ -99,7 +102,7 @@ const Desktop = () => {
     <div className="desktop">
       <div className="desktop-icons">
         {Object.keys(windowConfig)
-          .filter((key) => windowConfig[key].available && windowConfig[key].location==='desktop') // Sadece desktop konumunda available olanlar
+          .filter((key) => windowConfig[key].available && windowConfig[key].location === 'desktop')
           .map((key) => (
             <div key={key} className="icon" onClick={() => handleDesktopClick(key)}>
               <img src={windowConfig[key].icon} alt={`${windowConfig[key].label} Icon`} />
@@ -109,7 +112,12 @@ const Desktop = () => {
       </div>
 
       <TodoProvider>
-      {openWindows.map((windowKey) => {
+        {/* 📂 **Açılan Uygulamalar (windowConfig içindekiler) ** */}
+        {openWindows.map((windowKey) => {
+          if (!windowConfig[windowKey]) {
+            console.warn(`windowConfig içinde bulunamayan pencere: ${windowKey}`);
+            return null;
+          }
           const { component: WindowComponent } = windowConfig[windowKey];
           const { closeHandler } = handlers[windowKey];
           return (
@@ -117,8 +125,20 @@ const Desktop = () => {
               key={windowKey}
               closeHandler={closeHandler}
               style={windowPositions[windowKey] || {}}
-              updateAvailableStatus={updateAvailableStatus}
             />
+          );
+        })}
+
+        {/* 📂 **Açılan Dosyalar İçin Pencere Yönetimi** */}
+        {openedFiles.map((fileName) => {
+          const file = files[fileName];
+          return (
+            <div key={fileName} className="window file-window" 
+            style={windowPositions[fileName] || {}}
+            >
+              <FileOpener file={file} fileName={fileName}/>
+              <button className="close-btn" onClick={() => closeFile(fileName)}>X</button>
+            </div>
           );
         })}
       </TodoProvider>

@@ -6,6 +6,7 @@ import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import { useMailContext } from '../../Contexts/MailContext'; 
 import { use } from 'react';
+import { useFileContext } from '../../Contexts/FileContext';
 
 const TaskBar = ({windowConfig}) => {
   const [time, setTime] = useState(new Date());
@@ -38,22 +39,41 @@ const TaskBar = ({windowConfig}) => {
     handleIconClick, zindex, setZindex
   } = useUIContext();
 
+  const { openedFiles, files } = useFileContext();
+
   const renderIcons = () => {
-    return openWindows.map((windowName) => (
-      <img
-        key={windowName}
-        src={windowConfig[windowName].icon}
-        alt={`${windowName} Icon`}
-        className={activeWindow === windowName ? 'active' : ''}
-        onClick={() => handleIconClickWithVisibility(windowName)}
-      />
-    ));
+    // Tekrar eden öğeleri engellemek için `Set` kullanıyoruz
+    const uniqueWindows = [...new Set([...openWindows, ...openedFiles])];
+
+    return uniqueWindows.map((windowName) => {
+        const appConfig = windowConfig[windowName]; // Eğer bir uygulama ise
+        const fileConfig = files[windowName]; // Eğer bir dosya ise
+
+        if (!appConfig && !fileConfig) {
+            console.warn(`❌ Taskbar'da bilinmeyen pencere/dosya: ${windowName}`);
+            return null;
+        }
+
+        const isImageFile = fileConfig && ['jpg', 'png', 'gif'].includes(fileConfig.type);
+        const classKey = isImageFile ? 'image-viewer' : windowName;
+
+        return (
+            <img
+                key={appConfig ? `app-${windowName}` : `file-${windowName}`} // ✅ Aynı isimde çakışmayı önler
+                src={appConfig?.icon || fileConfig?.icon || "/icons/file.png"} // ✅ Doğru ikon kullanılıyor
+                alt={`${windowName} Icon`}
+                className={activeWindow === classKey ? 'active' : ''}
+                onClick={() => handleIconClickWithVisibility(classKey)}
+            />
+        );
+    });
   };
+
 
   // Bildirim Silme Fonksiyonu
   const handleDeleteNotification = (mail) => {
     setNotifiedMails(prevNotifiedMails => prevNotifiedMails.filter(m => m.id !== mail.id));
-};
+  };
 
   const handleStartButtonClick = () => {
     setShowStartMenu(!showStartMenu);
@@ -97,7 +117,10 @@ const TaskBar = ({windowConfig}) => {
 
   const handleIconClickWithVisibility = (windowName) => {
     const element = document.querySelector(`.${windowName}-window`);
-    if(!element) return;
+    if(!element) {
+      console.log(`.${windowName}-window elementi bulunamadı`);
+    return;
+    }
 
     if (activeWindow === windowName) {
         element.style.visibility = 'hidden';
@@ -188,12 +211,6 @@ const TaskBar = ({windowConfig}) => {
   useEffect(() => {
       setNotifiedMails((initMail.filter(mail => !mail.readMail && mail.notified && mail.used)));
     }, []);
-
-  useEffect(() => {
-    if (openWindows.length === 0) {
-      setZindex(100);
-    }
-  }, [openWindows]);
 
   useEffect(() => {
     setActiveWindow(visibleWindows[visibleWindows.length - 1]);
@@ -295,7 +312,7 @@ const TaskBar = ({windowConfig}) => {
     <div className="taskbar-icons">{renderIcons()}</div>
 
     <div className="taskbar-right">
-      {windowConfig.antivirus.downloaded && (
+      {windowConfig.antivirus.available && (
         <div className="taskbar-antivirus">
           {antivirusIcon}
           {antivirusTooltip}

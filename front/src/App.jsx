@@ -6,7 +6,7 @@ import Game from "./pages/Game";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignPage from "./pages/SignPage/SignPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import { AuthProvider } from "../src/Contexts/AuthContext";
+import { AuthProvider } from "./Contexts/AuthContext";
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
