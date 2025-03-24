@@ -9,7 +9,7 @@ export const FileContextProvider = ({ children }) => {
     // 📌 Dosyalar burada tanımlanıyor
     const [files, setFiles] = useState({
         file1: { 
-            available: true, 
+            available: false, 
             infected: true,
             virusType: "ransomware", 
             type: "pdf", 

@@ -3,13 +3,32 @@ import './Ransom.css';
 
 const Ransom = () => {
   const [timeLeft, setTimeLeft] = useState(72 * 60 * 60);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
+    if (!showContent) return;
     const timer = setInterval(() => {
       setTimeLeft(prevTime => prevTime > 0 ? prevTime - 1 : 0);
     }, 1000);
 
     return () => clearInterval(timer);
+  }, [showContent]);
+
+  useEffect(() => {
+    if (showContent) {
+      const audio = new Audio('/audio/ransomware.m4a');
+      audio.play();
+      return () => audio.pause();
+    }
+  }, [showContent]);
+
+  useEffect(() => {
+    const randomDelay = Math.floor(Math.random() * 20000) + 10000;
+    const timeout = setTimeout(() => {
+      setShowContent(true);
+    }, randomDelay);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   const formatTime = (seconds) => {
@@ -18,7 +37,8 @@ const Ransom = () => {
     const secs = seconds % 60;
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
-
+  // showContent true olana kadar null döndür
+  if (!showContent) return null;
   return (
     <div className="ransomware-container">
       <div className="ransomware-timer">

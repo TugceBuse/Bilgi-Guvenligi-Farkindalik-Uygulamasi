@@ -7,7 +7,6 @@ export const GameContextProvider = ({ children }) => {
   const [isWificonnected, setIsWificonnected] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [isantivirusuptodate, setAntivirusisuptodate] = useState(false);
-  const [isransomware, setIsransomware] = useState(false);
   const email = "hilal.kaya@oriontech.colum";
   const phone = "05416494438";
 
@@ -56,8 +55,6 @@ export const GameContextProvider = ({ children }) => {
         setUpdating_antivirus, 
         isantivirusuptodate, 
         setAntivirusisuptodate, 
-        isransomware, 
-        setIsransomware,
         ProCareerHubInfo,
         setProCareerHubInfo,
         SkillForgeHubInfo,

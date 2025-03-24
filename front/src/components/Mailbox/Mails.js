@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import './Mailbox.css';
 import { useFileContext } from '../../Contexts/FileContext';
-import { useGameContext } from '../../Contexts/GameContext';
+import { useVirusContext } from '../../Contexts/VirusContext';
 
 //Manuel ayarlanmış RansomwareButton compenent'i
 const RansomwareButton = ({ label }) => {
-  const { setIsransomware } = useGameContext();
   const { updateFileStatus } = useFileContext();
+  const { addVirus } = useVirusContext();
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = () => {
     setDownloading(true);
     setTimeout(() => {
       setDownloading(false);
-      setIsransomware(true);
-      updateFileStatus(label.split('.')[0], { downloaded: true });
+      updateFileStatus(label.split('.')[0], { available: true });
+      addVirus({ type: "ransomware", detectable: true, sourcefile: label.split('.')[0] });
     }, 3000); // 3 saniye sonra indirme işlemi tamamlanır ve ransomware tetiklenir
   };
 
@@ -144,15 +144,14 @@ export const mails = [
                 <li>
                 <RansomwareButton label='file1.pdf' />
                 </li>
-
+                {/* 
                 <li>
                 <RansomwareButton label='file2.docx' />
                 </li>
 
                 <li>
                   <button onClick={() => null}>File3.jpg</button>
-                </li>
-
+                </li> */}
               </ul>
           </div>
           <pre>

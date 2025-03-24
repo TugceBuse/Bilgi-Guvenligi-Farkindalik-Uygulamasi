@@ -9,11 +9,13 @@ import Alert from '../Notifications/Alert';
 import RansomScreen from '../Notifications/Ransom';
 import FileOpener from '../../viewers/FileOpener';
 import { TodoProvider } from '../../Contexts/TodoContext';
+import { useVirusContext } from '../../Contexts/VirusContext';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
   const { openWindows, visibleWindows, handleIconClick, zindex, setZindex } = useUIContext();
   const { openedFiles, closeFile, files } = useFileContext();
+  const { viruses } = useVirusContext();
 
   const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -35,22 +37,6 @@ const Desktop = () => {
       document.body.classList.remove('no-scroll');
     };
   }, []);
-
-  useEffect(() => {
-    if (isransomware) {
-      const randomDelay = Math.floor(Math.random() * 20000) + 10000;
-      const timer = setTimeout(() => setShowRansom(true), randomDelay);
-      return () => clearTimeout(timer);
-    }
-  }, [isransomware]);
-
-  useEffect(() => {
-    if (showRansom) {
-      const audio = new Audio('/audio/ransomware.m4a');
-      audio.play();
-      return () => audio.pause();
-    }
-  }, [showRansom]);
 
   // ✅ Açık olan pencere sırasına göre pozisyon belirleme
   useEffect(() => {
@@ -150,7 +136,7 @@ const Desktop = () => {
         handleClose={() => setShowAlert(false)}
         message="Internet bağlantısı bulunamadı"
       />
-      {showRansom && <RansomScreen />}
+      {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
     </div>
   );
 };

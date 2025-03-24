@@ -5,10 +5,23 @@ const VirusContext = createContext();
 export const VirusProvider = ({ children }) => {
     const [viruses, setViruses] = useState([]);
 
-    // ✅ Virüs ekleme fonksiyonu
-    const addVirus = (virusType) => {
-        if (!viruses.includes(virusType)) {
-            setViruses([...viruses, virusType]);
+
+    // Virüs ekleme fonksiyonu
+    //     🚩KULLANIMI🚩
+    // addVirus({ type: "ransomware", detectable: true, sourcefile: "file1" });
+    // addVirus({ type: "keylogger", detectable: false, sourcefile: null });
+
+    //   {
+    //   type: "ransomware",
+    //   detectable: true
+    //   sourcefile: "file1"
+    //   }
+
+    // const detectableViruses = viruses.filter(v => v.detectable);
+
+    const addVirus = (newVirus) => {
+        if (!viruses.some(v => v.type === newVirus.type)) {
+            setViruses([...viruses, newVirus]);
         }
     };
 
