@@ -1,6 +1,8 @@
 // Postify.jsx
 import React, { useState } from 'react';
 import styles from './Postify.module.css';
+import { useGameContext } from "../../Contexts/GameContext";
+import PostifyAuth from './PostifyAuth';
 
 const initialPosts = [
   {
@@ -98,6 +100,43 @@ const Postify = () => {
     setNewPostContent('');
   };
 
+  const { PostifyInfo, setPostifyInfo } = useGameContext();
+
+  const [showSettings, setShowSettings] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [successPassword, setSuccessPassword] = useState("");
+  const [password, setPassword] = useState("");
+      const isPasswordStrongEnough = (password) => {
+        return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
+      };
+      const passwordStrong = isPasswordStrongEnough(password);
+
+  const handleLogout = () => {
+    setPostifyInfo({
+      ...PostifyInfo,
+      isLoggedIn: false,
+    });
+    setShowSettings(false);
+    if(!PostifyInfo.isLoggedIn){
+         return <PostifyAuth />;
+    }
+  };
+
+const handlePasswordUpdate = () => {
+      if (!newPassword) return;
+  
+      const strong = isPasswordStrongEnough(newPassword);
+      setPostifyInfo({
+        ...PostifyInfo,
+        password: newPassword,
+        isPasswordStrong: strong,
+      });
+  
+      setSuccessPassword("Şifreniz başarıyla güncellendi!");
+      setNewPassword("");
+      setTimeout(() => setSuccessPassword(""), 2000);
+};
+ 
   return (
     <div className={styles.container}>
       <div className={styles.topbar}>
@@ -108,6 +147,81 @@ const Postify = () => {
           <img className={styles.avatar} src="/avatars/avatar9.png" alt="Profil" />
         </div>
       </div>
+{/* Settings */}
+
+
+{/* Kullanıcı Paneli */}
+{PostifyInfo.isLoggedIn && (
+          <div className={styles.userPanel}>
+            <p className={styles.userName}>👤 {PostifyInfo.name}</p>
+            <button className={styles.settingsButton} onClick={() => setShowSettings(!showSettings)}>⚙ Ayarlar</button>
+            <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
+          </div>
+        )}
+
+        {/* Ayarlar Menüsü */}
+        {showSettings && (
+          <div className={`${styles.settingsMenu} ${showSettings ? styles.active : ""}`}>
+            <div className={styles.settingsHeader}>
+              <h3>⚙ Kullanıcı Ayarları</h3>
+              <span className={styles.closeIcon} onClick={() => setShowSettings(false)}>✖</span>
+            </div>
+            <p>📧 E-posta: {PostifyInfo.email}</p>
+            <p>📷 Profil Fotoğrafı: <button className={styles.profilePictureButton}>Değiştir</button></p>
+            <p>📱 Telefon Numarası:</p>
+            <input type="text" value={PostifyInfo.phone} disabled />
+
+            <div>
+              <p>🔐 Parola Güncelle:</p>
+              <input
+                type="password"
+                placeholder="Yeni şifrenizi giriniz:"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              {successPassword && <p className={styles.successMessage}>{successPassword}</p>}
+
+              <button onClick={handlePasswordUpdate}>Güncelle</button>
+              <p>📢 Bildirimler: <button>Değiştir</button></p>
+            </div>
+
+            <button
+              className={styles.twoFAButton}
+              onClick={() => {
+                setPostifyInfo({
+                  ...PostifyInfo,
+                  is2FAEnabled: !PostifyInfo.is2FAEnabled,
+                });
+              }}
+            >
+              {PostifyInfo.is2FAEnabled ? "2FA Kapat" : "2FA Aç"}
+            </button>
+          </div>
+        )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       <div className={styles.body}>
         <div className={styles.sidebar}>

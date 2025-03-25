@@ -37,6 +37,19 @@ export const GameContextProvider = ({ children }) => {
     isPasswordStrong: false,
   });
 
+  // Kullanıcı bilgileri (sadece context içinde tutuluyor)
+  const [PostifyInfo, setPostifyInfo] = useState({
+    name: '',
+    surname: '',
+    email: email,
+    password: '',
+    phone: phone,
+    is2FAEnabled: false,
+    isRegistered: false,
+    isLoggedIn: false,
+    isPasswordStrong: false,
+  });
+
   useEffect(() => {
     const interval = setInterval(() => {
       setSeconds((prevSeconds) => prevSeconds + 1);
@@ -58,7 +71,9 @@ export const GameContextProvider = ({ children }) => {
         ProCareerHubInfo,
         setProCareerHubInfo,
         SkillForgeHubInfo,
-        setSkillForgeHubInfo
+        setSkillForgeHubInfo,
+        PostifyInfo,
+        setPostifyInfo
       }}
     >
       {children}

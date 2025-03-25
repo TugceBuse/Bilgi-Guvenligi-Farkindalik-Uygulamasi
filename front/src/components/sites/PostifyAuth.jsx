@@ -1,22 +1,84 @@
 // PostifyAuth.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Postify from './Postify';
 import styles from './PostifyAuth.module.css';
+import { useGameContext } from "../../Contexts/GameContext";
 
 const PostifyAuth = () => {
-  const [isRegistered, setIsRegistered] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({ name: '', avatar: '/avatars/avatar9.png' });
+    const { PostifyInfo, setPostifyInfo } = useGameContext();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (user.name.trim()) {
-      if (!isRegistered) setIsRegistered(true);
-      else setIsLoggedIn(true);
-    }
-  };
+    const [isLogin, setIsLogin] = useState(true);
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
 
-  if (isLoggedIn) return <Postify user={user} />;
+    const [password, setPassword] = useState("");
+    const isPasswordStrongEnough = (password) => {
+      return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
+    };
+    const passwordStrong = isPasswordStrongEnough(password);
+
+    const email = PostifyInfo.email;
+    const [errorMessage, setErrorMessage] = useState("");
+  
+    const handleAuth = () => {
+      if (!isLogin) {
+        if (PostifyInfo.isRegistered && PostifyInfo.email === email) {
+          setErrorMessage("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
+          return;
+        }
+        if (!name || !surname || !password) {
+          setErrorMessage("Lütfen tüm alanları doldurun!");
+          return;
+        }
+    
+        setPostifyInfo({
+          ...PostifyInfo,
+          name,
+          surname,
+          password,
+          phone: "05416494438",
+          is2FAEnabled: false,
+          isRegistered: true,
+          isLoggedIn: true,
+          isPasswordStrong: passwordStrong,
+        });
+        setErrorMessage("");
+      } else {
+        if (!PostifyInfo.isRegistered || PostifyInfo.email !== email) {
+          setErrorMessage("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
+          return;
+        }
+        if (!password || password !== PostifyInfo.password) {
+          setErrorMessage("Hatalı şifre! Lütfen tekrar deneyin.");
+          return;
+        }
+    
+        setPostifyInfo({
+          ...PostifyInfo,
+          isLoggedIn: true,
+        });
+        setErrorMessage("");
+      }
+    };
+  
+  useEffect(() => {
+        if(!PostifyInfo.isLoggedIn) {
+            setName("");
+            setSurname("");
+            setPassword("");
+            setErrorMessage("");
+        } 
+  }, [PostifyInfo.isLoggedIn]);
+
+  const handleSignInOut = () => {
+      setIsLogin(!isLogin);
+      setName("");
+      setSurname("");
+      setPassword("");
+      setErrorMessage("");
+    };
+
+  if (PostifyInfo.isLoggedIn) return <Postify />;
 
   return (
     <div className={styles.authContainer}>
@@ -61,29 +123,30 @@ const PostifyAuth = () => {
         </div>
         
       </div>
+
+
+      {/* Auth Right */}
       <div className={styles.authRight}>
-        <form onSubmit={handleSubmit} className={styles.authForm}>
-          <h2>{isRegistered ? 'Giriş Yap' : 'Kayıt Ol'}</h2>
-          <input
-            type="text"
-            placeholder="Kullanıcı adınızı girin"
-            value={user.name}
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
-          />
-          <button type="submit">{isRegistered ? 'Giriş Yap' : 'Kayıt Ol'}</button>
-          {isRegistered ? (
-            <p>
-              Hesabın yok mu?{' '}
-              <span className={styles.switchLink} onClick={() => setIsRegistered(false)}>Kayıt Ol</span>
+
+        {/* Giriş / Kayıt Paneli */}
+        {!PostifyInfo.isLoggedIn && (
+          <div className={styles.authBox}>
+            <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
+            {!isLogin && <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />}
+            {!isLogin && <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />}
+            <input type="email" placeholder="E-posta adresiniz" value={PostifyInfo.email} disabled />
+            <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
+            {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+
+            <p onClick={handleSignInOut}>
+              {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
             </p>
-          ) : (
-            <p>
-              Zaten bir hesabın var mı?{' '}
-              <span className={styles.switchLink} onClick={() => setIsRegistered(true)}>Giriş Yap</span>
-            </p>
-          )}
-        </form>
+          </div>
+        )}
       </div>
+
+
     </div>
   );
 };
