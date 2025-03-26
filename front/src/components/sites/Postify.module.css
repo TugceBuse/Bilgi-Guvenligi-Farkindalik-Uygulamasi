@@ -37,6 +37,10 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    cursor: pointer;
+  }
+  .avatar:hover{
+    transform: scale(1.05);
   }
   
   .body {
@@ -244,4 +248,272 @@
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   margin-bottom: 5px;
+}
+
+/* Profil Menü */
+.userPanel {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeInDown 0.3s ease;
+  z-index: 10;
+  min-width: 150px;
+}
+.avatarWrapper {
+  position: relative;
+}
+
+.settingsButton,
+.logoutButton,
+.username {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.settingsButton:hover {
+  background-color: #a3732f;
+}
+.logoutButton:hover {
+  background-color: #6e1411;
+}
+
+.settingsButton {
+  background-color: #f0ad4e;
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.logoutButton {
+  background-color: #d9534f;
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+/* AYARLAR */
+.settingsMenu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #ff6f00;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 10;
+  display: none;
+  animation: fadeInDown 0.5s ease-in-out;
+}
+
+.settingsMenu.active {
+  display: block;
+}
+
+.settingsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.settingsHeader h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0;
+}
+
+.closeIcon {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d32f2f;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: 0.2s ease-in-out;
+}
+
+.closeIcon:hover {
+  background-color: #fddede;
+  transform: scale(1.1);
+}
+
+.settingsMenu p {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.settingsMenu input[type="text"],
+.settingsMenu input[type="password"] {
+  width: calc(100% - 22px);
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.settingsMenu button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.settingsMenu button:hover {
+  background-color: #0056b3;
+}
+
+.twoFAButton {
+  display: block;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.twoFAButton:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+.profilePictureButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profilePictureButton:hover {
+  background-color: #218838;
+}
+
+.successMessage {
+  color: #248111;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  background: #86d383;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #075c2a;
+  text-align: center;
+}
+
+.errorMessage {
+  color: rgb(223, 66, 66);
+  font-size: 0.9rem;
+  margin-top: 10px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Privacy Settings */
+.privacySelector {
+  position: relative;
+  margin-bottom: 10px;
+  display: inline-block;
+  z-index: 1000;
+}
+
+.privacySelector button {
+  background-color: #f3cdcc;
+  border: 1px solid #ccc;
+  padding: 6px 14px;
+  margin-right: 5px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.privacySelector button:hover {
+  background-color: rgb(243, 208, 208);
+}
+
+.privacyMenu {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  width: 200px;
+  padding: 6px 0;
+  animation: fadeInDown 0.3s ease;
+  z-index: 1000;
+}
+
+.privacyMenu li {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.privacyMenu li:hover {
+  background-color: #f2f2f2;
+}
+.privacy{
+  color: #6e1411;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-style: italic;
+  font-weight: bolder;
 }
