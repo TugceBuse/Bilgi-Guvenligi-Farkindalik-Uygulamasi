@@ -17,6 +17,22 @@ export const UIContextProvider = ({ children }) => {
     
   }, [openWindows]);
 
+  // useEffect(() => {
+  //   console.log('🧭 Z-Index Durumu:');
+  
+  //   visibleWindows.forEach((windowName) => {
+  //     // Dosya mı değil mi ayırt edebilmek için hem class hem data-filename kontrolü yapılabilir
+  //     const element = document.querySelector(`.${windowName}-window`) || document.querySelector(`[data-filename="${windowName}"]`);
+  //     if (element) {
+  //       console.log(`🔹 ${windowName}: z-index = ${element.style.zIndex}`);
+  //     } else {
+  //       console.warn(`❌ ${windowName} pencere elementi bulunamadı`);
+  //     }
+  //   });
+  
+  // }, [visibleWindows, activeWindow]);
+  
+
   const toggleWindow = (windowName) => {
     setOpenWindows((prevOpenWindows) =>
       prevOpenWindows.includes(windowName)

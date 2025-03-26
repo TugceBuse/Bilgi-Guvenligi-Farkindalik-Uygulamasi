@@ -16,7 +16,7 @@ const ImageViewer = ({ file, fileName }) => {
     };
 
     return (
-        <div className="image-viewer-window" ref={ImageRef}>
+        <div className="image-viewer-window" ref={ImageRef} data-filename={fileName}>
             <div className="image-viewer-header">
                 <div className="image-viewer-title">
                 <img src="/icons/image.png" alt="Image Icon" />

@@ -8,16 +8,26 @@ export const FileContextProvider = ({ children }) => {
 
     // 📌 Dosyalar burada tanımlanıyor
     const [files, setFiles] = useState({
-        file1: { 
+        benioku: { 
+            available: true, 
+            infected: false, 
+            type: "txt", 
+            size: "1KB", 
+            location: "downloads", 
+            label: "benioku", 
+            icon: "/icons/txt.png", 
+            content: "/files/benioku.txt" 
+        },
+        rapor_2025: { 
             available: false, 
             infected: true,
             virusType: "ransomware", 
-            type: "pdf", 
+            type: "docx", 
             size: "2MB", 
             location: "downloads", 
-            label: "Gizli Belge", 
-            icon: "/icons/pdf.png", 
-            content: "/files/document1.pdf" 
+            label: "Rapor_2025", 
+            icon: "/icons/docx.png", 
+            specialView : "enableContentDocx" 
         },
         antivirussetup: { 
             available: true, 
@@ -99,6 +109,7 @@ export const FileContextProvider = ({ children }) => {
 
     // 📌 Dosya kapatma fonksiyonu
     const closeFile = (fileName) => {
+        console.log('📌 Dosya kapatılıyor:', fileName);
         setOpenedFiles(openedFiles.filter(file => file !== fileName)); // Açılan dosyalar listesinden çıkar
         toggleWindow(fileName); // 📌 UIContext ile Taskbar ve pencereyi kapat
     };

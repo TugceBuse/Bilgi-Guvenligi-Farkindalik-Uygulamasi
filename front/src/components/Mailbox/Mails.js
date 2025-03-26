@@ -10,11 +10,11 @@ const RansomwareButton = ({ label }) => {
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = () => {
+    let fileName = label.split('.')[0].toLowerCase();
     setDownloading(true);
     setTimeout(() => {
       setDownloading(false);
-      updateFileStatus(label.split('.')[0], { available: true });
-      addVirus({ type: "ransomware", detectable: true, sourcefile: label.split('.')[0] });
+      updateFileStatus( fileName , { available: true });
     }, 3000); // 3 saniye sonra indirme işlemi tamamlanır ve ransomware tetiklenir
   };
 
@@ -142,7 +142,7 @@ export const mails = [
           <div className="attachments">
               <ul>
                 <li>
-                <RansomwareButton label='file1.pdf' />
+                <RansomwareButton label='Rapor_2025.docx' />
                 </li>
                 {/* 
                 <li>

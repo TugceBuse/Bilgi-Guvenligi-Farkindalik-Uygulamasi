@@ -1,0 +1,13 @@
+👋 Merhaba!  
+PhishVille'e hoş geldin.
+
+Bu simülasyon ortamında, bir ofis çalışanı olarak sana verilen görevleri tamamlaman gerekiyor. Ama dikkat! Bu şehirde her köşede seni avlamaya çalışan siber tehditler var...
+
+🎯 Görevlerin To Do List (Yapılacaklar Listesi) uygulamasında seni bekliyor.  
+🛡️ Amacın: Tüm görevleri tamamlamak ve bu süreçte herhangi bir oltalama (phishing) saldırısına kurban gitmemek.
+
+Doğru seçimler seni başarıya, dikkatsizlik ise Phish'lenmeye götürür.  
+Kendini test etmeye hazır mısın?
+
+Bol şans!  
+🕵️‍♂️ PhishVille Güvenlik Ekibi

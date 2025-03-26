@@ -54,16 +54,13 @@ const TaskBar = ({windowConfig}) => {
             return null;
         }
 
-        const isImageFile = fileConfig && ['jpg', 'png', 'gif'].includes(fileConfig.type);
-        const classKey = isImageFile ? 'image-viewer' : windowName;
-
         return (
             <img
                 key={appConfig ? `app-${windowName}` : `file-${windowName}`} // Aynı isimde çakışmayı önler
                 src={appConfig?.icon || fileConfig?.icon || "/icons/file.png"} // Doğru ikon kullanılıyor
                 alt={`${windowName} Icon`}
-                className={activeWindow === classKey ? 'active' : ''}
-                onClick={() => handleIconClickWithVisibility(classKey)}
+                className={activeWindow === windowName ? 'active' : ''}
+                onClick={() => handleIconClickWithVisibility(windowName)}
             />
         );
     });
@@ -116,7 +113,17 @@ const TaskBar = ({windowConfig}) => {
   };
 
   const handleIconClickWithVisibility = (windowName) => {
-    const element = document.querySelector(`.${windowName}-window`);
+
+    const isFile = files[windowName] !== undefined;
+    const innerSelector = isFile 
+    ? `[data-filename="${windowName}"]` 
+    : `.${windowName}-window`;
+
+    const innerElement = document.querySelector(innerSelector);
+    const element = isFile 
+    ? innerElement?.closest('.file-window') 
+    : innerElement;
+
     if(!element) {
       console.log(`.${windowName}-window elementi bulunamadı`);
     return;

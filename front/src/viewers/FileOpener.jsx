@@ -5,6 +5,8 @@ import { useVirusContext } from '../Contexts/VirusContext';
 // import DocxViewer from './viewers/DocxViewer';
 import ExeOpener from './ExeOpener';
 import ImageViewer from './ImageViewer';
+import EnableContentDocx from './EnableContentDocx';
+import DocxViewer from './DocxViewer';
 
 const FileOpener = ({ file, fileName, updateAvailableStatus /* WindowConfig available */ }) => {
     const { addVirus } = useVirusContext();
@@ -22,7 +24,10 @@ const FileOpener = ({ file, fileName, updateAvailableStatus /* WindowConfig avai
             // return <PdfViewer file={file} />;
         case 'docx':
         case 'txt':
-            // return <DocxViewer file={file} />;
+            if (file.specialView === 'enableContentDocx') {
+                return <EnableContentDocx file={file} fileName={fileName}/>; // özel sahte görünüm
+            }
+            return <DocxViewer file={file} fileName={fileName}/>;
         case 'jpg':
         case 'png':
         case 'gif':
