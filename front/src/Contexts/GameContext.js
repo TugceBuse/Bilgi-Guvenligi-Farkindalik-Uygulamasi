@@ -48,6 +48,7 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
+    privacySettings: "Herkese Açık",
   });
 
   useEffect(() => {

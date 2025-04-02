@@ -114,7 +114,7 @@ const sites = {
       "profil"
     ],
     clickable: true,
-    color: "#3b5998",
+    color: "#b95d5d",
     protocol: "https",
     isSponsored: false,
     seoScore: 78

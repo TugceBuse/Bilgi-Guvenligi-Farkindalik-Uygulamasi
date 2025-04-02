@@ -13,6 +13,7 @@ const initialPosts = [
     content: 'Ofis içinde bir Wi-Fi sıkıntısı var mı? Bağlanamıyorum.',
     likes: 120,
     commands: 50,
+    privacySettings: "Sadece Bağlantılarım",
   },
   {
     id: 2,
@@ -27,6 +28,7 @@ const initialPosts = [
     ),
     likes: 70,
     commands: 30,
+    privacySettings: "Sadece Bağlantılarım",
   },
   {
     id: 3,
@@ -41,6 +43,77 @@ const initialPosts = [
     ),
     likes: 500,
     commands: 120,
+    privacySettings: "Herkese açık",
+  },
+  {
+    id: 4,
+    name: 'Zeynep Güler',
+    time: '3 saat önce',
+    avatar: '/avatars/avatar5.png',
+    content: 'Bugün öğle yemeği efsaneydi! Şefin yaptığı köri soslu tavuk efsane olmuş 👨‍🍳🍛',
+    likes: 94,
+    commands: 16,
+    privacySettings: "Herkese açık",
+  },
+  {
+    id: 5,
+    name: 'Murat Yılmaz',
+    time: '10 dakika önce',
+    avatar: '/avatars/avatar7.png',
+    content: 'Kedim klavyemin üstüne yattı, 30 dakika boyunca kod yazamadım 😅🐱',
+    likes: 212,
+    commands: 34,
+    privacySettings: "Herkese açık",
+  },
+  {
+    id: 6,
+    name: 'HR Departmanı',
+    time: '6 gün önce',
+    avatar: '/avatars/avatar4.png',
+    content: 'Pazartesi günü için planlanan eğitim semineri saat 14:00’te başlayacaktır. Katılım zorunludur.',
+    likes: 45,
+    commands: 10,
+    privacySettings: "Sadece Bağlantılarım",
+  },
+  {
+    id: 7,
+    name: 'Mehmet Demir',
+    time: '15 dakika önce',
+    avatar: '/avatars/avatar6.png',
+    content: 'Yeni bir oyuna başladım: Baldur’s Gate 3. Tavsiye ederim, senaryo çok sürükleyici! 🎮✨',
+    likes: 188,
+    commands: 27,
+    privacySettings: "Herkese açık",
+  },
+  {
+    id: 8,
+    name: 'Gülce Aksoy',
+    time: '1 saat önce',
+    avatar: '/avatars/avatar8.png',
+    content: 'Sabah kahvesi = odaklanma süper gücü ☕🚀',
+    likes: 64,
+    commands: 11,
+    privacySettings: "Herkese açık",
+  },
+  {
+    id: 9,
+    name: 'Network Takımı',
+    time: '4 gün önce',
+    avatar: '/avatars/avatar11.png',
+    content: 'Sunucu bakım çalışması cuma gecesi 00:00 - 03:00 arası gerçekleştirilecektir.',
+    likes: 39,
+    commands: 7,
+    privacySettings: "Sadece Bağlantılarım",
+  },
+  {
+    id: 10,
+    name: 'Tuğba Yıldız',
+    time: '2 saat önce',
+    avatar: '/avatars/avatar13.png',
+    content: 'Bu aralar AI projeleriyle ilgileniyorum. Midjourney ile bazı görseller denedim, çok ilham verici!',
+    likes: 123,
+    commands: 20,
+    privacySettings: "Herkese açık",
   },
 ];
 
@@ -103,6 +176,19 @@ const Postify = () => {
   const { PostifyInfo, setPostifyInfo } = useGameContext();
 
   const [showSettings, setShowSettings] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const toggleUserMenu = () => setShowUserMenu(!showUserMenu);
+
+  const [showPrivacyOptions, setShowPrivacyOptions] = useState(false);
+
+  const selectPrivacy = (option) => {
+    setPostifyInfo({
+      ...PostifyInfo,
+      privacySettings: option
+    });
+    setShowPrivacyOptions(false);
+  };
+
   const [newPassword, setNewPassword] = useState("");
   const [successPassword, setSuccessPassword] = useState("");
   const [password, setPassword] = useState("");
@@ -140,24 +226,33 @@ const handlePasswordUpdate = () => {
   return (
     <div className={styles.container}>
       <div className={styles.topbar}>
-        <div className={styles.logo}>Postify</div>
-        <input type="text" className={styles.search} placeholder="Ara..." />
-        <div className={styles.menu}>
-          <span>🔔</span>
-          <img className={styles.avatar} src="/avatars/avatar9.png" alt="Profil" />
-        </div>
-      </div>
-{/* Settings */}
+          <div className={styles.logo}>Postify</div>
+            <input type="text" className={styles.search} placeholder="Ara..." />
+            <div className={styles.menu}>
+              <span>🔔</span>
 
+                {/* 👇 Avatarın etrafını saran div (position: relative için) */}
+                <div className={styles.avatarWrapper}>
+                  {/* 👇 Profil fotoğrafı */}
+                  <img
+                    className={styles.avatar}
+                    src="/avatars/avatar6.png"
+                    alt="Profil"
+                    onClick={toggleUserMenu}
+                  />
 
-{/* Kullanıcı Paneli */}
-{PostifyInfo.isLoggedIn && (
-          <div className={styles.userPanel}>
-            <p className={styles.userName}>👤 {PostifyInfo.name}</p>
-            <button className={styles.settingsButton} onClick={() => setShowSettings(!showSettings)}>⚙ Ayarlar</button>
-            <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
+                  {/* Kullanıcı Paneli */}
+                  {PostifyInfo.isLoggedIn && showUserMenu && (
+                    <div className={styles.userPanel}>
+                      <p className={styles.userName}>👤 {PostifyInfo.name}</p>
+                      <button className={styles.settingsButton} onClick={() => setShowSettings(!showSettings)}>⚙ Ayarlar</button>
+                      <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
+                    </div>
+                  )}
+                </div>
+            </div>
           </div>
-        )}
+
 
         {/* Ayarlar Menüsü */}
         {showSettings && (
@@ -199,30 +294,6 @@ const handlePasswordUpdate = () => {
           </div>
         )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <div className={styles.body}>
         <div className={styles.sidebar}>
           <ul>
@@ -252,6 +323,20 @@ const handlePasswordUpdate = () => {
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
             ></textarea>
+            {/* Gizlilik Menüsü Butonu */}
+            <div className={styles.privacySelector}>
+              <button onClick={() => setShowPrivacyOptions(!showPrivacyOptions)}>
+                {PostifyInfo.privacySettings} 🔽
+              </button>
+
+              {showPrivacyOptions && (
+                <ul className={styles.privacyMenu}>
+                  <li onClick={() => selectPrivacy("Herkese Açık")}>🌐 Herkese Açık</li>
+                  <li onClick={() => selectPrivacy("Sadece Bağlantılarım")}>👥 Sadece Bağlantılarım</li>
+                  <li onClick={() => selectPrivacy("Gizli")}>🔒 Gizli</li>
+                </ul>
+              )}
+            </div>
             <button className={styles.button} onClick={handlePostShare}>Paylaş</button>
           </div>
 
@@ -263,6 +348,8 @@ const handlePasswordUpdate = () => {
                   <div className={styles.name}>{post.name}</div>
                   <div className={styles.time}>
                     {typeof post.time === 'number' ? getRelativeTime(post.time) : post.time}
+                    <p className={styles.privacy}>{post.privacySettings}</p>
+                    
                   </div>
                 </div>
               </div>
@@ -302,7 +389,7 @@ const handlePasswordUpdate = () => {
             <div className={styles.userList}>
               <img src="/avatars/avatar4.png" alt="user" />
               <img src="/avatars/avatar5.png" alt="user" />
-              <img src="/avatars/avatar6.png" alt="user" />
+              <img src="/avatars/avatar7.png" alt="user" />
             </div>
           </div>
 
