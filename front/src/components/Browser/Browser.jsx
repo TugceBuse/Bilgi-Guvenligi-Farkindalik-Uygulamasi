@@ -13,8 +13,8 @@ export const useBrowser = () => {
 const CachedComponents = {}; // 📌 Bileşenleri cachelemek için bir obje oluşturduk
 
 const Browser = ({ closeHandler, style }) => {
-  const [url, setUrl] = useState("google.com");
-  const [currentUrl, setCurrentUrl] = useState("google.com");
+  const [url, setUrl] = useState("https://google.com");
+  const [currentUrl, setCurrentUrl] = useState("https://google.com");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState(["google.com"]);
   const [matchedSites, setMatchedSites] = useState([]);
@@ -51,7 +51,7 @@ const Browser = ({ closeHandler, style }) => {
     if (!searchText || !searchText.trim()) return;
   
     const searchQuery = normalizeText(searchText.trim());  // Normalizasyonu uygula
-    const searchUrl = `google.com/search?q=${encodeURIComponent(searchQuery)}`;
+    const searchUrl = `https://google.com/search?q=${encodeURIComponent(searchQuery)}`;
   
     setUrl(searchUrl);
     await startLoading();
@@ -67,30 +67,41 @@ const Browser = ({ closeHandler, style }) => {
   const handleGoClick = async (newUrl = url, addToHistory = true) => {
     await startLoading(); 
   
-    const normalizedUrl = normalizeText(newUrl.trim().replace(/^(https?:\/\/)?(www\.)?|\/$/g, ''));
+    const cleanedUrl = newUrl.trim().replace(/^(www\.)?|\/$/g, '');
+    const hasProtocol = /^https?:\/\//i.test(cleanedUrl);
+    const finalUrl = hasProtocol ? cleanedUrl : `https://${cleanedUrl}`;
+    const normalizedUrl = normalizeText(finalUrl);
   
-    if (normalizedUrl.startsWith("google.com/search?q=")) {
+    if (normalizedUrl.startsWith("https://google.com/search?q=") || normalizedUrl.startsWith("google.com/search?q=")) {
       setCurrentUrl(normalizedUrl);
       setUrl(normalizedUrl);
     } else {
-      const matchedSite = sites[normalizedUrl] || null;
-      setCurrentUrl(matchedSite ? normalizedUrl : "404");
-      setUrl(normalizedUrl);
+      const matchedSite = sites[finalUrl] || null;
+      setCurrentUrl(matchedSite ? finalUrl : "404");
+      setUrl(finalUrl);
     }
   
     if (addToHistory) {
-      setHistory([...history.slice(0, currentIndex + 1), newUrl]);
+      setHistory([...history.slice(0, currentIndex + 1), finalUrl]);
       setCurrentIndex(currentIndex + 1);
     }
   };
+  
 
   useEffect(() => {
-    if (currentUrl.startsWith("google.com/search?q=")) {
+    if (currentUrl.startsWith("https://google.com/search?q=")) {
       const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
   
-      const filteredSites = Object.entries(sites).filter(([key, site]) =>
-        site.searchKeys.some((key) => normalizeText(key) === (searchQuery))
-      );
+      const filteredSites = Object.entries(sites)
+      .filter(([key, site]) =>
+        site.searchKeys?.some((k) => normalizeText(k).includes(searchQuery))
+      )
+      .map(([key, site]) => ({
+        key,
+        site,
+        score: (site.isSponsored ? 1000 : 0) + (site.seoScore || 0)
+      }))
+      .sort((a, b) => b.score - a.score); // yüksek puanlı en üstte
   
       setMatchedSites(filteredSites);
     }
@@ -149,7 +160,7 @@ const Browser = ({ closeHandler, style }) => {
             </div>
     }
 
-    if (currentUrl.startsWith("google.com/search?q=")) {
+    if (currentUrl.startsWith("https://google.com/search?q=")) {
       const searchedText = decodeURIComponent(currentUrl.split("search?q=")[1]);
       return (
         
@@ -180,23 +191,29 @@ const Browser = ({ closeHandler, style }) => {
           </div>
           {/* <h2>Arama Sonuçları</h2> */}
           {matchedSites.length > 0 ? (
-            matchedSites.map(([key, site]) => {
+            matchedSites.map(({ key, site }) => {
               return (
-                <div key={key} className="link-part"onClick={() => site.clickable && handleGoClick(key)}
+                <div key={key} className="link-part" onClick={() => site.clickable && handleGoClick(key)}
                   style={{
                     cursor: site.clickable ? "pointer" : "default",
                     color: site.clickable ? "white" : "gray",
                   }}>
                   <div className="top-of-the-link">
-                    <div className={`image-div site-${key.split(".")[0]}`}>
+                    <div className={`image-div site-${key.split("//")[1].split(".")[0]}`}>
                       {site.title.charAt(0)}
                     </div>
-                    <div>
-                      <h3>{site.title}</h3>
+                    <div className="link-content">
+                      <p style={{ fontSize: 16, color: "#cacaca" }}>{key}</p>
+                      <h3>
+                        {site.title}
+                        {site.isSponsored && (
+                        <span className="sponsored-tag">Reklam</span>
+                        )}
+                      </h3>
                       <p>{site.statement}</p>
                     </div>
                   </div>
-                  <h2>
+                  <h2 className={site.clickable ? "clickable-title" : "disabled-title"}>
                     {site.title} | {site.statement}
                   </h2>
                 </div>
@@ -210,7 +227,7 @@ const Browser = ({ closeHandler, style }) => {
       );
     }
 
-    if (currentUrl === "google.com") {
+    if (currentUrl === "https://google.com") {
       return (
         <div className="firstPartOfBrowser">
           <h1>Google</h1>

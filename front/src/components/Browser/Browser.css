@@ -205,12 +205,6 @@
   background-color: #1e1e1e;
 }
 
-.download-pages h2 {
-  font-size: 25px;
-  color: orange;
-  border-radius: 5px;
-}
-
 .link-part {
   width: 80%;
   display: flex;
@@ -222,7 +216,7 @@
   border-radius: 12px;
   /* transition: all 0.3s ease-in-out; */
   transition: none; /* Hover edildiğinde hızlı olması için geçişleri iptal ettim */
-  cursor: pointer;
+  cursor: default;
   border: 2px solid transparent; /* Normalde çerçeve olmasın */
 }
 
@@ -245,20 +239,42 @@
 }
 
 /* Site Başlıkları */
-.link-part h2 {
+.clickable-title {
   cursor: pointer;
+  font-size: 25px;
+  color: orange;
+  border-radius: 5px;
   transition: color 0.2s ease-in-out;
 }
 
-.link-part:hover h2 {
-  color: #ffb84d;
+.link-part:hover .clickable-title {
+  color: #fdbd5d;
   text-decoration: underline;
 }
 
-/* Tıklanamayan Siteler İçin */
-.link-part h2[style*="gray"] {
-  color: gray;
+.disabled-title {
+  color: #fdbd5d6c;
   cursor: default;
+  font-size: 25px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: none;
+}
+
+.sponsored-tag {
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  color: gold;
+  background-color: #333;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+.link-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px; /* istediğin boşluk */
 }
 
 .searchPart_bottom {
@@ -296,7 +312,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: bold;
   color: white;
   box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5), /* İç kısımdan hafif parıltı */

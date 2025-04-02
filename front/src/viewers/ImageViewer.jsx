@@ -19,7 +19,7 @@ const ImageViewer = ({ file, fileName }) => {
         <div className="image-viewer-window" ref={ImageRef} data-filename={fileName}>
             <div className="image-viewer-header">
                 <div className="image-viewer-title">
-                <img src="/icons/image.png" alt="Image Icon" />
+                <img src="/icons/image.png" alt="imgViewer Icon" />
                 <span>{file.label || 'Görsel'}</span>
                 </div>
                 <button className="close-btn" onClick={handleClose}>×</button>

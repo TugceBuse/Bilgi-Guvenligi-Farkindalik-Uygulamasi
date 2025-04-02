@@ -1,43 +1,63 @@
 const sites = {
-  "google.com": { 
+  "https://google.com": { 
     title: "Google", 
     type: "search", 
     statement: "Dünyanın en popüler arama motoru.",
-    searchKeys: []
+    searchKeys: [],
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 100
   },
-  "google.com/search?q=": { 
+
+  "https://google.com/search?q=": { 
     title: "Google Search", 
     type: "search-results", 
     statement: "Arama sonuçlarınızı görüntüleyin.",
-    searchKeys: []
+    searchKeys: [],
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 95
   },
-  "shieldsecure.com": { 
+
+  "https://shieldsecure.com": { 
     title: "ShieldSecure", 
     type: "component", 
     component: "ShieldSecure",
     statement: "Cihazlarınızı antivirüs ile güvenle koruyun.",
     searchKeys: ["antivirus", "security", "vpn", "shield", "shieldsecure", "secure"],
     clickable: true,
-    color: "green"
+    color: "green",
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 75
   },
-  "cybersentinel.com": { 
+
+  "https://cybersentinel.com": { 
     title: "CyberSentinel", 
     type: "component", 
     component: "CyberSentinel",
     statement: "Kurumsal güvenlik ve antivirüs hizmetleri sunuyoruz.",
     searchKeys: ["antivirus", "firewall", "malware", "cyber", "cybersentinel", "sentinel"],
     clickable: true,
-    color: "red"
+    color: "red",
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 70
   },
-  "safebrowsing.com": { 
+
+  "https://safebrowsing.com": { 
     title: "SafeBrowsing", 
     type: "info",
     statement: "Güvenli internet gezinme hakkında bilgiler.",
     searchKeys: ["safe browsing", "web security", "privacy","antivirus"],
     clickable: false,
-    color: "blue"
+    color: "blue",
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 65
   },
-  "procareerhub.com": {
+
+  "https://procareerhub.com": {
     title: "ProCareerHub",
     type: "component",
     component: "ProCareerHub",
@@ -45,17 +65,37 @@ const sites = {
     searchKeys: ["kariyer", "iş ilanları", "profesyonel ağ", "cv hazırlama", "mülakat teknikleri"],
     clickable: true,
     color: "#0073e6",
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 83
   },
-  "skillforgehub.com": {
+
+  "https://skillforgehub.com": {
     title: "SkillForgeHub",
     type: "component",
     component: "SkillForgeHub",
     statement: "Becerilerini geliştir, mentor desteği al ve başarı hikayelerinden ilham al!",
     searchKeys: ["kariyer", "iş ilanları", "profesyonel ağ", "cv hazırlama", "mülakat teknikleri", "beceri geliştirme", "mentorluk", "online kurslar", "kariyer planlama", "başarı hikayeleri"],
     clickable: true,
-    color: "#FF6F00"
-},
-  "postify.com": {
+    color: "#FF6F00",
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 82
+  },
+
+  "https://ads-skillforgehub.com": {
+    title: "SkillForgeHub",
+    type: "component",
+    statement: "Becerilerini geliştir, mentor desteği al ve başarı hikayelerinden ilham al!",
+    searchKeys: ["kariyer", "iş ilanları", "profesyonel ağ", "cv hazırlama", "mülakat teknikleri", "beceri geliştirme", "mentorluk", "online kurslar", "kariyer planlama", "başarı hikayeleri"],
+    clickable: false,
+    color: "#FFF300",
+    protocol: "https",
+    isSponsored: true,
+    seoScore: 15
+  },
+
+  "https://postify.com": {
     title: "Postify",
     type: "component",
     component: "PostifyAuth",
@@ -74,9 +114,11 @@ const sites = {
       "profil"
     ],
     clickable: true,
-    color: "#3b5998"
+    color: "#3b5998",
+    protocol: "https",
+    isSponsored: false,
+    seoScore: 78
   }
-
 };
 
 export default sites;
