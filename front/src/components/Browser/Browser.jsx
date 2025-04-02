@@ -199,9 +199,12 @@ const Browser = ({ closeHandler, style }) => {
                     color: site.clickable ? "white" : "gray",
                   }}>
                   <div className="top-of-the-link">
-                    <div className={`image-div site-${key.split("//")[1].split(".")[0]}`}>
-                      {site.title.charAt(0)}
-                    </div>
+                  <div
+                    className={site.color ? "image-div" : `image-div site-${key.split("//")[1].split(".")[0]}`}
+                    style={site.color ? { backgroundColor: site.color } : {}}
+                  >
+                    {site.title.charAt(0)}
+                  </div>
                     <div className="link-content">
                       <p style={{ fontSize: 16, color: "#cacaca" }}>{key}</p>
                       <h3>

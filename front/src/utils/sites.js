@@ -26,7 +26,6 @@ const sites = {
     statement: "Cihazlarınızı antivirüs ile güvenle koruyun.",
     searchKeys: ["antivirus", "security", "vpn", "shield", "shieldsecure", "secure"],
     clickable: true,
-    color: "green",
     protocol: "https",
     isSponsored: false,
     seoScore: 75
@@ -39,7 +38,6 @@ const sites = {
     statement: "Kurumsal güvenlik ve antivirüs hizmetleri sunuyoruz.",
     searchKeys: ["antivirus", "firewall", "malware", "cyber", "cybersentinel", "sentinel"],
     clickable: true,
-    color: "red",
     protocol: "https",
     isSponsored: false,
     seoScore: 70
@@ -51,8 +49,8 @@ const sites = {
     statement: "Güvenli internet gezinme hakkında bilgiler.",
     searchKeys: ["safe browsing", "web security", "privacy","antivirus"],
     clickable: false,
-    color: "blue",
     protocol: "https",
+    color: "#FF5733",
     isSponsored: false,
     seoScore: 65
   },
@@ -64,7 +62,6 @@ const sites = {
     statement: "İş fırsatlarını keşfet ve profesyonel ağını genişlet.",
     searchKeys: ["kariyer", "iş ilanları", "profesyonel ağ", "cv hazırlama", "mülakat teknikleri"],
     clickable: true,
-    color: "#0073e6",
     protocol: "https",
     isSponsored: false,
     seoScore: 83
@@ -77,7 +74,6 @@ const sites = {
     statement: "Becerilerini geliştir, mentor desteği al ve başarı hikayelerinden ilham al!",
     searchKeys: ["kariyer", "iş ilanları", "profesyonel ağ", "cv hazırlama", "mülakat teknikleri", "beceri geliştirme", "mentorluk", "online kurslar", "kariyer planlama", "başarı hikayeleri"],
     clickable: true,
-    color: "#FF6F00",
     protocol: "https",
     isSponsored: false,
     seoScore: 82
@@ -114,7 +110,6 @@ const sites = {
       "profil"
     ],
     clickable: true,
-    color: "#b95d5d",
     protocol: "https",
     isSponsored: false,
     seoScore: 78
