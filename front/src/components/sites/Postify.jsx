@@ -20,10 +20,14 @@ const initialPosts = [
     name: 'IT Departmanı',
     time: '5 saat önce',
     avatar: '/avatars/avatar2.png',
+    image: '/SpamMailPictures/fake-product.png',
     content: (
       <span>
-        Yeni sistem güncellemesi yayınlandı. Buradan indirin: 
-        <a href="#" className={styles.maliciousLink} onClick={() => alert('Virüs bulaştı!')}>sistemguncelleme.exe</a>
+        <b>Yepyeni formülümüzle tanışmaya hazır olun! </b><br/><br/>
+            Vücut metabolizmasını hızlandıran ve yağ yakımını maksimum seviyeye çıkaran ürünümüzle yalnızca 7 gün içinde 10 kilo verebilirsiniz. 
+            Bilimsel olarak kanıtlanmış içeriklerle geliştirilen bu ürün tamamen doğaldır ve herhangi bir yan etkisi yoktur.<br/>
+            Etkisini görmek için hemen sipariş verin! <br/> 
+        <a href="#" title='http://healthtips.com/track/#888%465677&&3' className={styles.maliciousLink}>HealthTips.com</a>
       </span>
     ),
     likes: 70,
@@ -60,7 +64,13 @@ const initialPosts = [
     name: 'Murat Yılmaz',
     time: '10 dakika önce',
     avatar: '/avatars/avatar7.png',
-    content: 'Kedim klavyemin üstüne yattı, 30 dakika boyunca kod yazamadım 😅🐱',
+    image: '/SpamMailPictures/gift.jpg',
+    content: (
+      <span>
+        Katkı sağladığınız çekilişimizi kazanmış bulunmaktasınız. Bir iPhone 15 Pro Max kazandınız! 🎉📱 <br/> Hediyenizi talep etmek için tıklayın!
+        <a href="#"  title='rewarsd@winbig.com' className={styles.phishingLink}> Hediyeniz Sizi Bekliyor!</a>
+      </span>
+    ),
     likes: 212,
     commands: 34,
     privacySettings: "Herkese açık",
@@ -80,7 +90,15 @@ const initialPosts = [
     name: 'Mehmet Demir',
     time: '15 dakika önce',
     avatar: '/avatars/avatar6.png',
-    content: 'Yeni bir oyuna başladım: Baldur’s Gate 3. Tavsiye ederim, senaryo çok sürükleyici! 🎮✨',
+    image: '/SpamMailPictures/workingHome.png',
+    content: (
+      <span>
+        <b>Evden Çalışarak Ayda 50.000 TL Kazanın! </b><br/> 
+        Yeni geliştirdiğimiz sistemle, yalnızca günde 1-2 saat çalışarak ayda 50.000 TL kazanabilirsiniz.<br/>
+        Bu fırsatı kaçırmayın! <br/>
+        <a href="#" title='http://careeroptionsnow.com/c/&1118#46567^#^3&3' className={styles.maliciousLink}>Hızlıca kaydolun!</a><br/>
+      </span>
+    ),
     likes: 188,
     commands: 27,
     privacySettings: "Herkese açık",
@@ -424,6 +442,7 @@ const handlePasswordUpdate = () => {
                         </div>
                       </div>
                     </div>
+                    <img src={post.image} className={styles.image} alt="reklam" />
                     <div className={styles.content}>{post.content}</div>
 
                     <div className={styles.metaInfo}>

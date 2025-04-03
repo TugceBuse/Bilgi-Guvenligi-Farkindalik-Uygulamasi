@@ -42,7 +42,11 @@
   .avatar:hover{
     transform: scale(1.05);
   }
-  
+  .image{
+    width: 50%;
+    border-radius: 10px;
+    object-fit: cover;
+  }
   .body {
     display: flex;
     flex: 1;
@@ -130,6 +134,7 @@
   }
   
   .card {
+    width: 100%;
     background-color: white;
     padding: 15px;
     margin-bottom: 15px;
@@ -311,14 +316,10 @@
 
 /* AYARLAR */
 .settingsMenu {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
+  width: 100%;
   background: #f8f9fa;
   border-radius: 10px;
-  border: 1px solid #ff6f00;
+  border: 1px solid #b6b6b6;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 15px;
   text-align: left;
