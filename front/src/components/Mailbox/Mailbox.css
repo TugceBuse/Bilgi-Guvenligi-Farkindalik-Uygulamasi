@@ -220,18 +220,30 @@
     margin-top: 1%;
   }
 
+  .mailbox-mailcontentheader-rightBox {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .mailbox-mailcontentheader-rightBox span{
+    color: #000000;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+  }
   
   .mail-content pre {
-    white-space: pre-wrap; /* Beyaz boşlukları ve satır sonlarını koru */
-    font-size: 18px; /* Yazı boyutunu ayarla */
-    line-height: 1.1; /* Satır yüksekliğini ayarla */
-    color: #f1f1f1; /* Metin rengini ayarla */
+    white-space: pre-wrap;
+    font-size: 18px; 
+    line-height: 1.1;
+    color: #f1f1f1;
     margin-top: 2%;
     margin-bottom: 5%;
   }
-
   
-
   .postbox-icon{
     width: 200px;
     height: 200px;

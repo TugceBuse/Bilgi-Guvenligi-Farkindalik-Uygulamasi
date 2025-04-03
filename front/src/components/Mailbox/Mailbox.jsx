@@ -46,6 +46,22 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const {isWificonnected} = useGameContext();
   
+  // **Inbox ve Spam kutularını güncelleme**
+  const [showSpamMenu, setShowSpamMenu] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.mailbox-mailcontentheader-rightBox')) {
+        setShowSpamMenu(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+
+
+
   // used özelliği false olan ve bildirim olarak gösterilen mailleri inbox'a ekler
   useEffect(() => {
     setInboxMails(prevMails => {
@@ -318,10 +334,43 @@ const Mailbox = ({ closeHandler, style }) => {
                         <h3>&lt;{selectedMail?.from}&gt;</h3>
                         <h3 style={{paddingTop:8}}>Bugün</h3>
                       </div>
-                      <div style={{position: 'absolute', top:20, right:30, display:"flex", flexDirection:"row", gap:20}}>
+                      <div className="mailbox-mailcontentheader-rightBox">
                         <img  src="./icons/undo.png" alt="Undo Icon"/>
                         <img  src="./icons/undo-all.png" alt="Undo-All Icon"/>
                         <img  src="./icons/next.png" alt="Right-Arrow Icon"/>
+                        {activeTab === 'inbox' && (
+                          <>
+                            <span onClick={() => setShowSpamMenu(prev => !prev)} style={{ cursor: 'pointer' }}>...</span>
+                            {showSpamMenu && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '100%',
+                                right: 0,
+                                background: 'white',
+                                color: 'black',
+                                border: '1px solid gray',
+                                padding: '5px 10px',
+                                borderRadius: '5px',
+                                zIndex: 999
+                              }}>
+                                <button
+                                  onClick={() => {
+                                    if (selectedMail) {
+                                      setInboxMails(prev => prev.filter(mail => mail.id !== selectedMail.id));
+                                      setSpamboxMails(prev => [...prev, { ...selectedMail, readMail: true }]);
+                                      setSelectedMail(null);
+                                      setActiveIndex(null);
+                                    }
+                                    setShowSpamMenu(false);
+                                  }}
+                                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'black' }}
+                                >
+                                  📩 Bildir (Spam olarak işaretle)
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        )}
                       </div>      
                   </div>
                 ) : (
