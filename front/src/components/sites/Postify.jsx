@@ -138,6 +138,7 @@ const Postify = () => {
     });
     return initial;
   });
+
   const [newPostContent, setNewPostContent] = useState('');
   const [timestamps, setTimestamps] = useState({});
 
@@ -181,6 +182,26 @@ const Postify = () => {
 
   const [showPrivacyOptions, setShowPrivacyOptions] = useState(false);
 
+  // Mesajlar için gerekli state'ler
+  const [showMessages, setShowMessages] = useState(false);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [messageText, setMessageText] = useState("");
+
+  const dummyChats = [
+    { id: 1, name: "Ahmet Kaya", avatar: "/avatars/avatar1.png", messages: ["Selam!", "Toplantı ne zaman?"] },
+    { id: 2, name: "Zeynep Güler", avatar: "/avatars/avatar5.png", messages: ["Merhaba!", "Yarın görüşelim mi?"] },
+    { id: 3, name: "IT Departmanı", avatar: "/avatars/avatar2.png", messages: ["Sistemde bakım yapılacak."] },
+  ];
+
+  const handleSendMessage = () => {
+    if (messageText.trim() && selectedChat) {
+      selectedChat.messages.push(messageText);
+      setMessageText("");
+    }
+  };
+  /////////////////////////////////////
+
+
   const selectPrivacy = (option) => {
     setPostifyInfo({
       ...PostifyInfo,
@@ -191,11 +212,10 @@ const Postify = () => {
 
   const [newPassword, setNewPassword] = useState("");
   const [successPassword, setSuccessPassword] = useState("");
-  const [password, setPassword] = useState("");
-      const isPasswordStrongEnough = (password) => {
-        return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
-      };
-      const passwordStrong = isPasswordStrongEnough(password);
+
+  const isPasswordStrongEnough = (password) => {
+      return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
+  };
 
   const handleLogout = () => {
     setPostifyInfo({
@@ -227,7 +247,7 @@ const handlePasswordUpdate = () => {
     <div className={styles.container}>
       <div className={styles.topbar}>
           <div className={styles.logo}>Postify</div>
-            <input type="text" className={styles.search} placeholder="Ara..." />
+            <input type="text" disabled className={styles.search} placeholder="Ara..." />
             <div className={styles.menu}>
               <span>🔔</span>
 
@@ -294,115 +314,169 @@ const handlePasswordUpdate = () => {
           </div>
         )}
 
-      <div className={styles.body}>
-        <div className={styles.sidebar}>
-          <ul>
-            <li>📄 Profilim</li>
-            <li>💬 Mesajlar</li>
-            <li>👥 Takip</li>
-            <li>🧑‍💼 Gruplar</li>
-            <li>📅 Etkinlikler</li>
-          </ul>
-          <h4>Sponsorlu</h4>
-          <p>Yeni güvenlik rehberimize göz atın!</p>
-          <hr />
-          <h4>Popüler Gruplar</h4>
-          <div className={styles.groups}>
-            <label>👩‍💻 Kadınlar İçin Teknoloji</label>
-            <label>💻 Yazılım Ekibi</label>
-            <label>🔒 Güvenlik Farkındalığı</label>
-            <label>🎨 Tasarım Dünyası</label>
-          </div>
-        </div>
+        <div className={styles.body}>
+          {showMessages ? (
+            <div className={styles.messages}>
+              <button className={styles.button} onClick={() => setShowMessages(false)}>🔙 Geri</button>
 
-        <div className={styles.feed}>
-        <div className={styles.shareBox}>
-            <textarea
-              placeholder="Ne düşünüyorsun?"
-              className={styles.input}
-              value={newPostContent}
-              onChange={(e) => setNewPostContent(e.target.value)}
-            ></textarea>
-            {/* Gizlilik Menüsü Butonu */}
-            <div className={styles.privacySelector}>
-              <button onClick={() => setShowPrivacyOptions(!showPrivacyOptions)}>
-                {PostifyInfo.privacySettings} 🔽
-              </button>
+                <div className={styles.messagesWrapper}>
+                  {/* Sol sohbet listesi */}
+                  <div className={styles.chatList}>
+                    <h4>Mesajlar</h4>
+                    {dummyChats.map((chat) => (
+                      <div
+                        key={chat.id}
+                        className={`${styles.chatUser} ${selectedChat?.id === chat.id ? styles.activeChat : ""}`}
+                        onClick={() => setSelectedChat(chat)}
+                      >
+                        <img src={chat.avatar} alt={chat.name} />
+                        <span>{chat.name}</span>
+                      </div>
+                    ))}
+                  </div>
 
-              {showPrivacyOptions && (
-                <ul className={styles.privacyMenu}>
-                  <li onClick={() => selectPrivacy("Herkese Açık")}>🌐 Herkese Açık</li>
-                  <li onClick={() => selectPrivacy("Sadece Bağlantılarım")}>👥 Sadece Bağlantılarım</li>
-                  <li onClick={() => selectPrivacy("Gizli")}>🔒 Gizli</li>
-                </ul>
-              )}
-            </div>
-            <button className={styles.button} onClick={handlePostShare}>Paylaş</button>
-          </div>
-
-          {posts.map((post) => (
-            <div key={post.id} className={styles.card}>
-              <div className={styles.header}>
-                <img src={post.avatar} className={styles.avatar} alt="user" />
-                <div>
-                  <div className={styles.name}>{post.name}</div>
-                  <div className={styles.time}>
-                    {typeof post.time === 'number' ? getRelativeTime(post.time) : post.time}
-                    <p className={styles.privacy}>{post.privacySettings}</p>
-                    
+                  {/* Sağ sohbet alanı */}
+                  <div className={styles.chatBox}>
+                    {selectedChat ? (
+                      <>
+                        <div className={styles.chatHeader}>
+                          <img src={selectedChat.avatar} alt={selectedChat.name} />
+                          <strong>{selectedChat.name}</strong>
+                        </div>
+                        <div className={styles.chatMessages}>
+                          {selectedChat.messages.map((msg, index) => (
+                            <div key={index} className={styles.chatBubble}>{msg}</div>
+                          ))}
+                        </div>
+                        <div className={styles.chatInput}>
+                          <input
+                            type="text"
+                            placeholder="Mesaj yaz..."
+                            value={messageText}
+                            onChange={(e) => setMessageText(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                          />
+                          <button onClick={handleSendMessage}>Gönder</button>
+                        </div>
+                      </>
+                      ) : (
+                        <p>Bir sohbet seçin.</p>
+                      )}
+                    </div>
                   </div>
                 </div>
+          ) : (
+            <>
+              <div className={styles.sidebar}>
+                <ul>
+                  <li>📄 Profilim</li>
+                  <li onClick={() => setShowMessages(true)}>💬 Mesajlar</li>
+                  <li>👥 Takip</li>
+                  <li>🧑‍💼 Gruplar</li>
+                  <li>📅 Etkinlikler</li>
+                </ul>
+                <h4>Sponsorlu</h4>
+                <p>Yeni güvenlik rehberimize göz atın!</p>
+                <hr />
+                <h4>Popüler Gruplar</h4>
+                <div className={styles.groups}>
+                  <label>👩‍💻 Kadınlar İçin Teknoloji</label>
+                  <label>💻 Yazılım Ekibi</label>
+                  <label>🔒 Güvenlik Farkındalığı</label>
+                  <label>🎨 Tasarım Dünyası</label>
+                </div>
               </div>
-              <div className={styles.content}>{post.content}</div>
 
-              <div className={styles.metaInfo}>
-                <span>👍 {likes[post.id]?.count || 0}</span>
-                <span>💬 {post.commands}</span>
-                <span>📤 Paylaş</span>
+              <div className={styles.feed}>
+                <div className={styles.shareBox}>
+                  <textarea
+                    placeholder="Ne düşünüyorsun?"
+                    className={styles.input}
+                    value={newPostContent}
+                    onChange={(e) => setNewPostContent(e.target.value)}
+                  ></textarea>
+
+                  <div className={styles.privacySelector}>
+                    <button onClick={() => setShowPrivacyOptions(!showPrivacyOptions)}>
+                      {PostifyInfo.privacySettings} 🔽
+                    </button>
+
+                    {showPrivacyOptions && (
+                      <ul className={styles.privacyMenu}>
+                        <li onClick={() => selectPrivacy("Herkese Açık")}>🌐 Herkese Açık</li>
+                        <li onClick={() => selectPrivacy("Sadece Bağlantılarım")}>👥 Sadece Bağlantılarım</li>
+                        <li onClick={() => selectPrivacy("Gizli")}>🔒 Gizli</li>
+                      </ul>
+                    )}
+                  </div>
+                  <button className={styles.button} onClick={handlePostShare}>Paylaş</button>
+                </div>
+
+                {posts.map((post) => (
+                  <div key={post.id} className={styles.card}>
+                    <div className={styles.header}>
+                      <img src={post.avatar} className={styles.avatar} alt="user" />
+                      <div>
+                        <div className={styles.name}>{post.name}</div>
+                        <div className={styles.time}>
+                          {typeof post.time === 'number' ? getRelativeTime(post.time) : post.time}
+                          <p className={styles.privacy}>{post.privacySettings}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.content}>{post.content}</div>
+
+                    <div className={styles.metaInfo}>
+                      <span>👍 {likes[post.id]?.count || 0}</span>
+                      <span>💬 {post.commands}</span>
+                      <span>📤 Paylaş</span>
+                    </div>
+
+                    <div className={styles.actions}>
+                      <button
+                        onClick={() => toggleLike(post.id)}
+                        className={likes[post.id]?.liked ? styles.likedButton : ''}
+                      >
+                        {likes[post.id]?.liked ? '💙 Beğenildi' : '👍 Beğen'}
+                      </button>
+                      <button>💬 Yorum Yap</button>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              <div className={styles.actions}>
-              <button
-                  onClick={() => toggleLike(post.id)}
-                  className={likes[post.id]?.liked ? styles.likedButton : ''}
-                >
-                  {likes[post.id]?.liked ? '💙 Beğenildi' : '👍 Beğen'}
-                </button>
-                <button>💬 Yorum Yap</button>
+              <div className={styles.rightExtras}>
+                <div className={styles.securityTips}>
+                  <h4>🔐 Güvenlik İpuçları</h4>
+                  <ul>
+                    <li>🔸 Gelen bağlantıları tıklamadan önce kontrol et.</li>
+                    <li>🔸 Kişisel bilgilerini paylaşmadan önce emin ol.</li>
+                    <li>🔸 “.exe” uzantılı dosyalar kötü amaçlı olabilir.</li>
+                  </ul>
+                </div>
+
+                <div className={styles.onlineUsers}>
+                  <h4>🟢 Aktif Kullanıcılar</h4>
+                  <div className={styles.userList}>
+                    <img src="/avatars/avatar4.png" alt="user" />
+                    <img src="/avatars/avatar5.png" alt="user" />
+                    <img src="/avatars/avatar7.png" alt="user" />
+                  </div>
+                </div>
+
+                <div className={styles.trending}>
+                  <h4>🔥 Gündemdekiler</h4>
+                  <ul>
+                    <li>#SiberGüvenlik2025</li>
+                    <li>#YeniÇalışanlar</li>
+                    <li>#OfisNetworkSorunu</li>
+                  </ul>
+                </div>
               </div>
-            </div>
-          ))}
+            </>
+          )}
         </div>
 
-        <div className={styles.rightExtras}>
-          <div className={styles.securityTips}>
-            <h4>🔐 Güvenlik İpuçları</h4>
-            <ul>
-              <li>🔸Gelen bağlantıları tıklamadan önce kontrol et.</li>
-              <li>🔸Kişisel bilgilerini paylaşmadan önce emin ol.</li>
-              <li>🔸“.exe” uzantılı dosyalar kötü amaçlı olabilir.</li>
-            </ul>
-          </div>
-
-          <div className={styles.onlineUsers}>
-            <h4>🟢 Aktif Kullanıcılar</h4>
-            <div className={styles.userList}>
-              <img src="/avatars/avatar4.png" alt="user" />
-              <img src="/avatars/avatar5.png" alt="user" />
-              <img src="/avatars/avatar7.png" alt="user" />
-            </div>
-          </div>
-
-          <div className={styles.trending}>
-            <h4>🔥 Gündemdekiler</h4>
-            <ul>
-              <li>#SiberGüvenlik2025</li>
-              <li>#YeniÇalışanlar</li>
-              <li>#OfisNetworkSorunu</li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
