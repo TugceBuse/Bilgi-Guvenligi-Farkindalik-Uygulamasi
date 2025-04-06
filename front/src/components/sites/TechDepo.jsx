@@ -7,13 +7,13 @@ const cards = [
     id: 1,
     name: "UltraBook X200",
     price: "₺22.999",
-    image: "/techDepo/com1.jpg"
+    image: "/techDepo/computer1.jpg"
   },
   {
     id: 2,
     name: "ProClick Mouse",
     price: "₺399",
-    image: "/techDepo/com2.jpg"
+    image: "/techDepo/computer2.jpg"
   },
   {
     id: 3,
