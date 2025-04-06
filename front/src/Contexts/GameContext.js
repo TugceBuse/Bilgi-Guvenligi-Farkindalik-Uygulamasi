@@ -11,7 +11,7 @@ export const GameContextProvider = ({ children }) => {
   const phone = "05416494438";
 
 
-  // Kullanıcı bilgileri (sadece context içinde tutuluyor)
+  // PROCAREERHUB - Kullanıcı bilgileri (sadece context içinde tutuluyor)
   const [ProCareerHubInfo, setProCareerHubInfo] = useState({
     name: '',
     surname: '',
@@ -24,7 +24,7 @@ export const GameContextProvider = ({ children }) => {
     isPasswordStrong: false,
   });
 
-  // Kullanıcı bilgileri (sadece context içinde tutuluyor)
+  // SKILLFORGEHUB - Kullanıcı bilgileri (sadece context içinde tutuluyor)
   const [SkillForgeHubInfo, setSkillForgeHubInfo] = useState({
     name: '',
     surname: '',
@@ -37,7 +37,7 @@ export const GameContextProvider = ({ children }) => {
     isPasswordStrong: false,
   });
 
-  // Kullanıcı bilgileri (sadece context içinde tutuluyor)
+  // POSTİFY - Kullanıcı bilgileri (sadece context içinde tutuluyor)
   const [PostifyInfo, setPostifyInfo] = useState({
     name: '',
     surname: '',
@@ -49,6 +49,19 @@ export const GameContextProvider = ({ children }) => {
     isLoggedIn: false,
     isPasswordStrong: false,
     privacySettings: "Herkese Açık",
+  });
+
+   // TECHDEPO - Kullanıcı bilgileri (sadece context içinde tutuluyor)
+   const [TechInfo, setTechInfo] = useState({
+    name: '',
+    surname: '',
+    email: email,
+    password: '',
+    phone: phone,
+    is2FAEnabled: false,
+    isRegistered: false,
+    isLoggedIn: false,
+    isPasswordStrong: false,
   });
 
   useEffect(() => {
@@ -74,7 +87,9 @@ export const GameContextProvider = ({ children }) => {
         SkillForgeHubInfo,
         setSkillForgeHubInfo,
         PostifyInfo,
-        setPostifyInfo
+        setPostifyInfo, 
+        TechInfo,
+        setTechInfo,
       }}
     >
       {children}
