@@ -157,7 +157,7 @@ const Folder = ({ closeHandler, style }) => {
                                 const file = files[fileName];
                                 if (file.available && file.location === "downloads") {
                                     return (
-                                        <div key={fileName} className='Icons' onDoubleClick={() => openFile(fileName)}>
+                                        <div key={fileName} className='Icons' onClick={() => openFile(fileName)}>
                                             <img src={file.icon} alt={`${file.label} Icon`} />
                                             <span>{file.label}</span>
                                         </div>

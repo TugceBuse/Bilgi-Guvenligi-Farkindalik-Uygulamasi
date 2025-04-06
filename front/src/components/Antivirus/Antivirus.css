@@ -69,15 +69,151 @@
     transform: scale(1.1);
   }
 
-  .antivirus-content {
+  /* Menü butonlarını üstte göstermek için */
+  .antivirus-menu {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 20px;
-    gap: 20px;
+    align-items: flex-start;
+    background-color: rgba(0, 30, 60, 0.85);
+    border-right: 2px solid #002a52;
+    padding: 10px;
+    width: 180px;
+    height: 100%;
+    gap: 15px;
+    border-radius: 10px;
   }
+
+  .antivirus-menu button {
+    background-color: #ffcc00;
+    color: #000;
+    border: 2px solid #000;
+    border-radius: 10px;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+  }
+
+  .antivirus-menu button:hover {
+    background-color: #ffe066;
+    transform: scale(1.03);
+  }
+
+  .antivirus-home,
+  .antivirus-scan,
+  .antivirus-quarantine,
+  .antivirus-settings {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #000;
+    padding: 30px;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    border: 3px solid #015a9c;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+    font-size: 20px;
+  }
+
+  .antivirus-home h2,
+  .antivirus-home h3 {
+    background-color: #b3e5fc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #0288d1;
+    color: #01579b;
+  }
+  .antivirus-home h3 {
+    margin-top: 150px;
+  }
+  
+  .antivirus-home ul {
+    margin-left: 20px;
+  }
+
+  .antivirus-home li {
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  /* listbox home */
+  .log-listbox {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 2px solid #0288d1;
+    padding: 15px 20px;
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+  }
+  
+  .log-listbox ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+  }
+  
+  .log-listbox li {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #000;
+  }
+
+  /* Karantina bölümü girdileri */
+  .antivirus-quarantine .quarantine-entry {
+    background-color: #ffcdd2;
+    border: 2px solid #b71c1c;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .antivirus-quarantine .quarantine-entry button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #f44336;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .antivirus-quarantine .quarantine-entry button:hover {
+    background-color: #b71c1c;
+  }
+
+  /* Ayarlar sekmesi */
+  .antivirus-settings label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    background-color: #e1f5fe;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 2px solid #0288d1;
+    color: #01579b;
+    gap: 10px;
+  }
+
+
+  .antivirus-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    gap: 10px;
+    overflow: hidden;
+  }
+  
   .antivirus-content h2{
     background-color: #79b9c9;
     border-radius: 20px;
@@ -175,30 +311,64 @@
   
   .antivirus-scan-progress {
     margin-top: 20px;
-    color: #000000;
-    font-size: 22px;
-    background-color: hsl(49, 50%, 80%);
-    border-radius: 50px;
-    width: 20%;
-    height: 70px;
-    padding: 5px;
+    color: #ffffff;
+    font-size: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 2px dashed #f2e638;
+    border-radius: 15px;
+    padding: 20px;
+    width: 60%;
     text-align: center;
+    animation: scan-blink 3s infinite alternate;
+  }
+  
+  @keyframes scan-blink {
+    from {
+      border-color: #f2e638;
+    }
+    to {
+      border-color: #ffd700;
+    }
   }
   
   .antivirus-icons img {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-self: center;
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
   }
+
   .antivirus-scan-complete {
-    margin-top: 20px;
-    font-size: 22px;
-    color: #01bd2d;
-    background-color: #000000;
-    width: 40%;
-    padding: 15px;
-    text-align: center;
-  }
+  margin-top: 20px;
+  font-size: 18px;
+  padding: 20px;
+  border-radius: 15px;
+  width: 70%;
+  text-align: left;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.antivirus-scan-complete img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.antivirus-scan-complete.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 2px solid #81c784;
+}
+
+.antivirus-scan-complete.warning {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 2px solid #ffb74d;
+}
+
+.antivirus-scan-complete ul {
+  margin-top: 10px;
+  margin-left: 20px;
+  list-style-type: disc;
+}
   

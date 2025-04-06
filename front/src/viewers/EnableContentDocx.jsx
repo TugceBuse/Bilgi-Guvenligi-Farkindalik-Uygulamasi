@@ -16,7 +16,7 @@ const EnableContentDocx = ({ file, fileName }) => {
     const handleEnableClick = () => {
         setEnabled(true);
         if (file.infected && file.virusType) {
-            addVirus({ type: file.virusType, detectable: false, sourcefile: fileName}); 
+            addVirus({ type: file.virusType, detectable: true, sourcefile: fileName}); 
         };
     }
 
@@ -46,7 +46,7 @@ const EnableContentDocx = ({ file, fileName }) => {
                     {enabled ? (
                         <p><b>Belge içeriği etkinleştirildi.</b></p>
                     ) : (
-                        <p>Bu belgenin içeriği görüntülenemiyor. Lütfen yukarıdan içeriği etkinleştirin.</p>
+                        <p>Bu belgenin içeriği görüntülenemiyor. Görebilmek için Lütfen içeriği etkinleştirin.</p>
                     )}
                 </div>
             </div>

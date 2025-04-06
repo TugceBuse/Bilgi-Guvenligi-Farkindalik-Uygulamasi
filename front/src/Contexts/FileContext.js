@@ -9,17 +9,19 @@ export const FileContextProvider = ({ children }) => {
     // 📌 Dosyalar burada tanımlanıyor
     const [files, setFiles] = useState({
         benioku: { 
-            available: true, 
+            available: true,
+            quarantined: false, 
             infected: false, 
             type: "txt", 
             size: "1KB", 
             location: "downloads", 
             label: "benioku", 
             icon: "/icons/txt.png", 
-            content: "/files/benioku.txt" 
+            content: "/files/benioku.txt"
         },
         rapor_2025: { 
             available: false, 
+            quarantined: false,
             infected: true,
             virusType: "ransomware", 
             type: "docx", 
@@ -30,7 +32,8 @@ export const FileContextProvider = ({ children }) => {
             specialView : "enableContentDocx" 
         },
         antivirussetup: { 
-            available: true, 
+            available: true,
+            quarantined: false, 
             infected: false, 
             type: "exe", 
             size: "20MB", 
@@ -40,7 +43,8 @@ export const FileContextProvider = ({ children }) => {
             exeType: "antivirussetup"
         },
         officeDoc: { 
-            available: true, 
+            available: true,
+            quarantined: false, 
             infected: false, 
             type: "docx", 
             size: "1MB", 
@@ -50,7 +54,8 @@ export const FileContextProvider = ({ children }) => {
             content: "/files/word1.docx" 
         },
         photo1: { 
-            available: true, 
+            available: true,
+            quarantined: false, 
             infected: false, 
             type: "jpg", 
             size: "363KB", 
@@ -60,7 +65,8 @@ export const FileContextProvider = ({ children }) => {
             content: "/images/office.jpg"
         },
         photo12: { 
-            available: true, 
+            available: true,
+            quarantined: false, 
             infected: false, 
             type: "jpg", 
             size: "363KB", 
@@ -70,7 +76,8 @@ export const FileContextProvider = ({ children }) => {
             content: "/images/office.jpg"
         },
         photo2: { 
-            available: true, 
+            available: true,
+            quarantined: false, 
             infected: false, 
             type: "jpg", 
             size: "3MB", 

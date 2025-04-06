@@ -11,12 +11,6 @@ import DocxViewer from './DocxViewer';
 const FileOpener = ({ file, fileName, updateAvailableStatus /* WindowConfig available */ }) => {
     const { addVirus } = useVirusContext();
 
-    useEffect(() => {
-        if (file.infected) {
-            addVirus(file.virusType); // Dosya açılınca virüs bulaşıyor
-        }
-    }, [file, addVirus]);
-
     if (!file) return <p>Dosya bulunamadı.</p>;
 
     switch (file.type) {

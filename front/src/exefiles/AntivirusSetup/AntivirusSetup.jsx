@@ -3,6 +3,7 @@ import './AntivirusSetup.css';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
+import { useVirusContext } from '../../Contexts/VirusContext';
 
 export const useSetup = () => {
     const { toggleWindow } = useUIContext();
@@ -28,6 +29,7 @@ const AntivirusSetup = ({ file, fileName }) => {
     const { closeFile } = useFileContext();
     const { updateAvailableStatus } = useWindowConfig();
     const { windowConfig } = useWindowConfig();
+    const { setIsAntivirusOn } = useVirusContext();
 
     const handleNextStep = () => {
         if (windowConfig.antivirus.available) {
@@ -48,6 +50,7 @@ const AntivirusSetup = ({ file, fileName }) => {
             setButtonLoading(false); 
             setStep(step + 1);
             updateAvailableStatus('antivirus', true);
+            setIsAntivirusOn(true); // Antivirüs açıldı
         }, 5000);
        
     };
