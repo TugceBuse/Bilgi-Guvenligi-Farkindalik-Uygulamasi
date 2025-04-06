@@ -113,7 +113,21 @@ const sites = {
     protocol: "https",
     isSponsored: false,
     seoScore: 78
-  }
+  },
+
+  "https://techdepo.com": {
+  title: "TechDepo",
+  type: "component",
+  component: "TechDepo",
+  statement: "Bilgisayar ve ofis ekipmanlarında güvenilir alışverişin adresi.",
+  searchKeys: ["tech shop", "bilgisayar parçaları", "ofis ekipmanları", "indirimli teknoloji, techdepo, tech, depo"],
+  clickable: true,
+  protocol: "https",
+  color: "#1E90FF",
+  isSponsored: false,
+  seoScore: 87
+}
+
 };
 
 export default sites;
