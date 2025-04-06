@@ -52,6 +52,11 @@
         align-items: center;
         gap: 10px;
     }
+
+    .image-viewer-title img{
+        width: 24px;
+        height: 24px;
+    }
     
     .image-viewer-content {
         flex: 1;

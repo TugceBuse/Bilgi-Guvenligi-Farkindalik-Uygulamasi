@@ -154,13 +154,27 @@
     list-style-type: disc;
     padding-left: 20px;
     margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 15px;
+    color: #000;
   }
   
   .log-listbox li {
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #000;
+    margin-bottom: 10px;
   }
+  
+  .log-listbox li ul {
+    list-style-type: circle;
+    padding-left: 20px;
+    margin-top: 5px;
+  }
+  
+  .log-listbox li ul li {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
 
   /* Karantina bölümü girdileri */
   .antivirus-quarantine .quarantine-entry {

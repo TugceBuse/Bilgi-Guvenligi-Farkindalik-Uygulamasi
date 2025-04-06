@@ -137,7 +137,18 @@ const Antivirus = ({ closeHandler, style }) => {
                 <ul>
                   {scanLogs.map((log, index) => (
                     <li key={index}>
-                      {log.date} - {log.files.length > 0 ? `${log.files.length} dosya karantinaya alındı.` : "Herhangi bir tehdit bulunamadı."}
+                      <strong>{log.date}</strong>
+                      <ul>
+                        {log.files.length === 0 ? (
+                          <li>Herhangi bir tehdit bulunamadı.</li>
+                        ) : (
+                          log.files.map((file, i) => (
+                            <li key={i}>
+                              📄 <strong>{file.fileName}</strong> dosyasında <em>{file.virusType}</em> tespit edildi.
+                            </li>
+                          ))
+                        )}
+                      </ul>
                     </li>
                   ))}
                 </ul>
