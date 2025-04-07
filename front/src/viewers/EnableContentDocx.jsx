@@ -3,19 +3,33 @@ import { useVirusContext } from '../Contexts/VirusContext';
 import { useFileContext } from '../Contexts/FileContext';
 import './EnableContentDocx.css';
 import { MakeDraggable } from '../utils/Draggable';
+import { useNotification } from '../Contexts/NotificationContext';
 
 
 const EnableContentDocx = ({ file, fileName }) => {
-    const { addVirus } = useVirusContext();
+    const { addVirus, realTimeProtection } = useVirusContext();
     const [enabled, setEnabled] = useState(false);
     const { closeFile } = useFileContext();
     const docxRef = useRef(null);
+    const { addNotification } = useNotification();
+    const { updateFileStatus } = useFileContext();
 
     MakeDraggable(docxRef, '.docx-header');
 
     const handleEnableClick = () => {
         setEnabled(true);
         if (file.infected && file.virusType) {
+            if( realTimeProtection) {
+                updateFileStatus(fileName, { quarantined: true, available: false });
+                addNotification({
+                    title: 'Şüpheli Dosya!',
+                    message: `"${fileName}.${file.type}" dosyasında ${file.virusType} tespit edildi ve karantinaya alındı.`,
+                    icon: '/icons/caution.png',
+                    type: 'danger',
+                    duration: 7000
+                });
+                return;
+            }
             addVirus({ type: file.virusType, detectable: true, sourcefile: fileName}); 
         };
     }
