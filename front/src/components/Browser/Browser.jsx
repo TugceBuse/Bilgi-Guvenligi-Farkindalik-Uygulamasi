@@ -13,10 +13,10 @@ export const useBrowser = () => {
 const CachedComponents = {}; // 📌 Bileşenleri cachelemek için bir obje oluşturduk
 
 const Browser = ({ closeHandler, style }) => {
-  const [url, setUrl] = useState("https://google.com");
-  const [currentUrl, setCurrentUrl] = useState("https://google.com");
+  const [url, setUrl] = useState("https://www.google.com");
+  const [currentUrl, setCurrentUrl] = useState("https://www.google.com");
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState(["google.com"]);
+  const [history, setHistory] = useState(["https://www.google.com"]);
   const [matchedSites, setMatchedSites] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const browserRef = useRef(null);
@@ -26,10 +26,14 @@ const Browser = ({ closeHandler, style }) => {
 
   const { isWificonnected } = useGameContext();
 
+  useEffect(() => {
+    console.log("History güncellendi:", history);
+  }, [history]);
+
   // 📌 Yükleme fonksiyonu: 1 saniye bekletir, sonra devam eder
   const startLoading = async () => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 📌 1 saniye beklet
+    await new Promise(resolve => setTimeout(resolve, 1000));
     setLoading(false);
   };
 
@@ -50,8 +54,8 @@ const Browser = ({ closeHandler, style }) => {
   const handleGoogleSearch = async (searchText, addToHistory = true) => {
     if (!searchText || !searchText.trim()) return;
   
-    const searchQuery = normalizeText(searchText.trim());  // Normalizasyonu uygula
-    const searchUrl = `https://google.com/search?q=${encodeURIComponent(searchQuery)}`;
+    const searchQuery = normalizeText(searchText.trim());
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
   
     setUrl(searchUrl);
     await startLoading();
@@ -72,7 +76,7 @@ const Browser = ({ closeHandler, style }) => {
     const finalUrl = hasProtocol ? cleanedUrl : `https://${cleanedUrl}`;
     const normalizedUrl = normalizeText(finalUrl);
   
-    if (normalizedUrl.startsWith("https://google.com/search?q=") || normalizedUrl.startsWith("google.com/search?q=")) {
+    if (normalizedUrl.startsWith("https://www.google.com/search?q=") || normalizedUrl.startsWith("google.com/search?q=")) {
       setCurrentUrl(normalizedUrl);
       setUrl(normalizedUrl);
     } else {
@@ -89,7 +93,7 @@ const Browser = ({ closeHandler, style }) => {
   
 
   useEffect(() => {
-    if (currentUrl.startsWith("https://google.com/search?q=")) {
+    if (currentUrl.startsWith("https://www.google.com/search?q=")) {
       const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
   
       const filteredSites = Object.entries(sites)
@@ -110,7 +114,7 @@ const Browser = ({ closeHandler, style }) => {
 
   const handleBackClick = async () => {
     if (currentIndex > 0) {
-      await startLoading(); // 1 saniye beklet
+      await startLoading();
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
       setUrl(history[newIndex]); 
@@ -120,7 +124,7 @@ const Browser = ({ closeHandler, style }) => {
 
   const handleForwardClick = async () => {
     if (currentIndex < history.length - 1) {
-      await startLoading(); // 📌 1 saniye beklet
+      await startLoading();
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
       setUrl(history[newIndex]); 
@@ -160,7 +164,7 @@ const Browser = ({ closeHandler, style }) => {
             </div>
     }
 
-    if (currentUrl.startsWith("https://google.com/search?q=")) {
+    if (currentUrl.startsWith("https://www.google.com/search?q=")) {
       const searchedText = decodeURIComponent(currentUrl.split("search?q=")[1]);
       return (
         
@@ -230,7 +234,7 @@ const Browser = ({ closeHandler, style }) => {
       );
     }
 
-    if (currentUrl === "https://google.com") {
+    if (currentUrl === "https://www.google.com") {
       return (
         <div className="firstPartOfBrowser">
           <h1>Google</h1>
@@ -296,7 +300,7 @@ const Browser = ({ closeHandler, style }) => {
         <img 
         className="home-icon"
         src="./icons/home.png" alt="Home" 
-        onClick={() => handleGoClick("google.com")}
+        onClick={() => handleGoClick("https://www.google.com")}
         />
         
         <input className="browser-url-input" type="text" value={url} onChange={handleUrlChange} onKeyDown={handleKeyDown} placeholder="Enter URL" />
