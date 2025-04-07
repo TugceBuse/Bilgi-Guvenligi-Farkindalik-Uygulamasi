@@ -6,7 +6,7 @@ export const VirusProvider = ({ children }) => {
     const [viruses, setViruses] = useState([]);
 
     const [scanLogs, setScanLogs] = useState([]);
-    const [isantivirusOn, setIsAntivirusOn] = useState(false); // Antivirüs aktif mi değil mi
+    const [realTimeProtection, setRealTimeProtection] = useState(false); // Antivirüs aktif mi değil mi
     const [isantivirusUpToDate, setIsAntivirusUpToDate] = useState(false); // Antivirüs güncel mi değil mi
 
 
@@ -53,7 +53,10 @@ export const VirusProvider = ({ children }) => {
     };
 
     return (
-        <VirusContext.Provider value={{ viruses, addVirus, removeVirus, scanLogs, setScanLogs, isantivirusOn, setIsAntivirusOn, isantivirusUpToDate, setIsAntivirusUpToDate }}>
+        <VirusContext.Provider value=
+        {{ viruses, addVirus, removeVirus,
+         scanLogs, setScanLogs, realTimeProtection, setRealTimeProtection,
+          isantivirusUpToDate, setIsAntivirusUpToDate }}>
             {children}
         </VirusContext.Provider>
     );

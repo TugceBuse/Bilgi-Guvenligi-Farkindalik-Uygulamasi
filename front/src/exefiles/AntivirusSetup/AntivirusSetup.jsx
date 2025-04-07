@@ -4,6 +4,7 @@ import { useUIContext } from '../../Contexts/UIContext';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
+import { useGameContext } from '../../Contexts/GameContext';
 
 export const useSetup = () => {
     const { toggleWindow } = useUIContext();
@@ -29,7 +30,7 @@ const AntivirusSetup = ({ file, fileName }) => {
     const { closeFile } = useFileContext();
     const { updateAvailableStatus } = useWindowConfig();
     const { windowConfig } = useWindowConfig();
-    const { setIsAntivirusOn } = useVirusContext();
+    const { setRealTimeProtection } = useVirusContext();
 
     const handleNextStep = () => {
         if (windowConfig.antivirus.available) {
@@ -50,7 +51,7 @@ const AntivirusSetup = ({ file, fileName }) => {
             setButtonLoading(false); 
             setStep(step + 1);
             updateAvailableStatus('antivirus', true);
-            setIsAntivirusOn(true); // Antivirüs açıldı
+            setRealTimeProtection(true); // Antivirüs açıldı
         }, 5000);
        
     };

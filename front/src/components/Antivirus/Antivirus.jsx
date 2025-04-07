@@ -36,7 +36,7 @@ const Antivirus = ({ closeHandler, style }) => {
   const [quarantinedFiles, setQuarantinedFiles] = useState([]);
   const [activeTab, setActiveTab] = useState("home");
 
-  const { viruses, removeVirus, scanLogs, setScanLogs, isantivirusOn, setIsAntivirusOn } = useVirusContext();
+  const { viruses, removeVirus, scanLogs, setScanLogs, realTimeProtection, setRealTimeProtection } = useVirusContext();
   const { files, updateFileStatus } = useFileContext();
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const Antivirus = ({ closeHandler, style }) => {
   };
 
   const handleToggleAntivirus = () => {
-    setIsAntivirusOn(!isantivirusOn);
+    setRealTimeProtection(!realTimeProtection);
   };
 
   const handleDeleteFile = (fileName) => {
@@ -127,8 +127,14 @@ const Antivirus = ({ closeHandler, style }) => {
 
         {activeTab === "home" && (
           <div className="antivirus-home">
-            <h2>Shield Secure Antivirus'e Hoşgeldiniz!</h2>
-            <p>Bu antivirüs bilgisayarınızı güvende tutar.</p>
+            <h2>Shield Secure Antivirus'e Hoş Geldiniz</h2>
+            <p>
+              Shield Secure, cihazınızı zararlı yazılımlara, fidye yazılımlarına, casus yazılımlara ve diğer dijital tehditlere karşı korumak için tasarlanmıştır.
+              Gerçek zamanlı koruma ve düzenli tarama seçenekleriyle sistem güvenliğinizi en üst düzeyde tutar.
+            </p>
+            <p><br />
+              Aşağıda en son gerçekleştirilen taramaların kayıtlarını görüntüleyebilirsiniz. Yeni bir tarama başlatarak sisteminizi tekrar kontrol edebilir, karantinaya alınan dosyaları inceleyebilir veya antivirüs ayarlarını düzenleyebilirsiniz.
+            </p>
             <h3>📜 Geçmiş Tarama Kayıtları:</h3>
             <div className="log-listbox">
               {scanLogs.length === 0 ? (
@@ -224,18 +230,21 @@ const Antivirus = ({ closeHandler, style }) => {
         )}
 
         {activeTab === "settings" && (
-          <div className="antivirus-settings">
-            <h3>⚙️ Ayarlar</h3>
-            <label>
-              Antivirüs Durumu:
+        <div className="antivirus-settings">
+          <h3>⚙️ Ayarlar</h3>
+          <div className="toggle-setting">
+            <span>Gerçek Zamanlı Koruma:</span>
+            <label className="switch">
               <input
                 type="checkbox"
-                checked={isantivirusOn}
+                checked={realTimeProtection}
                 onChange={handleToggleAntivirus}
               />
-              {isantivirusOn ? " Açık" : " Kapalı"}
+              <span className="slider"></span>
             </label>
+            <span className="status-text">{realTimeProtection ? "Açık" : "Kapalı"}</span>
           </div>
+        </div>
         )}
       </div>
     </div>
