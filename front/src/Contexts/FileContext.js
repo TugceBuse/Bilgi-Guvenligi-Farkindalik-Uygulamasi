@@ -6,12 +6,13 @@ const FileContext = createContext();
 export const FileContextProvider = ({ children }) => {
     const { toggleWindow } = useUIContext();
 
-    // 📌 Dosyalar burada tanımlanıyor
+    // Dosya ve Özellikleri
     const [files, setFiles] = useState({
         benioku: { 
             available: true,
             quarantined: false, 
-            infected: false, 
+            infected: false,
+            virusType: null, 
             type: "txt", 
             size: "1KB", 
             location: "downloads", 
@@ -23,6 +24,7 @@ export const FileContextProvider = ({ children }) => {
             available: false, 
             quarantined: false,
             infected: true,
+            detectable: true,
             virusType: "ransomware", 
             type: "docx", 
             size: "2MB", 
@@ -34,7 +36,7 @@ export const FileContextProvider = ({ children }) => {
         antivirussetup: { 
             available: true,
             quarantined: false, 
-            infected: false, 
+            infected: false,
             type: "exe", 
             size: "20MB", 
             location: "downloads", 

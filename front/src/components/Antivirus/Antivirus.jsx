@@ -36,7 +36,19 @@ const Antivirus = ({ closeHandler, style }) => {
   const [quarantinedFiles, setQuarantinedFiles] = useState([]);
   const [activeTab, setActiveTab] = useState("home");
 
-  const { viruses, removeVirus, scanLogs, setScanLogs, realTimeProtection, setRealTimeProtection } = useVirusContext();
+  // Antivirüs güncellemeleri için durum değişkenleri
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [checkingUpdates, setCheckingUpdates] = useState(false);
+  const [hasCheckedUpdates, setHasCheckedUpdates] = useState(false);
+  const [updateProgress, setUpdateProgress] = useState(0);
+  const updateIntervalRef = useRef(null); // İptal etmek için referans
+
+  const { 
+    viruses, removeVirus,
+    scanLogs,setScanLogs,
+    realTimeProtection, setRealTimeProtection,
+    antivirusUpdated, setAntivirusUpdated 
+  } = useVirusContext();
   const { files, updateFileStatus } = useFileContext();
 
   useEffect(() => {
@@ -45,46 +57,124 @@ const Antivirus = ({ closeHandler, style }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
+  // Antivirüs Tarama Simülasyonu Karantinaya alma ve log tutma işlemleri
   const handleScanClick = () => {
     setIsScanning(true);
     setScanComplete(false);
     setQuarantinedFiles([]);
-
+  
     const now = new Date();
     const date = now.toLocaleDateString('tr-TR');
     const time = now.toLocaleTimeString('tr-TR');
     const scanDate = `${date} - ${time}`;
-
+  
     setTimeout(() => {
-      const detectableViruses = viruses.filter(v => v.detectable && v.sourcefile);
       const quarantined = [];
-
+      const quarantinedFilesSet = new Set();
+  
+      // 🔎 1. Aktif virüsleri analiz et (Virüs context’ten gelenler)
+      const detectableViruses = viruses.filter(v => v.detectable && v.sourcefile);
+      console.log("Detectable Viruses:", detectableViruses);
+  
       detectableViruses.forEach(virus => {
-        const fileKey = Object.keys(files).find(file => files[file].label.toLowerCase() === virus.sourcefile.toLowerCase());
-        if (fileKey) {
+        const fileKey = Object.keys(files).find(
+          file => files[file].label.toLowerCase() === virus.sourcefile.toLowerCase()
+        );
+        console.log("File Key:", fileKey);
+        if (fileKey && !quarantinedFilesSet.has(fileKey)) {
           updateFileStatus(fileKey, {
             quarantined: true,
             available: false
           });
-          quarantined.push({ fileName: fileKey, virusType: virus.type });
-          removeVirus(virus.type);
+  
+          quarantined.push({
+            fileName: fileKey,
+            virusType: virus.type
+          });
+  
+          quarantinedFilesSet.add(fileKey);
+          removeVirus(virus.type); // virüs etkisizleştirildi
+        }
+      });
+  
+      // 🔍 2. Dosya içinden doğrudan enfekte olanları analiz et (aktif virüs olmasa bile)
+      Object.entries(files).forEach(([fileName, fileData]) => {
+        console.log("FileName:", fileName);
+        console.log("FileData:", fileData);
+        const isDetectableInfected =
+          fileData.detectable &&
+          fileData.infected &&
+          fileData.available &&
+          !fileData.quarantined;
+          console.log("Is Detectable Infected:", isDetectableInfected);
+  
+        const alreadyHandled = quarantinedFilesSet.has(fileName);
+  
+        if (isDetectableInfected && !alreadyHandled) {
+          updateFileStatus(fileName, {
+            quarantined: true,
+            available: false
+          });
+  
+          quarantined.push({
+            fileName,
+            virusType: fileData.virusType || "unknown"
+          });
+  
+          quarantinedFilesSet.add(fileName);
         }
       });
 
+      console.log("Quarantined Files:", quarantined);
+      console.log("Quarantined Files Set:", quarantinedFilesSet);
+  
+      // 🔄 Durumları güncelle
       setIsScanning(false);
       setScanComplete(true);
-      setQuarantinedFiles(quarantined);
-
-      const resultLog = {
-        date: scanDate,
-        files: quarantined
-      };
-
-      setScanLogs(prev => [...prev, resultLog]);
-
+      setQuarantinedFiles(quarantined); // Sadece array olarak setle
+      setScanLogs(prev => [...prev, { date: scanDate, files: quarantined }]);
+  
       setTimeout(() => setScanComplete(false), 3000);
     }, 5000);
+  };
+
+
+  
+
+  //Güncelleme kontrolü ve yükleme simülasyonu
+  const checkForUpdates = () => {
+    setCheckingUpdates(true);
+    setTimeout(() => {
+      setCheckingUpdates(false);
+      setHasCheckedUpdates(true);
+    }, 2000);
+  };
+  
+  const handleUpdateDefinitions = () => {
+    setIsUpdating(true);
+    setUpdateProgress(0);
+
+    updateIntervalRef.current = setInterval(() => {
+      setUpdateProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(updateIntervalRef.current);
+        setIsUpdating(false);
+        setAntivirusUpdated(true);
+        return 100;
+      }
+        return prev + 5;
+      });
+    }, 200); // her 200ms'de %5 artar → ~4 saniye
+  };
+  // sayfa kapatıldığında  interval'ı temizle
+  useEffect(() => {
+    return () => clearInterval(updateIntervalRef.current);
+  }, []);
+
+  const handleCancelUpdate = () => {
+    clearInterval(updateIntervalRef.current);
+    setIsUpdating(false);
+    setUpdateProgress(0);
   };
 
   const handleToggleAntivirus = () => {
@@ -100,12 +190,9 @@ const Antivirus = ({ closeHandler, style }) => {
   };
 
   // 🔄 Tüm scanLogs içinden karantinaya alınmış ve hala karantinada olan dosyaları bul
-  const allQuarantinedFromLogs = scanLogs
-    .flatMap(log => log.files)
-    .filter((value, index, self) =>
-      index === self.findIndex(v => v.fileName === value.fileName)
-    )
-    .filter(file => files[file.fileName]?.quarantined);
+    const allQuarantinedFiles = Object.entries(files)
+    .filter(([fileName, fileData]) => fileData.quarantined)
+    .map(([fileName, fileData]) => ({ fileName, ...fileData }));
 
   return (
     <div className="antivirus-window" style={style} ref={antivirusRef}>
@@ -122,6 +209,7 @@ const Antivirus = ({ closeHandler, style }) => {
           <button onClick={() => setActiveTab("home")}>Giriş</button>
           <button onClick={() => setActiveTab("scan")}>Tarama</button>
           <button onClick={() => setActiveTab("quarantine")}>Karantina</button>
+          <button onClick={() => setActiveTab("updates")}>Güncellemeler</button>
           <button onClick={() => setActiveTab("settings")}>Ayarlar</button>
         </div>
 
@@ -209,10 +297,10 @@ const Antivirus = ({ closeHandler, style }) => {
         {activeTab === "quarantine" && (
           <div className="antivirus-quarantine">
             <h3>🛑 Karantinadaki Dosyalar</h3>
-            {allQuarantinedFromLogs.length === 0 ? (
+            {allQuarantinedFiles.length === 0 ? (
               <p>Şu anda karantinada dosya bulunmuyor.</p>
             ) : (
-              allQuarantinedFromLogs.map(({ fileName, virusType }) => (
+              allQuarantinedFiles.map(({ fileName, virusType }) => (
                 <div key={fileName} className="quarantine-entry">
                   <strong>{fileName}</strong> — ({virusType})
                   <button onClick={() => {
@@ -225,6 +313,43 @@ const Antivirus = ({ closeHandler, style }) => {
                   }}>Karantinadan Çıkar</button>
                 </div>
               ))
+            )}
+          </div>
+        )}
+
+        {activeTab === "updates" && (
+          <div className="antivirus-updates">
+            <h3>🧬 Virüs Veritabanı Güncellemeleri</h3>
+
+            {!hasCheckedUpdates && (
+              <button onClick={checkForUpdates} disabled={checkingUpdates}>
+                {checkingUpdates ? "Güncellemeler kontrol ediliyor..." : "Güncellemeleri Kontrol Et"}
+              </button>
+            )}
+
+            {hasCheckedUpdates && antivirusUpdated && (
+              <p className="updated-msg">✅ Sisteminiz zaten güncel.</p>
+            )}
+
+            {hasCheckedUpdates && !antivirusUpdated && (
+              <>
+                {!isUpdating && (
+                  <>
+                    <p>🚨 Yeni bir güvenlik yükseltmesi bulundu.</p>
+                    <button onClick={handleUpdateDefinitions}>Güncellemeyi Yükle</button>
+                  </>
+                )}
+
+                {isUpdating && (
+                  <>
+                    <p>🔄 Güncelleme yükleniyor: %{updateProgress}</p>
+                    <div className="progress-bar-container">
+                      <div className="progress-bar-fill" style={{ width: `${updateProgress}%` }}></div>
+                    </div>
+                    <button onClick={handleCancelUpdate}>İptal Et</button>
+                  </>
+                )}
+              </>
             )}
           </div>
         )}

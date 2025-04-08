@@ -7,7 +7,7 @@ import { useNotification } from '../Contexts/NotificationContext';
 
 
 const EnableContentDocx = ({ file, fileName }) => {
-    const { addVirus, realTimeProtection } = useVirusContext();
+    const { addVirus, fullProtection  } = useVirusContext();
     const [enabled, setEnabled] = useState(false);
     const { closeFile } = useFileContext();
     const docxRef = useRef(null);
@@ -19,7 +19,7 @@ const EnableContentDocx = ({ file, fileName }) => {
     const handleEnableClick = () => {
         setEnabled(true);
         if (file.infected && file.virusType) {
-            if( realTimeProtection) {
+            if( fullProtection ) {
                 updateFileStatus(fileName, { quarantined: true, available: false });
                 addNotification({
                     title: 'Şüpheli Dosya!',
