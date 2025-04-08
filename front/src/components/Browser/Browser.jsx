@@ -21,6 +21,7 @@ const Browser = ({ closeHandler, style }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const browserRef = useRef(null);
   const searchInputRef = useRef(null);
+  const browserScrollRef = useRef(null);
 
   MakeDraggable(browserRef, ".browser-header");
 
@@ -269,7 +270,7 @@ const Browser = ({ closeHandler, style }) => {
 
         return (
           <Suspense /*fallback={<div className="browser-loading">Yükleniyor...</div>}*/>
-            <SiteComponent />
+            <SiteComponent scrollRef={browserScrollRef} />
           </Suspense>
         );
       default:
@@ -307,7 +308,7 @@ const Browser = ({ closeHandler, style }) => {
         <button className="browser-go-button" onClick={() => handleGoClick(url)}>Go</button>
       </div>
      
-      <div className="browser-content">{renderContent()}</div>
+      <div className="browser-content" ref={browserScrollRef}>{renderContent()}</div>
     </div>
   );
 };

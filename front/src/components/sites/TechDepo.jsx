@@ -210,10 +210,11 @@ const cards = [
 ];
 
 
-const TechDepo = () => {
+const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo } = useGameContext();
 
   const [page, setPage] = useState("welcome");
+  const [subPage, setSubPage] = useState("profileInfo");
 
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
@@ -232,20 +233,24 @@ const TechDepo = () => {
   const email = TechInfo.email;
 
   useEffect(() => {
-          if(!TechInfo.isLoggedIn) {
-              setName("");
-              setSurname("");
-              setPassword("");
-              setErrorMessage("");
-          } 
-    }, [TechInfo.isLoggedIn]);
+    if(!TechInfo.isLoggedIn) {
+        setName("");
+        setSurname("");
+        setPassword("");
+        setErrorMessage("");
+    } 
+  }, [TechInfo.isLoggedIn]);
+
+  useEffect(() => {
+    scrollRef?.current?.scrollTo?.({ top: 0, behavior: "auto" });
+  }, [page]); // veya [subPage], [view], vb.
 
   const handleAuth = () => {
     const showError = (message) => {
       setErrorMessage(message);
       setTimeout(() => {
         setErrorMessage("");
-      }, 3000); // 3 saniye sonra silinir
+      }, 3000); 
     };
   
     if (!isLogin) {
@@ -290,6 +295,7 @@ const TechDepo = () => {
     setPage("welcome");
   };
   
+
   const handleLogout = () => {
     setTechInfo({
       ...TechInfo,
@@ -313,9 +319,41 @@ const TechDepo = () => {
    
   };
 
+  const handleEdit = () => {
+    setTechInfo({
+      ...TechInfo,
+      name: editableName,
+      surname: editableSurname,
+    });
+  
+    setInfoUpdated(true);
+  
+    setTimeout(() => {
+      setInfoUpdated(false);
+    }, 3000); 
+  };
+
+
    const [showUserMenu, setShowUserMenu] = useState(false);
    const toggleUserMenu = () => setShowUserMenu(!showUserMenu);
 
+   // Kullanıcı bilgilerini düzenlemek için state'ler
+   const [editableName, setEditableName] = useState(TechInfo.name);
+   const [editableSurname, setEditableSurname] = useState(TechInfo.surname);
+
+   useEffect(() => {
+     setEditableName(TechInfo.name);
+     setEditableSurname(TechInfo.surname);
+   }, [TechInfo.name, TechInfo.surname]);
+
+   const [infoUpdated, setInfoUpdated] = useState(false); // ✔ güncellendi bildirimi
+   const isChanged =
+   editableName !== TechInfo.name ||
+   editableSurname !== TechInfo.surname;
+
+
+   // User menu dışına tıklanıldığında menüyü kapat
+   // useRef ile referans alıyoruz
    const userMenuRef = useRef(null);
    useEffect(() => {
     const handleClickOutside = (event) => {
@@ -336,6 +374,7 @@ const TechDepo = () => {
   return (
     <div className={styles.container}>
         
+      {/* TechDepo navbar */}
       <div className={styles.header}>
             <div className={styles.logoContainer} onClick={() => setPage("welcome")}>
             <img src="/techDepo/techHome.png" alt="TechDepo Logo" className={styles.logo} />
@@ -345,10 +384,10 @@ const TechDepo = () => {
      
             {TechInfo.isLoggedIn ? (
               <div className={styles.userPanel}   onClick={toggleUserMenu}>
-                <p className={styles.userName}><img src={"/techDepo/programmer.png"} alt="user"/> {TechInfo.name}</p>
+                <p className={styles.userName}><img src={"/techDepo/programmer.png"} alt="user"/> {TechInfo.name} {TechInfo.surname}</p>
                 {showUserMenu &&
                   <div className={styles.userActions} ref={userMenuRef}>
-                  <button className={styles.settingsButton}> Ayarlar</button>
+                  <button className={styles.settingsButton}  onClick={() => setPage("userProfile")}> Kullanıcı Bilgilerim</button>
                   <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
                 </div>
                 }
@@ -362,9 +401,9 @@ const TechDepo = () => {
                 Giriş Yap
               </button>
             )}
-           
       </div>
 
+      {/* TechDepo ana sayfa */}
       {page === "welcome" && (
         <div className={styles.welcome}>
           <div className={styles.productGrid}>
@@ -408,6 +447,7 @@ const TechDepo = () => {
         </div>
       )}
 
+      {/* TechDepo spesifik ürün sayfası */}
       {page.startsWith("product_") && (
         <div className={styles.productDetail}>
           {(() => {
@@ -445,6 +485,7 @@ const TechDepo = () => {
         </div>
       )}
 
+      {/* TechDepo giriş/kayıt olma sayfası */}
       {page === "login" && !TechInfo.isLoggedIn && (
         <div className={styles.loginForm}>
           <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
@@ -465,6 +506,7 @@ const TechDepo = () => {
         </div>
       )}
 
+      {/* TechDepo ödeme sayfası */}
       {page === "payment" && (
         <div className={styles.paymentForm}>
           <h2>Ödeme Bilgileri</h2>
@@ -474,6 +516,83 @@ const TechDepo = () => {
           <button onClick={handlePayment}>Ödemeyi Tamamla</button>
         </div>
       )}
+
+      {/* TechDepo kullanıcı bilgileri sayfası */}
+      {page === "userProfile" && (
+        <div className={styles.userProfile}>
+          <div className={styles.sidebar}>
+            <h3>Hesabım</h3>
+            <ul>
+               <li onClick={() => setSubPage("profileInfo")}>Kullanıcı Bilgilerim</li>
+               <li onClick={() => setSubPage("cards")}>Kayıtlı Kartlarım</li>
+            </ul>
+          </div>
+
+          <div className={styles.profileContent}>
+            {subPage === "profileInfo" && (
+              <>
+                <div className={styles.profileForm}>
+                  <h2>Kullanıcı Bilgilerim</h2>
+                  <div className={styles.userBasicInfo}>
+                    <strong>Ad:</strong>
+                    <input value={editableName} onChange={(e) => setEditableName(e.target.value)} />
+                    <strong>Soyad:</strong>
+                    <input value={editableSurname} onChange={(e) => setEditableSurname(e.target.value)} />
+                  </div>
+
+                  <strong>Email:</strong>
+                  <input value={email} disabled />
+
+                  <strong>Telefon:</strong>
+                  <input value={TechInfo.phone} disabled />
+
+                  <button
+                    onClick={handleEdit}
+                    disabled={!isChanged}
+                    className={isChanged ? styles.saveButton : styles.saveButtonDisabled}
+                  >
+                    Bilgilerimi Güncelle
+                  </button>
+
+                  {infoUpdated && (
+                    <p className={styles.updateMessage}>Bilgiler başarıyla güncellendi ✅</p>
+                  )}
+                </div>
+
+
+                <div className={styles.twoFactor}>
+                  <div className={styles.twoFactorHeader}>
+                    <h4>🔐 Çift Faktörlü Doğrulama</h4>
+                    <label className={styles.switch}>
+                      <input
+                        type="checkbox"
+                        checked={TechInfo.is2FAEnabled}
+                        onChange={(e) =>
+                          setTechInfo({ ...TechInfo, is2FAEnabled: e.target.checked })
+                        }
+                      />
+                      <span className={styles.slider}></span>
+                    </label>
+                  </div>
+                  <p className={styles.twoFactorDescription}>
+                    Hesabınıza girişlerde ek güvenlik katmanı sağlar.
+                  </p>
+                </div>
+                </>
+            )}
+
+                {subPage === "cards" && (
+                  <div>
+                    <h2>Kayıtlı Kartlarım</h2>
+                    <p style={{color: "black"}}>💳 Henüz kart eklenmemiş.</p>
+                    {/* Buraya ileride kart yönetimi eklersin */}
+                  </div>
+                )}
+          </div>
+
+        </div>
+      )}
+
 
       <footer className={styles.footer}>
         <p>&copy; 2025 TechDepo</p>

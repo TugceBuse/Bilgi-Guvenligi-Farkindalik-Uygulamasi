@@ -62,6 +62,9 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
+    cardNumber: '',
+    cardExpiryDate: '',
+    cardCVV: '',
   });
 
   useEffect(() => {
