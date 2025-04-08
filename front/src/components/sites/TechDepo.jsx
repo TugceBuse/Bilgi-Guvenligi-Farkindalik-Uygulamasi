@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 
@@ -313,6 +313,26 @@ const TechDepo = () => {
    
   };
 
+   const [showUserMenu, setShowUserMenu] = useState(false);
+   const toggleUserMenu = () => setShowUserMenu(!showUserMenu);
+
+   const userMenuRef = useRef(null);
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target)
+      ) {
+        setShowUserMenu(false);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className={styles.container}>
         
@@ -322,19 +342,27 @@ const TechDepo = () => {
             <h1>TechDepo</h1>
             <h4>Teknoloji Deposu</h4>
             </div>
+     
             {TechInfo.isLoggedIn ? (
-              <div className={styles.userPanel}>
-                <p className={styles.userName}>👤 {TechInfo.name}</p>
-                <div className={styles.userActions}>
-                  <button className={styles.settingsButton}>⚙ Ayarlar</button>
+              <div className={styles.userPanel}   onClick={toggleUserMenu}>
+                <p className={styles.userName}><img src={"/techDepo/programmer.png"} alt="user"/> {TechInfo.name}</p>
+                {showUserMenu &&
+                  <div className={styles.userActions} ref={userMenuRef}>
+                  <button className={styles.settingsButton}> Ayarlar</button>
                   <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
                 </div>
+                }
               </div>
             ) : (
-              <button className={styles.loginButton} onClick={() => setPage("login")}>
+              <button className={styles.loginButton} 
+              onClick={() => {
+                setIsLogin(true);
+                setPage("login");
+              }}>
                 Giriş Yap
               </button>
             )}
+           
       </div>
 
       {page === "welcome" && (
@@ -387,6 +415,7 @@ const TechDepo = () => {
             const product = cards.find((card) => card.id === productId);
             return (
               <div className={styles.detailCard}>
+                <button className={styles.backButton} onClick={() => setPage("welcome")}>◀️ Geri</button>
                 <img src={product.image} alt={product.name} className={styles.detailImage} />
                 <h2>{product.name}</h2>
                 <p><strong>Fiyat:</strong> {product.price}</p>
@@ -400,7 +429,16 @@ const TechDepo = () => {
                     ))}
                   </ul>
                 </div>
-                <button className={styles.backButton} onClick={() => setPage("welcome")}>◀️ Geri Dön</button>
+                
+                <button className={styles.addButton} 
+                onClick={(e) => {
+                  e.stopPropagation();                   
+                    setPage("payment");                     
+                }}> 
+                  <img src="/techDepo/add-to-cart.png" alt="add-to-cart"/> 
+                  Sepete Ekle
+                </button>
+                
               </div>
             );
           })()}
@@ -438,7 +476,7 @@ const TechDepo = () => {
       )}
 
       <footer className={styles.footer}>
-        <p>&copy; 2025 TechDepo - Sahte Görev Senaryosu</p>
+        <p>&copy; 2025 TechDepo</p>
       </footer>
     </div>
   );
