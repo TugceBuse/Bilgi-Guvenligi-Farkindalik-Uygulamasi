@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import Mailbox, { useMailbox } from '../components/Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../components/Todolist/Todolist';
 import Browser, { useBrowser } from '../components/Browser/Browser';
-import ITsupport, { useITsupport } from '../components/ITsupport/ITsupport';
+import ChatApp, { useChatApp } from '../components/ChatApp/ChatApp';
 import Folder, { useFolder } from '../components/Folder/Folder';
 import Scanner, { useScanner } from '../components/Scanner/Scanner';
 import Antivirus, { useAntivirus } from '../components/Antivirus/Antivirus';
@@ -34,11 +34,11 @@ const initialWindowConfig = {
     location: 'desktop',
     available: true,
   },
-  itsupport: {
-    icon: '/icons/helpdesk.png',
-    label: 'IT Support',
-    component: ITsupport,
-    useComponent: useITsupport,
+  chatapp: {
+    icon: '/icons/chat.png',
+    label: 'Sohbet',
+    component: ChatApp,
+    useComponent: useChatApp,
     location: 'desktop',
     available: true,
   },
