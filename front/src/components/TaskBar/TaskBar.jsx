@@ -5,8 +5,8 @@ import { useUIContext } from '../../Contexts/UIContext';
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import { useMailContext } from '../../Contexts/MailContext'; 
-import { use } from 'react';
 import { useFileContext } from '../../Contexts/FileContext';
+import { useVirusContext } from '../../Contexts/VirusContext';
 
 const TaskBar = ({windowConfig}) => {
   const [time, setTime] = useState(new Date());
@@ -28,8 +28,10 @@ const TaskBar = ({windowConfig}) => {
   const navigate = useNavigate();
   const {
     isWificonnected, setIsWificonnected,
-    updating_antivirus, isantivirusuptodate,
+    updating_antivirus
   } = useGameContext();
+
+  const { antivirusUpdated , antivirusUpdating } = useVirusContext();
 
   const { initMail, setInitMail, setSelectedMail, setInboxMails } = useMailContext(); 
 
@@ -235,7 +237,7 @@ const TaskBar = ({windowConfig}) => {
   }, []);
 
   const setAntivirus = () => {
-    if (updating_antivirus) {
+    if (antivirusUpdating) {
       return {
         icon: <img src="/icons/antivirus_in_progress.png" alt="Antivirus Updating Icon" />,
         tooltip: (
@@ -247,7 +249,7 @@ const TaskBar = ({windowConfig}) => {
           </div>
         )
       };
-    } else if (isantivirusuptodate) {
+    } else if (antivirusUpdated) {
       return {
         icon: <img src="/icons/antivirus_latest.png" alt="Antivirus Latest Icon" />,
         tooltip: (
@@ -269,6 +271,7 @@ const TaskBar = ({windowConfig}) => {
   };
 
   const { icon: antivirusIcon, tooltip: antivirusTooltip } = setAntivirus();
+  
   const wifiIcon = isWificonnected 
     ? <img src="/icons/wifi.png" alt="Wifi Connected Icon" /> 
     : <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />;

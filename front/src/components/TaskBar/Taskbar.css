@@ -141,7 +141,7 @@
   width: 0;
   height: 4px;
   background-color: #0078d7;
-  animation: loading 20s infinite;
+  animation: loading 15s infinite;
 }
 
 @keyframes loading {

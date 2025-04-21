@@ -37,7 +37,6 @@ const Antivirus = ({ closeHandler, style }) => {
   const [activeTab, setActiveTab] = useState("home");
 
   // Antivirüs güncellemeleri için durum değişkenleri
-  const [isUpdating, setIsUpdating] = useState(false);
   const [checkingUpdates, setCheckingUpdates] = useState(false);
   const [hasCheckedUpdates, setHasCheckedUpdates] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
@@ -47,7 +46,8 @@ const Antivirus = ({ closeHandler, style }) => {
     viruses, removeVirus,
     scanLogs,setScanLogs,
     realTimeProtection, setRealTimeProtection,
-    antivirusUpdated, setAntivirusUpdated 
+    antivirusUpdated, setAntivirusUpdated,
+    antivirusUpdating, setAntivirusUpdating,
   } = useVirusContext();
   const { files, updateFileStatus } = useFileContext();
 
@@ -151,14 +151,14 @@ const Antivirus = ({ closeHandler, style }) => {
   };
   
   const handleUpdateDefinitions = () => {
-    setIsUpdating(true);
+    setAntivirusUpdating(true);
     setUpdateProgress(0);
 
     updateIntervalRef.current = setInterval(() => {
       setUpdateProgress(prev => {
         if (prev >= 100) {
           clearInterval(updateIntervalRef.current);
-        setIsUpdating(false);
+        setAntivirusUpdating(false);
         setAntivirusUpdated(true);
         return 100;
       }
@@ -173,7 +173,7 @@ const Antivirus = ({ closeHandler, style }) => {
 
   const handleCancelUpdate = () => {
     clearInterval(updateIntervalRef.current);
-    setIsUpdating(false);
+    setAntivirusUpdating(false);
     setUpdateProgress(0);
   };
 
@@ -333,14 +333,14 @@ const Antivirus = ({ closeHandler, style }) => {
 
             {hasCheckedUpdates && !antivirusUpdated && (
               <>
-                {!isUpdating && (
+                {!antivirusUpdating && (
                   <>
                     <p>🚨 Yeni bir güvenlik yükseltmesi bulundu.</p>
                     <button onClick={handleUpdateDefinitions}>Güncellemeyi Yükle</button>
                   </>
                 )}
 
-                {isUpdating && (
+                {antivirusUpdating && (
                   <>
                     <p>🔄 Güncelleme yükleniyor: %{updateProgress}</p>
                     <div className="progress-bar-container">
