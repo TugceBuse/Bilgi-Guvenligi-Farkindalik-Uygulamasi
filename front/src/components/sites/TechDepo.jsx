@@ -375,8 +375,16 @@ const TechDepo = ({scrollRef}) => {
     }).format(price);
   };
   
+  const [isPaying, setIsPaying] = useState(false);
+
   const handlePayment = () => {
-   
+    setIsPaying(true);
+
+    // örnek sahte süre
+    setTimeout(() => {
+      // ödeme işlemleri...
+      setIsPaying(false);
+    }, 2000);
   };
 
   const handleEdit = () => {
@@ -518,7 +526,7 @@ const TechDepo = ({scrollRef}) => {
                 }, 0))
               } 
             </p>
-            <button onClick={() => setPage("payment")}>Ödemeyi Tamamla</button>
+            <button onClick={() => setPage("payment")}>Sepeti Onayla</button>
           </div>
         </div>
       )}
@@ -630,13 +638,101 @@ const TechDepo = ({scrollRef}) => {
       {/* TechDepo ödeme sayfası */}
       {page === "payment" && (
         <div className={styles.paymentForm}>
-          <h2>Ödeme Bilgileri</h2>
-          <input type="text" placeholder="Kart Numarası" />
-          <input type="text" placeholder="Son Kullanma Tarihi" />
-          <input type="text" placeholder="CVV" />
-          <button onClick={handlePayment}>Ödemeyi Tamamla</button>
+          {/* Sol taraf */}
+          <div className={styles.paymentLeft}>
+
+            {/* 1. İndirim Kodu Bölümü */}
+            <div className={styles.discountSection}>
+              <h3>✨ İndirim Kodu</h3>
+              <div>
+                <input type="text" placeholder="Kodunuzu girin" />
+                <button className={styles.applyButton}>Uygula</button>
+              </div>
+            </div>
+
+            {/* 2. Adres ve İletişim Bilgileri */}
+            <div className={styles.infoSection}>
+              <h3><span>1</span>📞 Adres & İletişim Bilgileri</h3>
+              <input type="text" placeholder="E-posta adresiniz" value={email} readOnly />
+              <input type="text" placeholder="Adınız Soyadınız" />
+              <input type="text" placeholder="Telefon Numaranız" />
+              <input type="text" placeholder="Adres" />
+            </div>
+
+            {/* 3. Kargo Seçimi */}
+            <div className={styles.shippingSection}>
+              <h3><span>2</span>🚚 Kargo Seçimi</h3>
+
+              <label className={styles.radioLabel}>
+                <input type="radio" name="shipping" />
+                <p>CargoNova - ₺49,99</p>
+              </label>
+
+              <label className={styles.radioLabel}>
+                <input type="radio" name="shipping" />
+                <p>FlyTakip Kargo - ₺54,99</p>
+              </label>
+
+              <label className={styles.radioLabel}>
+                <input type="radio" name="shipping" />
+                <p>TrendyTaşıma - ₺80,49</p>
+              </label>
+            </div>
+
+
+
+            {/* 4. Ödeme Bilgileri */}
+            <div className={styles.paymentSection}>
+              <h3><span>3</span>💳 Ödeme Bilgileri</h3>
+              <div className={styles.paymentSectionCard}>
+                <h4>Kredi Kartı</h4>
+                <input className={styles.paymentSectionInput} type="text" placeholder="Kart Numarası" />
+                <input className={styles.paymentSectionInput} type="text" placeholder="Kart Üzerindeki İsim" />
+
+                <div className={styles.expiryCVV}>
+                  <input className={styles.paymentSectionInput} type="text" placeholder="Ay / Yıl" />
+                  <input className={styles.paymentSectionInput} type="text" placeholder="CVV" />
+                </div>
+              </div>
+
+              <div className={styles.optionsRow}>
+                <label className={styles.checkboxLabel}>
+                  <input type="checkbox" />
+                  <p>3D Secure ile ödeme</p>
+                </label>
+                <label className={styles.checkboxLabel}>
+                  <input type="checkbox" />
+                  <p>Kart bilgilerimi kaydet</p>
+                </label>               
+              </div>
+
+              <button className={styles.paymentButton} onClick={handlePayment} disabled={isPaying}>
+                {isPaying ? "⏳ Ödeme İşleniyor..." : "💳 Ödemeyi Tamamla"}
+              </button>
+            </div>
+          </div>
+
+          {/* Sağ taraf - Ürün Bilgileri */}
+          <div className={styles.paymentRight}>
+            <h3>📦 Sepetiniz</h3>
+            {cartItems.map((item) => (
+              <div key={item.id} className={styles.cartItemSummary}>
+                <img src={item.image} alt={item.name} />
+                <div>
+                  <h4>{item.name}</h4>
+                  <p>{item.quantity} x ₺{item.price}</p>
+                  <p>Toplam: ₺{(item.price * item.quantity).toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
+
+            <div className={styles.cartTotal}>
+              Toplam Tutar: ₺{cartItems.reduce((acc, item) => acc + item.quantity * parseFloat(item.price), 0).toFixed(2)}
+            </div>
+          </div>
         </div>
       )}
+
 
       {/* TechDepo kullanıcı bilgileri sayfası */}
       {page === "userProfile" && (

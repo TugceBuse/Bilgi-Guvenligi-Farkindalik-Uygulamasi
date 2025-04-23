@@ -409,8 +409,267 @@
     transform: translateX(-10px);
   }
   
-  .loginForm,
+  /* TechDepo.module.css - Ödeme Sayfası CSS */
   .paymentForm {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 30px;
+    margin-top: 10px;
+    border-radius: 12px;
+    background-color: #333944;
+    min-height: 80vh;
+  }
+
+  .paymentLeft {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    border-radius: 30px;
+    border-left: #4d6c8b 0.5px solid;
+    border-right: #4d6c8b 0.5px solid;
+  }
+
+  .paymentRight {
+    flex: 1;
+    background: transparent;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-height: fit-content;
+    border-radius: 30px;
+    border-left: #4d6c8b 0.5px solid;
+    border-right: #4d6c8b 0.5px solid;
+  }
+
+  .discountSection,
+  .infoSection,
+  .shippingSection,
+  .paymentSection {
+    background: transparent;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  }
+
+  .paymentSectionCard{
+    background: #586069;
+    padding: 30px;
+    margin: 30px;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+  }
+  .paymentSectionCard h4{
+    font-size: 18px;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  .expiryCVV{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .radioLabel {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin: 8px 0;
+    font-size: 15px;
+    color: #2c3e50;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    position: relative;
+  }
+  
+  .radioLabel input[type="radio"] {
+    accent-color: #2ecc71;
+  }
+  
+  .radioLabel:hover {
+    background-color: #838383;
+  }
+  
+  .radioLabel input[type="radio"]:checked + span::before {
+    content: "\2713"; /* onay işareti */
+    color: #2ecc71;
+    font-weight: bold;
+    position: absolute;
+    right: 16px;
+  }
+  
+  .radioLabel p {
+    font-size: 18px;
+    color: #ffffff;
+    display: inline-block;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+  }
+  
+  .checkboxLabel {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    color: #ffffff;
+    cursor: pointer;
+    background-color: #262a33;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s;
+  }
+  
+  .checkboxLabel:hover {
+    background-color: #838383;
+  }
+  
+  .checkboxLabel input[type="checkbox"] {
+    accent-color: #2ecc71;
+  }
+
+  .discountSection input,
+  .infoSection input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+
+  .paymentSectionInput{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .infoSection input,
+  .paymentSection input{
+    margin-bottom: 10px;
+  }
+
+  .discountSection div{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .shippingSection input{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .discountSection h3,
+  .infoSection h3,
+  .shippingSection h3,
+  .paymentSection h3 {
+    align-content: end;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  .infoSection span,
+  .shippingSection span,
+  .paymentSection span {
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #7cb1e6;
+    border-radius: 50%;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+  }
+  
+  .applyButton {
+    padding: 8px 14px;
+    background-color: #2ecc71;
+    height: 42px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .applyButton:hover {
+    background-color: #27ae60;
+  }
+
+  .optionsRow {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .cartItemSummary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+
+  .cartItemSummary img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .cartItemSummary h4 {
+    margin: 0;
+    font-size: 15px;
+    color: #2c3e50;
+  }
+
+  .cartTotal {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #27ae60;
+  }
+
+  .paymentButton {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background-color: #2ecc71;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .paymentButton:hover {
+    background-color: #27ae60;
+  }
+
+  .paymentButton:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+  
+  .loginForm{
     background-color: #586069;
     padding: 20px;
     width: 40%;
@@ -423,8 +682,7 @@
     align-items: center;
   }
   
-  .loginForm input,
-  .paymentForm input {
+  .loginForm input{
     width: 60%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -529,8 +787,7 @@
     transition: background-color 0.2s ease;
   }
   
-  .loginForm button,
-  .paymentForm button {
+  .loginForm button{
     width: 60%;
     background-color: #00b894;
     color: #e5e5e5;
@@ -543,8 +800,7 @@
   }
 
   .loginButton:hover,
-  .loginForm button:hover,
-  .paymentForm button:hover {
+  .loginForm button:hover{
     background-color: #27ae60;
   }
   
