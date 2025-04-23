@@ -215,6 +215,11 @@
   .quantityControls button:hover {
     background-color: #474747;
   }
+
+  .quantityControls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   
   .quantityControls span {
     font-size: 16px;
