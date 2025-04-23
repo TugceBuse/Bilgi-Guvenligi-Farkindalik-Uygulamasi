@@ -91,6 +91,17 @@ const Browser = ({ closeHandler, style }) => {
       setCurrentIndex(currentIndex + 1);
     }
   };
+
+  // 📌 Ana sayfaya gitme fonksiyonu
+  const goHome = async () => {
+    const googleUrl = "https://www.google.com";
+    setUrl(googleUrl);
+    await startLoading();
+    setCurrentUrl(googleUrl);
+  
+    setHistory([...history.slice(0, currentIndex + 1), googleUrl]);
+    setCurrentIndex(currentIndex + 1);
+  };
   
 
   useEffect(() => {
@@ -301,7 +312,7 @@ const Browser = ({ closeHandler, style }) => {
         <img 
         className="home-icon"
         src="./icons/home.png" alt="Home" 
-        onClick={() => handleGoClick("https://www.google.com")}
+        onClick={goHome}
         />
         
         <input className="browser-url-input" type="text" value={url} onChange={handleUrlChange} onKeyDown={handleKeyDown} placeholder="Enter URL" />
