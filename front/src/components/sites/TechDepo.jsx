@@ -350,15 +350,20 @@ const TechDepo = ({scrollRef}) => {
   
 
   // Sepetten kaldırmak için fonksiyon
-  const removeFromCart = (productId) => {
+  const removeFromCart = (productId, forceDelete = false) => {
     setCartItems(prevItems => {
       return prevItems
-        .map(item =>
-          item.id === productId
-            ? { ...item, quantity: 0 }
-            : item
-        )
-        .filter(item => item.quantity > 0); // quantity sıfırsa listeden çıkar
+        .map(item => {
+          if (item.id === productId) {
+            if (forceDelete || item.quantity === 1) {
+              return null; // tamamen kaldırılacak
+            } else {
+              return { ...item, quantity: item.quantity - 1 };
+            }
+          }
+          return item;
+        })
+        .filter(Boolean); // null olanları (silinenler) at
     });
   };
 
@@ -432,7 +437,7 @@ const TechDepo = ({scrollRef}) => {
       {/* Sepete ürün eklendi bildirimi */}
       {showCartNotice && (
         <div className={styles.cartNotice}>
-          ✅ Sepetiniz Güncellendi!
+          ✅ Sepetiniz Başarıyla Güncellendi!
         </div>
       )}
       {/* TechDepo navbar */}
@@ -495,12 +500,12 @@ const TechDepo = ({scrollRef}) => {
                   </div>
 
                   <div className={styles.quantityControls}>
-                    <button onClick={() => removeFromCart(item.id)}>-</button>
+                    <button onClick={() => removeFromCart(item.id)} disabled={item.quantity === 1}>-</button>
                     <span>{item.quantity}</span>
                     <button onClick={() => addToCart(item)}>+</button>
                   </div>
                   
-                  <button className={styles.removeItem} onClick={() => removeFromCart(item.id)}>Kaldır</button>
+                  <button className={styles.removeItem} onClick={() => removeFromCart(item.id, true)}>Kaldır</button>
                 </div>
               ))}
             </div>
