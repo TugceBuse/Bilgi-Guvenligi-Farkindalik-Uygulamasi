@@ -35,7 +35,7 @@ const initialWindowConfig = {
     available: true,
   },
   chatapp: {
-    icon: '/icons/chat.png',
+    icon: '/icons/speak.png',
     label: 'Sohbet',
     component: ChatApp,
     useComponent: useChatApp,
