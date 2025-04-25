@@ -126,7 +126,19 @@ const sites = {
   color: "#1E90FF",
   isSponsored: false,
   seoScore: 87
-}
+},
+  "http://novatekno.com": {
+    title: "NovaTekno",
+    type: "component",
+    component: "NovaTekno",
+    statement: "Fırsat ürünleriyle uygun fiyatlı alışveriş deneyimi!",
+    searchKeys: ["teknoloji, bilgisayar , ofis ekipmanları, ekipman, novatekno, tekno, novatekno.com, nova, tech, techdepo,bilgisayar parçaları"],
+    clickable: true,
+    protocol: "http",
+    color: "#1EFFFF",
+    isSponsored: false,
+    seoScore: 42
+  },
 
 };
 
