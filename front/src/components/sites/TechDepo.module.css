@@ -443,6 +443,12 @@
     border-right: #4d6c8b 0.5px solid;
   }
 
+  .paymentRight h3{
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
   .discountSection,
   .infoSection,
   .shippingSection,
@@ -459,6 +465,7 @@
     margin: 30px;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    border: #c6d8d5 0.5px solid;
     margin-bottom: 20px;
   }
   .paymentSectionCard h4{
@@ -519,7 +526,7 @@
     font-size: 14px;
     color: #ffffff;
     cursor: pointer;
-    background-color: #262a33;
+    background-color: #1a1c20;
     padding: 8px 12px;
     border-radius: 6px;
     border: 1px solid #ddd;
@@ -624,6 +631,12 @@
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
   }
+  .cartItemSummary div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+  }
 
   .cartItemSummary img {
     width: 60px;
@@ -635,7 +648,7 @@
   .cartItemSummary h4 {
     margin: 0;
     font-size: 15px;
-    color: #2c3e50;
+    color: white;
   }
 
   .cartTotal {
@@ -643,6 +656,10 @@
     font-weight: bold;
     font-size: 18px;
     color: #27ae60;
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
   }
 
   .paymentButton {
@@ -1065,3 +1082,8 @@
     transform: translateX(24px);
   }
   
+  .errorMessage {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 5px;
+  }

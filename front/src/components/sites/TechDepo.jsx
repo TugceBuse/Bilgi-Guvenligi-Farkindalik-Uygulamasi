@@ -374,18 +374,93 @@ const TechDepo = ({scrollRef}) => {
       minimumFractionDigits: 2
     }).format(price);
   };
+
+  const [selectedShippingPrice, setSelectedShippingPrice] = useState(0);
+  const cartTotal = cartItems.reduce((acc, item) => acc + item.quantity * parseFloat(item.price), 0);
+  const grandTotal = cartTotal + selectedShippingPrice;
   
   const [isPaying, setIsPaying] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [saveCard, setSaveCard] = useState(false);
 
   const handlePayment = () => {
-    setIsPaying(true);
+    let newErrors = {};
+  
+    // Kart Bilgileri Kontrolü
+    if (!cardNumber) newErrors.cardNumber = "Kart numarası zorunludur.";
+    if (!cardName) newErrors.cardName = "Kart üzerindeki isim zorunludur.";
+    if (!expiryDate) newErrors.expiryDate = "Son kullanma tarihi zorunludur.";
+    if (!cvv) newErrors.cvv = "CVV zorunludur.";
 
-    // örnek sahte süre
+    // Kargo Seçimi Kontrolü, Gizlilik Sözleşmesi Kontrolü
+    if (!selectedShipping) newErrors.shipping = "Kargo seçimi zorunludur.";
+    if (!acceptedTerms) newErrors.terms = "Gizlilik ve satış sözleşmesini onaylamalısınız.";
+  
+    // Kayıtlı kartla eşleşme kontrolü
+    if (TechInfo) {
+      const cardMatches =
+        cardNumber === TechInfo.cardNumber &&
+        cardName === TechInfo.cardName &&
+        expiryDate === TechInfo.cardExpiryDate &&
+        cvv === TechInfo.cardCVV;
+    
+      if (!cardMatches) {
+        newErrors.registeredCard = "Kart bilgileri kayıtlı bilgilerle eşleşmiyor.";
+      }
+    }
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    
+      // 3 saniye sonra hataları sıfırla
+      setTimeout(() => {
+        setErrors({});
+      }, 3000);
+    
+      return; // hatalıysa işlemi durdur
+    }
+    
+  
+    // Hatalar yoksa işlemi başlat
+    setErrors({});
+    setIsPaying(true);
+    setShowCartNotice(true);
+
     setTimeout(() => {
-      // ödeme işlemleri...
       setIsPaying(false);
+      setShowCartNotice(false);
+      // Eğer kullanıcı 'Kartı kaydet' seçtiyse
+      if (saveCard) {
+        setTechInfo((prev) => ({
+          ...prev,
+          cardNumber: cardNumber,
+          cardName: cardName,
+          cardExpiryDate: expiryDate,
+          cardCVV: cvv,
+        }));
+      }
+
+
+      // Tüm alanları sıfırla
+      setCardNumber("");
+      setCardName("");
+      setExpiryDate("");
+      setCVV("");
+      setSelectedShipping("");
+      setAcceptedTerms(false);
+      setSaveCard(false);
+      setSelectedShippingPrice(0);
+      setCartItems([]);
+      setPage("welcome");
     }, 2000);
   };
+
+  const maskCardNumber = (cardNumber) => {
+    if (!cardNumber) return "";
+    return "**** **** **** " + cardNumber.slice(-4);
+  };
+
 
   const handleEdit = () => {
     setTechInfo({
@@ -439,15 +514,28 @@ const TechDepo = ({scrollRef}) => {
     };
   }, []);
 
+
+  // Doldurulması zorunlu olan alanlar için gerekli state'ler
+  const [selectedShipping, setSelectedShipping] = useState("");
+
+  const [cardNumber, setCardNumber] = useState("");
+  const [isCardMatched, setIsCardMatched] = useState(false);
+
+  const [cardName, setCardName] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCVV] = useState("");
+
+
   return (
     <div className={styles.container}>
 
       {/* Sepete ürün eklendi bildirimi */}
       {showCartNotice && (
         <div className={styles.cartNotice}>
-          ✅ Sepetiniz Başarıyla Güncellendi!
+          ✅ {isPaying ? "Ödemeniz başarıyla gerçekleştirildi!" : "Sepetiniz başarıyla güncellendi!"}
         </div>
       )}
+      
       {/* TechDepo navbar */}
       <div className={styles.header}>
             <div className={styles.logoContainer} onClick={() => setPage("welcome")}>
@@ -552,7 +640,7 @@ const TechDepo = ({scrollRef}) => {
               >    
                 <img src={card.image} alt={card.name} className={styles.productImage} />
                 <h3>{card.name}</h3>
-                <p>₺{card.price}</p>
+                <p>{formatPrice(card.price)}</p>
                 <button
                   className={styles.addButton}
                   onClick={(e) => {
@@ -653,10 +741,14 @@ const TechDepo = ({scrollRef}) => {
             {/* 2. Adres ve İletişim Bilgileri */}
             <div className={styles.infoSection}>
               <h3><span>1</span>📞 Adres & İletişim Bilgileri</h3>
-              <input type="text" placeholder="E-posta adresiniz" value={email} readOnly />
-              <input type="text" placeholder="Adınız Soyadınız" />
-              <input type="text" placeholder="Telefon Numaranız" />
-              <input type="text" placeholder="Adres" />
+              <label>E-mail :</label>
+              <input type="text" placeholder="E-posta adresiniz" value={email} readOnly/>
+              <label>Ad Soyad :</label>
+              <input type="text" placeholder="Adınız Soyadınız" value={`${TechInfo.name} ${TechInfo.surname}`} readOnly />
+              <label>Telefon Numarası :</label>
+              <input type="text" placeholder="Telefon Numaranız" value={TechInfo.phone} readOnly />
+              <label>Adres :</label>
+              <input type="text" placeholder="Adres" value={TechInfo.adres} readOnly />
             </div>
 
             {/* 3. Kargo Seçimi */}
@@ -664,21 +756,48 @@ const TechDepo = ({scrollRef}) => {
               <h3><span>2</span>🚚 Kargo Seçimi</h3>
 
               <label className={styles.radioLabel}>
-                <input type="radio" name="shipping" />
+                <input
+                  type="radio"
+                  name="shipping"
+                  value="CargoNova"
+                  checked={selectedShipping === "CargoNova"}
+                  onChange={() => {
+                    setSelectedShipping("CargoNova");
+                    setSelectedShippingPrice(49.99); // buraya kargo fiyatı!
+                  }}
+                />
                 <p>CargoNova - ₺49,99</p>
               </label>
 
               <label className={styles.radioLabel}>
-                <input type="radio" name="shipping" />
+                <input 
+                  type="radio" 
+                  name="shipping"
+                  value="FlyTakip"
+                  checked={selectedShipping === "FlyTakip"}
+                  onChange={() => {
+                    setSelectedShipping("FlyTakip");
+                    setSelectedShippingPrice(54.99);
+                  }}
+                />
                 <p>FlyTakip Kargo - ₺54,99</p>
               </label>
 
               <label className={styles.radioLabel}>
-                <input type="radio" name="shipping" />
+                <input 
+                  type="radio"
+                  name="shipping"
+                  value="TrendyTasima"
+                  checked={selectedShipping === "TrendyTasima"}
+                  onChange={() => {
+                    setSelectedShipping("TrendyTasima");
+                    setSelectedShippingPrice(80.49);
+                  }}
+                />
                 <p>TrendyTaşıma - ₺80,49</p>
               </label>
             </div>
-
+            {errors.shipping && <p className={styles.errorMessage}>{errors.shipping}</p>}
 
 
             {/* 4. Ödeme Bilgileri */}
@@ -686,25 +805,68 @@ const TechDepo = ({scrollRef}) => {
               <h3><span>3</span>💳 Ödeme Bilgileri</h3>
               <div className={styles.paymentSectionCard}>
                 <h4>Kredi Kartı</h4>
-                <input className={styles.paymentSectionInput} type="text" placeholder="Kart Numarası" />
-                <input className={styles.paymentSectionInput} type="text" placeholder="Kart Üzerindeki İsim" />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="Kart Numarası"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="Kart Üzerindeki İsim"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                />
 
                 <div className={styles.expiryCVV}>
-                  <input className={styles.paymentSectionInput} type="text" placeholder="Ay / Yıl" />
-                  <input className={styles.paymentSectionInput} type="text" placeholder="CVV" />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="Ay / Yıl"
+                  value={expiryDate}
+                  onChange={(e) => setExpiryDate(e.target.value)}
+                />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="CVV"
+                  value={cvv}
+                  onChange={(e) => setCVV(e.target.value)}
+                />
                 </div>
               </div>
 
+              {errors.cardNumber && <p className={styles.errorMessage}>{errors.cardNumber}</p>}
+              {errors.cardName && <p className={styles.errorMessage}>{errors.cardName}</p>}
+              {errors.expiryDate && <p className={styles.errorMessage}>{errors.expiryDate}</p>}
+              {errors.cvv && <p className={styles.errorMessage}>{errors.cvv}</p>}
+              {errors.registeredCard && <p className={styles.errorMessage}>{errors.registeredCard}</p>}
+
               <div className={styles.optionsRow}>
                 <label className={styles.checkboxLabel}>
-                  <input type="checkbox" />
-                  <p>3D Secure ile ödeme</p>
+                  <input 
+                    type="checkbox" 
+                    checked={saveCard}
+                    onChange={(e) => setSaveCard(e.target.checked)}
+                  />
+                  <p>Kart bilgilerimi kaydet</p>
                 </label>
                 <label className={styles.checkboxLabel}>
                   <input type="checkbox" />
-                  <p>Kart bilgilerimi kaydet</p>
-                </label>               
+                  <p>3D Secure ile ödeme</p>
+                </label> 
+                <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                />
+                <p><b>Gizlilik Sözleşmesini</b> ve <b>Satış Sözleşmesini</b> okudum, onaylıyorum.</p>
+              </label>                                  
               </div>
+              {errors.terms && <p className={styles.errorMessage}>{errors.terms}</p>}
 
               <button className={styles.paymentButton} onClick={handlePayment} disabled={isPaying}>
                 {isPaying ? "⏳ Ödeme İşleniyor..." : "💳 Ödemeyi Tamamla"}
@@ -720,14 +882,17 @@ const TechDepo = ({scrollRef}) => {
                 <img src={item.image} alt={item.name} />
                 <div>
                   <h4>{item.name}</h4>
-                  <p>{item.quantity} x ₺{item.price}</p>
-                  <p>Toplam: ₺{(item.price * item.quantity).toFixed(2)}</p>
+                  <p>{item.quantity} x ₺{formatPrice(item.price)}</p>
+                  <p>Toplam: {formatPrice(item.price * item.quantity)}</p>
                 </div>
               </div>
             ))}
 
             <div className={styles.cartTotal}>
-              Toplam Tutar: ₺{cartItems.reduce((acc, item) => acc + item.quantity * parseFloat(item.price), 0).toFixed(2)}
+              <p>Ürünler Toplamı: {formatPrice(cartTotal)}</p>
+              <p>Kargo Ücreti: {formatPrice(selectedShippingPrice)}</p>
+              <hr />
+              <h3>Genel Toplam: {formatPrice(grandTotal)}</h3>
             </div>
           </div>
         </div>
@@ -798,13 +963,20 @@ const TechDepo = ({scrollRef}) => {
                 </>
             )}
 
-                {subPage === "cards" && (
-                  <div>
-                    <h2>Kayıtlı Kartlarım</h2>
-                    <p style={{color: "black"}}>💳 Henüz kart eklenmemiş.</p>
-                    {/* Buraya ileride kart yönetimi eklersin */}
+            {subPage === "cards" && (
+              <div>
+                <h2>Kayıtlı Kartlarım</h2>
+                {TechInfo.cardNumber ? (
+                  <div className={styles.savedCard}>
+                    <p>💳 Kart Numarası: {maskCardNumber(TechInfo.cardNumber)}</p>
+                    <p>👤 Kart Sahibi: {TechInfo.cardName}</p>
+                    <p>📅 Son Kullanma Tarihi: {TechInfo.cardExpiryDate}</p>
                   </div>
+                ) : (
+                  <p style={{color: "black"}}>💳 Henüz kart eklenmemiş.</p>
                 )}
+              </div>
+            )}
           </div>
 
         </div>
