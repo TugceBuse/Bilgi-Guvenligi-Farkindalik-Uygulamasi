@@ -215,6 +215,7 @@ const TechDepo = ({scrollRef}) => {
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("profileInfo");
+  const [orders, setOrders] = useState([]);
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -440,7 +441,19 @@ const TechDepo = ({scrollRef}) => {
           cardCVV: cvv,
         }));
       }
-
+      
+      // 🆕 Sipariş ekleme
+      const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000); // 10 haneli random sipariş numarası
+      setOrders(prevOrders => [
+        ...prevOrders,
+        {
+          id: orderNumber,
+          items: cartItems,
+          shipping: selectedShipping,
+          total: grandTotal,
+          date: new Date().toLocaleString(),
+        }
+      ]);
 
       // Tüm alanları sıfırla
       setCardNumber("");
@@ -614,7 +627,13 @@ const TechDepo = ({scrollRef}) => {
                 }, 0))
               } 
             </p>
-            <button onClick={() => setPage("payment")}>Sepeti Onayla</button>
+            <button
+              onClick={() => setPage("payment")}
+              disabled={cartItems.length === 0}
+              className={styles.checkoutButton}
+            >
+              Sepeti Onayla
+            </button>
           </div>
         </div>
       )}
@@ -905,12 +924,39 @@ const TechDepo = ({scrollRef}) => {
           <div className={styles.sidebar}>
             <h3>Hesabım</h3>
             <ul>
+               <li onClick={() => setSubPage("orders")}>Siparişlerim</li>
                <li onClick={() => setSubPage("profileInfo")}>Kullanıcı Bilgilerim</li>
                <li onClick={() => setSubPage("cards")}>Kayıtlı Kartlarım</li>
             </ul>
           </div>
 
           <div className={styles.profileContent}>
+
+            {subPage === "orders" && (
+              <div className={styles.ordersSection}>
+                <h2>Siparişlerim</h2>
+                {orders.length === 0 ? (
+                  <p>Henüz sipariş verilmedi.</p>
+                ) : (
+                  orders.map(order => (
+                    <div key={order.id} className={styles.orderCard}>
+                      <h4>🆔 Sipariş No: {order.id}</h4>
+                      <p>📦 Kargo Firması: {order.shipping}</p>
+                      <p>💵 Toplam Tutar: {formatPrice(order.total)}</p>
+                      <p>📅 Sipariş Tarihi: {order.date}</p>
+                      <div className={styles.orderItems}>
+                        {order.items.map((item, index) => (
+                          <div key={index}>
+                            <p>🔹 {item.name} ({item.quantity} adet)</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
             {subPage === "profileInfo" && (
               <>
                 <div className={styles.profileForm}>
