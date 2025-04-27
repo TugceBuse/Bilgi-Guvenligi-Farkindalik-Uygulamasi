@@ -963,6 +963,12 @@
     flex-direction: column;
     gap: 20px;
   }
+
+  .ordersSection p {
+    margin-bottom: 16px;
+    color: #2c3e50;
+    font-size: 18px;
+  }
   
   .orderCard {
     background-color: #ffffff;
@@ -1146,4 +1152,21 @@
     color: #e74c3c;
     font-size: 13px;
     margin-top: 5px;
+  }
+
+  /* Kayıtlı Kart Bilgilerinin Dolumu Buton CSS */
+  .fillSavedCardButton {
+    margin-top: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .fillSavedCardButton:hover {
+    background-color: #2980b9;
   }

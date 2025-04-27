@@ -214,7 +214,7 @@ const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo } = useGameContext();
 
   const [page, setPage] = useState("welcome");
-  const [subPage, setSubPage] = useState("profileInfo");
+  const [subPage, setSubPage] = useState("orders");
   const [orders, setOrders] = useState([]);
 
   const [cartItems, setCartItems] = useState([]);
@@ -320,8 +320,9 @@ const TechDepo = ({scrollRef}) => {
     setErrorMessage("");
   };
 
-  // Sepete ekleme bildirimi için state
+  // Sepete ekleme bildirimi ve ödeme bildirimi için state
   const [showCartNotice, setShowCartNotice] = useState(false);
+  const [noticeType, setNoticeType] = useState(""); // "" | "cart" | "payment"
 
 
   // Sepete ekleme bildirimi için fonksiyon
@@ -342,8 +343,12 @@ const TechDepo = ({scrollRef}) => {
       }
     });
   
+    setNoticeType("cart");
     setShowCartNotice(true);
-    setTimeout(() => setShowCartNotice(false), 1000);
+
+    setTimeout(() => {
+      setShowCartNotice(false);
+    }, 2000);
   };
   const getCartItemCount = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -426,11 +431,8 @@ const TechDepo = ({scrollRef}) => {
     // Hatalar yoksa işlemi başlat
     setErrors({});
     setIsPaying(true);
-    setShowCartNotice(true);
 
     setTimeout(() => {
-      setIsPaying(false);
-      setShowCartNotice(false);
       // Eğer kullanıcı 'Kartı kaydet' seçtiyse
       if (saveCard) {
         setTechInfo((prev) => ({
@@ -455,6 +457,14 @@ const TechDepo = ({scrollRef}) => {
         }
       ]);
 
+      // Eğer kullanıcı 'Kartı kaydet' seçtiyse TechInfo'ya savedCard:true kaydedelim
+      if (saveCard) {
+        setTechInfo(prev => ({
+          ...prev,
+          savedCard: true
+        }));
+      }
+      
       // Tüm alanları sıfırla
       setCardNumber("");
       setCardName("");
@@ -466,6 +476,14 @@ const TechDepo = ({scrollRef}) => {
       setSelectedShippingPrice(0);
       setCartItems([]);
       setPage("welcome");
+  
+      setIsPaying(false);
+      setNoticeType("payment"); // Ödeme bildirimi 
+      setShowCartNotice(true);
+
+      setTimeout(() => {
+        setShowCartNotice(false);
+      }, 2000);
     }, 2000);
   };
 
@@ -545,7 +563,7 @@ const TechDepo = ({scrollRef}) => {
       {/* Sepete ürün eklendi bildirimi */}
       {showCartNotice && (
         <div className={styles.cartNotice}>
-          ✅ {isPaying ? "Ödemeniz başarıyla gerçekleştirildi!" : "Sepetiniz başarıyla güncellendi!"}
+          {noticeType === "payment" ? "✅ Ödemeniz başarıyla gerçekleştirildi!" : "✅ Sepetiniz başarıyla güncellendi!"}
         </div>
       )}
       
@@ -855,6 +873,21 @@ const TechDepo = ({scrollRef}) => {
                   onChange={(e) => setCVV(e.target.value)}
                 />
                 </div>
+                {TechInfo.isLoggedIn && TechInfo.savedCard && (
+                  <button
+                    type="button"
+                    className={styles.fillSavedCardButton}
+                    onClick={() => {
+                      setCardNumber(TechInfo.cardNumber);
+                      setCardName(TechInfo.cardName);
+                      setExpiryDate(TechInfo.cardExpiryDate);
+                      // CVV boş bırakılacak
+                      setCVV("");
+                    }}
+                  >
+                    💳 Kayıtlı Kart Bilgilerimi Doldur
+                  </button>
+                )}
               </div>
 
               {errors.cardNumber && <p className={styles.errorMessage}>{errors.cardNumber}</p>}
@@ -1012,7 +1045,7 @@ const TechDepo = ({scrollRef}) => {
             {subPage === "cards" && (
               <div>
                 <h2>Kayıtlı Kartlarım</h2>
-                {TechInfo.cardNumber ? (
+                {TechInfo.savedCard ? (
                   <div className={styles.savedCard}>
                     <p>💳 Kart Numarası: {maskCardNumber(TechInfo.cardNumber)}</p>
                     <p>👤 Kart Sahibi: {TechInfo.cardName}</p>
