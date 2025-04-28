@@ -22,13 +22,16 @@ export const GameContextProvider = ({ children }) => {
     };
   });
 
-  const email = "hilal.kaya@oriontech.colum";
-  const phone = "05416494438";
-
   const constUser = {
     email: "hilal.kaya@oriontech.colum",
-    phone: "05416494438",
+    phone: "054164944",
     adres: "Atatürk Mahallesi, Gökkuşağı Sokak No:17/3, 34850, Yıldızlı İlçesi, İstanbul",
+    tcNo: "1420080129",
+    digitalPassword: "123456",
+    cardNumber: '54545454',
+    cardName: 'Tugce Buse',
+    cardExpiryDate: '05/26',
+    cardCVV: '123',
   };
 
 
@@ -83,16 +86,20 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
-    cardNumber: '54545454',
-    cardName: 'Tugce Buse',
-    cardExpiryDate: '05/26',
-    cardCVV: '123',
+    cardNumber: constUser.cardNumber,
+    cardName: constUser.cardName,
+    cardExpiryDate: constUser.cardExpiryDate,
+    cardCVV: constUser.cardCVV,
     saveCard: false,
     adres: constUser.adres
   });
 
   const [productInfo, setProductInfo] = useState({
     productIDs: []
+  });
+
+  const [BankInfo, setBankInfo] = useState({
+    rememberMe: false,
   });
 
   useEffect(() => {
@@ -106,10 +113,10 @@ export const GameContextProvider = ({ children }) => {
   useEffect(() => {
     if (isWificonnected && !wifiMailSent) {
       console.log('🌐 İnternete ilk bağlanıldı, mailler gönderiliyor...');
-      addMailToMailbox('inbox', 1);
-      addMailToMailbox('inbox', 2);
       addMailToMailbox('inbox', 3);
       addMailToMailbox('inbox', 4);
+      addMailToMailbox('inbox', 1);
+      addMailToMailbox('inbox', 2);
       addMailToMailbox('spam', 31);
       addMailToMailbox('spam', 32);
   
@@ -170,6 +177,9 @@ export const GameContextProvider = ({ children }) => {
         getRelativeDate,
         productInfo,
         setProductInfo,
+        constUser,
+        BankInfo,
+        setBankInfo,
       }}
     >
       {children}
