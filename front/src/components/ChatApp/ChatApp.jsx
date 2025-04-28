@@ -65,17 +65,13 @@ const ChatApp = ({ closeHandler, style }) => {
   const [selectedUser, setSelectedUser] = useState(dummyUsers[0]);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
-
-  useEffect(() => {
-    if (getRelativeDate) {
-      const newMessages = dummyMessages(getRelativeDate)[selectedUser.id];
-      setMessages(newMessages);
-    }
-  }, [getRelativeDate, selectedUser]);
   
 
   const handleUserClick = (user) => {
     setSelectedUser(user);
+    if (getRelativeDate) {
+      setMessages(dummyMessages(getRelativeDate)[user.id]);
+    }
   };
 
   const handleSend = () => {
