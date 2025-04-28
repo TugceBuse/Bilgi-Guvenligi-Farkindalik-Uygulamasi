@@ -50,7 +50,7 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const {isWificonnected} = useGameContext();
   
-  // **Inbox ve Spam kutularını güncelleme**
+  // **Inbox ve Spam kutularını güncelleme (Bildiri için) **
   const [showSpamMenu, setShowSpamMenu] = useState(false);
 
 

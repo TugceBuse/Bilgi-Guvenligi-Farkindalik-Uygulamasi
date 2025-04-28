@@ -6,6 +6,7 @@ import ChatApp, { useChatApp } from '../components/ChatApp/ChatApp';
 import Folder, { useFolder } from '../components/Folder/Folder';
 import Scanner, { useScanner } from '../components/Scanner/Scanner';
 import Antivirus, { useAntivirus } from '../components/Antivirus/Antivirus';
+import BankApp, {useBankApp} from '../components/BankApp/BankApp';
 
 const WindowConfigContext = createContext();
 
@@ -65,6 +66,14 @@ const initialWindowConfig = {
     useComponent: useAntivirus,
     location: 'desktop',
     available: false,
+  },
+  bankapp: {
+    icon: '/novaBank/novaLogo.png',
+    label: 'NovaBank',
+    component: BankApp,
+    useComponent: useBankApp,
+    location: 'desktop',
+    available: true,
   },
 };
 

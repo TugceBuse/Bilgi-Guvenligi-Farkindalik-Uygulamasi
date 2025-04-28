@@ -531,6 +531,33 @@ export const mails = [
               </div>
             )
             },
+
+            /* 19.Mail Content*/
+          {id: 17, from:'updates@shieldsecure.com',
+            title: 'test4', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
+            content: 
+            (
+              <div className="mail-content">
+                <pre>
+                    <b>Merhaba Onur,</b><br/><br/>
+                    🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
+
+                    Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
+                    Amacın: Görevleri başarıyla tamamlayarak tuzaklardan kaçmak ve sistemi güvence altına almak!<br/><br/>
+
+                    Unutma: Dış görünüş her zaman gerçeği yansıtmayabilir. 😉
+                    Her tıkladığın bağlantı, her verdiğin bilgi ve her atladığın detay sonuçlarını doğrudan etkileyecek.<br/><br/>
+
+                    Şimdi kemerlerini bağla, şüpheciliğini kuşan ve oyuna başla! 🚀<br/><br/>
+
+                    <b>İyi şanslar dileriz,<br/>
+                    PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
+                    <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phishville.com</span><br/>
+                    <b>Telefon:</b> +90 212 123 4567
+                </pre>
+              </div>
+            )
+            },
   ];
 
 
