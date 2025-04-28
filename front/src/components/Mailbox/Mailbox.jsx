@@ -165,28 +165,28 @@ const Mailbox = ({ closeHandler, style }) => {
   const mailboxRef = useRef(null);
   MakeDraggable(mailboxRef, '.mailbox-header');
 
-  const handleMailClick = (mail,index) => {
-    if(!isWificonnected) {
+  const handleMailClick = (mail) => {
+    if (!isWificonnected) {
       return;
     }
     setSelectedMail(mail);
-    setActiveIndex(index);
     
     // Maili okundu olarak işaretle
     if (mail.hasOwnProperty('readMail')) {
       setInboxMails((prevMails) =>
-        prevMails.map((m, i) =>
-          i === index ? { ...m, readMail: true } : m
+        prevMails.map((m) =>
+          m.id === mail.id ? { ...m, readMail: true } : m
         )
       );
     }
     else if (mail.hasOwnProperty('readSpam')) {
       setSpamboxMails((prevMails) =>
-        prevMails.map((m, i) =>
-          i === index ? { ...m, readMail: true } : m
+        prevMails.map((m) =>
+          m.id === mail.id ? { ...m, readMail: true } : m
         )
       );
     }
+    
     // Maili bildirim kutusundan kaldır
     setNotifiedMails(prevNotifiedMails =>
       prevNotifiedMails.filter(m => m.id !== mail.id)
@@ -281,58 +281,59 @@ const Mailbox = ({ closeHandler, style }) => {
             
             <ul className="mailbox-maillist">
               { activeTab === 'inbox' ?
-                (inboxMails.slice().reverse().map((mail, index) => (
+                inboxMails.slice().reverse().map((mail) => (
                   <li
-                    key={index}
-                    onClick={() => handleMailClick(mail, index)}
-                    className={activeIndex === index ? 'active' : ''}
+                    key={mail.id}
+                    onClick={() => handleMailClick(mail)}
+                    className={selectedMail?.id === mail.id ? 'active' : ''}
                   >
-                    <div style={{display:"flex", flexDirection:"row"}}>        
+                    <div style={{ display: "flex", flexDirection: "row" }}>
                       {!mail.readMail && <div className="dot"></div>}
                       <h3>{mail.title}</h3>
                     </div>
-                    <p>{/* mail contentin uzunlugunu belirler*/}
-                      {mail.precontent.length > 50
-                        ? `${mail.precontent.slice(0, 50)}...`
-                        : mail.precontent}
-                    </p> 
-                  </li>
-                ))) : activeTab === 'sent' ?
-                (initsentMails.map((mail, index) => (
-                  <li
-                    key={index}
-                    onClick={() => handleMailClick(mail, index)}
-                    className={activeIndex === index ? 'active' : ''}
-                  >
-                    <div style={{display:"flex", flexDirection:"row"}}>        
-                      <h3>{mail.title}</h3>
-                    </div>
-                    <p>{/* mail contentin uzunlugunu belirler*/}
+                    <p>
                       {mail.precontent.length > 50
                         ? `${mail.precontent.slice(0, 50)}...`
                         : mail.precontent}
                     </p>
                   </li>
-                ))) : activeTab === 'spam' ?
-                (spamboxMails.slice().reverse().map((mail, index) => (
+                ))
+              : activeTab === 'sent' ?
+                initsentMails.map((mail) => (
                   <li
-                    key={index}
-                    onClick={() => handleMailClick(mail, index)}
-                    className={activeIndex === index ? 'active' : ''}
+                    key={mail.id}
+                    onClick={() => handleMailClick(mail)}
+                    className={selectedMail?.id === mail.id ? 'active' : ''}
                   >
-                    <div style={{display:"flex", flexDirection:"row"}}>        
-                      {!mail.readMail && <div className="dot"></div>}
+                    <div style={{ display: "flex", flexDirection: "row" }}>
                       <h3>{mail.title}</h3>
                     </div>
-                    <p>{/* mail contentin uzunlugunu belirler*/}
+                    <p>
                       {mail.precontent.length > 50
                         ? `${mail.precontent.slice(0, 50)}...`
                         : mail.precontent}
                     </p>
                   </li>
-                ))) : null
-              }
-              <div style={{height:3}}></div>
+                ))
+              : activeTab === 'spam' ?
+                spamboxMails.slice().reverse().map((mail) => (
+                  <li
+                    key={mail.id}
+                    onClick={() => handleMailClick(mail)}
+                    className={selectedMail?.id === mail.id ? 'active' : ''}
+                  >
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      {!mail.readMail && <div className="dot"></div>}
+                      <h3>{mail.title}</h3>
+                    </div>
+                    <p>
+                      {mail.precontent.length > 50
+                        ? `${mail.precontent.slice(0, 50)}...`
+                        : mail.precontent}
+                    </p>
+                  </li>
+                ))
+              : null }
             </ul>
           </div>
           {/* mail içeriği*/}
