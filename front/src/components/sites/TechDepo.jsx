@@ -212,9 +212,13 @@ const cards = [
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo } = useGameContext();
+  const [productInfo, setProductInfo] = useState({
+    productIDs: []
+  });
 
   const [page, setPage] = useState("welcome");
-  const [subPage, setSubPage] = useState("profileInfo");
+  const [subPage, setSubPage] = useState("orders");
+  const [orders, setOrders] = useState([]);
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -231,6 +235,7 @@ const TechDepo = ({scrollRef}) => {
   const [successPassword, setSuccessPassword] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
+  const errorRef = useRef(null);
 
   const email = TechInfo.email;
 
@@ -319,31 +324,49 @@ const TechDepo = ({scrollRef}) => {
     setErrorMessage("");
   };
 
-  // Sepete ekleme bildirimi için state
+  // Sepete ekleme bildirimi ve ödeme bildirimi için state
   const [showCartNotice, setShowCartNotice] = useState(false);
+  const [noticeType, setNoticeType] = useState(""); // "" | "cart" | "payment"
 
 
   // Sepete ekleme bildirimi için fonksiyon
   const addToCart = (product) => {
-    setCartItems((prevItems) => {
+    if (!product.id) {
+      console.error("Ürün ID'si eksik! Eklenemedi:", product);
+      return;
+    }
+  
+    setCartItems(prevItems => {
       const existing = prevItems.find(item => item.id === product.id);
   
       if (existing) {
-        // aynı üründen varsa, sadece quantity artır
         return prevItems.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        // yoksa yeni ürün olarak ekle
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });
   
+    setProductInfo({ productID: product.id });
+  
+    setNoticeType("cart");
     setShowCartNotice(true);
-    setTimeout(() => setShowCartNotice(false), 1000);
+  
+    setTimeout(() => {
+      setShowCartNotice(false);
+    }, 2000);
   };
+
+  useEffect(() => {
+    if (productInfo.productID !== 0) { // Başlangıçta 0 olduğu için gereksiz console spam olmasın diye
+      console.log("🛒 Güncellenen Ürün ID:", productInfo.productID);
+    }
+  }, [productInfo.productID]);
+  
+  
   const getCartItemCount = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
@@ -352,7 +375,7 @@ const TechDepo = ({scrollRef}) => {
   // Sepetten kaldırmak için fonksiyon
   const removeFromCart = (productId, forceDelete = false) => {
     setCartItems(prevItems => {
-      return prevItems
+      const updatedItems = prevItems
         .map(item => {
           if (item.id === productId) {
             if (forceDelete || item.quantity === 1) {
@@ -363,9 +386,18 @@ const TechDepo = ({scrollRef}) => {
           }
           return item;
         })
-        .filter(Boolean); // null olanları (silinenler) at
+        .filter(Boolean); // null olanları at
+  
+      // 🆕 Eğer artık o ürün kalmadıysa, productInfo'yu sıfırla
+      const stillExists = updatedItems.find(item => item.id === productId);
+      if (!stillExists) {
+        setProductInfo({ productID: 0 });
+      }
+  
+      return updatedItems;
     });
-  };
+    console.log("Sepetten çıkarılan ürün:", productInfo.productID);
+  };  
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("tr-TR", {
@@ -374,18 +406,126 @@ const TechDepo = ({scrollRef}) => {
       minimumFractionDigits: 2
     }).format(price);
   };
+
+  const [selectedShippingPrice, setSelectedShippingPrice] = useState(0);
+  const cartTotal = cartItems.reduce((acc, item) => acc + item.quantity * parseFloat(item.price), 0);
+  const grandTotal = cartTotal + selectedShippingPrice;
   
   const [isPaying, setIsPaying] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [saveCard, setSaveCard] = useState(false);
 
   const handlePayment = () => {
+    setIsSubmitted(true);
+    let newErrors = {};
+    
+    // Kart Bilgileri Kontrolü
+    if (!cardNumber) newErrors.cardNumber = "Kart numarası zorunludur.";
+    if (!cardName) newErrors.cardName = "Kart üzerindeki isim zorunludur.";
+    if (!expiryDate) newErrors.expiryDate = "Son kullanma tarihi zorunludur.";
+    if (!cvv) newErrors.cvv = "CVV zorunludur.";
+
+    // Kargo Seçimi Kontrolü, Gizlilik Sözleşmesi Kontrolü
+    if (!selectedShipping) newErrors.shipping = "Kargo seçimi zorunludur.";
+    if (!acceptedTerms) newErrors.terms = "Gizlilik ve satış sözleşmesini onaylamalısınız.";
+  
+    // Kayıtlı kartla eşleşme kontrolü
+    if (TechInfo) {
+      const cardMatches =
+        cardNumber === TechInfo.cardNumber &&
+        cardName === TechInfo.cardName &&
+        expiryDate === TechInfo.cardExpiryDate &&
+        cvv === TechInfo.cardCVV;
+    
+      if (!cardMatches) {
+        newErrors.registeredCard = "Kart bilgileri kayıtlı bilgilerle eşleşmiyor.";
+      }
+    }
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    
+      // 3 saniye sonra hataları sıfırla
+      setTimeout(() => {
+        setErrors({});
+      }, 3000);
+    
+      // 🆕 Hata oluştuysa errorRef'e scroll yap
+      setTimeout(() => {
+        if (errorRef.current) {
+          errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 100); 
+      return; 
+    }
+    
+  
+    // Hatalar yoksa işlemi başlat
+    setErrors({});
     setIsPaying(true);
 
-    // örnek sahte süre
     setTimeout(() => {
-      // ödeme işlemleri...
+      // Eğer kullanıcı 'Kartı kaydet' seçtiyse
+      if (saveCard) {
+        setTechInfo((prev) => ({
+          ...prev,
+          cardNumber: cardNumber,
+          cardName: cardName,
+          cardExpiryDate: expiryDate,
+          cardCVV: cvv,
+        }));
+      }
+      
+      // 🆕 Sipariş ekleme
+      const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000); // 10 haneli random sipariş numarası
+      setOrders(prevOrders => [
+        ...prevOrders,
+        {
+          id: orderNumber,
+          items: cartItems,
+          shipping: selectedShipping,
+          total: grandTotal,
+          date: new Date().toLocaleString(),
+        }
+      ]);
+
+      // Eğer kullanıcı 'Kartı kaydet' seçtiyse TechInfo'ya savedCard:true kaydedelim
+      if (saveCard) {
+        setTechInfo(prev => ({
+          ...prev,
+          savedCard: true
+        }));
+      }
+      
+      // Tüm alanları sıfırla
+      setCardNumber("");
+      setCardName("");
+      setExpiryDate("");
+      setCVV("");
+      setSelectedShipping("");
+      setAcceptedTerms(false);
+      setSaveCard(false);
+      setSelectedShippingPrice(0);
+      setCartItems([]);
+      setPage("welcome");
+  
       setIsPaying(false);
+      setNoticeType("payment"); // Ödeme bildirimi 
+      setShowCartNotice(true);
+
+      setTimeout(() => {
+        setShowCartNotice(false);
+      }, 2000);
     }, 2000);
   };
+
+  const maskCardNumber = (cardNumber) => {
+    if (!cardNumber) return "";
+    return "**** **** **** " + cardNumber.slice(-4);
+  };
+
 
   const handleEdit = () => {
     setTechInfo({
@@ -439,15 +579,28 @@ const TechDepo = ({scrollRef}) => {
     };
   }, []);
 
+
+  // Doldurulması zorunlu olan alanlar için gerekli state'ler
+  const [selectedShipping, setSelectedShipping] = useState("");
+
+  const [cardNumber, setCardNumber] = useState("");
+  const [isCardMatched, setIsCardMatched] = useState(false);
+
+  const [cardName, setCardName] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCVV] = useState("");
+
+
   return (
     <div className={styles.container}>
 
       {/* Sepete ürün eklendi bildirimi */}
       {showCartNotice && (
         <div className={styles.cartNotice}>
-          ✅ Sepetiniz Başarıyla Güncellendi!
+          {noticeType === "payment" ? "✅ Ödemeniz başarıyla gerçekleştirildi!" : "✅ Sepetiniz başarıyla güncellendi!"}
         </div>
       )}
+      
       {/* TechDepo navbar */}
       <div className={styles.header}>
             <div className={styles.logoContainer} onClick={() => setPage("welcome")}>
@@ -526,7 +679,13 @@ const TechDepo = ({scrollRef}) => {
                 }, 0))
               } 
             </p>
-            <button onClick={() => setPage("payment")}>Sepeti Onayla</button>
+            <button
+              onClick={() => setPage("payment")}
+              disabled={cartItems.length === 0}
+              className={styles.checkoutButton}
+            >
+              Sepeti Onayla
+            </button>
           </div>
         </div>
       )}
@@ -552,7 +711,7 @@ const TechDepo = ({scrollRef}) => {
               >    
                 <img src={card.image} alt={card.name} className={styles.productImage} />
                 <h3>{card.name}</h3>
-                <p>₺{card.price}</p>
+                <p>{formatPrice(card.price)}</p>
                 <button
                   className={styles.addButton}
                   onClick={(e) => {
@@ -653,10 +812,14 @@ const TechDepo = ({scrollRef}) => {
             {/* 2. Adres ve İletişim Bilgileri */}
             <div className={styles.infoSection}>
               <h3><span>1</span>📞 Adres & İletişim Bilgileri</h3>
-              <input type="text" placeholder="E-posta adresiniz" value={email} readOnly />
-              <input type="text" placeholder="Adınız Soyadınız" />
-              <input type="text" placeholder="Telefon Numaranız" />
-              <input type="text" placeholder="Adres" />
+              <label>E-mail :</label>
+              <input type="text" placeholder="E-posta adresiniz" value={email} readOnly/>
+              <label>Ad Soyad :</label>
+              <input type="text" placeholder="Adınız Soyadınız" value={`${TechInfo.name} ${TechInfo.surname}`} readOnly />
+              <label>Telefon Numarası :</label>
+              <input type="text" placeholder="Telefon Numaranız" value={TechInfo.phone} readOnly />
+              <label>Adres :</label>
+              <input type="text" placeholder="Adres" value={TechInfo.adres} readOnly />
             </div>
 
             {/* 3. Kargo Seçimi */}
@@ -664,21 +827,48 @@ const TechDepo = ({scrollRef}) => {
               <h3><span>2</span>🚚 Kargo Seçimi</h3>
 
               <label className={styles.radioLabel}>
-                <input type="radio" name="shipping" />
+                <input
+                  type="radio"
+                  name="shipping"
+                  value="CargoNova"
+                  checked={selectedShipping === "CargoNova"}
+                  onChange={() => {
+                    setSelectedShipping("CargoNova");
+                    setSelectedShippingPrice(49.99); // buraya kargo fiyatı!
+                  }}
+                />
                 <p>CargoNova - ₺49,99</p>
               </label>
 
               <label className={styles.radioLabel}>
-                <input type="radio" name="shipping" />
+                <input 
+                  type="radio" 
+                  name="shipping"
+                  value="FlyTakip"
+                  checked={selectedShipping === "FlyTakip"}
+                  onChange={() => {
+                    setSelectedShipping("FlyTakip");
+                    setSelectedShippingPrice(54.99);
+                  }}
+                />
                 <p>FlyTakip Kargo - ₺54,99</p>
               </label>
 
               <label className={styles.radioLabel}>
-                <input type="radio" name="shipping" />
+                <input 
+                  type="radio"
+                  name="shipping"
+                  value="TrendyTasima"
+                  checked={selectedShipping === "TrendyTasima"}
+                  onChange={() => {
+                    setSelectedShipping("TrendyTasima");
+                    setSelectedShippingPrice(80.49);
+                  }}
+                />
                 <p>TrendyTaşıma - ₺80,49</p>
               </label>
             </div>
-
+            {errors.shipping && <p ref={errorRef} className={styles.errorMessage}>{errors.shipping}</p>}
 
 
             {/* 4. Ödeme Bilgileri */}
@@ -686,25 +876,85 @@ const TechDepo = ({scrollRef}) => {
               <h3><span>3</span>💳 Ödeme Bilgileri</h3>
               <div className={styles.paymentSectionCard}>
                 <h4>Kredi Kartı</h4>
-                <input className={styles.paymentSectionInput} type="text" placeholder="Kart Numarası" />
-                <input className={styles.paymentSectionInput} type="text" placeholder="Kart Üzerindeki İsim" />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="Kart Numarası"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="Kart Üzerindeki İsim"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                />
 
                 <div className={styles.expiryCVV}>
-                  <input className={styles.paymentSectionInput} type="text" placeholder="Ay / Yıl" />
-                  <input className={styles.paymentSectionInput} type="text" placeholder="CVV" />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="Ay / Yıl"
+                  value={expiryDate}
+                  onChange={(e) => setExpiryDate(e.target.value)}
+                />
+                <input
+                  className={styles.paymentSectionInput}
+                  type="text"
+                  placeholder="CVV"
+                  value={cvv}
+                  onChange={(e) => setCVV(e.target.value)}
+                />
                 </div>
+                {TechInfo.isLoggedIn && TechInfo.savedCard && (
+                  <button
+                    type="button"
+                    className={styles.fillSavedCardButton}
+                    onClick={() => {
+                      setCardNumber(TechInfo.cardNumber);
+                      setCardName(TechInfo.cardName);
+                      setExpiryDate(TechInfo.cardExpiryDate);
+                      // CVV boş bırakılacak
+                      setCVV("");
+                    }}
+                  >
+                    💳 Kayıtlı Kart Bilgilerimi Doldur
+                  </button>
+                )}
               </div>
+
+              {errors.cardNumber && <p className={styles.errorMessage}>{errors.cardNumber}</p>}
+              {errors.cardName && <p className={styles.errorMessage}>{errors.cardName}</p>}
+              {errors.expiryDate && <p className={styles.errorMessage}>{errors.expiryDate}</p>}
+              {errors.cvv && <p className={styles.errorMessage}>{errors.cvv}</p>}
+
+
+              {errors.registeredCard && <p className={styles.errorMessage}>{errors.registeredCard}</p>}
 
               <div className={styles.optionsRow}>
                 <label className={styles.checkboxLabel}>
-                  <input type="checkbox" />
-                  <p>3D Secure ile ödeme</p>
+                  <input 
+                    type="checkbox" 
+                    checked={saveCard}
+                    onChange={(e) => setSaveCard(e.target.checked)}
+                  />
+                  <p>Kart bilgilerimi kaydet</p>
                 </label>
                 <label className={styles.checkboxLabel}>
                   <input type="checkbox" />
-                  <p>Kart bilgilerimi kaydet</p>
-                </label>               
+                  <p>3D Secure ile ödeme</p>
+                </label> 
+                <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                />
+                <p><b>Gizlilik Sözleşmesini</b> ve <b>Satış Sözleşmesini</b> okudum, onaylıyorum.</p>
+              </label>                                  
               </div>
+              {errors.terms && <p className={styles.errorMessage}>{errors.terms}</p>}
 
               <button className={styles.paymentButton} onClick={handlePayment} disabled={isPaying}>
                 {isPaying ? "⏳ Ödeme İşleniyor..." : "💳 Ödemeyi Tamamla"}
@@ -720,14 +970,17 @@ const TechDepo = ({scrollRef}) => {
                 <img src={item.image} alt={item.name} />
                 <div>
                   <h4>{item.name}</h4>
-                  <p>{item.quantity} x ₺{item.price}</p>
-                  <p>Toplam: ₺{(item.price * item.quantity).toFixed(2)}</p>
+                  <p>{item.quantity} x ₺{formatPrice(item.price)}</p>
+                  <p>Toplam: {formatPrice(item.price * item.quantity)}</p>
                 </div>
               </div>
             ))}
 
             <div className={styles.cartTotal}>
-              Toplam Tutar: ₺{cartItems.reduce((acc, item) => acc + item.quantity * parseFloat(item.price), 0).toFixed(2)}
+              <p>Ürünler Toplamı: {formatPrice(cartTotal)}</p>
+              <p>Kargo Ücreti: {formatPrice(selectedShippingPrice)}</p>
+              <hr />
+              <h3>Genel Toplam: {formatPrice(grandTotal)}</h3>
             </div>
           </div>
         </div>
@@ -740,12 +993,39 @@ const TechDepo = ({scrollRef}) => {
           <div className={styles.sidebar}>
             <h3>Hesabım</h3>
             <ul>
+               <li onClick={() => setSubPage("orders")}>Siparişlerim</li>
                <li onClick={() => setSubPage("profileInfo")}>Kullanıcı Bilgilerim</li>
                <li onClick={() => setSubPage("cards")}>Kayıtlı Kartlarım</li>
             </ul>
           </div>
 
           <div className={styles.profileContent}>
+
+            {subPage === "orders" && (
+              <div className={styles.ordersSection}>
+                <h2>Siparişlerim</h2>
+                {orders.length === 0 ? (
+                  <p>Henüz sipariş verilmedi.</p>
+                ) : (
+                  orders.map(order => (
+                    <div key={order.id} className={styles.orderCard}>
+                      <h4>🆔 Sipariş No: {order.id}</h4>
+                      <p>📦 Kargo Firması: {order.shipping}</p>
+                      <p>💵 Toplam Tutar: {formatPrice(order.total)}</p>
+                      <p>📅 Sipariş Tarihi: {order.date}</p>
+                      <div className={styles.orderItems}>
+                        {order.items.map((item, index) => (
+                          <div key={index} className={styles.orderItemRow}>
+                            <p>🔹 {item.name} ({item.quantity} adet) - ₺{formatPrice(item.price)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
             {subPage === "profileInfo" && (
               <>
                 <div className={styles.profileForm}>
@@ -798,13 +1078,20 @@ const TechDepo = ({scrollRef}) => {
                 </>
             )}
 
-                {subPage === "cards" && (
-                  <div>
-                    <h2>Kayıtlı Kartlarım</h2>
-                    <p style={{color: "black"}}>💳 Henüz kart eklenmemiş.</p>
-                    {/* Buraya ileride kart yönetimi eklersin */}
+            {subPage === "cards" && (
+              <div>
+                <h2>Kayıtlı Kartlarım</h2>
+                {TechInfo.savedCard ? (
+                  <div className={styles.savedCard}>
+                    <p>💳 Kart Numarası: {maskCardNumber(TechInfo.cardNumber)}</p>
+                    <p>👤 Kart Sahibi: {TechInfo.cardName}</p>
+                    <p>📅 Son Kullanma Tarihi: {TechInfo.cardExpiryDate}</p>
                   </div>
+                ) : (
+                  <p style={{color: "black"}}>💳 Henüz kart eklenmemiş.</p>
                 )}
+              </div>
+            )}
           </div>
 
         </div>

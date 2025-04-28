@@ -7,14 +7,25 @@ import PostifyAuth from './PostifyAuth';
 const initialPosts = [
   {
     id: 1,
-    name: 'Ahmet Kaya',
-    time: '2 saat önce',
-    avatar: '/avatars/avatar1.png',
-    content: 'Ofis içinde bir Wi-Fi sıkıntısı var mı? Bağlanamıyorum.',
-    likes: 120,
-    commands: 50,
-    privacySettings: "Sadece Bağlantılarım",
+    name: 'TechDepo Resmi Hesabı',
+    time: '30 dakika önce',
+    avatar: '/techDepo/techHome.png',
+    image: '/techDepo/afiş.png', // ✅ Kullanacağımız görsel
+    content: (
+      <span>
+        <b>🚀 TechDepo İle Alışverişte Devrim Başladı!</b><br/><br/>
+        En yeni teknolojiler, en güvenli alışveriş deneyimiyle TechDepo’da seni bekliyor!<br/><br/>
+        💻 Laptoplar, 🎮 Oyuncu ekipmanları, 🎧 Kulaklıklar ve daha fazlası %30’e varan indirimlerle!<br/><br/>
+        🎯 Güvenli ödeme seçenekleri, hızlı kargo ve 7/24 destek garantisi!<br/><br/>
+        ✨ Şimdi alışverişe başla!<br/><br/>
+        👉 <a href="#" title="https://techdepo.com" className={styles.officialLink}>techdepo.com</a>
+      </span>
+    ),
+    likes: 310,
+    commands: 95,
+    privacySettings: "Herkese Açık",
   },
+  
   {
     id: 2,
     name: 'IT Departmanı',
@@ -217,9 +228,8 @@ const Postify = () => {
       setMessageText("");
     }
   };
-  /////////////////////////////////////
 
-
+  // Gizlilik ayarları için fonksiyon
   const selectPrivacy = (option) => {
     setPostifyInfo({
       ...PostifyInfo,

@@ -21,15 +21,20 @@ export const GameContextProvider = ({ children }) => {
   const email = "hilal.kaya@oriontech.colum";
   const phone = "05416494438";
 
+  const constUser = {
+    email: "hilal.kaya@oriontech.colum",
+    phone: "05416494438",
+    adres: "Atatürk Mahallesi, Gökkuşağı Sokak No:17/3, 34850, Yıldızlı İlçesi, İstanbul",
+  };
 
 
   // PROCAREERHUB - Kullanıcı bilgileri (sadece context içinde tutuluyor)
   const [ProCareerHubInfo, setProCareerHubInfo] = useState({
     name: '',
     surname: '',
-    email: email,
+    email: constUser.email,
     password: '',
-    phone: phone,
+    phone: constUser.phone,
     is2FAEnabled: false,
     isRegistered: false,
     isLoggedIn: false,
@@ -40,9 +45,9 @@ export const GameContextProvider = ({ children }) => {
   const [SkillForgeHubInfo, setSkillForgeHubInfo] = useState({
     name: '',
     surname: '',
-    email: email,
+    email: constUser.email,
     password: '',
-    phone: phone,
+    phone: constUser.phone,
     is2FAEnabled: false,
     isRegistered: false,
     isLoggedIn: false,
@@ -53,9 +58,9 @@ export const GameContextProvider = ({ children }) => {
   const [PostifyInfo, setPostifyInfo] = useState({
     name: '',
     surname: '',
-    email: email,
+    email: constUser.email,
     password: '',
-    phone: phone,
+    phone: constUser.phone,
     is2FAEnabled: false,
     isRegistered: false,
     isLoggedIn: false,
@@ -67,16 +72,23 @@ export const GameContextProvider = ({ children }) => {
    const [TechInfo, setTechInfo] = useState({
     name: '',
     surname: '',
-    email: email,
+    email: constUser.email,
     password: '',
-    phone: phone,
+    phone: constUser.phone,
     is2FAEnabled: false,
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
-    cardNumber: '',
-    cardExpiryDate: '',
-    cardCVV: '',
+    cardNumber: '54545454',
+    cardName: 'Tugce Buse',
+    cardExpiryDate: '05/26',
+    cardCVV: '123',
+    saveCard: false,
+    adres: constUser.adres
+  });
+
+  const [productInfo, setProductInfo] = useState({
+    productIDs: []
   });
 
   useEffect(() => {
@@ -128,6 +140,8 @@ export const GameContextProvider = ({ children }) => {
         TechInfo,
         setTechInfo,
         getRelativeDate,
+        productInfo,
+        setProductInfo,
       }}
     >
       {children}
