@@ -72,6 +72,10 @@ export const GameContextProvider = ({ children }) => {
     adres: constUser.adres
   });
 
+  const [productInfo, setProductInfo] = useState({
+    productIDs: []
+  });
+
   useEffect(() => {
     const interval = setInterval(() => {
       setSeconds((prevSeconds) => prevSeconds + 1);
@@ -96,6 +100,8 @@ export const GameContextProvider = ({ children }) => {
         setPostifyInfo, 
         TechInfo,
         setTechInfo,
+        productInfo,
+        setProductInfo,
       }}
     >
       {children}

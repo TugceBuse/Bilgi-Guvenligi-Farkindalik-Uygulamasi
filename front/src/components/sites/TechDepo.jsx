@@ -212,6 +212,9 @@ const cards = [
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo } = useGameContext();
+  const [productInfo, setProductInfo] = useState({
+    productIDs: []
+  });
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
@@ -232,6 +235,7 @@ const TechDepo = ({scrollRef}) => {
   const [successPassword, setSuccessPassword] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
+  const errorRef = useRef(null);
 
   const email = TechInfo.email;
 
@@ -327,29 +331,42 @@ const TechDepo = ({scrollRef}) => {
 
   // Sepete ekleme bildirimi için fonksiyon
   const addToCart = (product) => {
-    setCartItems((prevItems) => {
+    if (!product.id) {
+      console.error("Ürün ID'si eksik! Eklenemedi:", product);
+      return;
+    }
+  
+    setCartItems(prevItems => {
       const existing = prevItems.find(item => item.id === product.id);
   
       if (existing) {
-        // aynı üründen varsa, sadece quantity artır
         return prevItems.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        // yoksa yeni ürün olarak ekle
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });
   
+    setProductInfo({ productID: product.id });
+  
     setNoticeType("cart");
     setShowCartNotice(true);
-
+  
     setTimeout(() => {
       setShowCartNotice(false);
     }, 2000);
   };
+
+  useEffect(() => {
+    if (productInfo.productID !== 0) { // Başlangıçta 0 olduğu için gereksiz console spam olmasın diye
+      console.log("🛒 Güncellenen Ürün ID:", productInfo.productID);
+    }
+  }, [productInfo.productID]);
+  
+  
   const getCartItemCount = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
@@ -358,7 +375,7 @@ const TechDepo = ({scrollRef}) => {
   // Sepetten kaldırmak için fonksiyon
   const removeFromCart = (productId, forceDelete = false) => {
     setCartItems(prevItems => {
-      return prevItems
+      const updatedItems = prevItems
         .map(item => {
           if (item.id === productId) {
             if (forceDelete || item.quantity === 1) {
@@ -369,9 +386,18 @@ const TechDepo = ({scrollRef}) => {
           }
           return item;
         })
-        .filter(Boolean); // null olanları (silinenler) at
+        .filter(Boolean); // null olanları at
+  
+      // 🆕 Eğer artık o ürün kalmadıysa, productInfo'yu sıfırla
+      const stillExists = updatedItems.find(item => item.id === productId);
+      if (!stillExists) {
+        setProductInfo({ productID: 0 });
+      }
+  
+      return updatedItems;
     });
-  };
+    console.log("Sepetten çıkarılan ürün:", productInfo.productID);
+  };  
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("tr-TR", {
@@ -387,12 +413,14 @@ const TechDepo = ({scrollRef}) => {
   
   const [isPaying, setIsPaying] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [saveCard, setSaveCard] = useState(false);
 
   const handlePayment = () => {
+    setIsSubmitted(true);
     let newErrors = {};
-  
+    
     // Kart Bilgileri Kontrolü
     if (!cardNumber) newErrors.cardNumber = "Kart numarası zorunludur.";
     if (!cardName) newErrors.cardName = "Kart üzerindeki isim zorunludur.";
@@ -424,7 +452,13 @@ const TechDepo = ({scrollRef}) => {
         setErrors({});
       }, 3000);
     
-      return; // hatalıysa işlemi durdur
+      // 🆕 Hata oluştuysa errorRef'e scroll yap
+      setTimeout(() => {
+        if (errorRef.current) {
+          errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 100); 
+      return; 
     }
     
   
@@ -834,7 +868,7 @@ const TechDepo = ({scrollRef}) => {
                 <p>TrendyTaşıma - ₺80,49</p>
               </label>
             </div>
-            {errors.shipping && <p className={styles.errorMessage}>{errors.shipping}</p>}
+            {errors.shipping && <p ref={errorRef} className={styles.errorMessage}>{errors.shipping}</p>}
 
 
             {/* 4. Ödeme Bilgileri */}
@@ -894,6 +928,8 @@ const TechDepo = ({scrollRef}) => {
               {errors.cardName && <p className={styles.errorMessage}>{errors.cardName}</p>}
               {errors.expiryDate && <p className={styles.errorMessage}>{errors.expiryDate}</p>}
               {errors.cvv && <p className={styles.errorMessage}>{errors.cvv}</p>}
+
+
               {errors.registeredCard && <p className={styles.errorMessage}>{errors.registeredCard}</p>}
 
               <div className={styles.optionsRow}>
@@ -979,8 +1015,8 @@ const TechDepo = ({scrollRef}) => {
                       <p>📅 Sipariş Tarihi: {order.date}</p>
                       <div className={styles.orderItems}>
                         {order.items.map((item, index) => (
-                          <div key={index}>
-                            <p>🔹 {item.name} ({item.quantity} adet)</p>
+                          <div key={index} className={styles.orderItemRow}>
+                            <p>🔹 {item.name} ({item.quantity} adet) - ₺{formatPrice(item.price)}</p>
                           </div>
                         ))}
                       </div>
