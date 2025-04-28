@@ -108,9 +108,21 @@ export const GameContextProvider = ({ children }) => {
       console.log('🌐 İnternete ilk bağlanıldı, mailler gönderiliyor...');
       addMailToMailbox('inbox', 1);
       addMailToMailbox('inbox', 2);
+      addMailToMailbox('inbox', 3);
+      addMailToMailbox('inbox', 4);
       addMailToMailbox('spam', 1);
       addMailToMailbox('spam', 2);
-      setWifiMailSent(true); // 📢 Artık tekrar çalışmaz
+  
+      // 📢 30 saniye sonra 3 numaralı maili inbox'a ekle
+      const timeoutId = setTimeout(() => {
+        console.log('📩 30 saniye sonra 3 numaralı mail gönderiliyor...');
+        addMailToMailbox('inbox', 3);
+      }, 30000); // 30 saniye = 30000 ms
+  
+      setWifiMailSent(true);
+  
+      // Temizlik: component unmount olursa timeout iptal olsun
+      return () => clearTimeout(timeoutId);
     }
   }, [isWificonnected, wifiMailSent]);
 

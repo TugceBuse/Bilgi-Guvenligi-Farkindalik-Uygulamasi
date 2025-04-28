@@ -191,7 +191,7 @@ const TaskBar = ({windowConfig}) => {
     setNotifiedMails(prevNotifiedMails => 
       prevNotifiedMails.filter(m => m.id !== mail.id)
     );
-    setPopupQueue(prev => prev.slice(0, -1)); //  Tıklanınca popup sırasını ilerlet
+    setPopupQueue(prev => prev.slice(1)); //  Tıklanınca popup sırasını ilerlet
     setShowNotifications(false);
   };
   
@@ -239,35 +239,52 @@ const TaskBar = ({windowConfig}) => {
     // }, []);
 
   // 📌 **Yeni Mail Geldiğinde Bildirim Gösterme**
-    useEffect(() => {
-      if (!isWificonnected) return;
-    
-      const newUnreadMails = inboxMails.filter(mail => !mail.readMail && !mail.notified && mail.used);
-    
-      if (newUnreadMails.length > 0) {
-        const newMail = newUnreadMails[0];
-        const updatedMail = { ...newMail, notified: true };
-    
-        setInboxMails(prevMails =>
-          prevMails.map(m => (m.id === newMail.id ? updatedMail : m))
-        );
-    
-        // 📌 Yeni maili popup kuyruğuna ekle
-        setPopupQueue(prev => [...prev, updatedMail]);
-      }
-    }, [inboxMails, isWificonnected]);
+  useEffect(() => {
+    if (!isWificonnected) return;
+  
+    const newUnreadMails = inboxMails.filter(mail => 
+      !mail.readMail && mail.used &&
+      !popupQueue.some(q => q.id === mail.id) && // Popup'ta da yoksa
+      !notifiedMails.some(n => n.id === mail.id)  // Bildirim kutusunda da yoksa
+    );
+  
+    if (newUnreadMails.length > 0) {
+      const newMail = { ...newUnreadMails[0], notified: true }; // direk notified:true yap
+  
+      setInboxMails(prevMails =>
+        prevMails.map(m => (m.id === newMail.id ? newMail : m))
+      );
+  
+      setPopupQueue(prev => [...prev, newMail]);
+    }
+  }, [inboxMails, isWificonnected]);
+
+  useEffect(() => {
+    console.log("Popup Queue:", popupQueue);
+  }, [popupQueue]);
+
+  useEffect(() => {
+    console.log("Notified Mails:", notifiedMails);
+  }, [notifiedMails]);
+
+  useEffect(() => {
+    console.log("Inbox Mails:", inboxMails);
+  }, [inboxMails]);
+
+  
+  
 
     // 📌 **Pop-up Bildirimini Gösterme**
     useEffect(() => {
       if (popupQueue.length > 0 && !popupTimeout.current) {
         const timer = setTimeout(() => {
-          const currentMail = popupQueue[popupQueue.length - 1]; // 📌 Son eklenen mail
+          const currentMail = popupQueue[0]; // 📌 Son eklenen mail
     
           // 📌 8 saniye sonunda popup kayboluyor ve bildirim kutusuna düşüyor
           setNotifiedMails(prev => [currentMail, ...prev]);
-          setPopupQueue(prev => prev.slice(0, -1)); // 📌 Son maili çıkar (stack mantığı)
+          setPopupQueue(prev => prev.slice(1)); // 📌 Son maili çıkar (stack mantığı)
           popupTimeout.current = null; // 📌 Yeni popup için hazır hale getir
-        }, 8000);
+        }, 3000);
     
         popupTimeout.current = timer;
       }
@@ -336,10 +353,10 @@ const TaskBar = ({windowConfig}) => {
   return (
   <div className="taskbar">
       {popupQueue.length > 0 && (
-        <div className="popup-notification" onClick={() => handleOpenMailbox(popupQueue[popupQueue.length - 1])}>
+        <div className="popup-notification" onClick={() => handleOpenMailbox(popupQueue[0])}>
           <img style={{width:30, height:30}} src="/icons/mail.png" alt="Mail Icon" />
-          <h4>{popupQueue[popupQueue.length - 1].title}</h4>
-          <p>{popupQueue[popupQueue.length - 1].precontent}</p>
+          <h4>{popupQueue[0].title}</h4>
+          <p>{popupQueue[0].precontent}</p>
         </div>
       )}
       

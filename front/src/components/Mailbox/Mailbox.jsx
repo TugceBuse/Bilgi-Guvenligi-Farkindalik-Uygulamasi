@@ -281,7 +281,7 @@ const Mailbox = ({ closeHandler, style }) => {
             
             <ul className="mailbox-maillist">
               { activeTab === 'inbox' ?
-                (inboxMails.map((mail, index) => (
+                (inboxMails.slice().reverse().map((mail, index) => (
                   <li
                     key={index}
                     onClick={() => handleMailClick(mail, index)}
@@ -314,7 +314,7 @@ const Mailbox = ({ closeHandler, style }) => {
                     </p>
                   </li>
                 ))) : activeTab === 'spam' ?
-                (spamboxMails.map((mail, index) => (
+                (spamboxMails.slice().reverse().map((mail, index) => (
                   <li
                     key={index}
                     onClick={() => handleMailClick(mail, index)}

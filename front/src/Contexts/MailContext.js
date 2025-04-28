@@ -24,7 +24,7 @@ export const MailContextProvider = ({ children }) => {
         );
   
         // 2. Sonra inboxMails'in en başına ekliyoruz
-        setInboxMails(prevMails => [{ ...mailToAdd, used: true }, ...prevMails]);
+        setInboxMails(prevMails => [...prevMails ,{ ...mailToAdd, used: true }]);
       }
     } else if (type === 'spam') {
       const spamToAdd = initspamMails.find(mail => mail.id === id);
@@ -37,7 +37,7 @@ export const MailContextProvider = ({ children }) => {
         );
   
         // 2. Sonra spamboxMails'in en başına ekliyoruz
-        setSpamboxMails(prevMails => [{ ...spamToAdd, used: true }, ...prevMails]);
+        setSpamboxMails(prevMails => [...prevMails, { ...spamToAdd, used: true }]);
       }
     }
   };
