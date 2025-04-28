@@ -113,10 +113,10 @@ export const GameContextProvider = ({ children }) => {
   useEffect(() => {
     if (isWificonnected && !wifiMailSent) {
       console.log('🌐 İnternete ilk bağlanıldı, mailler gönderiliyor...');
-      addMailToMailbox('inbox', 1);
-      addMailToMailbox('inbox', 2);
       addMailToMailbox('inbox', 3);
       addMailToMailbox('inbox', 4);
+      addMailToMailbox('inbox', 1);
+      addMailToMailbox('inbox', 2);
       addMailToMailbox('spam', 31);
       addMailToMailbox('spam', 32);
   

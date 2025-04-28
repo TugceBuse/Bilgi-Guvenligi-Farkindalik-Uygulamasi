@@ -28,63 +28,59 @@ const RansomwareButton = ({ label }) => {
 
 export const mails = [
     /* 1.Mail Content*/
-  {id: 1, from:'IT.Destek@globalbank-support.com',
-  title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, readMail: false, notified: false, used: false,
-    content: 
-    (
-      <div className="mail-content">
-          <pre>
-              <b>Merhaba Onur,</b><br/><br/>
-              Son yapılan sistem güncellemelerimiz sırasında hesabınızda güvenlik açığı tespit edilmiştir. 
-              Bu nedenle hesabınız geçici olarak askıya alınmıştır. 
-              Hesabınıza yeniden erişebilmeniz için aşağıdaki bağlantıdan giriş yaparak bilgilerinizi güncellemeniz gerekmektedir.<br/><br/>
-
-              Bağlantı: <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}>Hesabı Yeniden Etkinleştir!</span><br/><br/>
-              
-              Bu işlemi 24 saat içinde gerçekleştirmezseniz, hesabınız kalıcı olarak kapatılacaktır ve tüm verileriniz silinecektir.
-              E-posta güvenliği politikamız gereğince, bu bağlantının gizliliğini koruyun ve kimseyle paylaşmayın.<br/><br/><br/>
-
-              <b>Teşekkürler,<br/><br/>
-              GlobalBank IT Destek Ekibi</b><br/>
-              <b>E-posta:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@globalbank.com</span><br/>
-              <b>Telefon:</b> +90 212 555 0101
+    {id: 1, from:'support@phishville.com',
+      title: 'PhishVille', precontent: `PhishVille'ye Hoşgeldiniz!`, readMail: false, notified: false, used: false,
+        content: 
+        (
+          <div className="mail-content-first">
+            <pre>
+                <b>Merhaba Onur,</b><br/><br/>
+                🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
+        
+                Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
+                Amacın: Görevleri başarıyla tamamlayarak tuzaklardan kaçmak ve sistemi güvence altına almak!<br/><br/>
+        
+                Unutma: Dış görünüş her zaman gerçeği yansıtmayabilir. 😉
+                Her tıkladığın bağlantı, her verdiğin bilgi ve her atladığın detay sonuçlarını doğrudan etkileyecek.<br/><br/>
+        
+                Şimdi kemerlerini bağla, şüpheciliğini kuşan ve oyuna başla! 🚀<br/><br/>
+        
+                <b>İyi şanslar dileriz,<br/>
+                PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
+                <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phishville.com</span><br/>
+                <b>Telefon:</b> +90 212 123 4567
             </pre>
-      </div>
-    )
-   },
+          </div>
+        )        
+       },
 
    /* 2.Mail Content*/
-   {id: 2, from:'info@shipmenttracker.com',
-   title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, readMail: false, notified: false, used: false,
-    content: 
-    (
-      <div className="mail-content">
+   {id: 2, from:'support@phisville.com',
+    title: 'PhishVille', precontent: `PhishVille'ye Hoşgeldiniz!`, readMail: false, notified: false, used: false,
+      content: 
+      (
+        <div className="mail-content-first">
           <pre>
-              <b>Değerli Müşterimiz,</b><br/><br/>
-              Sizin için hazırlanan gönderimizle ilgili bir teslimat sorunu oluştu. [Order #123456] numaralı siparişiniz teslim edilememiştir. 
-              Bunun temel nedeni, adres bilgilerinizde eksiklik veya yanlışlık olabileceğidir.<br/><br/>
-
-              Teslimat sürecinde yaşanan bu aksaklığı en kısa sürede çözmek ve paketinizi yeniden yönlendirebilmek için lütfen aşağıdaki bağlantıya tıklayarak adres bilgilerinizi doğrulayınız:<br/><br/>
-
-              <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
-              title='https://shipmenttracker.com/track/123456'
-              >Paketimi Güncelle</span><br/><br/>
-              
-              Güncellenen bilgilerle paketinizin yeniden sevkiyatını gerçekleştirebiliriz. Eğer adres doğrulama işlemi gerçekleştirilmezse, gönderinizi teslim edemeyeceğimiz için siparişiniz otomatik olarak 3 iş günü içerisinde iade edilecektir.
-
-              Siparişinizin durumu hakkında anlık bildirim almak ve kargo sürecinizi kesintisiz takip etmek için bilgilerinizi eksiksiz doldurduğunuzdan emin olun.<br/><br/>
-
-              Eğer bu mesajı yanlışlıkla aldıysanız ya da başka bir konuda yardıma ihtiyaç duyuyorsanız, lütfen bizimle iletişime geçmekten çekinmeyin.<br/><br/>
-              Gönderinizin güvenliği ve memnuniyetiniz bizim önceliğimizdir.<br/><br/><br/>
-
-              <b>Teşekkürler,<br/><br/>
-              Kargo Takip Ekibi</b><br/>
-              <b>Info:</b> info@shipmenttracker.com<br/>
-              <b>Info:</b> shipmenttracker.com
-            </pre>
-      </div>
-    )
-   },
+              <b>Merhaba Onur,</b><br/><br/>
+              🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
+      
+              Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
+              Amacın: Görevleri başarıyla tamamlayarak tuzaklardan kaçmak ve sistemi güvence altına almak!<br/><br/>
+      
+              Unutma: Dış görünüş her zaman gerçeği yansıtmayabilir. 😉
+              Her tıkladığın bağlantı, her verdiğin bilgi ve her atladığın detay sonuçlarını doğrudan etkileyecek.<br/><br/>
+      
+              Şimdi kemerlerini bağla, şüpheciliğini kuşan ve oyuna başla! 🚀<br/><br/>
+      
+              <b>İyi şanslar dileriz,<br/>
+              PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
+              <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phishville.com</span><br/>
+              <b>Telefon:</b> +90 212 123 4567
+          </pre>
+        </div>
+      )        
+     },
+   
    /* 3.Mail Content*/
    {id: 3, from:'rewards@shoppingplus.com',
     title: 'ShoppingPlus', precontent: `-Sadakat Puanlarınızı Hemen Kullanın!`, readMail: false, notified: false, used: false,
@@ -558,6 +554,64 @@ export const mails = [
               </div>
             )
             },
+            /* 20.Mail Content*/
+            {id: 20, from:'IT.Destek@globalbank-support.com',
+              title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, readMail: false, notified: false, used: false,
+                content: 
+                (
+                  <div className="mail-content">
+                      <pre>
+                          <b>Merhaba Onur,</b><br/><br/>
+                          Son yapılan sistem güncellemelerimiz sırasında hesabınızda güvenlik açığı tespit edilmiştir. 
+                          Bu nedenle hesabınız geçici olarak askıya alınmıştır. 
+                          Hesabınıza yeniden erişebilmeniz için aşağıdaki bağlantıdan giriş yaparak bilgilerinizi güncellemeniz gerekmektedir.<br/><br/>
+            
+                          Bağlantı: <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}>Hesabı Yeniden Etkinleştir!</span><br/><br/>
+                          
+                          Bu işlemi 24 saat içinde gerçekleştirmezseniz, hesabınız kalıcı olarak kapatılacaktır ve tüm verileriniz silinecektir.
+                          E-posta güvenliği politikamız gereğince, bu bağlantının gizliliğini koruyun ve kimseyle paylaşmayın.<br/><br/><br/>
+            
+                          <b>Teşekkürler,<br/><br/>
+                          GlobalBank IT Destek Ekibi</b><br/>
+                          <b>E-posta:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@globalbank.com</span><br/>
+                          <b>Telefon:</b> +90 212 555 0101
+                        </pre>
+                  </div>
+                )
+               },
+
+            /* 21.Mail Content*/
+            {id: 2, from:'info@shipmenttracker.com',
+              title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, readMail: false, notified: false, used: false,
+               content: 
+               (
+                 <div className="mail-content">
+                     <pre>
+                         <b>Değerli Müşterimiz,</b><br/><br/>
+                         Sizin için hazırlanan gönderimizle ilgili bir teslimat sorunu oluştu. [Order #123456] numaralı siparişiniz teslim edilememiştir. 
+                         Bunun temel nedeni, adres bilgilerinizde eksiklik veya yanlışlık olabileceğidir.<br/><br/>
+           
+                         Teslimat sürecinde yaşanan bu aksaklığı en kısa sürede çözmek ve paketinizi yeniden yönlendirebilmek için lütfen aşağıdaki bağlantıya tıklayarak adres bilgilerinizi doğrulayınız:<br/><br/>
+           
+                         <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}
+                         title='https://shipmenttracker.com/track/123456'
+                         >Paketimi Güncelle</span><br/><br/>
+                         
+                         Güncellenen bilgilerle paketinizin yeniden sevkiyatını gerçekleştirebiliriz. Eğer adres doğrulama işlemi gerçekleştirilmezse, gönderinizi teslim edemeyeceğimiz için siparişiniz otomatik olarak 3 iş günü içerisinde iade edilecektir.
+           
+                         Siparişinizin durumu hakkında anlık bildirim almak ve kargo sürecinizi kesintisiz takip etmek için bilgilerinizi eksiksiz doldurduğunuzdan emin olun.<br/><br/>
+           
+                         Eğer bu mesajı yanlışlıkla aldıysanız ya da başka bir konuda yardıma ihtiyaç duyuyorsanız, lütfen bizimle iletişime geçmekten çekinmeyin.<br/><br/>
+                         Gönderinizin güvenliği ve memnuniyetiniz bizim önceliğimizdir.<br/><br/><br/>
+           
+                         <b>Teşekkürler,<br/><br/>
+                         Kargo Takip Ekibi</b><br/>
+                         <b>Info:</b> info@shipmenttracker.com<br/>
+                         <b>Info:</b> shipmenttracker.com
+                       </pre>
+                 </div>
+               )
+              },
   ];
 
 

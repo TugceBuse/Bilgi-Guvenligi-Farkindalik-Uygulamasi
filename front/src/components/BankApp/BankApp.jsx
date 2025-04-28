@@ -149,9 +149,22 @@ const BankApp = ({ closeHandler, style }) => {
           </div>
           <div className={styles.accountInfo}>
             <div className={styles.card}>
-              <h3>Kart Bilgileri</h3>
-              <p>Kart No: 1234 5678 9012 3456</p>
+                <div className={styles.cardBackground}>
+                    <h3 className={styles.cardBankName}>NovaBank</h3>
+                    <div className={styles.cardNumber}>**** **** **** 3456</div>
+                    <div className={styles.cardDetails}>
+                        <div>
+                            <label>Son Kullanım</label>
+                            <p>12/26</p>
+                        </div>
+                        <div>
+                            <label>Kart Sahibi</label>
+                            <p>Onur Yılmaz</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div className={styles.card}>
               <h3>IBAN</h3>
               <p>TR12 3456 7890 1234 5678 9012 34</p>
