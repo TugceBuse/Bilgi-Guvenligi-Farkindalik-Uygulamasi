@@ -5,11 +5,43 @@ const MailContext = createContext();
 
 export const MailContextProvider = ({ children }) => {
   const [initMail, setInitMail] = useState(initialMails);
-  const [inboxMails, setInboxMails] = useState(initialMails.filter(mail => mail.used));
+  const [inboxMails, setInboxMails] = useState(initialMails.filter(mail => mail.used));//ilk gelen mailleri used(TRUE) yap ki gösterilsin
   const [initsentMails, setInitSentMails] = useState(initialSentMails);
   const [initspamMails, setInitSpamMails] = useState(initialSpamMails);
-  const [spamboxMails, setSpamboxMails] = useState(initialSpamMails.filter(mail => !mail.used));
+  const [spamboxMails, setSpamboxMails] = useState(initialSpamMails.filter(mail => mail.used));
+  const [notifiedMails, setNotifiedMails] = useState([]); // Bildirim kutusu mailleri
   const [selectedMail, setSelectedMail] = useState(null);
+
+  const addMailToMailbox = (type, id) => {
+    if (type === 'inbox') {
+      const mailToAdd = initMail.find(mail => mail.id === id);
+      if (mailToAdd && !mailToAdd.used) {
+        // 1. Önce initMail içinde ilgili mailin used'ını true yapıyoruz
+        setInitMail(prevMails =>
+          prevMails.map(mail =>
+            mail.id === id ? { ...mail, used: true } : mail
+          )
+        );
+  
+        // 2. Sonra inboxMails'in en başına ekliyoruz
+        setInboxMails(prevMails => [{ ...mailToAdd, used: true }, ...prevMails]);
+      }
+    } else if (type === 'spam') {
+      const spamToAdd = initspamMails.find(mail => mail.id === id);
+      if (spamToAdd && !spamToAdd.used) {
+        // 1. Önce initspamMails içinde ilgili spam mailin used'ını true yapıyoruz
+        setInitSpamMails(prevMails =>
+          prevMails.map(mail =>
+            mail.id === id ? { ...mail, used: true } : mail
+          )
+        );
+  
+        // 2. Sonra spamboxMails'in en başına ekliyoruz
+        setSpamboxMails(prevMails => [{ ...spamToAdd, used: true }, ...prevMails]);
+      }
+    }
+  };
+  
 
   return (
     <MailContext.Provider value=
@@ -19,7 +51,9 @@ export const MailContextProvider = ({ children }) => {
       initsentMails, setInitSentMails,
       initspamMails, setInitSpamMails,
       spamboxMails, setSpamboxMails,
-      selectedMail, setSelectedMail
+      selectedMail, setSelectedMail,
+      notifiedMails, setNotifiedMails,
+      addMailToMailbox,
     }}>
       {children}
     </MailContext.Provider>

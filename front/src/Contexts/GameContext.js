@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useMailContext } from './MailContext';
 
 const GameContext = createContext();
 
@@ -6,6 +7,9 @@ export const GameContextProvider = ({ children }) => {
   const [seconds, setSeconds] = useState(0); // oyun süresi
   const [isWificonnected, setIsWificonnected] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
+  const [wifiMailSent, setWifiMailSent] = useState(false); // Wi-Fi bağlantısı için mail gönderildi mi kontrolü
+
+  const { addMailToMailbox } = useMailContext();
 
   const [gameStart, setGameStart] = useState(() => {
     const now = new Date();
@@ -98,6 +102,18 @@ export const GameContextProvider = ({ children }) => {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (isWificonnected && !wifiMailSent) {
+      console.log('🌐 İnternete ilk bağlanıldı, mailler gönderiliyor...');
+      addMailToMailbox('inbox', 1);
+      addMailToMailbox('inbox', 2);
+      addMailToMailbox('spam', 1);
+      addMailToMailbox('spam', 2);
+      setWifiMailSent(true); // 📢 Artık tekrar çalışmaz
+    }
+  }, [isWificonnected, wifiMailSent]);
+
 
   const getRelativeDate = ({ days = 0, months = 0, hours = 0, minutes = 0 }) => {
     const baseDate = new Date(

@@ -34,11 +34,13 @@ const Mailbox = ({ closeHandler, style }) => {
   // Context Değişkenler
   const {
     initMail,
-    inboxMails, setInboxMails,
+    inboxMails, setInboxMails, //posta kutusu
     initsentMails, setInitSentMails,
     initspamMails, setInitSpamMails,
-    spamboxMails, setSpamboxMails,
-    selectedMail, setSelectedMail
+    spamboxMails, setSpamboxMails, //posta kutusu
+    selectedMail, setSelectedMail,
+    setNotifiedMails,
+    addMailToMailbox
   } = useMailContext();
 
   const prevInboxLength = useRef(inboxMails.length); // Önceki mail sayısını sakla
@@ -49,6 +51,8 @@ const Mailbox = ({ closeHandler, style }) => {
   // **Inbox ve Spam kutularını güncelleme**
   const [showSpamMenu, setShowSpamMenu] = useState(false);
 
+
+  //Spam menüsünü kapatmak için dışarı tıklama olayı
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest('.mailbox-mailcontentheader-rightBox')) {
@@ -61,34 +65,37 @@ const Mailbox = ({ closeHandler, style }) => {
 
 
 
-
-  // used özelliği false olan ve bildirim olarak gösterilen mailleri inbox'a ekler
   useEffect(() => {
-    setInboxMails(prevMails => {
-        const filteredMails = initMail.filter(mail => !mail.used && mail.notified); 
+    addMailToMailbox('inbox', 1); // 📩 id=1 maili Inbox'a ekle
+    addMailToMailbox('spam', 2);  // 📩 id=2 maili Spambox'a ekle
+  }, []);
+  // // used özelliği false olan ve bildirim olarak gösterilen mailleri inbox'a ekler
+  // useEffect(() => {
+  //   setInboxMails(prevMails => {
+  //       const filteredMails = initMail.filter(mail => !mail.used && mail.notified); 
         
-        const newMails = filteredMails.filter(mail => 
-            !prevMails.some(prevMail => prevMail.title === mail.title)
-        );
+  //       const newMails = filteredMails.filter(mail => 
+  //           !prevMails.some(prevMail => prevMail.title === mail.title)
+  //       );
 
-        return [...newMails, ...prevMails];
-    });
-  }, [initMail]);
+  //       return [...newMails, ...prevMails];
+  //   });
+  // }, [initMail]);
 
 
-  useEffect(() => {
-    setSpamboxMails(prevMails => {
-        // `used: true` olan spam mailleri filtrele
-        const spamMails = initspamMails.filter(mail => mail.used);
+  // useEffect(() => {
+  //   setSpamboxMails(prevMails => {
+  //       // `used: true` olan spam mailleri filtrele
+  //       const spamMails = initspamMails.filter(mail => mail.used);
 
-        // Yeni spam maillerini daha önce eklenmiş olanlarla karşılaştır
-        const newSpamMails = spamMails.filter(mail => 
-            !prevMails.some(prevMail => prevMail.title === mail.title)
-        );
+  //       // Yeni spam maillerini daha önce eklenmiş olanlarla karşılaştır
+  //       const newSpamMails = spamMails.filter(mail => 
+  //           !prevMails.some(prevMail => prevMail.title === mail.title)
+  //       );
 
-        return [...newSpamMails, ...prevMails];
-    });
-  }, [initspamMails]);
+  //       return [...newSpamMails, ...prevMails];
+  //   });
+  // }, [initspamMails]);
 
 
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
@@ -180,6 +187,10 @@ const Mailbox = ({ closeHandler, style }) => {
         )
       );
     }
+    // Maili bildirim kutusundan kaldır
+    setNotifiedMails(prevNotifiedMails =>
+      prevNotifiedMails.filter(m => m.id !== mail.id)
+    );
   };
 
   const handleTabClick = (tab) => {

@@ -29,7 +29,7 @@ const RansomwareButton = ({ label }) => {
 export const mails = [
     /* 1.Mail Content*/
   {id: 1, from:'IT.Destek@globalbank-support.com',
-  title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, readMail: false, notified: true, used: true,
+  title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, readMail: false, notified: false, used: false,
     content: 
     (
       <div className="mail-content">
@@ -55,7 +55,7 @@ export const mails = [
 
    /* 2.Mail Content*/
    {id: 2, from:'info@shipmenttracker.com',
-   title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, readMail: false, notified: true, used: true,
+   title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, readMail: false, notified: false, used: false,
     content: 
     (
       <div className="mail-content">
@@ -87,7 +87,7 @@ export const mails = [
    },
    /* 3.Mail Content*/
    {id: 3, from:'rewards@shoppingplus.com',
-    title: 'ShoppingPlus', precontent: `-Sadakat Puanlarınızı Hemen Kullanın!`, readMail: false, notified: true, used: true,
+    title: 'ShoppingPlus', precontent: `-Sadakat Puanlarınızı Hemen Kullanın!`, readMail: false, notified: false, used: false,
      content: 
      (
        <div className="mail-content">
@@ -109,7 +109,7 @@ export const mails = [
 
    /* 4.Mail Content*/
    {id: 4, from:'no-reply@trustedplatform.com',
-   title: 'Trusted Platformu', precontent: `-Üyeliğiniz Başarıyla Oluşturuldu!`, readMail: false, notified: true, used: true,
+   title: 'Trusted Platformu', precontent: `-Üyeliğiniz Başarıyla Oluşturuldu!`, readMail: false, notified: false, used: false,
     content: 
     (
       <div className="mail-content">
@@ -135,7 +135,7 @@ export const mails = [
 
    /* 5.Mail Content*/
    {id: 5, from:'aht-krkse@gmail.com',
-    title: 'Ahmet Karaköse', precontent: `-İş Tamamlandı!`, readMail: false, notified: true, used: true,
+    title: 'Ahmet Karaköse', precontent: `-İş Tamamlandı!`, readMail: false, notified: false, used: false,
      content: 
      (
        <div className="mail-content">
@@ -163,7 +163,7 @@ export const mails = [
     },
     /* 6.Mail Content*/
     {id: 6, from:'meeting@corporatehub.com',
-      title: 'Corporate Hub', precontent: `-Toplantı Hatırlatması: Proje Güncellemesi`, readMail: false, notified: true, used: true,
+      title: 'Corporate Hub', precontent: `-Toplantı Hatırlatması: Proje Güncellemesi`, readMail: false, notified: false, used: false,
        content: 
        (
          <div className="mail-content">
@@ -192,7 +192,7 @@ export const mails = [
       },
       /* 7.Mail Content*/
     {id: 7, from:'notification@fiberspeed.com',
-      title: 'FiberSpeed', precontent: `-Hizmet Bakım Çalışması Bilgilendirmesi.`, readMail: false, notified: true, used: true,
+      title: 'FiberSpeed', precontent: `-Hizmet Bakım Çalışması Bilgilendirmesi.`, readMail: false, notified: false, used: false,
        content: 
        (
          <div className="mail-content">
@@ -214,7 +214,7 @@ export const mails = [
       },
       /* 8.Mail Content*/
       {id: 8, from:'noreply@onlinetraining.com',
-        title: 'OnlineTraning', precontent: `-Eğitim Sertifikanız Hazır!`, readMail: false, notified: true, used: true,
+        title: 'OnlineTraning', precontent: `-Eğitim Sertifikanız Hazır!`, readMail: false, notified: false, used: false,
          content: 
          (
            <div className="mail-content">
@@ -239,7 +239,7 @@ export const mails = [
         },
         /* 9.Mail Content*/
         {id: 9, from:'security@bankonline.com',
-          title: 'BankOnline', precontent: `-Hesap Şifrenizi Güncelleyin`, readMail: false, notified: true, used: true,
+          title: 'BankOnline', precontent: `-Hesap Şifrenizi Güncelleyin`, readMail: false, notified: false, used: false,
            content: 
            (
              <div className="mail-content">
@@ -269,7 +269,7 @@ export const mails = [
 
         /* 10.Mail Content*/
         {id: 10, from:'hr@global-jobs.com',
-          title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, readMail: false, notified: true, used: true,
+          title: 'Global Jobs', precontent: `-Özel Bir İş Teklifimiz Var! Size Uygun Pozisyon Açıldı`, readMail: false, notified: false, used: false,
           content: 
           (
             <div className="mail-content">
@@ -308,7 +308,7 @@ export const mails = [
           },
           /* 11.Mail Content*/
           {id: 11, from:'health@wellcheck.com',
-            title: 'WellCheck', precontent: `-Sağlık Testi Sonuçlarınız Hazır: Hemen Kontrol Edin`, readMail: false, notified: true, used: true,
+            title: 'WellCheck', precontent: `-Sağlık Testi Sonuçlarınız Hazır: Hemen Kontrol Edin`, readMail: false, notified: false, used: false,
             content: 
             (
               <div className="mail-content">
@@ -343,7 +343,7 @@ export const mails = [
             },
             /* 12.Mail Content*/
           {id: 12, from:'license@shieldsecure.com',
-            title: 'ShieldSecure', precontent: `-Lisans Aktivasyonu Tamamlandı`, readMail: false, notified: true, used: true,
+            title: 'ShieldSecure', precontent: `-Lisans Aktivasyonu Tamamlandı`, readMail: false, notified: false, used: false,
             content: 
             (
               <div className="mail-content">
@@ -374,7 +374,7 @@ export const mails = [
             },
             /* 13.Mail Content*/
           {id: 13, from:'library@digitalbookshelf.com',
-            title: 'DigitalBookShelf', precontent: `-E-kitap Koleksiyonunuz Sizi Bekliyor!`, readMail: false, notified: true, used: true,
+            title: 'DigitalBookShelf', precontent: `-E-kitap Koleksiyonunuz Sizi Bekliyor!`, readMail: false, notified: false, used: false,
             content: 
             (
               <div className="mail-content">
@@ -400,7 +400,7 @@ export const mails = [
             },
             /* 14.Mail Content*/
           {id: 14, from:'updates@shieldsecure.com',
-            title: 'ShieldSecure', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: true, used: true,
+            title: 'ShieldSecure', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
             content: 
             (
               <div className="mail-content">
@@ -564,7 +564,7 @@ export const mails = [
       title: 'Winbig',
       precontent: 'iPhone 15 Pro Max Sizi Bekliyor!',
       readSpam: false,
-      used: true,
+      used: false,
       content: (
         <div className="mail-content">
           <pre>
@@ -596,7 +596,7 @@ export const mails = [
       title: 'HealthTips',
       precontent: 'Sadece 7 Günde 10 Kilo Verin!',
       readSpam: false,
-      used: true,
+      used: false,
       content: (
         <div className="mail-content">
           <pre>
@@ -625,7 +625,7 @@ export const mails = [
       title: 'Career Options Now',
       precontent: 'Evden Çalışarak Ayda 50.000 TL Kazanın!',
       readSpam: false,
-      used: true,
+      used: false,
       content: (
         <div className="mail-content">
           <pre>

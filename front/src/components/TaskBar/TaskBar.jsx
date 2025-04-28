@@ -20,8 +20,7 @@ const TaskBar = ({windowConfig}) => {
   const [showWifiAlert, setShowWifiAlert] = useState(false);
   const [wifiname, setwifiname] = useState('');
   const { toggleWindow } = useUIContext();
-  const [popupNotification, setPopupNotification] = useState(null); // 📌 Pop-up bildirimi yöneten state
-  const [notifiedMails, setNotifiedMails] = useState([]); // 📌 Bildirim kutusuna düşen mailleri takip eder.
+  const [popupQueue, setPopupQueue] = useState([]); // 📌 Pop-up bildirimi yöneten state
   const popupTimeout = useRef(null);
 
   const pass = "1234";
@@ -33,7 +32,11 @@ const TaskBar = ({windowConfig}) => {
 
   const { antivirusUpdated , antivirusUpdating } = useVirusContext();
 
-  const { initMail, setInitMail, setSelectedMail, setInboxMails } = useMailContext(); 
+  const { initMail, setInitMail, setSelectedMail,
+    inboxMails, setInboxMails,
+    spamboxMails, setSpamboxMails,
+    notifiedMails, setNotifiedMails,
+  } = useMailContext(); 
 
   const {
     openWindows, activeWindow, setActiveWindow,
@@ -163,69 +166,114 @@ const TaskBar = ({windowConfig}) => {
 
   // Mail anlık bildirime tıklanma durumu(mailbox aç, maili seçili hale getir)
   const handleOpenMailbox = (mail) => {
-    if(!isWificonnected) {
+    if (!isWificonnected) {
       setShowWifiAlert(true);
       return;
     }
-    
+  
     if (popupTimeout.current) {
-      clearTimeout(popupTimeout.current); // 📌 Kullanıcı tıklarsa timeout'u iptal et
+      clearTimeout(popupTimeout.current); //  Kullanıcı tıklarsa timeout'u iptal et
+      popupTimeout.current = null;
     }
-
+  
     setSelectedMail(mail);
+  
     setInboxMails(prevMails =>
       prevMails.map(m => 
         m.id === mail.id ? { ...m, readMail: true } : m
       )
     );    
-
-    if(!openWindows.includes('mailbox')) {
+  
+    if (!openWindows.includes('mailbox')) {
       toggleWindow('mailbox');
     }
-    setNotifiedMails(prevNotifiedMails => prevNotifiedMails.filter(m => m.id !== mail.id));
+  
+    setNotifiedMails(prevNotifiedMails => 
+      prevNotifiedMails.filter(m => m.id !== mail.id)
+    );
+    setPopupQueue(prev => prev.slice(0, -1)); //  Tıklanınca popup sırasını ilerlet
     setShowNotifications(false);
-    setPopupNotification(null); // 📌 Pop-up bildirimi kapat
   };
+  
 
    // 📌 **Rastgele Zamanlarda Bildirim Çıkartma**
-  useEffect(() => {
-    const showRandomNotification = () => {
+  // useEffect(() => {
+  //   const showRandomNotification = () => {
 
-      if(!isWificonnected) return;
+  //     if(!isWificonnected) return;
       
-      const unread = initMail.filter(mail => !mail.readMail && !mail.notified && !mail.used);
-      if (unread.length > 0) {
-        const randomMail = unread[Math.floor(Math.random() * unread.length)];
+  //     const unread = initMail.filter(mail => !mail.readMail && !mail.notified && !mail.used);
+  //     if (unread.length > 0) {
+  //       const randomMail = unread[Math.floor(Math.random() * unread.length)];
 
-        setPopupNotification(randomMail);
+  //       setPopupNotification(randomMail);
 
-        // Seçilen rastgele mail bildirim olarak gösterilmiş sayılacak
-        setInitMail(prevMails =>
-          prevMails.map(m =>
-            m.id === randomMail.id ? { ...m, notified: true, used: true } : m
-          )
+  //       // Seçilen rastgele mail bildirim olarak gösterilmiş sayılacak
+  //       setInitMail(prevMails =>
+  //         prevMails.map(m =>
+  //           m.id === randomMail.id ? { ...m, notified: true, used: true } : m
+  //         )
+  //       );
+  //       setInboxMails(prevMails => [{ ...randomMail, notified: true, used: true }, ...prevMails]);
+  //       // 📌 Eğer kullanıcı 8 saniye içinde bildirime basmazsa bildirim kutusuna ekle
+  //       popupTimeout.current = setTimeout(() => {
+  //         setNotifiedMails(prev => [randomMail, ...prev]);
+  //         setPopupNotification(null);
+  //       }, 8000);
+  //     }else{
+  //       // 📌 Eğer okunmamış mail kalmamışsa bildirim çıkartma işlemi durdur
+  //       clearInterval(interval);
+  //     }
+  //   };
+
+  //   // 📌 Rastgele 30-90 saniye arasında bir süre belirle
+  //   const interval = setInterval(showRandomNotification, Math.floor(Math.random() * 5 + 10) * 1000);
+
+  //   return () => clearInterval(interval);
+  // }, [ initMail, isWificonnected ]);
+
+
+
+    // useEffect(() => {
+    //   setNotifiedMails((initMail.filter(mail => !mail.readMail && mail.notified && mail.used)));
+    // }, []);
+
+  // 📌 **Yeni Mail Geldiğinde Bildirim Gösterme**
+    useEffect(() => {
+      if (!isWificonnected) return;
+    
+      const newUnreadMails = inboxMails.filter(mail => !mail.readMail && !mail.notified && mail.used);
+    
+      if (newUnreadMails.length > 0) {
+        const newMail = newUnreadMails[0];
+        const updatedMail = { ...newMail, notified: true };
+    
+        setInboxMails(prevMails =>
+          prevMails.map(m => (m.id === newMail.id ? updatedMail : m))
         );
-        setInboxMails(prevMails => [{ ...randomMail, notified: true, used: true }, ...prevMails]);
-        // 📌 Eğer kullanıcı 8 saniye içinde bildirime basmazsa bildirim kutusuna ekle
-        popupTimeout.current = setTimeout(() => {
-          setNotifiedMails(prev => [randomMail, ...prev]);
-          setPopupNotification(null);
-        }, 8000);
-      }else{
-        // 📌 Eğer okunmamış mail kalmamışsa bildirim çıkartma işlemi durdur
-        clearInterval(interval);
+    
+        // 📌 Yeni maili popup kuyruğuna ekle
+        setPopupQueue(prev => [...prev, updatedMail]);
       }
-    };
+    }, [inboxMails, isWificonnected]);
 
-    // 📌 Rastgele 30-90 saniye arasında bir süre belirle
-    const interval = setInterval(showRandomNotification, Math.floor(Math.random() * 5 + 10) * 1000);
-
-    return () => clearInterval(interval);
-  }, [ initMail, isWificonnected ]);
-
-  useEffect(() => {
-      setNotifiedMails((initMail.filter(mail => !mail.readMail && mail.notified && mail.used)));
-    }, []);
+    // 📌 **Pop-up Bildirimini Gösterme**
+    useEffect(() => {
+      if (popupQueue.length > 0 && !popupTimeout.current) {
+        const timer = setTimeout(() => {
+          const currentMail = popupQueue[popupQueue.length - 1]; // 📌 Son eklenen mail
+    
+          // 📌 8 saniye sonunda popup kayboluyor ve bildirim kutusuna düşüyor
+          setNotifiedMails(prev => [currentMail, ...prev]);
+          setPopupQueue(prev => prev.slice(0, -1)); // 📌 Son maili çıkar (stack mantığı)
+          popupTimeout.current = null; // 📌 Yeni popup için hazır hale getir
+        }, 8000);
+    
+        popupTimeout.current = timer;
+      }
+    }, [popupQueue]);
+    
+    
 
   useEffect(() => {
     setActiveWindow(visibleWindows[visibleWindows.length - 1]);
@@ -287,11 +335,11 @@ const TaskBar = ({windowConfig}) => {
 
   return (
   <div className="taskbar">
-      {popupNotification && (
-        <div className="popup-notification" onClick={() => handleOpenMailbox(popupNotification)}>
+      {popupQueue.length > 0 && (
+        <div className="popup-notification" onClick={() => handleOpenMailbox(popupQueue[popupQueue.length - 1])}>
           <img style={{width:30, height:30}} src="/icons/mail.png" alt="Mail Icon" />
-          <h4>{popupNotification.title}</h4>
-          <p>{popupNotification.precontent}</p>
+          <h4>{popupQueue[popupQueue.length - 1].title}</h4>
+          <p>{popupQueue[popupQueue.length - 1].precontent}</p>
         </div>
       )}
       
