@@ -243,7 +243,7 @@ const TaskBar = ({windowConfig}) => {
     if (!isWificonnected) return;
   
     const newUnreadMails = inboxMails.filter(mail => 
-      !mail.readMail && mail.used &&
+      !mail.readMail && mail.used && !mail.notified &&
       !popupQueue.some(q => q.id === mail.id) && // Popup'ta da yoksa
       !notifiedMails.some(n => n.id === mail.id)  // Bildirim kutusunda da yoksa
     );

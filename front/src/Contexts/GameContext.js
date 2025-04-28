@@ -110,8 +110,8 @@ export const GameContextProvider = ({ children }) => {
       addMailToMailbox('inbox', 2);
       addMailToMailbox('inbox', 3);
       addMailToMailbox('inbox', 4);
-      addMailToMailbox('spam', 1);
-      addMailToMailbox('spam', 2);
+      addMailToMailbox('spam', 31);
+      addMailToMailbox('spam', 32);
   
       // 📢 30 saniye sonra 3 numaralı maili inbox'a ekle
       const timeoutId = setTimeout(() => {

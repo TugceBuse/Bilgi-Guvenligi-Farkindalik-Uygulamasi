@@ -23,8 +23,10 @@ export const useMailbox = () => {
 
 const Mailbox = ({ closeHandler, style }) => {
 
+  const mailboxRef = useRef(null);
+  MakeDraggable(mailboxRef, '.mailbox-header');
+
   //seçilen maili ve indexi tutacak state'ler
-  const [activeIndex, setActiveIndex] = useState(null);
   const [activeTab, setActiveTab] = useState('inbox');
 
   const [unreadCountMail, setUnreadCountMail] = useState(0);
@@ -64,11 +66,6 @@ const Mailbox = ({ closeHandler, style }) => {
   }, []);
 
 
-
-  useEffect(() => {
-    addMailToMailbox('inbox', 1); // 📩 id=1 maili Inbox'a ekle
-    addMailToMailbox('spam', 2);  // 📩 id=2 maili Spambox'a ekle
-  }, []);
   // // used özelliği false olan ve bildirim olarak gösterilen mailleri inbox'a ekler
   // useEffect(() => {
   //   setInboxMails(prevMails => {
@@ -100,57 +97,39 @@ const Mailbox = ({ closeHandler, style }) => {
 
   // **Eğer `selectedMail` varsa, onu varsayılan olarak aç**
   useEffect(() => {
-    if (selectedMail) {
-      let selectedIndex = -1; // Varsayılan olarak seçili index bulunamazsa -1 bırak
-      
-      if (activeTab === 'inbox') {
-        selectedIndex = inboxMails.findIndex(mail => mail.id === selectedMail.id);
-      } else if (activeTab === 'spam') {
-        selectedIndex = spamboxMails.findIndex(mail => mail.id === selectedMail.id);
-      } else if (activeTab === 'sent') {
-        selectedIndex = initsentMails.findIndex(mail => mail.id === selectedMail.id);
-      }
-
-      setActiveIndex(selectedIndex); // Güncellenmiş index'i set et
-    }
-
-    resetScroll(contentRef); // Yeni mail seçildiğinde scrollu sıfırlar -- util import
+    if (selectedMail) {resetScroll(contentRef);} // Yeni mail seçildiğinde scrollu sıfırlar -- util import
   }, [selectedMail]); //
 
     // **inboxMails değiştiğinde activeIndex'i güncelle**
-  useEffect(() => {
-    if (activeTab === "inbox") {
-      const prevLength = prevInboxLength.current;
-      const newLength = inboxMails.length;
+  // useEffect(() => {
+  //   if (activeTab === "inbox") {
+  //     const prevLength = prevInboxLength.current;
+  //     const newLength = inboxMails.length;
   
-      if (newLength > prevLength) {// Yeni Inbox mail eklendiğinde
-        console.log('Inbox: Yeni mail eklendi, activeIndex artırıldı');
-        setActiveIndex((prevIndex) => (prevIndex !== null ? prevIndex + 1 : prevIndex));
-      } else if (newLength < prevLength) {// Inbox mail silindiğinde
-        console.log('Inbox: Mail silindi, activeIndex azaltıldı');
-        setActiveIndex((prevIndex) => (prevIndex !== null ? Math.max(prevIndex - 1, 0) : prevIndex));
-      }
+  //     if (newLength > prevLength) {// Yeni Inbox mail eklendiğinde
+  //       console.log('Inbox: Yeni mail eklendi, activeIndex artırıldı');
+  //       setActiveIndex((prevIndex) => (prevIndex !== null ? prevIndex + 1 : prevIndex));
+  //     } else if (newLength < prevLength) {// Inbox mail silindiğinde
+  //       console.log('Inbox: Mail silindi, activeIndex azaltıldı');
+  //       setActiveIndex((prevIndex) => (prevIndex !== null ? Math.max(prevIndex - 1, 0) : prevIndex));
+  //     }
       
-      prevInboxLength.current = newLength; // Yeni uzunluğu sakla
-    } else if (activeTab === "spam") {
-      const prevLength = prevSpamLength.current;
-      const newLength = spamboxMails.length;
+  //     prevInboxLength.current = newLength; // Yeni uzunluğu sakla
+  //   } else if (activeTab === "spam") {
+  //     const prevLength = prevSpamLength.current;
+  //     const newLength = spamboxMails.length;
   
-      if (newLength > prevLength) {// Yeni Spam mail eklendiğinde
-        console.log('Spam: Yeni mail eklendi, activeIndex artırıldı');
-        setActiveIndex((prevIndex) => (prevIndex !== null ? prevIndex + 1 : prevIndex));
-      } else if (newLength < prevLength) {// Spam mail silindiğinde
-        console.log('Spam: Mail silindi, activeIndex azaltıldı');
-        setActiveIndex((prevIndex) => (prevIndex !== null ? Math.max(prevIndex - 1, 0) : prevIndex));
-      }
+  //     if (newLength > prevLength) {// Yeni Spam mail eklendiğinde
+  //       console.log('Spam: Yeni mail eklendi, activeIndex artırıldı');
+  //       setActiveIndex((prevIndex) => (prevIndex !== null ? prevIndex + 1 : prevIndex));
+  //     } else if (newLength < prevLength) {// Spam mail silindiğinde
+  //       console.log('Spam: Mail silindi, activeIndex azaltıldı');
+  //       setActiveIndex((prevIndex) => (prevIndex !== null ? Math.max(prevIndex - 1, 0) : prevIndex));
+  //     }
   
-      prevSpamLength.current = newLength; // Yeni uzunluğu sakla
-    }
-  }, [inboxMails, spamboxMails, activeTab]); // 📌 Hem inbox, hem spam hem de activeTab değişiminde çalışır
-
-  useEffect(() => {
-    console.log('activeIndex: ',activeIndex);
-  }, [activeIndex]);
+  //     prevSpamLength.current = newLength; // Yeni uzunluğu sakla
+  //   }
+  // }, [inboxMails, spamboxMails, activeTab]); // 📌 Hem inbox, hem spam hem de activeTab değişiminde çalışır
 
   useEffect(() => {
     const count = inboxMails.filter(mail => !mail.readMail).length;
@@ -162,8 +141,6 @@ const Mailbox = ({ closeHandler, style }) => {
     setUnreadCountSpam(count);
   }, [spamboxMails]); 
 
-  const mailboxRef = useRef(null);
-  MakeDraggable(mailboxRef, '.mailbox-header');
 
   const handleMailClick = (mail) => {
     if (!isWificonnected) {
@@ -196,7 +173,6 @@ const Mailbox = ({ closeHandler, style }) => {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     setSelectedMail(null);
-    setActiveIndex(null);
   };
 
 
@@ -271,7 +247,7 @@ const Mailbox = ({ closeHandler, style }) => {
           {/* mail listesi */}
           <div className="mailbox-mails">
             <div style={{display:"flex", flexDirection:"column"}}>
-            <h2>{activeTab === 'inbox' ? 'Inbox' : 'Sent'}</h2>
+            <h2>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>{/* ilk harfi büyük yapar */}
             <button 
               style={{width:200, height:20, alignSelf:"center",alignItems:"center", justifyContent:"center", backgroundColor:"rgb(255, 242, 225)", color:"black", border:"none", borderRadius:10, cursor:"pointer",}}
               onClick={resetReadMails}>
@@ -371,7 +347,6 @@ const Mailbox = ({ closeHandler, style }) => {
                                       setInboxMails(prev => prev.filter(mail => mail.id !== selectedMail.id));
                                       setSpamboxMails(prev => [...prev, { ...selectedMail, readMail: true }]);
                                       setSelectedMail(null);
-                                      setActiveIndex(null);
                                     }
                                     setShowSpamMenu(false);
                                   }}

@@ -537,7 +537,7 @@ export const mails = [
   
   export const sentMails = [
     {
-      id: 1,
+      id: 91,
       from: 'me@myemail.com',
       title: 'Meeting Reminder',
       precontent: 'Reminder: Meeting at 3 PM',
@@ -559,7 +559,7 @@ export const mails = [
 
     /* 1.Spam Mail Content*/
     {
-      id: 1,
+      id: 31,
       from: 'rewards@winbig.com',
       title: 'Winbig',
       precontent: 'iPhone 15 Pro Max Sizi Bekliyor!',
@@ -591,7 +591,7 @@ export const mails = [
 
     /* 2.Spam Mail Content*/
     {
-      id: 2,
+      id: 32,
       from: 'healthtips@fitlife.com',
       title: 'HealthTips',
       precontent: 'Sadece 7 Günde 10 Kilo Verin!',
@@ -620,7 +620,7 @@ export const mails = [
     /* 3.Spam Mail Content*/
 
     {
-      id: 3,
+      id: 33,
       from: 'support@careeroptionsnow.com',
       title: 'Career Options Now',
       precontent: 'Evden Çalışarak Ayda 50.000 TL Kazanın!',
