@@ -34,7 +34,7 @@ export const mails = [
         content: 
         (
           <div className="mail-content-first">
-            <DownloadButton label="TaskAppInstaller.exe" fileName="taskappinstaller" mailId={1}/>
+            <DownloadButton label="TaskAppInstaller.exe" fileName="taskappsetup" mailId={1}/>
             <DownloadButton label="testing.exe" fileName="testing" mailId={1}/>
             <pre>
                 <b>Merhaba Onur,</b><br/><br/>
