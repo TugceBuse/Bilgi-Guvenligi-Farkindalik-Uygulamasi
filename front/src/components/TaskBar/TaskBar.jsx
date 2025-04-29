@@ -259,17 +259,17 @@ const TaskBar = ({windowConfig}) => {
     }
   }, [inboxMails, isWificonnected]);
 
-  useEffect(() => {
-    console.log("Popup Queue:", popupQueue);
-  }, [popupQueue]);
+  // useEffect(() => {
+  //   console.log("Popup Queue:", popupQueue);
+  // }, [popupQueue]);
 
-  useEffect(() => {
-    console.log("Notified Mails:", notifiedMails);
-  }, [notifiedMails]);
+  // useEffect(() => {
+  //   console.log("Notified Mails:", notifiedMails);
+  // }, [notifiedMails]);
 
-  useEffect(() => {
-    console.log("Inbox Mails:", inboxMails);
-  }, [inboxMails]);
+  // useEffect(() => {
+  //   console.log("Inbox Mails:", inboxMails);
+  // }, [inboxMails]);
 
   
   

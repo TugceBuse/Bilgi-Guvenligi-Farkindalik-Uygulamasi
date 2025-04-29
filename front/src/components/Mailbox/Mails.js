@@ -2,29 +2,30 @@ import { useState } from 'react';
 import './Mailbox.css';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
+import DownloadButton from '../../utils/DownloadButton';
 
 //Manuel ayarlanmış RansomwareButton compenent'i
-const RansomwareButton = ({ label }) => {
-  const { updateFileStatus } = useFileContext();
-  const { addVirus } = useVirusContext();
-  const [downloading, setDownloading] = useState(false);
+// const RansomwareButton = ({ label }) => {
+//   const { updateFileStatus } = useFileContext();
+//   const { addVirus } = useVirusContext();
+//   const [downloading, setDownloading] = useState(false);
 
-  const handleDownload = () => {
-    let fileName = label.split('.')[0].toLowerCase();
-    setDownloading(true);
-    setTimeout(() => {
-      setDownloading(false);
-      updateFileStatus( fileName , { available: true });
-    }, 3000); // 3 saniye sonra indirme işlemi tamamlanır ve ransomware tetiklenir
-  };
+//   const handleDownload = () => {
+//     let fileName = label.split('.')[0].toLowerCase();
+//     setDownloading(true);
+//     setTimeout(() => {
+//       setDownloading(false);
+//       updateFileStatus( fileName , { available: true });
+//     }, 3000); // 3 saniye sonra indirme işlemi tamamlanır ve ransomware tetiklenir
+//   };
 
-  return (
-    <button onClick={handleDownload}>
-      {label}
-      {downloading && <div className="download-progress"></div>}
-    </button>
-  );
-};
+//   return (
+//     <button onClick={handleDownload}>
+//       {label}
+//       {downloading && <div className="download-progress"></div>}
+//     </button>
+//   );
+// };
 
 export const mails = [
     /* 1.Mail Content*/
@@ -33,6 +34,8 @@ export const mails = [
         content: 
         (
           <div className="mail-content-first">
+            <DownloadButton label="TaskAppInstaller.exe" fileName="taskappinstaller" mailId={1}/>
+            <DownloadButton label="testing.exe" fileName="testing" mailId={1}/>
             <pre>
                 <b>Merhaba Onur,</b><br/><br/>
                 🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
@@ -60,6 +63,7 @@ export const mails = [
       content: 
       (
         <div className="mail-content-first">
+          <DownloadButton label="TaskAppInstaller.exe" fileName="taskappinstallerF" mailId={2}/>
           <pre>
               <b>Merhaba Onur,</b><br/><br/>
               🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
@@ -135,21 +139,7 @@ export const mails = [
      content: 
      (
        <div className="mail-content">
-          <div className="attachments">
-              <ul>
-                <li>
-                <RansomwareButton label='Rapor_2025.docx' />
-                </li>
-                {/* 
-                <li>
-                <RansomwareButton label='file2.docx' />
-                </li>
-
-                <li>
-                  <button onClick={() => null}>File3.jpg</button>
-                </li> */}
-              </ul>
-          </div>
+          <DownloadButton label="Rapor_2025.docx" fileName="rapor_2025" mailId={5}/>
           <pre>
                 Selam Onur! Anlaştığımız gibi istediğin işlemi tamamladım. Dosyalar Ektee!<br/><br/>
                 <b>İyi çalışmalar.</b><br/><br/>
