@@ -1,0 +1,212 @@
+.taskappsetup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; 
+  }
+  .taskappsetup-window {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30%;
+      height: 50%;
+      background-color: #2c2c2c;
+      border: 1px solid #444;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.153);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      padding: 0;
+      margin: 0;
+    }
+    .taskappsetup-header {
+      background-color: #494949;
+      padding: 10px;
+      border-bottom: 1px solid #1a1919;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 10%;
+    }
+    
+    .taskappsetup-close {
+      width: 30px;
+      height: 100%;
+      background-color: transparent;
+      border: none;
+      color: #e4e4e4;
+      font-size: 1.5em;
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease-in-out;
+    }
+    
+    .taskappsetup-close:hover {
+      background-color: #ff0000;
+      transform: scale(1.1);
+    }
+    .taskappsetup-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .taskappsetup-img{
+      width: 22%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .taskappsetup-header h2 {
+      font-size: 1.5em;
+      margin: 0;
+    }
+  
+    .taskappsetup-content {
+      display: flex;
+      width: 100%;
+      height: 90%;
+      padding: 0;
+      margin: 0;
+    }
+    .taskappsetup-content-left{
+      width: 40%;
+      height: 100.3%;
+      background-color: #1a2837;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+      padding: 0;
+      margin-left: -1px;
+      border: 1px solid #042d5d;
+      background-image: url("../../../public/antivirus-setup-pic.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+  
+    .taskappsetup-step {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    
+    .taskappsetup-step h4 {
+      margin-bottom: 10px;
+    }
+    
+    .taskappsetup-step p {
+      margin-bottom: 20px;
+    }
+    
+    .taskappsetup-step textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .taskappsetup-step input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .taskappsetup-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    .taskappsetup-buttons button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .taskappsetup-buttons button:hover {
+      background-color: #0056b3;
+    }
+    .taskappsetup-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      gap: 40px;
+    }
+  
+    .progress-bar2 {
+      width: 100%;
+      height: 40px;
+      border-radius: 4px;
+      margin-top: 20px;
+      position: absolute;
+      animation: progress 10s linear forwards;
+      text-align: left;
+    }
+    @keyframes progress {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+  
+    .progress-bar2 div {
+      height: 100%;
+      background-color: #5b7086;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+    }
+  
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes scaleUp {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.5); }
+    }
+    
+    @keyframes scaleDown {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(0.5); }
+    }
+    .progress-bar2 img {
+      width: 23px;
+      height: 23px;
+      margin-left: 8px;
+      animation: rotate 3s linear infinite;
+    }
+    
+    .progress-bar2 img:nth-child(1) {
+      animation: rotate 2s linear infinite, scaleUp 2s linear infinite;
+    }
+    
+    .progress-bar2 img:nth-child(3) {
+      animation: rotate 2s linear infinite, scaleDown 2s linear infinite;
+    }

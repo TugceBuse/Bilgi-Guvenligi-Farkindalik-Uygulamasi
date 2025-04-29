@@ -1,0 +1,147 @@
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+}
+
+.task-app-container {
+  width: 420px;
+  height: 520px;
+  background: linear-gradient(145deg, #1f1f2f, #2b2b45);
+  border: 2px solid #444;
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  animation: fadeInUp 0.4s ease-out;
+  overflow: hidden;
+}
+
+.task-app-container.closing {
+  animation: fadeOutDown 0.3s ease-in forwards;
+}
+
+.task-app-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 8px;
+}
+
+.task-app-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #f0f0f0;
+}
+.task-icon{
+  width: 64px;
+  height: 64px;
+  background-color : rgb(255, 225, 255);
+  border-radius: 50%;
+  padding: 5px;
+}
+.task-icon-span{
+    display: flex;
+    align-self: center;
+    font-size: 32px;
+    color: #1f1f2f;
+    background-color: rgb(196, 73, 196);
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    padding-left: 5px;
+    padding-top: 2px;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  color: #bbb;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #ff5555;
+}
+
+.task-app-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-item {
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: #343457;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, transform 0.2s;
+  font-size: 15px;
+}
+
+.task-item:hover {
+  background-color: #3f3f6e;
+  transform: translateX(3px);
+}
+
+.task-item.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.no-tasks {
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+  margin-top: 30px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}
