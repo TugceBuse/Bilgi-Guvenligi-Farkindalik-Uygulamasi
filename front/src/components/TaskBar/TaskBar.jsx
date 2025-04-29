@@ -424,8 +424,8 @@ const TaskBar = ({windowConfig}) => {
           <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
         </div>
 
-        <div className="taskbar-notifications" >
-          <img src="/icons/notification_blck.png" alt="Notification Icon" onClick={toggleNotifications} />
+        <div className="taskbar-notifications" onClick={toggleNotifications}>
+          <img src="/icons/notification_blck.png" alt="Notification Icon"  />
           {notifiedMails.length > 0 && <span className="notification-count">{notifiedMails.length}</span>}
 
           {showNotifications && (

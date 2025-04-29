@@ -62,7 +62,7 @@ const TaskAppSetup = ({ file, fileName }) => {
       <div className="taskappsetup-window" ref={SetupRef}>
         <div className="taskappsetup-header">
           <div className="taskappsetup-header-left">
-            <img className="taskappsetup-img" src="/icons/taskapp.png" alt="Task Setup" />
+            <img className="taskappsetup-img" src="/icons/task-list.png" alt="Task Setup" />
             <h2>Setup</h2>
           </div>
           <button className="taskappsetup-close" onClick={handleClose}>×</button>
