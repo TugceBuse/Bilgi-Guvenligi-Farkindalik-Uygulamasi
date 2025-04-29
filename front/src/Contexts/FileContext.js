@@ -44,6 +44,17 @@ export const FileContextProvider = ({ children }) => {
             icon: "/icons/setting.png", 
             exeType: "antivirussetup"
         },
+        taskappsetup: { 
+            available: true,
+            quarantined: false, 
+            infected: false,
+            type: "exe", 
+            size: "25MB", 
+            location: "downloads", 
+            label: "TaskApp Kurulumu", 
+            icon: "/icons/task-list.png", 
+            exeType: "taskappsetup"
+        },
         officeDoc: { 
             available: true,
             quarantined: false, 

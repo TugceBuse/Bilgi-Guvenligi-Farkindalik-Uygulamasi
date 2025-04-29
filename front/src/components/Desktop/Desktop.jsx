@@ -10,6 +10,7 @@ import RansomScreen from '../Notifications/Ransom';
 import FileOpener from '../../viewers/FileOpener';
 import { TodoProvider } from '../../Contexts/TodoContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
+import TaskApp from '../TaskApp/TaskApp';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
@@ -137,6 +138,7 @@ const Desktop = () => {
         message="Internet bağlantısı bulunamadı"
       />
       {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
+      <TaskApp />
     </div>
   );
 };
