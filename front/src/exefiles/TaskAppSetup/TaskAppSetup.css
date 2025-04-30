@@ -88,15 +88,15 @@
     .taskappsetup-content-left{
       width: 40%;
       height: 100.3%;
-      background-color: #1a2837;
+      background-color: #312f9e;
       border-top-right-radius: 20px;
       border-bottom-right-radius: 20px;
       padding: 0;
       margin-left: -1px;
       border: 1px solid #042d5d;
-      background-image: url("../../../public/antivirus-setup-pic.png");
+      background-image: url("../../../public/TaskAppSetup.png");
       background-repeat: no-repeat;
-      background-size: cover;
+      background-size: 350px auto; /* 📌 Genişliği 200px yap, yükseklik otomatik */
       background-position: center;
     }
   

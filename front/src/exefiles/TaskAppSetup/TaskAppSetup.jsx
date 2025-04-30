@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import './TaskAppSetup.css';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useFileContext } from '../../Contexts/FileContext';
-import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 import { useGameContext } from '../../Contexts/GameContext';
 
 export const useTaskSetup = () => {
@@ -20,16 +19,15 @@ export const useTaskSetup = () => {
 };
 
 const TaskAppSetup = ({ file, fileName }) => {
+  const { isTaskAppInstalled, setIsTaskAppInstalled } = useGameContext();
   const SetupRef = useRef(null);
 
   const [step, setStep] = useState(1);
   const [buttonLoading, setButtonLoading] = useState(false);
   const { closeFile } = useFileContext();
-  const { updateAvailableStatus } = useWindowConfig();
-  const { windowConfig } = useWindowConfig();
 
   const handleNextStep = () => {
-    if (windowConfig.taskapp?.available) {
+    if (isTaskAppInstalled) {
       setStep(0); 
     } else {
       setStep(step + 1);
@@ -41,15 +39,11 @@ const TaskAppSetup = ({ file, fileName }) => {
   };
 
   const handleFinish = () => {
-    if (windowConfig.taskapp?.available) {
-      setStep(0);
-      return;
-    }
     setButtonLoading(true);
     setTimeout(() => {
       setButtonLoading(false);
       setStep(step + 1);
-      updateAvailableStatus('taskapp', true); // TaskApp artık kuruldu
+      setIsTaskAppInstalled(true);
     }, 4000);
   };
 
@@ -91,11 +85,11 @@ const TaskAppSetup = ({ file, fileName }) => {
                   style={{ color: "white", backgroundColor: "#1a2837", height: 150 }}
                   readOnly
                   value={`Lütfen kullanım koşullarını dikkatlice okuyunuz:
-1. Yazılım yalnızca kişisel kullanım için sunulmuştur.
-2. Yetkisiz kopyalama, dağıtım veya değiştirme yasaktır.
-3. Kullanım sırasında oluşabilecek veri kayıplarından geliştirici sorumlu tutulamaz.
-4. Güncellemeler otomatik olarak sunulacaktır.
-5. Şartları kabul ederek kuruluma devam edebilirsiniz.`}
+                  1. Yazılım yalnızca kişisel kullanım için sunulmuştur.
+                  2. Yetkisiz kopyalama, dağıtım veya değiştirme yasaktır.
+                  3. Kullanım sırasında oluşabilecek veri kayıplarından geliştirici sorumlu tutulamaz.
+                  4. Güncellemeler otomatik olarak sunulacaktır.
+                  5. Şartları kabul ederek kuruluma devam edebilirsiniz.`}
                 />
                 <div className="taskappsetup-buttons">
                   <button onClick={handleNextStep}>Kabul Ediyorum</button>
@@ -132,9 +126,9 @@ const TaskAppSetup = ({ file, fileName }) => {
                   <div className="progress-bar2">
                     Kuruluyor...
                     <div>
-                      <img src="/icons/tasksetup1.png" alt="Setup" />
-                      <img src="/icons/tasksetup2.png" alt="Setup" />
-                      <img src="/icons/tasksetup3.png" alt="Setup" />
+                    <img src="/icons/setting1.png" alt="Setup"/>
+                    <img src="/icons/setting2.png" alt="Setup"/>
+                    <img src="/icons/setting3.png" alt="Setup"/>
                     </div>
                   </div>
                 )}

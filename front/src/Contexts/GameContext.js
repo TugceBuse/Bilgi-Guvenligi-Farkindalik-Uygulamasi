@@ -8,7 +8,7 @@ export const GameContextProvider = ({ children }) => {
   const [isWificonnected, setIsWificonnected] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [wifiMailSent, setWifiMailSent] = useState(false); // Wi-Fi bağlantısı için mail gönderildi mi kontrolü
-  const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(true); // Task App'in kurulu olup olmadığını kontrol et
+  const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false); // Task App'in kurulu olup olmadığını kontrol et
 
   const { addMailToMailbox } = useMailContext();
 
