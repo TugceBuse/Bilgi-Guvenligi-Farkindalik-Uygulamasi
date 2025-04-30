@@ -35,7 +35,6 @@ export const mails = [
         (
           <div className="mail-content-first">
             <DownloadButton label="TaskAppInstaller.exe" fileName="taskappsetup" mailId={1}/>
-            <DownloadButton label="testing.exe" fileName="testing" mailId={1}/>
             <pre>
                 <b>Merhaba Onur,</b><br/><br/>
                 🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
@@ -63,7 +62,7 @@ export const mails = [
       content: 
       (
         <div className="mail-content-first">
-          <DownloadButton label="TaskAppInstaller.exe" fileName="taskappinstallerF" mailId={2}/>
+          <DownloadButton label="TaskAppInstaller.exe" fileName="taskappsetupf" mailId={2}/>
           <pre>
               <b>Merhaba Onur,</b><br/><br/>
               🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>

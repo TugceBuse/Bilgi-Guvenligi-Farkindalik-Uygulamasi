@@ -1,0 +1,52 @@
+.virus-container {
+    padding: 20px;
+    color: white;
+    background-color: black;
+    height: 100%;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .virus-file-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 15px;
+  }
+  
+  .virus-file {
+    background-color: #222;
+    border: 1px solid red;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: red;
+  }
+  
+  .cmd-popup {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    background-color: #1a1a1a;
+    color: #33ff33;
+    border: 2px solid #0f0;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    animation: flicker 0.2s steps(2, start) infinite;
+    font-family: 'Courier New', Courier, monospace;
+    z-index: 999;
+  }
+  
+  @keyframes flicker {
+    to { visibility: hidden; }
+  }
+  
+  body.virus-mouse-locked {
+    pointer-events: none;
+  }
+
+  @keyframes fadeOutFlash {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.95); }
+  }
+  

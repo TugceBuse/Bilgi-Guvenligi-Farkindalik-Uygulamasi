@@ -7,7 +7,9 @@ export const UIContextProvider = ({ children }) => {
   const [visibleWindows, setVisibleWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
   const [zindex, setZindex] = useState(100);
+  const [mouseLocked, setMouseLocked] = useState(false);
 
+   
   useEffect(() => {
     console.log('openWindows:', openWindows, 'visibleWindows:', visibleWindows);
     if (openWindows.length === 0 || visibleWindows.length === 0 ) return;
@@ -17,20 +19,23 @@ export const UIContextProvider = ({ children }) => {
     
   }, [openWindows]);
 
-  // useEffect(() => {
-  //   console.log('🧭 Z-Index Durumu:');
+
+  const blockEvent = (e) => e.preventDefault();
+  const lockMouse = () => {
+    document.body.style.pointerEvents = 'none';
+    window.addEventListener('mousemove', blockEvent, true);
+    window.addEventListener('mousedown', blockEvent, true);
+    setMouseLocked(true);
+  };
   
-  //   visibleWindows.forEach((windowName) => {
-  //     // Dosya mı değil mi ayırt edebilmek için hem class hem data-filename kontrolü yapılabilir
-  //     const element = document.querySelector(`.${windowName}-window`) || document.querySelector(`[data-filename="${windowName}"]`);
-  //     if (element) {
-  //       console.log(`🔹 ${windowName}: z-index = ${element.style.zIndex}`);
-  //     } else {
-  //       console.warn(`❌ ${windowName} pencere elementi bulunamadı`);
-  //     }
-  //   });
+  const unlockMouse = () => {
+    document.body.style.pointerEvents = 'auto';
+    window.removeEventListener('mousemove', blockEvent, true);
+    window.removeEventListener('mousedown', blockEvent, true);
+    setMouseLocked(false);
+  };
   
-  // }, [visibleWindows, activeWindow]);
+
   
 
   const toggleWindow = (windowName) => {
@@ -77,7 +82,8 @@ export const UIContextProvider = ({ children }) => {
       visibleWindows, setVisibleWindows,
       activeWindow, setActiveWindow,
       zindex, setZindex,
-      toggleWindow, handleIconClick 
+      toggleWindow, handleIconClick,
+      lockMouse, unlockMouse, mouseLocked,
     }}>
       {children}
     </UIContext.Provider>

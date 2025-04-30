@@ -55,7 +55,7 @@ export const FileContextProvider = ({ children }) => {
             icon: "/icons/task-list.png", 
             exeType: "taskappsetup"
         },
-        taskappsetupF: { 
+        taskappsetupf: { 
             available: false,
             quarantined: false, 
             infected: true,
@@ -65,9 +65,9 @@ export const FileContextProvider = ({ children }) => {
             label: "TaskApp Kurulumu", 
             icon: "/icons/task-list.png", 
             exeType: "taskappsetup",
-            virusType: "deadly",
+            virusType: "clown",
             detectable: false,
-            exeType: "taskappsetupF"
+            exeType: "taskappsetupf"
         },
         officeDoc: { 
             available: true,
@@ -115,6 +115,11 @@ export const FileContextProvider = ({ children }) => {
         }
     });
 
+    useEffect(() => {
+        console.log('Files:', files);
+    }
+    , [files]);
+
     // 📌 Açılan dosyaları takip eden state
     const [openedFiles, setOpenedFiles] = useState([]);
 
@@ -149,7 +154,7 @@ export const FileContextProvider = ({ children }) => {
     };
 
     return (
-        <FileContext.Provider value={{ files, openedFiles, updateFileStatus, openFile, closeFile }}>
+        <FileContext.Provider value={{ files,setFiles, openedFiles, updateFileStatus, openFile, closeFile }}>
             {children}
         </FileContext.Provider>
     );

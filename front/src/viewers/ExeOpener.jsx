@@ -1,12 +1,14 @@
 import React from 'react';
 import AntivirusSetup from '../exefiles/AntivirusSetup/AntivirusSetup';
 import TaskAppSetup from '../exefiles/TaskAppSetup/TaskAppSetup';
+import TaskAppSetupF from '../exefiles/TaskAppSetupF/TaskAppSetupF';
 
 
 // EXE bileşenlerini tanımlayalım
 const exeComponents = {
     "antivirussetup": AntivirusSetup,
     "taskappsetup": TaskAppSetup,
+    "taskappsetupf": TaskAppSetupF,
     // Yeni EXE bileşenleri buraya eklenebilir
 };
 

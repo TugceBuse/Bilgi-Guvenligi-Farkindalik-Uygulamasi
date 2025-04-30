@@ -96,6 +96,16 @@ const Desktop = () => {
               <span>{windowConfig[key].label}</span>
             </div>
           ))}
+
+          {/* 📂 Dosya ikonları */}
+        {Object.entries(files)
+          .filter(([_, file]) => file.available && file.location === 'desktop')
+          .map(([fileName, file]) => (
+            <div key={fileName} className="icon" onClick={() => handleDesktopClick(fileName)}>
+              <img src={file.icon} alt={`${file.label} Icon`} />
+              <span>{file.label}</span>
+            </div>
+          ))}
       </div>
 
       <TodoProvider>
