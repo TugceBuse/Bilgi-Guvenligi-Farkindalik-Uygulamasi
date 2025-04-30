@@ -88,16 +88,18 @@
     .taskappsetup-content-left{
       width: 40%;
       height: 100.3%;
-      background-color: #1a2837;
+      background-color: #312f9e;
       border-top-right-radius: 20px;
       border-bottom-right-radius: 20px;
       padding: 0;
       margin-left: -1px;
       border: 1px solid #042d5d;
-      background-image: url("../../../public/antivirus-setup-pic.png");
+      background-image: url("../../../public/TaskAppSetup.png");
       background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
+      background-size: 300px auto;
+      background-position: center center;
+      background-attachment: local; 
+      background-origin: content-box;
     }
   
     .taskappsetup-step {
@@ -210,3 +212,28 @@
     .progress-bar2 img:nth-child(3) {
       animation: rotate 2s linear infinite, scaleDown 2s linear infinite;
     }
+
+    .taskappsetup-highlight-box {
+      max-width: 300px;               /* 📏 Maksimum genişlik */
+      width: 100%;                    /* 🔁 Bulunduğu container kadar genişle */
+      background-color: #20395a;
+      color: #ffe680;
+      border: 2px dashed #ffc107;
+      padding: 12px;
+      margin: 20px auto 0 auto;       /* 📌 Üstten boşluk + yatay ortalama */
+      border-radius: 8px;
+      font-size: 15px;
+      animation: glow 1s ease-in-out infinite alternate;
+      text-align: center;
+    }
+    
+    
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 5px #ffc107;
+      }
+      to {
+        box-shadow: 0 0 15px #ffcc00;
+      }
+    }
+    
