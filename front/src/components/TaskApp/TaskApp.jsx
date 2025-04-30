@@ -43,7 +43,13 @@ const TaskApp = () => {
             <h2>TaskApp</h2>
             <button className="close-button" onClick={handleClose}>×</button>
         </div>
-        <span className="task-icon-span"><img src="/icons/task-list.png" alt="Task List Icon" className="task-icon" /></span>
+        
+        <div className="task-icon-container">
+          <div className="task-icon-wrapper">
+            <img src="/icons/task-list.png" alt="Task List Icon" className="task-icon-img" />
+            <span className="task-icon-badge">Yeni!</span>
+          </div>
+        </div>
         
         <div className="task-app-content">
         {tasks.length > 0 ? (

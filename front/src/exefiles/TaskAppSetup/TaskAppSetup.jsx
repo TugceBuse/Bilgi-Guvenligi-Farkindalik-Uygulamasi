@@ -71,6 +71,9 @@ const TaskAppSetup = ({ file, fileName }) => {
               <div className="taskappsetup-step">
                 <h4>Task Manager Zaten Kurulu</h4>
                 <p>Bu bilgisayarda Task Manager uygulaması zaten kurulu.</p>
+                <div className="taskappsetup-highlight-box">
+                  <strong>👉 <kbd>TAB</kbd> tuşuna basarak TaskApp servislerine erişebilirsin!</strong><br />
+                </div>
                 <div className="taskappsetup-buttons">
                   <button onClick={handleClose}>Tamam</button>
                 </div>
@@ -137,8 +140,13 @@ const TaskAppSetup = ({ file, fileName }) => {
 
             {step === 4 && (
               <div className="taskappsetup-step">
-                <h4>Kurulum Tamamlandı</h4>
+                <h4>✅ Kurulum Tamamlandı</h4>
                 <p>Task Manager uygulaması başarıyla kuruldu.</p>
+
+                <div className="taskappsetup-highlight-box">
+                  <strong>👉 Artık <kbd>TAB</kbd> tuşuna basarak TaskApp servislerine erişebilirsin!</strong><br />
+                </div>
+
                 <div className="taskappsetup-buttons">
                   <button onClick={handleClose}>Tamam</button>
                 </div>
