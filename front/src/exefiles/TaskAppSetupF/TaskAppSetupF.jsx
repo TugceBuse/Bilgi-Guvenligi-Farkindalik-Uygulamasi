@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
-import { useUIContext } from '../../Contexts/UIContext'; // 🔥 yeni
+import { useWindowConfig } from '../../Contexts/WindowConfigContext';
+import { useUIContext } from '../../Contexts/UIContext';
+import { showFakeCMD } from '../../utils/fakeCMD';
 
 const binaryMessage = "01000010 01110101 00100000 01100010 01101001 01110010 00100000 01000010 01101001 01101110 01100001 01110010 01111001 00100000 01010100 01100101 01110011 01110100 00100000 01101101 01100101 01110011 01100001 01101010 11000100 10110001 01100100 11000100 10110001 01110010 00001010";
 
 const TaskAppSetupF = () => {
   const { setFiles } = useFileContext();
   const { addVirus } = useVirusContext();
-  const { lockMouse, unlockMouse } = useUIContext(); // 🔥 artık context'ten
+  const { lockMouse, unlockMouse, setOpenWindows } = useUIContext();
+  const { setWindowConfig, windowConfig } = useWindowConfig();
 
   const hasStarted = useRef(false);
-  const [cmdFlash1, setCmdFlash1] = useState(false);
-  const [cmdFlash2, setCmdFlash2] = useState(false);
 
   useEffect(() => {
     const handleClick = () => {
       if (hasStarted.current) return;
       hasStarted.current = true;
 
-      lockMouse(); // 🔒 Mouse kilitleniyor
+      lockMouse();
 
       addVirus({
         type: "clown",
@@ -27,91 +28,104 @@ const TaskAppSetupF = () => {
         sourcefile: "taskappsetupF"
       });
 
-      // 1. CMD ekranı flash
+      // CMD 1
       setTimeout(() => {
-        setCmdFlash1(true);
-        setTimeout(() => setCmdFlash1(false), 1000);
-      }, 2000 + Math.random() * 1000);
+        showFakeCMD({
+          lines: [
+            "copy clown.bat C:\\Windows\\System32",
+            "copy clown.bat C:\\Windows\\System32",
+            "clown.bat çalıştırılıyor...",
+            "..."
+          ],
+          duration: 500
+        });
+      }, 2000);
 
-      // 2. Dosyaları sırayla oluştur
+      // Dosyaları yerleştir
       setTimeout(async () => {
-        const parts = binaryMessage.split(' ');
-        for (let index = 0; index < parts.length; index++) {
-          const bit = parts[index];
-          const fileName = `bin_${index}_${bit}`;
-          setFiles(prev => ({
-            ...prev,
-            [fileName]: {
-              available: true,
-              quarantined: false,
-              infected: true,
-              type: "bin",
-              size: "1KB",
-              location: "desktop",
-              label: bit,
-              icon: "/icons/clown.png",
-              content: bit
-            }
-          }));
-          await new Promise(resolve => setTimeout(resolve, 250));
+        // 🔴 windowConfig içerisindeki tüm available alanlarını false yap
+        const updatedConfig = {};
+        for (const key in windowConfig) {
+          updatedConfig[key] = {
+            ...windowConfig[key],
+            available: false
+          };
         }
-      }, 3000);
+        setWindowConfig(updatedConfig);
+        setOpenWindows([]); // Tüm açık pencereleri kapat
 
-      // 3. İkinci CMD ekranı flash
-      setTimeout(() => {
-        setCmdFlash2(true);
-        setTimeout(() => setCmdFlash2(false), 1000);
-      }, 6000 + Math.random() * 500);
+        const allBits = binaryMessage.replace(/\s+/g, '');
+        const totalFiles = 84;
+        const baseChunkSize = Math.floor(allBits.length / totalFiles);
+        const extraBits = allBits.length % totalFiles;
 
-      // 4. Mouse tekrar serbest bırakılır
+        let filesToCreate = {};
+        let pointer = 0;
+
+        for (let i = 0; i < totalFiles; i++) {
+          const chunkLength = baseChunkSize + (i < extraBits ? 1 : 0); // İlk 'extraBits' kadar dosya 1 bit fazla alır
+          const bitChunk = allBits.slice(pointer, pointer + chunkLength);
+
+          const fileName = `clownfile_${i}`;
+          filesToCreate[fileName] = {
+            available: true,
+            quarantined: false,
+            infected: true,
+            type: "bin",
+            size: "1KB",
+            location: "desktop",
+            label: bitChunk,
+            icon: "/icons/clown.png",
+            content: bitChunk
+          };
+
+          setFiles(prev => ({ ...filesToCreate, ...prev }));
+          pointer += chunkLength;
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+
+      }, 3500);
+
+      // CMD 2
       setTimeout(() => {
-        unlockMouse(); // 🔓 Mouse serbest
+        showFakeCMD({
+          lines: [
+            "taskkill /F /IM explorer.exe",
+            "BAŞARI: explorer.exe sonlandırıldı.",
+            "del /F /Q C:\\Users\\Onur\\Desktop\\*.*",
+            "cipher /w:C:\\"
+          ],
+          duration: 500
+        });
+      }, 6500);
+
+      // CMD 3
+      setTimeout(() => {
+        showFakeCMD({
+          lines: [
+            "copy clown.exe C:\\Windows\\System32",
+            "reg add ...\\Run /v Clown /t REG_SZ /d clown.exe",
+            "shutdown /s /f /t 10"
+          ],
+          duration: 500
+        });
       }, 8000);
+
+      // Mouse serbest
+      setTimeout(() => {
+        unlockMouse();
+      }, 11000);
     };
 
     window.addEventListener('click', handleClick, { once: true });
-
     return () => {
       window.removeEventListener('click', handleClick);
-      unlockMouse(); // bileşen kapanırken serbest bırak
+      unlockMouse();
     };
-  }, [setFiles, addVirus, lockMouse, unlockMouse]);
+  }, [setFiles, addVirus, lockMouse, unlockMouse, setWindowConfig, windowConfig]);
 
-  return (
-    <>
-      {cmdFlash1 && <CmdPopup />}
-      {cmdFlash2 && <CmdPopup />}
-    </>
-  );
-};
-
-const CmdPopup = () => {
-  return (
-    <div style={{
-      position: 'fixed',
-      top: `${30 + Math.random() * 40}%`,
-      left: `${30 + Math.random() * 30}%`,
-      width: '420px',
-      height: '180px',
-      backgroundColor: '#000000',
-      color: '#00FF00',
-      fontFamily: 'Consolas, monospace',
-      fontSize: '14px',
-      padding: '15px 20px',
-      border: '2px solid #00FF00',
-      boxShadow: '0 0 12px #00FF00',
-      zIndex: 9999,
-      whiteSpace: 'pre-line',
-      animation: 'fadeOutFlash 1s ease-in-out forwards'
-    }}>
-      C:\Windows\System32\cmd.exe{'\n'}
-      <br />
-      ping 127.0.0.1{'\n'}
-      Yanıt bekleniyor...{'\n'}
-      <br />
-      format c: /y
-    </div>
-  );
+  return null;
 };
 
 export default TaskAppSetupF;

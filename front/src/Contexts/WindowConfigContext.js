@@ -91,7 +91,7 @@ export const WindowConfigProvider = ({ children }) => {
   };
 
   return (
-    <WindowConfigContext.Provider value={{ windowConfig, updateAvailableStatus }}>
+    <WindowConfigContext.Provider value={{ windowConfig, setWindowConfig, updateAvailableStatus }}>
       {children}
     </WindowConfigContext.Provider>
   );
