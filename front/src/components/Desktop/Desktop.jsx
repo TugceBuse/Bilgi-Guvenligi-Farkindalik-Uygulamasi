@@ -88,25 +88,36 @@ const Desktop = () => {
   return (
     <div className="desktop">
       <div className="desktop-icons">
+
+        {/* 🪟 Pencere ikonları */}
         {Object.keys(windowConfig)
           .filter((key) => windowConfig[key].available && windowConfig[key].location === 'desktop')
           .map((key) => (
-            <div key={key} className="icon" onClick={() => handleDesktopClick(key)}>
+            <div
+              key={key}
+              className="icon"
+              {...(windowConfig[key].clickable && { onClick: () => handleDesktopClick(key) })}
+            >
               <img src={windowConfig[key].icon} alt={`${windowConfig[key].label} Icon`} />
               <span>{windowConfig[key].label}</span>
             </div>
           ))}
 
-          {/* 📂 Dosya ikonları */}
+        {/* 📂 Dosya ikonları */}
         {Object.entries(files)
           .filter(([_, file]) => file.available && file.location === 'desktop')
           .map(([fileName, file]) => (
-            <div key={fileName} className="icon" onClick={() => handleDesktopClick(fileName)}>
+            <div
+              key={fileName}
+              className="icon"
+              {...(file.clickable && { onClick: () => handleDesktopClick(fileName) })}
+            >
               <img src={file.icon} alt={`${file.label} Icon`} />
               <span>{file.label}</span>
             </div>
           ))}
       </div>
+
 
       <TodoProvider>
         {/* 📂 **Açılan Uygulamalar (windowConfig içindekiler) ** */}

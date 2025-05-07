@@ -8,6 +8,7 @@ export const UIContextProvider = ({ children }) => {
   const [activeWindow, setActiveWindow] = useState(null);
   const [zindex, setZindex] = useState(100);
   const [mouseLocked, setMouseLocked] = useState(false);
+  
 
    
   useEffect(() => {
@@ -20,20 +21,64 @@ export const UIContextProvider = ({ children }) => {
   }, [openWindows]);
 
 
-  const blockEvent = (e) => e.preventDefault();
+  const blockEvent = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  
   const lockMouse = () => {
-    document.body.style.pointerEvents = 'none';
-    window.addEventListener('mousemove', blockEvent, true);
-    window.addEventListener('mousedown', blockEvent, true);
+    window.alert('Fareyi kilitleme çalıştı!');
+    const existing = document.getElementById('mouse-lock-overlay');
+    if (existing) return;
+  
+    const overlay = document.createElement('div');
+    overlay.id = 'mouse-lock-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.zIndex = '999999';
+    overlay.style.cursor = 'progress';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.01)';
+    // overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.01)'; // 🔁 opacity > 0 olmalı ki bazı tarayıcılar işlesin
+    overlay.addEventListener('mousedown', blockEvent, true);
+    overlay.addEventListener('mousemove', blockEvent, true);
+    overlay.addEventListener('click', blockEvent, true);
+    document.body.appendChild(overlay);
+  
     setMouseLocked(true);
   };
   
+  
+  
   const unlockMouse = () => {
-    document.body.style.pointerEvents = 'auto';
-    window.removeEventListener('mousemove', blockEvent, true);
-    window.removeEventListener('mousedown', blockEvent, true);
+    const overlay = document.getElementById('mouse-lock-overlay');
+    if (overlay) {
+      overlay.remove();
+    }
     setMouseLocked(false);
   };
+
+  const trackGhostMouse = () => {
+    const handleMove = (e) => {
+      const ghost = document.createElement('div');
+      ghost.className = 'ghost-cursor';
+      ghost.style.left = `${e.clientX}px`;
+      ghost.style.top = `${e.clientY}px`;
+      document.body.appendChild(ghost);
+  
+      setTimeout(() => {
+        ghost.remove();
+      }, 800); // 0.8 saniyede silinir
+    };
+  
+    document.addEventListener('mousemove', handleMove);
+  
+    // disableMouseGhost() çağrıldığında dinleyici silinir
+    return () => document.removeEventListener('mousemove', handleMove);
+  };
+  
   
 
   
@@ -84,6 +129,7 @@ export const UIContextProvider = ({ children }) => {
       zindex, setZindex,
       toggleWindow, handleIconClick,
       lockMouse, unlockMouse, mouseLocked,
+      trackGhostMouse
     }}>
       {children}
     </UIContext.Provider>

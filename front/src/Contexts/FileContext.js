@@ -10,7 +10,8 @@ export const FileContextProvider = ({ children }) => {
     const [files, setFiles] = useState({
         benioku: { 
             available: true,
-            quarantined: false, 
+            quarantined: false,
+            clickable: true,
             infected: false,
             virusType: null, 
             type: "txt", 
@@ -22,6 +23,7 @@ export const FileContextProvider = ({ children }) => {
         },
         rapor_2025: { 
             available: false, 
+            clickable: true,
             quarantined: false,
             infected: true,
             detectable: true,
@@ -36,6 +38,7 @@ export const FileContextProvider = ({ children }) => {
         antivirussetup: { 
             available: true,
             quarantined: false, 
+            clickable: true,
             infected: false,
             type: "exe", 
             size: "20MB", 
@@ -46,7 +49,8 @@ export const FileContextProvider = ({ children }) => {
         },
         taskappsetup: { 
             available: false,
-            quarantined: false, 
+            quarantined: false,
+            clickable: true, 
             infected: false,
             type: "exe", 
             size: "25MB", 
@@ -58,6 +62,7 @@ export const FileContextProvider = ({ children }) => {
         taskappsetupf: { 
             available: false,
             quarantined: false, 
+            clickable: true,
             infected: true,
             type: "exe", 
             size: "25MB", 
@@ -72,6 +77,7 @@ export const FileContextProvider = ({ children }) => {
         officeDoc: { 
             available: true,
             quarantined: false, 
+            clickable: true,
             infected: false, 
             type: "docx", 
             size: "1MB", 
@@ -83,6 +89,7 @@ export const FileContextProvider = ({ children }) => {
         photo1: { 
             available: true,
             quarantined: false, 
+            clickable: true,
             infected: false, 
             type: "jpg", 
             size: "363KB", 
@@ -93,7 +100,8 @@ export const FileContextProvider = ({ children }) => {
         },
         photo12: { 
             available: true,
-            quarantined: false, 
+            quarantined: false,
+            clickable: true, 
             infected: false, 
             type: "jpg", 
             size: "363KB", 
@@ -105,6 +113,7 @@ export const FileContextProvider = ({ children }) => {
         photo2: { 
             available: true,
             quarantined: false, 
+            clickable: true,
             infected: false, 
             type: "jpg", 
             size: "3MB", 

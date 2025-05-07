@@ -17,6 +17,7 @@ const initialWindowConfig = {
     component: Todolist,
     useComponent: useTodoList,
     location: 'desktop',
+    clickable: true,
     available: true,
   },
   mailbox: {
@@ -25,6 +26,7 @@ const initialWindowConfig = {
     component: Mailbox,
     useComponent: useMailbox,
     location: 'desktop',
+    clickable: true,
     available: true,
   },
   browser: {
@@ -33,6 +35,7 @@ const initialWindowConfig = {
     component: Browser,
     useComponent: useBrowser,
     location: 'desktop',
+    clickable: true,
     available: true,
   },
   chatapp: {
@@ -41,6 +44,7 @@ const initialWindowConfig = {
     component: ChatApp,
     useComponent: useChatApp,
     location: 'desktop',
+    clickable: true,
     available: true,
   },
   folder: {
@@ -49,6 +53,7 @@ const initialWindowConfig = {
     component: Folder,
     useComponent: useFolder,
     location: 'desktop',
+    clickable: true,
     available: true,
   },
   scanner: {
@@ -57,6 +62,7 @@ const initialWindowConfig = {
     component: Scanner,
     useComponent: useScanner,
     location: 'desktop',
+    clickable: true,
     available: true,
   },
   antivirus: {
@@ -65,6 +71,7 @@ const initialWindowConfig = {
     component: Antivirus,
     useComponent: useAntivirus,
     location: 'desktop',
+    clickable: true,
     available: false,
   },
   bankapp: {
@@ -73,6 +80,7 @@ const initialWindowConfig = {
     component: BankApp,
     useComponent: useBankApp,
     location: 'desktop',
+    clickable: true,
     available: true,
   },
 };
