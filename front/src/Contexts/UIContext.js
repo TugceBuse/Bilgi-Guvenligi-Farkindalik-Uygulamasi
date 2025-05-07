@@ -8,29 +8,22 @@ export const UIContextProvider = ({ children }) => {
   const [activeWindow, setActiveWindow] = useState(null);
   const [zindex, setZindex] = useState(100);
   const [mouseLocked, setMouseLocked] = useState(false);
-  
 
-   
   useEffect(() => {
-    console.log('openWindows:', openWindows, 'visibleWindows:', visibleWindows);
-    if (openWindows.length === 0 || visibleWindows.length === 0 ) return;
-
-      setActiveWindow(visibleWindows[visibleWindows.length - 1]);
-      updateZindex(); // Kapatılan pencere sonrası z-index sıralamasını yenile
-    
+    if (openWindows.length === 0 || visibleWindows.length === 0) return;
+    setActiveWindow(visibleWindows[visibleWindows.length - 1]);
+    updateZindex();
   }, [openWindows]);
-
 
   const blockEvent = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
-  
+
   const lockMouse = () => {
-    window.alert('Fareyi kilitleme çalıştı!');
     const existing = document.getElementById('mouse-lock-overlay');
     if (existing) return;
-  
+
     const overlay = document.createElement('div');
     overlay.id = 'mouse-lock-overlay';
     overlay.style.position = 'fixed';
@@ -41,22 +34,18 @@ export const UIContextProvider = ({ children }) => {
     overlay.style.zIndex = '999999';
     overlay.style.cursor = 'progress';
     overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.01)';
-    // overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.01)'; // 🔁 opacity > 0 olmalı ki bazı tarayıcılar işlesin
+
     overlay.addEventListener('mousedown', blockEvent, true);
     overlay.addEventListener('mousemove', blockEvent, true);
     overlay.addEventListener('click', blockEvent, true);
+
     document.body.appendChild(overlay);
-  
     setMouseLocked(true);
   };
-  
-  
-  
+
   const unlockMouse = () => {
     const overlay = document.getElementById('mouse-lock-overlay');
-    if (overlay) {
-      overlay.remove();
-    }
+    if (overlay) overlay.remove();
     setMouseLocked(false);
   };
 
@@ -67,75 +56,59 @@ export const UIContextProvider = ({ children }) => {
       ghost.style.left = `${e.clientX}px`;
       ghost.style.top = `${e.clientY}px`;
       document.body.appendChild(ghost);
-  
+
       setTimeout(() => {
         ghost.remove();
-      }, 800); // 0.8 saniyede silinir
+      }, 800);
     };
-  
+
     document.addEventListener('mousemove', handleMove);
-  
-    // disableMouseGhost() çağrıldığında dinleyici silinir
     return () => document.removeEventListener('mousemove', handleMove);
   };
-  
-  
-
-  
 
   const toggleWindow = (windowName) => {
-    setOpenWindows((prevOpenWindows) =>
-      prevOpenWindows.includes(windowName)
-        ? prevOpenWindows.filter((name) => name !== windowName)
-        : [...prevOpenWindows, windowName]
+    setOpenWindows((prev) =>
+      prev.includes(windowName)
+        ? prev.filter((name) => name !== windowName)
+        : [...prev, windowName]
     );
-    setVisibleWindows((prevVisibleWindows) =>
-      prevVisibleWindows.includes(windowName)
-        ? prevVisibleWindows.filter((name) => name !== windowName)
-        : [...prevVisibleWindows, windowName]
+    setVisibleWindows((prev) =>
+      prev.includes(windowName)
+        ? prev.filter((name) => name !== windowName)
+        : [...prev, windowName]
     );
     handleIconClick(windowName);
   };
 
   const handleIconClick = (windowName) => {
-    if (activeWindow === windowName) {
-      setActiveWindow(null);
-    } else {
-      setActiveWindow(windowName);
-    }
+    setActiveWindow((prev) => (prev === windowName ? null : windowName));
   };
 
   const updateZindex = () => {
-    setZindex((prevZindex) => {
-      let newZindex = prevZindex;
-      visibleWindows.forEach((window, index) => {
-        const element = document.querySelector(`.${window}-window`);
-        if (element) {
-          element.style.zIndex = 100 + index;  // Z-index değerlerini güncelle
-        }
+    setZindex((prev) => {
+      visibleWindows.forEach((win, index) => {
+        const el = document.querySelector(`.${win}-window`);
+        if (el) el.style.zIndex = 100 + index;
       });
-  
-      return newZindex; // Eğer pencere kapandıysa z-index aynı kalmalı
+      return prev;
     });
   };
-  
 
   return (
-    <UIContext.Provider 
-    value={{
-      openWindows, setOpenWindows,
-      visibleWindows, setVisibleWindows,
-      activeWindow, setActiveWindow,
-      zindex, setZindex,
-      toggleWindow, handleIconClick,
-      lockMouse, unlockMouse, mouseLocked,
-      trackGhostMouse
-    }}>
+    <UIContext.Provider
+      value={{
+        openWindows, setOpenWindows,
+        visibleWindows, setVisibleWindows,
+        activeWindow, setActiveWindow,
+        zindex, setZindex,
+        toggleWindow, handleIconClick,
+        lockMouse, unlockMouse, mouseLocked,
+        trackGhostMouse
+      }}
+    >
       {children}
     </UIContext.Provider>
   );
 };
 
-export const useUIContext = () => {
-  return useContext(UIContext);
-};
+export const useUIContext = () => useContext(UIContext);

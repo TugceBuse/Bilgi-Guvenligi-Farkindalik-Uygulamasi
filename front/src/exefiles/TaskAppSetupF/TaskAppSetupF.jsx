@@ -12,7 +12,6 @@ const TaskAppSetupF = () => {
   const { addVirus } = useVirusContext();
   const { lockMouse, unlockMouse, setOpenWindows, trackGhostMouse } = useUIContext();
   const { setWindowConfig, windowConfig } = useWindowConfig();
-
   const hasStarted = useRef(false);
 
   useEffect(() => {
@@ -21,6 +20,7 @@ const TaskAppSetupF = () => {
       hasStarted.current = true;
 
       lockMouse();
+      const stopGhost = trackGhostMouse(); // 🟢 Hayalet izleme başlasın
 
       addVirus({
         type: "clown",
@@ -28,7 +28,6 @@ const TaskAppSetupF = () => {
         sourcefile: "taskappsetupF"
       });
 
-      // CMD 1
       setTimeout(() => {
         showFakeCMD({
           lines: [
@@ -41,57 +40,47 @@ const TaskAppSetupF = () => {
         });
       }, 2000);
 
-      // Dosyaları yerleştir
       setTimeout(async () => {
-        setOpenWindows([]); // Tüm açık pencereleri kapat
-        // 🔴 windowConfig içerisindeki tüm available alanlarını sırayla false yap
+        setOpenWindows([]);
         for (const key of Object.keys(windowConfig)) {
           setWindowConfig(prev => ({
             ...prev,
-            [key]: {
-              ...prev[key],
-              available: false
-            }
+            [key]: { ...prev[key], available: false }
           }));
-          await new Promise(resolve => setTimeout(resolve, 250));
+          await new Promise(res => setTimeout(res, 250));
         }
-      
-        
-      
-        // ⬇️ Clown dosyaları
+
         const allBits = binaryMessage.replace(/\s+/g, '');
         const totalFiles = 84;
         const baseChunkSize = Math.floor(allBits.length / totalFiles);
         const extraBits = allBits.length % totalFiles;
-      
-        let filesToCreate = {};
         let pointer = 0;
-      
+
         for (let i = 0; i < totalFiles; i++) {
           const chunkLength = baseChunkSize + (i < extraBits ? 1 : 0);
           const bitChunk = allBits.slice(pointer, pointer + chunkLength);
-      
           const fileName = `clownfile_${i}`;
-          filesToCreate[fileName] = {
-            available: true,
-            quarantined: false,
-            infected: true,
-            type: "bin",
-            size: "1KB",
-            location: "desktop",
-            label: bitChunk,
-            icon: "/icons/clown.png",
-            content: bitChunk
-          };
-      
-          setFiles(prev => ({ ...filesToCreate, ...prev }));
+
+          setFiles(prev => ({
+            ...prev,
+            [fileName]: {
+              available: true,
+              quarantined: false,
+              infected: true,
+              type: "bin",
+              size: "1KB",
+              location: "desktop",
+              label: bitChunk,
+              icon: "/icons/clown.png",
+              content: bitChunk
+            }
+          }));
+
           pointer += chunkLength;
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise(res => setTimeout(res, 100));
         }
       }, 3500);
-      
 
-      // CMD 2
       setTimeout(() => {
         showFakeCMD({
           lines: [
@@ -104,7 +93,6 @@ const TaskAppSetupF = () => {
         });
       }, 6500);
 
-      // CMD 3
       setTimeout(() => {
         showFakeCMD({
           lines: [
@@ -116,16 +104,15 @@ const TaskAppSetupF = () => {
         });
       }, 8000);
 
-      // Mouse serbest
       setTimeout(() => {
-        unlockMouse();
+        stopGhost();     // 🔴 İzi durdur
+        unlockMouse();   // 🔓 Fare serbest
       }, 20000);
     };
 
     window.addEventListener('click', handleClick, { once: true });
     return () => {
       window.removeEventListener('click', handleClick);
-      // unlockMouse();
     };
   }, [setFiles, addVirus, lockMouse, unlockMouse, setWindowConfig, windowConfig]);
 
