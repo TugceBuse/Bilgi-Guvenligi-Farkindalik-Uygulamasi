@@ -1,0 +1,122 @@
+.phoneWindow {
+    position: absolute;
+    width: 400px;
+    height: 550px;
+    background-color: #1e1e1e;
+    border: 2px solid #b14d40;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+    color: #f5f5f5;
+  }
+  
+  .phoneHeader {
+    background-color: #b14d40;
+    color: white;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  
+  .phoneClose {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .phoneBody {
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-top: 1px solid #444;
+  }
+  
+  .phoneStatus {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #444;
+    color: #cccccc;
+  }
+  
+  .phoneImage {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: brightness(1.2);
+    opacity: 0.9;
+  }
+  
+  .messageList {
+    height: 400px;
+    padding: 12px;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    border-top: 1px solid #444;
+  }
+  
+  .phoneMessages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #444;
+  }
+  
+  .phoneMessages img {
+    width: 22px;
+    height: 22px;
+    filter: brightness(1.1);
+  }
+  
+  .phoneMessages h2 {
+    font-size: 18px;
+    color: #b14d40;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .messageItem {
+    background-color: #2b2b2b;
+    border-left: 4px solid #b14d40;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    transition: transform 0.1s ease;
+  }
+  
+  .messageItem:hover {
+    transform: scale(1.01);
+  }
+  
+  .messageSender {
+    font-weight: 600;
+    font-size: 14px;
+    color: #b14d40;
+  }
+  
+  .messageContent {
+    font-size: 13px;
+    color: #f5f5f5;
+    margin: 6px 0;
+  }
+  
+  .messageTime {
+    font-size: 12px;
+    color: #aaa;
+    text-align: right;
+  }
+  
