@@ -8,7 +8,7 @@
 }
 
 .panel {
-  background: white;
+  background: rgb(255, 255, 255);
   display: flex;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -20,13 +20,13 @@
 .leftSide {
   flex: 2;
   padding: 40px;
-  background: #fff;
+  background: #fff2e0;
 }
 
 .rightSide {
   flex: 1;
   padding: 40px;
-  background: #fff2e0;
+  background: #f9dcb3;
   border-left: 1px solid #ffe0b2;
 }
 
@@ -34,7 +34,6 @@
   width: 300px;
   height: 200px;
   border-radius: 50%;
-  background: #ffffff;
   display: block;
   margin: 0 auto;
 }
