@@ -3,6 +3,7 @@ import styles from './PhoneApp.module.css';
 import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
+import { usePhoneContext } from '../../Contexts/PhoneContext';
 
 export const usePhoneApp = () => {
   const { toggleWindow } = useUIContext();
@@ -22,46 +23,7 @@ const PhoneApp = ({ closeHandler, style }) => {
   const PhoneAppRef = useRef(null);
   MakeDraggable(PhoneAppRef, `.${styles.phoneHeader}`);
 
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'NovaBank',
-      content: 'Giriş kodunuz: 428179',
-      time: '17:42'
-    },
-    {
-      id: 2,
-      sender: '2FA Güvenlik',
-      content: 'Kodunuz: 982134. Kimseyle paylaşmayın.',
-      time: '17:43'
-    },
-    {
-      id: 3,
-      sender: 'X Sosyal',
-      content: 'Hesap doğrulama kodunuz: 112358',
-      time: '17:45'
-    }
-  ]);
-  
-  const generate6DigitCode = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  };
-
-  const add2FAMessage = () => {
-    const code = generate6DigitCode();
-    const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  
-    const newMessage = {
-      id: Date.now(), // benzersiz
-      sender: '2FA Güvenlik',
-      content: `Kodunuz: ${code}. Kimseyle paylaşmayın.`,
-      time: time
-    };
-  
-    setMessages(prev => [...prev, newMessage]);
-  };
-  
+  const { messages, markMessageAsRead, readMessages, getUnreadCount } = usePhoneContext();
 
   return (
     <div className={styles.phoneWindow} style={style} ref={PhoneAppRef}>
@@ -78,9 +40,6 @@ const PhoneApp = ({ closeHandler, style }) => {
             <img src="/PhoneApp/power.png" alt="Battery Icon" className={styles.phoneImage} />
             <p>%87</p>
         </div>
-        <button onClick={add2FAMessage} style={{ margin: '10px auto', width: '80%' }}>
-            Yeni Kod Gönder
-        </button>
         <div className={styles.messageList}>
             <div className={styles.phoneMessages}>
                 <img src="/PhoneApp/comment.png" alt="Mesajlar" />
@@ -88,13 +47,23 @@ const PhoneApp = ({ closeHandler, style }) => {
             </div>
 
             {messages.map((msg) => (
-                <div key={msg.id} className={styles.messageItem}>
+              <div
+                key={msg.id}
+                className={`${styles.messageItem} ${readMessages.includes(msg.id) ? styles.read : styles.unread}`}
+                onClick={() => markMessageAsRead(msg.id)}
+              >
                 <div className={styles.messageSender}>{msg.sender}</div>
-                <div className={styles.messageContent}>{msg.content}</div>
-                <div className={styles.messageTime}>{msg.time}</div>
+                <div className={styles.messageContentRow}>
+                  <div className={styles.messageContent}>{msg.content}</div>
+                  <span className={styles.readStatus}>
+                    {readMessages.includes(msg.id) ? "✅ Okundu" : "\u00A0"}
+                  </span>
                 </div>
+                <div className={styles.messageTime}>{msg.time}</div>
+              </div>
             ))}
         </div>
+        
       </div>
 
       
