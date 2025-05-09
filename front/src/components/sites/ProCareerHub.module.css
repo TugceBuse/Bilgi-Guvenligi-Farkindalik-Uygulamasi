@@ -66,17 +66,6 @@
   background: #d63030;
   transform: scale(1.05);
 }
-/* Fade-In Animasyonu */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /* Header */
 .header {
@@ -486,16 +475,13 @@
     opacity: 0;
   }
 }
+/* Fade-In Animasyonu */
+
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+
 
 /* Sahte Tarayıcı Penceresi */
 .fakeBrowser {
@@ -562,4 +548,64 @@
 
 .fakeBrowserContent p {
   color: #444;
+}
+.twoFAInputArea {
+  background-color: #1e1e1e;
+  border: 1px solid #5dade2;
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin: 20px auto;
+  width: 100%;
+  box-shadow: 0 0 12px rgba(93, 173, 226, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.twoFAInputArea p {
+  color: #d0eaff;
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+}
+
+.twoFAInputArea input {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #5dade2;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 300px;
+  background-color: #2c3e50;
+  color: #d0eaff;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.twoFAInputArea input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 5px #3498db;
+}
+
+.twoFAInputArea button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.twoFAInputArea button:hover {
+  background-color: #2980b9;
+  transform: scale(1.02);
+}
+
+.twoFAInputArea button:active {
+  transform: scale(0.98);
 }

@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ProCareerHub.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
+import { usePhoneContext } from "../../Contexts/PhoneContext";
+import { use } from "react";
 
 const ProCareerHub = () => {
 
   const { ProCareerHubInfo, setProCareerHubInfo} = useGameContext();
 
   const [isLogin, setIsLogin] = useState(true);
+  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+  const [twoFACodeInput, setTwoFACodeInput] = useState("");
+  const [is2FAwaiting, setIs2FAwaiting] = useState(false);
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
 
@@ -35,14 +40,22 @@ const ProCareerHub = () => {
     return () => clearTimeout(adTimer);
   }, []);
 
+  // Hata mesajını göster ve 2 saniye sonra temizle
+  const showTemporaryError = (msg) => {
+    setErrorMessage(msg);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 2000);
+  };
+
   const handleAuth = () => {
     if (!isLogin) {
       if (ProCareerHubInfo.isRegistered && ProCareerHubInfo.email === email) {
-        setErrorMessage("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
+        showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
         return;
       }
       if (!name || !surname || !password) {
-        setErrorMessage("Lütfen tüm alanları doldurun!");
+        showTemporaryError("Lütfen tüm alanları doldurun!");
         return;
       }
   
@@ -60,13 +73,25 @@ const ProCareerHub = () => {
       setErrorMessage("");
     } else {
       if (!ProCareerHubInfo.isRegistered || ProCareerHubInfo.email !== email) {
-        setErrorMessage("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
+        showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
         return;
       }
       if (!password || password !== ProCareerHubInfo.password) {
-        setErrorMessage("Hatalı şifre! Lütfen tekrar deneyin.");
+        showTemporaryError("Hatalı şifre! Lütfen tekrar deneyin.");
         return;
       }
+
+      // Eğer 2FA aktifse, kod üret
+      if (ProCareerHubInfo.is2FAEnabled) {
+        generateCodeMessage("ProCareerHub", "procareerhub");
+        setIs2FAwaiting(true);
+        return;
+      }
+
+      // 2FA yoksa doğrudan girişe izin ver
+      setProCareerHubInfo({ ...ProCareerHubInfo, isLoggedIn: true });
+      setErrorMessage("");
+
   
       setProCareerHubInfo({
         ...ProCareerHubInfo,
@@ -75,6 +100,14 @@ const ProCareerHub = () => {
       setErrorMessage("");
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      // Bileşen kapatıldığında kodu temizle
+      clearCode("procareerhub");
+    };
+  }, []);
 
   const handleLogout = () => {
     setProCareerHubInfo({
@@ -85,6 +118,7 @@ const ProCareerHub = () => {
     setSurname("");
     setPassword("");
     setShowSettings(false);
+    setIsLogin("Giriş Yap");
   };
 
   const toggleSettings = () => {
@@ -125,6 +159,11 @@ const ProCareerHub = () => {
     }, 3000);
   };
 
+  useEffect(() => {
+    setName("");
+    setSurname("");
+    setPassword("");
+  }, [isLogin]);
 
   return (
     <div className={styles.careerContainer}>
@@ -203,18 +242,21 @@ const ProCareerHub = () => {
         <p>Kariyerini geliştirmek ve iş fırsatlarını yakalamak için doğru yerdesin!</p>
       </header>
 
-      {!ProCareerHubInfo.isLoggedIn && (
+      {!ProCareerHubInfo.isLoggedIn && !is2FAwaiting && (
         <div className={styles.authBox}>
           <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
+
           {!isLogin && (
             <>
               <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />
               <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />
             </>
           )}
+
           <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
           <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
+
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
 
           <p onClick={() => setIsLogin(!isLogin)}>
@@ -222,6 +264,34 @@ const ProCareerHub = () => {
           </p>
         </div>
       )}
+
+      {is2FAwaiting && (
+        <div className={styles.twoFAInputArea}>
+          <p>📲 Telefonunuza gelen doğrulama kodunu girin:</p>
+          <input
+            type="text"
+            placeholder="6 haneli kod"
+            value={twoFACodeInput}
+            onChange={(e) => setTwoFACodeInput(e.target.value)}
+          />
+          <button onClick={() => {
+            if (twoFACodeInput === lastCodes["procareerhub"]) {
+              setProCareerHubInfo({ ...ProCareerHubInfo, isLoggedIn: true });
+              setIs2FAwaiting(false);
+              setTwoFACodeInput("");
+              clearCode("procareerhub");
+            } else {
+              setErrorMessage("⚠ Kod hatalı!");
+              setTimeout(() => setErrorMessage(""), 2000);
+            }
+          }}>
+            Giriş Yap
+          </button>
+
+          {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+        </div>
+      )}
+
 
       {/* İş İlanları Bölümü */}
       <div className={styles.jobListings}>
