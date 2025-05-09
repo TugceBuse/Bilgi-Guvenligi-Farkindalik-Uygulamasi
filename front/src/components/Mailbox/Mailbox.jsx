@@ -183,7 +183,7 @@ const Mailbox = ({ closeHandler, style }) => {
   };
 
     return (
-      <div className="mailbox-window" style={style} ref={mailboxRef} >
+      <div className="mailbox-window" style={style} ref={mailboxRef} data-window="mailbox" >
         <div className="mailbox-header">
           {/* Mailbox header */}
                 <div className = 'mailbox-header-left'>

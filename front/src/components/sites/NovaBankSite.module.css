@@ -1,0 +1,139 @@
+.section {
+  background: #f9f9f9;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.panel {
+  background: white;
+  display: flex;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 1100px;
+  max-width: 95%;
+}
+
+.leftSide {
+  flex: 2;
+  padding: 40px;
+  background: #fff;
+}
+
+.rightSide {
+  flex: 1;
+  padding: 40px;
+  background: #fff2e0;
+  border-left: 1px solid #ffe0b2;
+}
+
+.logo {
+  width: 300px;
+  height: 200px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: block;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff6f00;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.featureBox {
+  background: #fff9f2;
+  border: 1px solid #ffcc80;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.featureBox h2 {
+  margin-bottom: 10px;
+  color: #d35400;
+}
+
+.featureBox ul {
+  list-style: none;
+  padding: 0;
+}
+
+.featureBox li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.downloadSection h2 {
+  font-size: 18px;
+  color: #d35400;
+  margin-bottom: 10px;
+}
+
+.downloadBtn {
+  background-color: #ff6f00;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.downloadBtn:hover {
+  background-color: #e65100;
+}
+
+.progressBar {
+  margin-top: 10px;
+  background: #ffe0b2;
+  border-radius: 5px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #ff6f00;
+  transition: width 0.3s ease;
+}
+
+.popup {
+  margin-top: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.rightSide h2 {
+  font-size: 20px;
+  color: #d35400;
+  margin-bottom: 15px;
+}
+
+.rightSide ul {
+  padding-left: 18px;
+  font-size: 14px;
+  color: #333;
+}
+
+.footer {
+  margin-top: 40px;
+  font-size: 13px;
+  color: #888;
+}

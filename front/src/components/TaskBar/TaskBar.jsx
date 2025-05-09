@@ -122,7 +122,7 @@ const TaskBar = ({windowConfig}) => {
     const isFile = files[windowName] !== undefined;
     const innerSelector = isFile 
     ? `[data-filename="${windowName}"]` 
-    : `.${windowName}-window`;
+    : `[data-window="${windowName}"]`;
 
     const innerElement = document.querySelector(innerSelector);
     const element = isFile 

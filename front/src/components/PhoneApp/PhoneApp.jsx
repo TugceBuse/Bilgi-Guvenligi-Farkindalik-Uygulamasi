@@ -26,7 +26,7 @@ const PhoneApp = ({ closeHandler, style }) => {
   const { messages, markMessageAsRead, readMessages, getUnreadCount } = usePhoneContext();
 
   return (
-    <div className={styles.phoneWindow} style={style} ref={PhoneAppRef}>
+    <div className={styles.phoneWindow} style={style} ref={PhoneAppRef} data-window="phoneapp">
       <div className={styles.phoneHeader}>
         <h2>Telefon</h2>
         <button className={styles.phoneClose} onClick={closeHandler}>×</button>

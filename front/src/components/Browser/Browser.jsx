@@ -289,8 +289,9 @@ const Browser = ({ closeHandler, style }) => {
     }
   };
 
+  // Tarayıcı Render Return yeri
   return (
-    <div className="browser-window" style={style} ref={browserRef}>
+    <div className="browser-window" style={style} ref={browserRef} data-window="browser">
       <div className="browser-header">
         <h2>Browser</h2>
         <button className="browser-close" onClick={closeHandler}>×</button>

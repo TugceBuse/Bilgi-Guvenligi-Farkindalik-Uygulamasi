@@ -195,7 +195,7 @@ const Antivirus = ({ closeHandler, style }) => {
     .map(([fileName, fileData]) => ({ fileName, ...fileData }));
 
   return (
-    <div className="antivirus-window" style={style} ref={antivirusRef}>
+    <div className="antivirus-window" style={style} ref={antivirusRef} data-window="antivirus">
       <div className="antivirus-header">
         <div className="antivirus-header-left">
           <img src="/icons/shieldSecure.png" alt="Antivirus Icon" />
