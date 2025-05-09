@@ -127,18 +127,47 @@ const sites = {
   isSponsored: false,
   seoScore: 87
 },
-  "http://novatekno.com": {
-    title: "NovaTekno",
-    type: "component",
-    component: "NovaTekno",
-    statement: "Fırsat ürünleriyle uygun fiyatlı alışveriş deneyimi!",
-    searchKeys: ["teknoloji, bilgisayar , ofis ekipmanları, ekipman, novatekno, tekno, novatekno.com, nova, tech, techdepo,bilgisayar parçaları"],
-    clickable: true,
-    protocol: "http",
-    color: "#1EFFFF",
-    isSponsored: false,
-    seoScore: 42
-  },
+"http://novatekno.com": {
+  title: "NovaTekno",
+  type: "component",
+  component: "NovaTekno",
+  statement: "Fırsat ürünleriyle uygun fiyatlı alışveriş deneyimi!",
+  searchKeys: ["teknoloji, bilgisayar , ofis ekipmanları, ekipman, novatekno, tekno, novatekno.com, nova, tech, techdepo,bilgisayar parçaları"],
+  clickable: true,
+  protocol: "http",
+  color: "#1EFFFF",
+  isSponsored: false,
+  seoScore: 42
+},
+"https://novabank.com": {
+  title: "NovaBank",
+  type: "component",
+  component: "NovaBankSite",
+  statement: "NovaBank masaüstü uygulamasını indirerek tüm bankacılık işlemlerinizi hızlı ve güvenli şekilde gerçekleştirin.",
+  searchKeys: [
+    "nova bank",
+    "bankacılık",
+    "finans",
+    "dijital bankacılık",
+    "mobil bankacılık",
+    "internet bankacılığı",
+    "nova",
+    "havale",
+    "eft",
+    "ibAN",
+    "güvenli bankacılık",
+    "masaüstü uygulama",
+    "şifreleme",
+    "2FA",
+    "NovaBankSetup"
+  ],
+  clickable: true,
+  protocol: "https",
+  color: "#0A3D91", // Koyu mavi: finansal güven çağrıştırır
+  isSponsored: false,
+  seoScore: 85
+}
+
 
 };
 

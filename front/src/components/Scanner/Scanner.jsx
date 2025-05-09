@@ -48,7 +48,7 @@ const Scanner = ({ closeHandler, style }) => {
         };
       }, []);
     return (
-        <div className="scanner-window" style={style} ref={ScannerRef}>
+        <div className="scanner-window" style={style} ref={ScannerRef} data-window="scanner">
             <div className="cursor"></div>
             <div className="scanner-header">
                 <h2>QR Scanner</h2>

@@ -34,7 +34,7 @@ const Folder = ({ closeHandler, style }) => {
     const [currentView, setCurrentView] = useState(VIEW_TYPES.DEFAULT);
     
     return (
-        <div className="folder-window" style={style} ref={FolderRef}>
+        <div className="folder-window" style={style} ref={FolderRef} data-window="folder">
 
             <div className="folder-header">
                 <div style={{display:"flex", flexDirection:"row", justifyItems:"center", alignItems:"center"}}>

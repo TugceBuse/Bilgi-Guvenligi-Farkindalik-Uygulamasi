@@ -82,7 +82,7 @@ const ChatApp = ({ closeHandler, style }) => {
   };
 
   return (
-    <div className={styles.chatWindow} style={style} ref={chatAppRef}>
+    <div className={styles.chatWindow} style={style} ref={chatAppRef} data-window="chatapp">
       <div className={styles.chatHeader}>
         <h2>Mesajlaşma</h2>
         <button className={styles.chatClose} onClick={closeHandler}>×</button>
