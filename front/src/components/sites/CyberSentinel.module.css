@@ -23,12 +23,12 @@
 }
 
 /* Üst Bilgi */
-h2 {
+.downloadContainer h2 {
   color: #00e676;
   margin-bottom: 10px;
 }
 
-p {
+.downloadContainer p {
   font-size: 14px;
   color: #ccc;
 }
