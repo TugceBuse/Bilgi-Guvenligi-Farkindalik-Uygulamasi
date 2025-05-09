@@ -40,6 +40,7 @@ export const PhoneProvider = ({ children }) => {
   
   ]);
   const [lastCodes, setLastCodes] = useState({});
+  const [codeTimers, setCodeTimers] = useState({});
 
   const addMessage = (sender, content) => {
     const now = new Date();
@@ -78,10 +79,25 @@ export const PhoneProvider = ({ children }) => {
   const code = generate6DigitCode();
   const content = `Kodunuz: ${code}. Kimseyle paylaşmayın.`;
   addMessage(senderName, content);
-  
+
   // Bu key'e ait son kodu sakla
   setLastCodes(prev => ({ ...prev, [key]: code }));
+
+  // Mevcut zamanlayıcıyı temizle
+  if (codeTimers[key]) clearTimeout(codeTimers[key]);
+
+  // 2 dakika sonra kodu temizle
+  const timerId = setTimeout(() => {
+    setLastCodes(prev => {
+      const updated = { ...prev };
+      delete updated[key];
+      return updated;
+    });
+  }, 2 * 60 * 1000); // 2 dakika
+
+  setCodeTimers(prev => ({ ...prev, [key]: timerId }));
 };
+
 
 const clearCode = (key) => {
   setLastCodes(prev => {

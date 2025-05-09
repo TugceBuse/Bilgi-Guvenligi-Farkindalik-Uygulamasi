@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./SkillForgeHub.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
+import { usePhoneContext } from "../../Contexts/PhoneContext";
 
 const SkillForgeHub = () => {
   const { SkillForgeHubInfo, setSkillForgeHubInfo } = useGameContext();
+
+  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+  const [is2FAwaiting, setIs2FAwaiting] = useState(false);
+  const [twoFACodeInput, setTwoFACodeInput] = useState("");
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
@@ -22,14 +27,22 @@ const SkillForgeHub = () => {
   const email = SkillForgeHubInfo.email;
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Hata mesajını göster ve 2 saniye sonra temizle
+  const showTemporaryError = (msg) => {
+    setErrorMessage(msg);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 2000);
+  };
+
   const handleAuth = () => {
     if (!isLogin) {
       if (SkillForgeHubInfo.isRegistered && SkillForgeHubInfo.email === email) {
-        setErrorMessage("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
+        showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
         return;
       }
       if (!name || !surname || !password) {
-        setErrorMessage("Lütfen tüm alanları doldurun!");
+        showTemporaryError("Lütfen tüm alanları doldurun!");
         return;
       }
   
@@ -47,11 +60,18 @@ const SkillForgeHub = () => {
       setErrorMessage("");
     } else {
       if (!SkillForgeHubInfo.isRegistered || SkillForgeHubInfo.email !== email) {
-        setErrorMessage("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
+        showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
         return;
       }
       if (!password || password !== SkillForgeHubInfo.password) {
-        setErrorMessage("Hatalı şifre! Lütfen tekrar deneyin.");
+        showTemporaryError("Hatalı şifre! Lütfen tekrar deneyin.");
+        return;
+      }
+
+
+      if (SkillForgeHubInfo.is2FAEnabled) {
+        generateCodeMessage("SkillForgeHub", "skillforgehub");
+        setIs2FAwaiting(true);
         return;
       }
   
@@ -62,6 +82,18 @@ const SkillForgeHub = () => {
       setErrorMessage("");
     }
   };
+
+  useEffect(() => {
+    return () => {
+      clearCode("skillforgehub");
+    };
+  }, []);
+
+  useEffect(() => {
+    setName("");
+    setSurname("");
+    setPassword("");
+  }, [isLogin]);
 
   const handleLogout = () => {
     setSkillForgeHubInfo({
@@ -74,6 +106,7 @@ const SkillForgeHub = () => {
     setNewPassword("");
     setSuccessPassword("");
     setShowSettings(false);
+    setIsLogin("Giriş Yap");
   };
 
   const handlePasswordUpdate = () => {
@@ -155,21 +188,93 @@ const SkillForgeHub = () => {
         </button>
       )}
 
-      {/* Giriş / Kayıt Paneli */}
-      {!SkillForgeHubInfo.isLoggedIn && isLoginOpen && (
+      {!SkillForgeHubInfo.isLoggedIn && isLoginOpen && !is2FAwaiting && (
         <div className={`${styles.authBox} ${isLoginOpen ? styles.active : ""}`}>
           <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
-          {!isLogin && <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />}
-          {!isLogin && <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />}
-          <input type="email" placeholder="E-posta adresiniz" value={SkillForgeHubInfo.email} disabled />
-          <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
-          {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+
+          {!isLogin && (
+            <>
+              <input
+                type="text"
+                placeholder="Ad"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Soyad"
+                value={surname}
+                onChange={(e) => setSurname(e.target.value)}
+              />
+            </>
+          )}
+
+          <input
+            type="email"
+            placeholder="E-posta adresiniz"
+            value={SkillForgeHubInfo.email}
+            disabled
+          />
+          <input
+            type="password"
+            placeholder="Şifreniz"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={handleAuth}>
+            {isLogin ? "Giriş Yap" : "Kayıt Ol"}
+          </button>
+
+          {errorMessage && (
+            <span className={styles.errorMessage}>{errorMessage}</span>
+          )}
 
           <p onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
           </p>
           <button onClick={() => setIsLoginOpen(false)}>Kapat</button>
+        </div>
+      )}
+
+      {!SkillForgeHubInfo.isLoggedIn && is2FAwaiting && (
+        <div className={`${styles.authBox} ${styles.active}`}>
+          <h2>🔐 2 Adımlı Doğrulama</h2>
+          <div className={styles.twoFAInputArea}>
+            <p>📲 Telefonunuza gelen doğrulama kodunu girin:</p>
+            <input
+              type="text"
+              placeholder="6 haneli kod"
+              value={twoFACodeInput}
+              onChange={(e) => setTwoFACodeInput(e.target.value)}
+            />
+            <button
+              onClick={() => {
+                if (twoFACodeInput === lastCodes["skillforgehub"]) {
+                  setSkillForgeHubInfo({ ...SkillForgeHubInfo, isLoggedIn: true });
+                  setIs2FAwaiting(false);
+                  setTwoFACodeInput("");
+                  clearCode("skillforgehub");
+                } else {
+                  setErrorMessage("⚠ Kod hatalı!");
+                  setTimeout(() => setErrorMessage(""), 2000);
+                }
+              }}
+            >
+              Giriş Yap
+            </button>
+            <button
+            onClick={() => {
+              setIs2FAwaiting(false);
+              setTwoFACodeInput(""); // input alanını temizle
+            }}
+          >
+            Kapat
+          </button>
+            {errorMessage && (
+              <span className={styles.errorMessage}>{errorMessage}</span>
+            )}
+          </div>
+          
         </div>
       )}
 
