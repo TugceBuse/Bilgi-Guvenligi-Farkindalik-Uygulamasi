@@ -6,7 +6,7 @@ import ChatApp, { useChatApp } from '../components/ChatApp/ChatApp';
 import Folder, { useFolder } from '../components/Folder/Folder';
 import Scanner, { useScanner } from '../components/Scanner/Scanner';
 import Antivirus, { useAntivirus } from '../components/Antivirus/Antivirus';
-import BankApp, {useBankApp} from '../components/BankApp/BankApp';
+import NovabankApp, { useNovabankApp } from '../components/NovabankApp/NovabankApp';
 import PhoneApp, { usePhoneApp } from '../components/PhoneApp/PhoneApp';
 
 const WindowConfigContext = createContext();
@@ -75,14 +75,14 @@ const initialWindowConfig = {
     clickable: true,
     available: false,
   },
-  bankapp: {
+  novabankapp: {
     icon: '/novaBank/novaLogo.png',
     label: 'NovaBank',
-    component: BankApp,
-    useComponent: useBankApp,
+    component: NovabankApp,
+    useComponent: useNovabankApp,
     location: 'desktop',
     clickable: true,
-    available: true,
+    available: false,
   },
 
   phoneapp: {

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useUIContext } from './UIContext';
+import NovaBankAppSetup from '../exefiles/NovaBankAppSetup/NovaBankAppSetup';
 
 const FileContext = createContext();
 
@@ -41,11 +42,23 @@ export const FileContextProvider = ({ children }) => {
             clickable: true,
             infected: false,
             type: "exe", 
-            size: "20MB", 
+            size: "35MB", 
             location: "downloads", 
             label: "Antivirus Kurulumu", 
             icon: "/icons/setting.png", 
             exeType: "antivirussetup"
+        },
+        novabankappsetup: {
+            available: false,
+            quarantined: false,
+            clickable: true,
+            infected: false,
+            type: "exe",
+            size: "18MB",
+            location: "downloads",
+            label: "Nova Bank Kurulumu",
+            icon: "/novaBank/NovaBankAppSetup.png",
+            exeType: "novabankappsetup"
         },
         taskappsetup: { 
             available: false,
@@ -53,7 +66,7 @@ export const FileContextProvider = ({ children }) => {
             clickable: true, 
             infected: false,
             type: "exe", 
-            size: "25MB", 
+            size: "12MB", 
             location: "downloads", 
             label: "TaskApp Kurulumu", 
             icon: "/icons/task-list.png", 
@@ -65,7 +78,7 @@ export const FileContextProvider = ({ children }) => {
             clickable: true,
             infected: true,
             type: "exe", 
-            size: "25MB", 
+            size: "17MB", 
             location: "downloads", 
             label: "TaskApp Kurulumu", 
             icon: "/icons/task-list.png", 
@@ -80,7 +93,7 @@ export const FileContextProvider = ({ children }) => {
             clickable: true,
             infected: false, 
             type: "docx", 
-            size: "1MB", 
+            size: "75KB", 
             location: "documents", 
             label: "İş Dosyası", 
             icon: "/icons/docx.png", 
@@ -116,7 +129,7 @@ export const FileContextProvider = ({ children }) => {
             clickable: true,
             infected: false, 
             type: "jpg", 
-            size: "3MB", 
+            size: "1.8MB", 
             location: "pictures", 
             label: "Toplantı Fotoğrafı", 
             icon: "/icons/image.png", 

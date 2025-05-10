@@ -1,24 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from './BankApp.module.css';
+import styles from './NovabankApp.module.css';
 import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
 
-export const useBankApp = () => {
+export const useNovabankApp = () => {
     const { toggleWindow } = useUIContext();
   
     const openHandler = () => {
-      toggleWindow('bankapp');
+      toggleWindow('novabankapp');
     };
   
     const closeHandler = () => {
-      toggleWindow('bankapp');
+      toggleWindow('novabankapp');
     };
   
     return { openHandler, closeHandler };
   };
 
-const BankApp = ({ closeHandler, style }) => {
+const NovabankApp = ({ closeHandler, style }) => {
   const { constUser, BankInfo, setBankInfo } = useGameContext(); // GameContext'ten constUser'ı çekiyoruz
   const BankAppRef = useRef(null);
   MakeDraggable(BankAppRef, `.${styles.bankHeader}`);
@@ -186,4 +186,4 @@ const BankApp = ({ closeHandler, style }) => {
   );
 };
 
-export default BankApp;
+export default NovabankApp;

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from './NovaBankSite.module.css';
 import { useGameContext } from "../../Contexts/GameContext";
+import { useFileContext } from "../../Contexts/FileContext";
 
 const NovaBankSite = () => {
-  const { setBankInfo } = useGameContext();
+  const { updateFileStatus } = useFileContext();
 
   const [progress, setProgress] = useState(0);
   const [downloading, setDownloading] = useState(false);
@@ -19,7 +20,7 @@ const NovaBankSite = () => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
           setShowPopup(true);
-          setBankInfo(prev => ({ ...prev, available: true }));
+          updateFileStatus("novabankappsetup", { available: true });
           setTimeout(() => setShowPopup(false), 3000);
           setDownloading(false);
           return 100;

@@ -2,6 +2,7 @@ import React from 'react';
 import AntivirusSetup from '../exefiles/AntivirusSetup/AntivirusSetup';
 import TaskAppSetup from '../exefiles/TaskAppSetup/TaskAppSetup';
 import TaskAppSetupF from '../exefiles/TaskAppSetupF/TaskAppSetupF';
+import NovaBankAppSetup from '../exefiles/NovaBankAppSetup/NovaBankAppSetup';
 
 
 // EXE bileşenlerini tanımlayalım
@@ -9,6 +10,7 @@ const exeComponents = {
     "antivirussetup": AntivirusSetup,
     "taskappsetup": TaskAppSetup,
     "taskappsetupf": TaskAppSetupF,
+    "novabankappsetup": NovaBankAppSetup,
     // Yeni EXE bileşenleri buraya eklenebilir
 };
 
