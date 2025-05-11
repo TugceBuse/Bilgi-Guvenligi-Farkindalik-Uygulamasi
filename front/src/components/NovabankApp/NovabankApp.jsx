@@ -47,24 +47,23 @@ const NovabankApp = ({ closeHandler, style }) => {
       newErrors.password = 'Şifre zorunludur.';
     }
   
-    if (tcNo && password) {
-      if (tcNo === constUser.tcNo && password === constUser.digitalPassword) {
-        setPage('dashboard');
-        return;
+    if (tcNo === constUser.tcNo && password === constUser.digitalPassword) {
+      if (BankInfo.rememberMe) {
+        setBankInfo(prev => ({ ...prev, savedTcNo: tcNo }));
       } else {
-        newErrors.login = 'Giriş bilgileriniz hatalıdır.';
+        setBankInfo(prev => ({ ...prev, savedTcNo: '' }));
       }
+      setPage('dashboard');
+      return;
     }
     setErrors(newErrors);
   };
 
     useEffect(() => {
-        if (BankInfo.rememberMe) {
-            setTcNo(constUser.tcNo);
-        } else {
-            setTcNo('');
-        }
-    }, [BankInfo.rememberMe]);
+      if (BankInfo.rememberMe && BankInfo.savedTcNo) {
+        setTcNo(BankInfo.savedTcNo);
+      }
+    }, []);
 
 
   return (
@@ -142,46 +141,49 @@ const NovabankApp = ({ closeHandler, style }) => {
 
       {page === 'dashboard' && (
         <div className={styles.dashboard}>
-          <div className={styles.dashboardHeader}>
-            <div className={styles.userInfo}>
-              Hoşgeldin, Onur Yılmaz
-            </div>
-          </div>
-          <div className={styles.accountInfo}>
+          <header className={styles.dashboardHeader}>
+            <span className={styles.userInfo}>👋 Hoşgeldin, Onur Yıldız</span>
+          </header>
+
+          <section className={styles.accountInfo}>
             <div className={styles.card}>
-                <div className={styles.cardBackground}>
-                    <h3 className={styles.cardBankName}>NovaBank</h3>
-                    <div className={styles.cardNumber}>**** **** **** 3456</div>
-                    <div className={styles.cardDetails}>
-                        <div>
-                            <label>Son Kullanım</label>
-                            <p>12/26</p>
-                        </div>
-                        <div>
-                            <label>Kart Sahibi</label>
-                            <p>Onur Yılmaz</p>
-                        </div>
-                    </div>
+              <div className={styles.cardBackground}>
+                <h3 className={styles.cardBankName}>NovaBank</h3>
+                <div className={styles.cardNumber}>**** **** **** 3456</div>
+                <div className={styles.cardDetails}>
+                  <div>
+                    <label>Son Kullanım</label>
+                    <p>12/26</p>
+                  </div>
+                  <div>
+                    <label>Kart Sahibi</label>
+                    <p>Onur Yılmaz</p>
+                  </div>
                 </div>
+              </div>
             </div>
 
-            <div className={styles.card}>
+            <div className={styles.cardInfo}>
               <h3>IBAN</h3>
               <p>TR12 3456 7890 1234 5678 9012 34</p>
             </div>
-            <div className={styles.card}>
+            <div className={styles.cardInfo}>
               <h3>Bakiye</h3>
-              <p>₺ 12,345.67</p>
+              <p>₺ 12.345,67</p>
             </div>
-          </div>
-          <div className={styles.otherServices}>
-            <h3>Diğer Bankacılık İşlemleri</h3>
-            <button disabled>Para Transferi (Kapalı)</button>
-            <button disabled>Fatura Ödeme (Kapalı)</button>
-            <button disabled>Kredi Başvurusu (Kapalı)</button>
-          </div>
+          </section>
+
+          <section className={styles.otherServices}>
+            <h3>🚧 Diğer Bankacılık İşlemleri</h3>
+            <div className={styles.serviceButtons}>
+              <button disabled>💸 Para Transferi</button>
+              <button disabled>🧾 Fatura Ödeme</button>
+              <button disabled>🏦 Kredi Başvurusu</button>
+            </div>
+          </section>
         </div>
       )}
+
     </div>
   );
 };
