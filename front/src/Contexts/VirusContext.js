@@ -22,7 +22,7 @@ export const VirusProvider = ({ children }) => {
     useEffect(() => {
         console.log("Antivirüs güncellendi:", antivirusUpdated);
     }
-    , [antivirusUpdated]);
+    , [viruses]);
 
     // Virüs ekleme fonksiyonu
     //     🚩KULLANIMI🚩
@@ -45,25 +45,31 @@ export const VirusProvider = ({ children }) => {
     }, [viruses]);
 
     const defaultVirusStructure = {
-        type: null,           // Virüs türü: 'ransomware', 'keylogger' vb.
-        detectable: false,    // Antivirüs tarafından algılanabilir mi
-        sourcefile: null      // Kaynak dosya
-    };
+        id: null,
+        type: null,
+        detectable: false,
+        sourcefile: null,
+        impact: null,
+        severity: "low",
+        startTime: null
+      };
 
     const addVirus = (newVirus) => {
         const completeVirus = {
             ...defaultVirusStructure,
-            ...newVirus
+            ...newVirus,
+            id: newVirus.id || `virus-${Date.now()}`,
+            startTime: Date.now()
         };
 
-        const alreadyExists = viruses.some(v => v.type === completeVirus.type);
+        const alreadyExists = viruses.some(v => v.id === completeVirus.id);
         if (!alreadyExists) {
             setViruses([...viruses, completeVirus]);
         }
     };
 
-    const removeVirus = (virusType) => {
-        setViruses(viruses.filter(v => v.type !== virusType));
+    const removeVirus = (virusID) => {
+        setViruses(viruses.filter(v => v.id !== virusID));
     };
 
     return (

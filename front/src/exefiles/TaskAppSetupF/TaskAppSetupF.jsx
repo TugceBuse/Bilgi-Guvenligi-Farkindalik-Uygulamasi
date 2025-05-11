@@ -23,9 +23,13 @@ const TaskAppSetupF = () => {
       const stopGhost = trackGhostMouse(); // 🟢 Hayalet izleme başlasın
 
       addVirus({
+        id: "deadlyclown",
         type: "clown",
         detectable: false,
-        sourcefile: "taskappsetupF"
+        sourcefile: "taskappsetupF",
+        impact: null,
+        severity: "high",
+        startTime: Date.now()
       });
 
       setTimeout(() => {
