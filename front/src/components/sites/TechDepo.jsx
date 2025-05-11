@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
+import { usePhoneContext } from "../../Contexts/PhoneContext"; 
 
 const cards = [
   {
@@ -216,6 +217,13 @@ const TechDepo = ({scrollRef}) => {
     productIDs: []
   });
 
+  // useState'ler
+  const [twoFACodeInput, setTwoFACodeInput] = useState("");
+  const [is2FAwaiting, setIs2FAwaiting] = useState(false);
+
+  // Context hook
+  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
   const [orders, setOrders] = useState([]);
@@ -252,6 +260,14 @@ const TechDepo = ({scrollRef}) => {
     scrollRef?.current?.scrollTo?.({ top: 0, behavior: "auto" });
   }, [page, subPage]);
 
+  // Hata mesajını göster ve 2 saniye sonra temizle
+  const showTemporaryError = (msg) => {
+    setErrorMessage(msg);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 2000);
+  };
+
   const handleAuth = () => {
     const showError = (message) => {
       setErrorMessage(message);
@@ -262,11 +278,11 @@ const TechDepo = ({scrollRef}) => {
   
     if (!isLogin) {
       if (TechInfo.isRegistered && TechInfo.email === email) {
-        showError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
+        showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
         return;
       }
       if (!name || !surname || !password) {
-        showError("Lütfen tüm alanları doldurun!");
+        showTemporaryError("Lütfen tüm alanları doldurun!");
         return;
       }
   
@@ -284,13 +300,20 @@ const TechDepo = ({scrollRef}) => {
       setErrorMessage("");
     } else {
       if (!TechInfo.isRegistered || TechInfo.email !== email) {
-        showError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır");
+        showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
         return;
       }
       if (!password || password !== TechInfo.password) {
-        showError("Hatalı şifre! Lütfen tekrar deneyin");
+        showTemporaryError("Hatalı şifre! Lütfen tekrar deneyin.");
         return;
       }
+
+       if (TechInfo.is2FAEnabled) {
+        generateCodeMessage("TechDepo", "techdepo");
+        setIs2FAwaiting(true);
+        return;
+      }
+
   
       setTechInfo({
         ...TechInfo,
@@ -302,6 +325,11 @@ const TechDepo = ({scrollRef}) => {
     setPage("welcome");
   };
   
+  useEffect(() => {
+    return () => {
+      clearCode("techdepo");
+    };
+  }, []);
 
   const handleLogout = () => {
     setTechInfo({
@@ -629,13 +657,17 @@ const TechDepo = ({scrollRef}) => {
                   }
                 </div>
               ) : (
-                <button className={styles.loginButton} 
-                onClick={() => {
-                  setIsLogin(true);
-                  setPage("login");
-                }}>
-                  Giriş Yap
-                </button>
+                !is2FAwaiting && ( // 🔒 2FA aktifse giriş yap butonunu gizle
+                  <button
+                    className={styles.loginButton}
+                    onClick={() => {
+                      setIsLogin(true);
+                      setPage("login");
+                    }}
+                  >
+                    Giriş Yap
+                  </button>
+                )
               )}
             </div>
       </div>
@@ -776,21 +808,51 @@ const TechDepo = ({scrollRef}) => {
       {/* TechDepo giriş/kayıt olma sayfası */}
       {page === "login" && !TechInfo.isLoggedIn && (
         <div className={styles.loginForm}>
-          <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
-          {!isLogin && (
+          {!is2FAwaiting ? (
             <>
-              <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />
-              <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />
+              <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
+              {!isLogin && (
+                <>
+                  <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />
+                  <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />
+                </>
+              )}
+              <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
+              <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
+              {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+              <p onClick={handleSignInOut}>
+                {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
+              </p>
+            </>
+          ) : (
+            <>
+              <h3>📲 Telefonunuza gelen doğrulama kodunu girin:</h3>
+              <input
+                type="text"
+                placeholder="6 haneli kod"
+                value={twoFACodeInput}
+                onChange={(e) => setTwoFACodeInput(e.target.value)}
+              />
+              <button
+                onClick={() => {
+                  if (twoFACodeInput === lastCodes["techdepo"]) {
+                    setTechInfo({ ...TechInfo, isLoggedIn: true });
+                    setIs2FAwaiting(false);
+                    setTwoFACodeInput("");
+                    clearCode("techdepo");
+                    setPage("welcome");
+                  } else {
+                    setErrorMessage("⚠ Kod hatalı!");
+                    setTimeout(() => setErrorMessage(""), 2000);
+                  }
+                }}
+              >
+                Giriş Yap
+              </button>
+              {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
             </>
           )}
-          <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
-          <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
-          {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
-
-          <p onClick={handleSignInOut}>
-            {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
-          </p>
         </div>
       )}
 
