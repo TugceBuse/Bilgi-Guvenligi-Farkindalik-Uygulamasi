@@ -217,9 +217,13 @@ const TechDepo = ({scrollRef}) => {
     productIDs: []
   });
 
-  // useState'ler
+  // kodlar için gerekli useState'ler
   const [twoFACodeInput, setTwoFACodeInput] = useState("");
   const [is2FAwaiting, setIs2FAwaiting] = useState(false);
+
+  const [is3DChecked, setIs3DChecked] = useState(false);
+  const [is3DWaiting, setIs3DWaiting] = useState(false);
+  const [payment2FACode, setPayment2FACode] = useState("");
 
   // Context hook
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
@@ -259,6 +263,15 @@ const TechDepo = ({scrollRef}) => {
   useEffect(() => {
     scrollRef?.current?.scrollTo?.({ top: 0, behavior: "auto" });
   }, [page, subPage]);
+
+
+  // 3D kod kısmı page değişkeni değiştiğinde sıfırlanır
+  useEffect(() => {
+  if (page !== "payment" && is3DWaiting) {
+    setIs3DWaiting(false);
+    setPayment2FACode(""); 
+  }
+}, [page, is3DWaiting]);
 
   // Hata mesajını göster ve 2 saniye sonra temizle
   const showTemporaryError = (msg) => {
@@ -445,6 +458,49 @@ const TechDepo = ({scrollRef}) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [saveCard, setSaveCard] = useState(false);
 
+  const finalizePayment = () => {
+    if (saveCard) {
+      setTechInfo((prev) => ({
+        ...prev,
+        cardNumber,
+        cardName,
+        cardExpiryDate: expiryDate,
+        cardCVV: cvv,
+        savedCard: true
+      }));
+    }
+
+    const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+    setOrders(prevOrders => [
+      ...prevOrders,
+      {
+        id: orderNumber,
+        items: cartItems,
+        shipping: selectedShipping,
+        total: grandTotal,
+        date: new Date().toLocaleString(),
+      }
+    ]);
+
+    setCardNumber("");
+    setCardName("");
+    setExpiryDate("");
+    setCVV("");
+    setSelectedShipping("");
+    setAcceptedTerms(false);
+    setSaveCard(false);
+    setSelectedShippingPrice(0);
+    setCartItems([]);
+    setPage("welcome");
+    setIs3DChecked(false);
+    setIs3DWaiting(false);
+    setIsPaying(false);
+
+    setNoticeType("payment");
+    setShowCartNotice(true);
+    setTimeout(() => setShowCartNotice(false), 2000);
+  };
+
   const handlePayment = () => {
     setIsSubmitted(true);
     let newErrors = {};
@@ -489,63 +545,30 @@ const TechDepo = ({scrollRef}) => {
       return; 
     }
     
-  
+     // 🔐 3D Secure seçiliyse önce kod gönder ve beklemeye al
+    if (is3DChecked && !is3DWaiting) {
+      // önce işleniyor yazısı çıksın
+      setIsPaying(true);
+
+      setTimeout(() => {
+        generateCodeMessage("TechDepo 3D Secure", "techdepo-payment");
+        setIs3DWaiting(true);
+        setIsPaying(false); // istenirse kaldırılabilir (butonu tekrar aktif yapar)
+      }, 1000); // 1 saniye sonra 3D aşamasına geç
+      return;
+    }
+        
     // Hatalar yoksa işlemi başlat
     setErrors({});
     setIsPaying(true);
 
+    if (is3DWaiting) {
+      finalizePayment(); // anında çalıştır
+      return;
+    }
+
     setTimeout(() => {
-      // Eğer kullanıcı 'Kartı kaydet' seçtiyse
-      if (saveCard) {
-        setTechInfo((prev) => ({
-          ...prev,
-          cardNumber: cardNumber,
-          cardName: cardName,
-          cardExpiryDate: expiryDate,
-          cardCVV: cvv,
-        }));
-      }
-      
-      // 🆕 Sipariş ekleme
-      const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000); // 10 haneli random sipariş numarası
-      setOrders(prevOrders => [
-        ...prevOrders,
-        {
-          id: orderNumber,
-          items: cartItems,
-          shipping: selectedShipping,
-          total: grandTotal,
-          date: new Date().toLocaleString(),
-        }
-      ]);
-
-      // Eğer kullanıcı 'Kartı kaydet' seçtiyse TechInfo'ya savedCard:true kaydedelim
-      if (saveCard) {
-        setTechInfo(prev => ({
-          ...prev,
-          savedCard: true
-        }));
-      }
-      
-      // Tüm alanları sıfırla
-      setCardNumber("");
-      setCardName("");
-      setExpiryDate("");
-      setCVV("");
-      setSelectedShipping("");
-      setAcceptedTerms(false);
-      setSaveCard(false);
-      setSelectedShippingPrice(0);
-      setCartItems([]);
-      setPage("welcome");
-  
-      setIsPaying(false);
-      setNoticeType("payment"); // Ödeme bildirimi 
-      setShowCartNotice(true);
-
-      setTimeout(() => {
-        setShowCartNotice(false);
-      }, 2000);
+      finalizePayment();
     }, 2000);
   };
 
@@ -868,7 +891,7 @@ const TechDepo = ({scrollRef}) => {
       )}
 
       {/* TechDepo ödeme sayfası */}
-      {page === "payment" && (
+      {page === "payment" && !is3DWaiting && (
         <div className={styles.paymentForm}>
           {/* Sol taraf */}
           <div className={styles.paymentLeft}>
@@ -1015,7 +1038,11 @@ const TechDepo = ({scrollRef}) => {
                   <p>Kart bilgilerimi kaydet</p>
                 </label>
                 <label className={styles.checkboxLabel}>
-                  <input type="checkbox" />
+                   <input
+                      type="checkbox"
+                      checked={is3DChecked}
+                      onChange={(e) => setIs3DChecked(e.target.checked)}
+                    />
                   <p>3D Secure ile ödeme</p>
                 </label> 
                 <label className={styles.checkboxLabel}>
@@ -1059,6 +1086,36 @@ const TechDepo = ({scrollRef}) => {
         </div>
       )}
 
+
+      {/* 3D Secure Doğrulama */}
+      {is3DWaiting && (
+        <div className={styles.twoFAInputArea}>
+          <h3>🔐 3D Secure Doğrulama</h3>
+          <p>📲 Ödeme işlemini onaylamak için telefonunuza gelen 6 haneli kodu girin:</p>
+          <input
+            type="text"
+            placeholder="6 haneli kod"
+            value={payment2FACode}
+            onChange={(e) => setPayment2FACode(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              if (payment2FACode === lastCodes["techdepo-payment"]) {
+                clearCode("techdepo-payment");
+                setIs3DWaiting(false);
+                setPayment2FACode("");
+                handlePayment(); // ✅ Doğru kod girildiğinde ödeme tamamlanır
+              } else {
+                setErrorMessage("⚠ Kod hatalı!");
+                setTimeout(() => setErrorMessage(""), 2000);
+              }
+            }}
+          >
+            Ödemeyi Onayla
+          </button>
+          {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+        </div>
+      )}
 
       {/* TechDepo kullanıcı bilgileri sayfası */}
       {page === "userProfile" && (
