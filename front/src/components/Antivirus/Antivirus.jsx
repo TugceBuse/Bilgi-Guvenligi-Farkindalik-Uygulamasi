@@ -89,11 +89,12 @@ const Antivirus = ({ closeHandler, style }) => {
   
           quarantined.push({
             fileName: fileKey,
-            virusType: virus.type
+            virusType: virus.type,
+            virusId: virus.id
           });
   
           quarantinedFilesSet.add(fileKey);
-          removeVirus(virus.type); // virüs etkisizleştirildi
+          removeVirus(virus.id); // virüs etkisizleştirildi
         }
       });
   
@@ -118,7 +119,8 @@ const Antivirus = ({ closeHandler, style }) => {
   
           quarantined.push({
             fileName,
-            virusType: fileData.virusType || "unknown"
+            virusType: fileData.virusType || "unknown",
+            virusId: fileData.virusId || null
           });
   
           quarantinedFilesSet.add(fileName);

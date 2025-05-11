@@ -30,7 +30,15 @@ const EnableContentDocx = ({ file, fileName }) => {
                 });
                 return;
             }
-            addVirus({ type: file.virusType, detectable: true, sourcefile: fileName}); 
+            addVirus({
+                id: "docx-ransomware",
+                type: file.virusType,
+                sourcefile: fileName,
+                impact: "encrypt",
+                severity: "high",
+                detectable: true,
+                startTime: Date.now()
+              });
         };
     }
 

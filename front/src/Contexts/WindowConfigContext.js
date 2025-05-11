@@ -73,7 +73,7 @@ const initialWindowConfig = {
     useComponent: useAntivirus,
     location: 'desktop',
     clickable: true,
-    available: false,
+    available: true,
   },
   novabankapp: {
     icon: '/novaBank/novaLogo.png',
