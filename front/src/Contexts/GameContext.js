@@ -27,7 +27,7 @@ export const GameContextProvider = ({ children }) => {
     email: "hilal.kaya@oriontech.colum",
     phone: "054164944",
     adres: "Atatürk Mahallesi, Gökkuşağı Sokak No:17/3, 34850, Yıldızlı İlçesi, İstanbul",
-    tcNo: "1420080129",
+    tcNo: "1716",
     digitalPassword: "123456",
     cardNumber: '54545454',
     cardName: 'Tugce Buse',
@@ -100,6 +100,7 @@ export const GameContextProvider = ({ children }) => {
 
   const [BankInfo, setBankInfo] = useState({
     rememberMe: false,
+    savedTcNo: '',
   });
 
   useEffect(() => {
