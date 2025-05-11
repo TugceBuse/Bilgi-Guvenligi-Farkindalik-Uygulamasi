@@ -3,6 +3,7 @@ import styles from './NovabankApp.module.css';
 import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
+import { usePhoneContext } from '../../Contexts/PhoneContext';
 
 export const useNovabankApp = () => {
     const { toggleWindow } = useUIContext();
@@ -20,6 +21,11 @@ export const useNovabankApp = () => {
 
 const NovabankApp = ({ closeHandler, style }) => {
   const { constUser, BankInfo, setBankInfo } = useGameContext(); // GameContext'ten constUser'ı çekiyoruz
+  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext(); // 2FA için
+
+  const [is2FAwaiting, setIs2FAwaiting] = useState(false); // Kod bekleniyor mu?
+  const [twoFACodeInput, setTwoFACodeInput] = useState(""); // Kod input
+
   const BankAppRef = useRef(null);
   MakeDraggable(BankAppRef, `.${styles.bankHeader}`);
 
@@ -29,6 +35,7 @@ const NovabankApp = ({ closeHandler, style }) => {
   const [tcNo, setTcNo] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // Kod hatası gösterimi
 
   // Error state'ler
   const [errors, setErrors] = useState({
@@ -47,22 +54,39 @@ const NovabankApp = ({ closeHandler, style }) => {
       newErrors.password = 'Şifre zorunludur.';
     }
   
-    if (tcNo === constUser.tcNo && password === constUser.digitalPassword) {
-      if (BankInfo.rememberMe) {
-        setBankInfo(prev => ({ ...prev, savedTcNo: tcNo }));
+    // Her iki alan doluysa ve eşleşme doğruysa
+    if (tcNo.trim() && password.trim()) {
+      if (tcNo === constUser.tcNo && password === constUser.digitalPassword) {
+        if (BankInfo.rememberMe) {
+          setBankInfo(prev => ({ ...prev, savedTcNo: tcNo }));
+        } else {
+          setBankInfo(prev => ({ ...prev, savedTcNo: '' }));
+        }
+
+        generateCodeMessage("NovaBank", "novabank");
+        setIs2FAwaiting(true);
+        setErrors({ tcNo: '', password: '', login: '' }); // önceki hataları temizle
+        return;
       } else {
-        setBankInfo(prev => ({ ...prev, savedTcNo: '' }));
+        newErrors.login = 'Giriş bilgileriniz hatalı.';
       }
-      setPage('dashboard');
-      return;
     }
     setErrors(newErrors);
+
+     // ❗ 2 saniye sonra hata mesajlarını temizle
+    setTimeout(() => {
+      setErrors({ tcNo: '', password: '', login: '' });
+    }, 2000);
   };
 
     useEffect(() => {
       if (BankInfo.rememberMe && BankInfo.savedTcNo) {
         setTcNo(BankInfo.savedTcNo);
       }
+    }, []);
+
+    useEffect(() => {
+      return () => clearCode("novabank");
     }, []);
 
 
@@ -75,58 +99,97 @@ const NovabankApp = ({ closeHandler, style }) => {
       {page === 'login' && (
         <div className={styles.loginPage}>
             <div className={styles.leftPanel}>
-                <img src="/novaBank/novaLogo.png" alt="Nova Logo" className={styles.logo} />
-                <h2>NovaBank Şubemize Hoşgeldiniz</h2>
-                <div className={styles.inputGroup}>
+              {!is2FAwaiting ? (
+                <>
+                  <img src="/novaBank/novaLogo.png" alt="Nova Logo" className={styles.logo} />
+                  <h2>NovaBank Şubemize Hoşgeldiniz</h2>
+
+                  <div className={styles.inputGroup}>
                     <label>TC/Müşteri No</label>
                     <input
-                        type="text"
-                        value={tcNo}
-                        maxLength={10}
-                        onChange={(e) => setTcNo(e.target.value)}
-                        placeholder={errors.tcNo ? "Bu alan zorunludur" : "TC Kimlik Numaranız"}
-                        className={errors.tcNo || errors.login ? styles.inputError : ''}
+                      type="text"
+                      value={tcNo}
+                      maxLength={10}
+                      onChange={(e) => setTcNo(e.target.value)}
+                      placeholder={errors.tcNo ? "Bu alan zorunludur" : "TC Kimlik Numaranız"}
+                      className={errors.tcNo || errors.login ? styles.inputError : ''}
                     />
                     {errors.tcNo && <span className={styles.errorText}>{errors.tcNo}</span>}
-                    </div>
+                  </div>
 
-                    <div className={styles.inputGroup}>
+                  <div className={styles.inputGroup}>
                     <label>Dijital Bankacılık Şifresi</label>
                     <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder={errors.password ? "Bu alan zorunludur" : "Şifreniz"}
-                        className={errors.password || errors.login ? styles.inputError : ''}
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder={errors.password ? "Bu alan zorunludur" : "Şifreniz"}
+                      className={errors.password || errors.login ? styles.inputError : ''}
                     />
                     {errors.password && <span className={styles.errorText}>{errors.password}</span>}
-                </div>
+                  </div>
 
-                    {/* Genel login hatası */}
-                    {errors.login && <div className={styles.errorText}>{errors.login}</div>}
+                  {errors.login && <div className={styles.errorText}>{errors.login}</div>}
 
-                <div className={styles.options}>
+                  <div className={styles.options}>
                     <div className={styles.options}>
-                        <label className={styles.switch}>
-                            <input
-                            type="checkbox"
-                            checked={BankInfo.rememberMe}
-                            onChange={() => setBankInfo(prev => ({
-                                ...prev,
-                                rememberMe: !prev.rememberMe
-                              }))}
-                            />
-                            <span className={styles.slider}></span>
-                        </label>
-                        <span className={styles.switchLabel}>Beni Hatırla</span>
+                      <label className={styles.switch}>
+                        <input
+                          type="checkbox"
+                          checked={BankInfo.rememberMe}
+                          onChange={() =>
+                            setBankInfo(prev => ({
+                              ...prev,
+                              rememberMe: !prev.rememberMe
+                            }))
+                          }
+                        />
+                        <span className={styles.slider}></span>
+                      </label>
+                      <span className={styles.switchLabel}>Beni Hatırla</span>
                     </div>
                     <button className={styles.forgotPassword}>Şifremi Unuttum</button>
-                </div>
+                  </div>
 
-                <button className={styles.loginButton} onClick={handleLogin}>
-                Giriş Yap
-                </button>
+                  <button className={styles.loginButton} onClick={handleLogin}>
+                    Giriş Yap
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h2 className={styles.codeVerificationTitle}>📲 NovaBank Giriş Doğrulama</h2>
+                  <p className={styles.codeVerificationText}>
+                    Kayıtlı numaranıza gelen 6 haneli doğrulama kodunu giriniz.
+                  </p>
+                  <input
+                    type="text"
+                    placeholder="6 haneli kod"
+                    value={twoFACodeInput}
+                    onChange={(e) => setTwoFACodeInput(e.target.value)}
+                    className={styles.codeVerificationInput}
+                  />
+                  {errorMessage && <div className={styles.codeVerificationError}>{errorMessage}</div>}
+                  <button
+                    className={styles.codeVerificationButton}
+                    onClick={() => {
+                      if (twoFACodeInput === lastCodes["novabank"]) {
+                        clearCode("novabank");
+                        setTwoFACodeInput("");
+                        setIs2FAwaiting(false);
+                        setPage("dashboard");
+                      } else {
+                        setErrorMessage("⚠ Kod hatalı!");
+                        setTimeout(() => setErrorMessage(""), 2000);
+                      }
+                    }}
+                  >
+                    Doğrula ve Giriş Yap
+                  </button>
+                  
+                </>
+              )}
             </div>
+
 
             <div className={styles.rightPanel}>
                 <h3>NovaBank ile Güvendesiniz!</h3>
