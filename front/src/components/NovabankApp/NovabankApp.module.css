@@ -340,3 +340,71 @@
   background-color: #e67e22;
 }
   
+ /* 2FA Kodu Kısmı İçin CSS */
+ .codeVerificationTitle {
+  color: #cc5200;
+  font-size: 22px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.codeVerificationText {
+  font-size: 15px;
+  color: #804000;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.codeVerificationInput {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #cc9966;
+  border-radius: 6px;
+  width: 220px;
+  margin: 0 auto 16px auto;
+  outline: none;
+  display: block;
+  text-align: center;
+  background-color: #fff8f0;
+}
+
+.codeVerificationInput:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 6px rgba(255, 102, 0, 0.4);
+}
+
+.codeVerificationButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.codeVerificationButton:hover {
+  background-color: #cc5200;
+  transform: scale(1.03);
+}
+
+.codeVerificationError {
+  color: red;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: center;
+  animation: fadeIn 0.2s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
