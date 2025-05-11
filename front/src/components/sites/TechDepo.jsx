@@ -631,14 +631,23 @@ const TechDepo = ({scrollRef}) => {
       
       {/* TechDepo navbar */}
       <div className={styles.header}>
-            <div className={styles.logoContainer} onClick={() => setPage("welcome")}>
-            <img src="/techDepo/techHome.png" alt="TechDepo Logo" className={styles.logo} />
-            <h1>TechDepo</h1>
-            <h4>Teknoloji Deposu</h4>
+            <div className={styles.logoContainer} 
+              onClick={() => {
+                setPage("welcome");
+                setIs2FAwaiting(false); 
+              }}>
+              <img src="/techDepo/techHome.png" alt="TechDepo Logo" className={styles.logo} />
+              <h1>TechDepo</h1>
+              <h4>Teknoloji Deposu</h4>
             </div>
 
             <div className={styles.navbarRight}>
-              <div className={styles.addToCart} onClick={() => setPage("cart")}>
+              <div className={styles.addToCart} 
+                onClick={() => {
+                  if (!is2FAwaiting) {
+                    setPage("cart");
+                  }
+                }}>
                 <img src="/techDepo/add-to-cart (1).png" alt="Sepete Ekle" />
                 <h4> Sepetim</h4>
                 {getCartItemCount() > 0 && (
@@ -663,6 +672,8 @@ const TechDepo = ({scrollRef}) => {
                     onClick={() => {
                       setIsLogin(true);
                       setPage("login");
+                      setPassword("");
+
                     }}
                   >
                     Giriş Yap
