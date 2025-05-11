@@ -68,7 +68,7 @@ const NovabankApp = ({ closeHandler, style }) => {
 
 
   return (
-    <div className={styles.bankWindow} style={style} ref={BankAppRef} data-window="bankapp">
+    <div className={styles.bankWindow} style={style} ref={BankAppRef} data-window="novabankapp">
         <div className={styles.bankHeader}>
             <h2>NovaBank</h2>
             <button className={styles.bankClose} onClick={closeHandler}>×</button>
