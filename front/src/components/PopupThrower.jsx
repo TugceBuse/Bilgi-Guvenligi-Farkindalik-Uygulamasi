@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useVirusContext } from "../../Contexts/VirusContext";
-import { useNotification } from "../../Contexts/NotificationContext";
+import { useVirusContext } from "../Contexts/VirusContext";
+import { useNotification } from "../Contexts/NotificationContext";
 
 // Sahte sistem bildirimleri
 const fakeNotifications = [
@@ -77,7 +77,7 @@ const PopupThrower = () => {
     if (!isAdwareActive) return;
 
     const scheduleNext = () => {
-      const randomDelay = Math.floor(Math.random() * 30000) + 20000; // 20–50s
+      const randomDelay = Math.floor(Math.random() * 5000) + 10000; // 20–50s
 
       setTimeout(() => {
         const isPopup = Math.random() < 0.5;
@@ -92,7 +92,7 @@ const PopupThrower = () => {
             message: notif.message,
             type: notif.type,
             icon: notif.icon,
-            duration: 5000
+            duration: 10000
           });
         }
 

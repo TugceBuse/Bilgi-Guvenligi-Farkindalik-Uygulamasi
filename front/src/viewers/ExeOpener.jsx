@@ -3,6 +3,7 @@ import AntivirusSetup from '../exefiles/AntivirusSetup/AntivirusSetup';
 import TaskAppSetup from '../exefiles/TaskAppSetup/TaskAppSetup';
 import TaskAppSetupF from '../exefiles/TaskAppSetupF/TaskAppSetupF';
 import NovaBankAppSetup from '../exefiles/NovaBankAppSetup/NovaBankAppSetup';
+import NovaBankAppSetupF from '../exefiles/NovaBankAppSetupF/NovaBankAppSetupF';
 
 
 // EXE bileşenlerini tanımlayalım
@@ -11,6 +12,7 @@ const exeComponents = {
     "taskappsetup": TaskAppSetup,
     "taskappsetupf": TaskAppSetupF,
     "novabankappsetup": NovaBankAppSetup,
+    "novabankappsetupf": NovaBankAppSetupF,
     // Yeni EXE bileşenleri buraya eklenebilir
 };
 

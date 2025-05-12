@@ -11,6 +11,7 @@ import FileOpener from '../../viewers/FileOpener';
 import { TodoProvider } from '../../Contexts/TodoContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
 import TaskApp from '../TaskApp/TaskApp';
+import PopupThrower from '../PopupThrower';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
@@ -158,6 +159,7 @@ const Desktop = () => {
         handleClose={() => setShowAlert(false)}
         message="Internet bağlantısı bulunamadı"
       />
+      {viruses.some(v => v.type === 'adware') && <PopupThrower/>}
       {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
       <TaskApp />
     </div>

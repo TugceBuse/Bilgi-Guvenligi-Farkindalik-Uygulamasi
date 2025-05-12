@@ -34,7 +34,7 @@ const NovaBankSiteF = () => {
               location: "downloads",
               label: "NovaBankSetup.exe",
               icon: "/novaBank/NovaBankAppSetup.png",
-              exeType: "novabankadware"
+              exeType: "novabankappsetupf"
             }
           }));
 
