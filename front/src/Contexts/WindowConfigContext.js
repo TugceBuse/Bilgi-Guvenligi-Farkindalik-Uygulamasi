@@ -8,6 +8,7 @@ import Scanner, { useScanner } from '../components/Scanner/Scanner';
 import Antivirus, { useAntivirus } from '../components/Antivirus/Antivirus';
 import NovabankApp, { useNovabankApp } from '../components/NovabankApp/NovabankApp';
 import PhoneApp, { usePhoneApp } from '../components/PhoneApp/PhoneApp';
+import DocuLiteApp, { useDocuLiteApp } from '../components/DocuLiteApp/DocuLiteApp';
 
 const WindowConfigContext = createContext();
 
@@ -94,6 +95,15 @@ const initialWindowConfig = {
     clickable: true,
     available: true,
   },
+  pdfviewer: {
+    icon: '/PDFViewer/pdf.png',
+    label: 'PDF Görüntüleyici',
+    component: DocuLiteApp,
+    useComponent: useDocuLiteApp,
+    location: 'desktop',
+    clickable: true,
+    available: false
+  }
 };
 
 export const WindowConfigProvider = ({ children }) => {

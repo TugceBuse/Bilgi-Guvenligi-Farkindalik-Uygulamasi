@@ -167,6 +167,27 @@ const sites = {
   isSponsored: false,
   seoScore: 85
 },
+"http://doculite.com": {
+  title: "DocuLite PDF Viewer",
+  type: "component",
+  component: "DocuLite",
+  statement: "Hafif, güvenli ve ücretsiz PDF görüntüleyici — ekstra izin olmadan!",
+  searchKeys: [
+    "pdf", 
+    "doculite", 
+    "pdf viewer", 
+    "belge görüntüleyici", 
+    "dosya açıcı", 
+    "reader", 
+    "güvenli pdf indir", 
+    "açık kaynak pdf uygulaması"
+  ],
+  clickable: true,
+  protocol: "https",
+  color: "#4CAF50", // Güven veren yeşil tonu
+  isSponsored: false,
+  seoScore: 87
+},
 "https://novabank-indir.com": {
   title: "NovaBank",
   type: "component",
