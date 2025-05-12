@@ -187,6 +187,34 @@ const sites = {
   color: "#4CAF50", // Güven veren yeşil tonu
   isSponsored: false,
   seoScore: 87
+},
+"https://novabank-indir.com": {
+  title: "NovaBank",
+  type: "component",
+  component: "NovaBankSiteF",
+  statement: "NovaBank masaüstü uygulamasını indirerek tüm bankacılık işlemlerinizi hızlı ve güvenli şekilde gerçekleştirin.",
+  searchKeys: [
+    "nova bank",
+    "bankacılık",
+    "finans",
+    "dijital bankacılık",
+    "mobil bankacılık",
+    "internet bankacılığı",
+    "nova",
+    "havale",
+    "eft",
+    "ibAN",
+    "güvenli bankacılık",
+    "masaüstü uygulama",
+    "şifreleme",
+    "2FA",
+    "NovaBankSetup"
+  ],
+  clickable: true,
+  protocol: "https",
+  color: "#0A3D91", // Koyu mavi: finansal güven çağrıştırır
+  isSponsored: true,
+  seoScore: 65
 }
 
 
