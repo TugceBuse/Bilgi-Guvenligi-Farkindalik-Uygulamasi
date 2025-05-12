@@ -9,7 +9,7 @@ const TaskApp = () => {
 
   const tasks = [
     { title: '🔐 Antivirüs Kur', completed: false },
-    { title: '🌐 İnternete Bağlan', completed: false },
+    { title: '📄 Oyundaki sanal çalışan profilinize ait kişisel bilgileri içeren PDF dosyasını indirip inceleyin. Bu bilgiler, ileride girişlerde kullanılacaktır.', completed: false },
     { title: '📩 Mail Kutunu Kontrol Et', completed: false },
     { title: '💾 Güvenli Şifre Oluştur', completed: false },
     { title: '📁 Güvenilir Dosya İndir', completed: false },

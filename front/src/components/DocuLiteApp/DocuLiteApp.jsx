@@ -20,6 +20,24 @@ export const useDocuLiteApp = () => {
 
 const dummyPDFs = [
   {
+    name: 'Kişisel Kullanıcı Bilgileri.pdf',
+    size: '740KB',
+    modified: '12.05.2025',
+    content: `
+    NovaTech A.Ş. - Kişisel Kullanıcı Bilgileri
+
+    👤 Ad Soyad: Onur Yıldız
+    🆔 Çalışan ID: 487231
+    💼 Departman: Bilgi Teknolojileri
+    📧 Kurumsal E-posta: onur.yildiz@novatech.com
+    📞 Dahili Numara: 2211
+    🧑‍💻 Kullanıcı Adı: onur.yildiz
+    🔑 Geçici Şifre: Nova_25xyz!
+
+    Lütfen bu bilgileri sadece kurum içi sistemlerde kullanınız. Güvenliğiniz için şifreyi ilk oturum açma sonrası değiştirmeniz önerilir.
+      `
+  },
+  {
     name: 'İş Sözleşmesi.pdf',
     size: '1.2MB',
     modified: '12.05.2025',
