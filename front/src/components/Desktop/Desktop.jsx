@@ -11,7 +11,7 @@ import FileOpener from '../../viewers/FileOpener';
 import { TodoProvider } from '../../Contexts/TodoContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
 import TaskApp from '../TaskApp/TaskApp';
-import PopupThrower from '../PopupThrower';
+import PopupThrower from '../PopupThrower/PopupThrower';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();

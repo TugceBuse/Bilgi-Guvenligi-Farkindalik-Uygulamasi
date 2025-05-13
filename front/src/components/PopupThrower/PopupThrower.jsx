@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useVirusContext } from "../Contexts/VirusContext";
-import { useNotification } from "../Contexts/NotificationContext";
+import { useVirusContext } from "../../Contexts/VirusContext";
+import { useNotification } from "../../Contexts/NotificationContext";
 
 // Sahte sistem bildirimleri
 const fakeNotifications = [
@@ -8,7 +8,7 @@ const fakeNotifications = [
     title: "Sistem Performansı",
     message: "RAM kullanımı %97 seviyesine ulaştı!",
     type: "warning",
-    icon: "/icons/ram.png"
+    icon: "/icons/caution.png"
   },
   {
     title: "Güncelleme Mevcut",
@@ -18,31 +18,37 @@ const fakeNotifications = [
   },
   {
     title: "Güvenlik Uyarısı",
-    message: "Bilinmeyen ağ trafiği tespit edildi.",
+    message: "Bilinmeyen ağ trafiği tespit edildi. Bağlantınızı kontrol edin.",
     type: "danger",
-    icon: "/icons/shield.png"
+    icon: "/icons/danger.png"
   },
   {
     title: "Tarayıcı Önerisi",
-    message: "NovaSecure Browser ile daha hızlı bağlantı.",
+    message: "NovaSecure Browser ile daha hızlı, güvenli ve reklamsız gezinme!",
     type: "info",
     icon: "/icons/browser.png"
   }
 ];
 
-// Sahte popup bileşenleri (her biri bir sekme içeriği gibi)
+// Reklam popup içerikleri
 const AdPopupVPN = () => (
   <div>
     <h3>🔒 NovaVPN - 6 Aylık Ücretsiz!</h3>
-    <p>Sınırlı süreli teklif! Tüm cihazlarda kullanılabilir.</p>
+    <p>
+      Tüm cihazlarınızda sınırsız koruma. <br />
+      Kimliğinizi gizleyin, internet özgürlüğünün tadını çıkarın.
+    </p>
     <button className="popup-btn">Şimdi Etkinleştir</button>
   </div>
 );
 
 const AdPopupPrize = () => (
   <div>
-    <h3>🎁 1000 TL Kazandınız!</h3>
-    <p>Hemen başvurun, şanslı 100 kişiden biri siz olun.</p>
+    <h3>🎁 1000 TL Değerinde Alışveriş Çeki!</h3>
+    <p>
+      Sadece bugün için geçerli! <br />
+      Şanslı 100 kişiden biri siz olun. Numaranızı doğrulayın.
+    </p>
     <button className="popup-btn">Ödülümü Al</button>
   </div>
 );
@@ -50,7 +56,10 @@ const AdPopupPrize = () => (
 const AdPopupCleaner = () => (
   <div>
     <h3>🧼 NovaCleaner - Ücretsiz Sistem Temizleyici</h3>
-    <p>Bilgisayarınız yavaşladı mı? Tek tıkla hızlandırın.</p>
+    <p>
+      Bilgisayarınız yavaşladı mı? <br />
+      Tek tıkla derin temizlik, gereksiz dosyalardan kurtulun!
+    </p>
     <button className="popup-btn">Temizlemeye Başla</button>
   </div>
 );
@@ -58,18 +67,20 @@ const AdPopupCleaner = () => (
 const AdPopupCard = () => (
   <div>
     <h3>💳 Kart Aidatı Geri Ödeme</h3>
-    <p>Son 6 ayın aidatlarını hemen geri alın.</p>
+    <p>
+      Banka aidatlarınızı geri alın. <br />
+      Başvurunuzu yapın, son 6 ayın ücretlerini anında iade alın!
+    </p>
     <button className="popup-btn">Geri Ödeme Talep Et</button>
   </div>
 );
 
-// PopupThrower ana bileşeni
+// Ana bileşen
 const PopupThrower = () => {
   const { viruses } = useVirusContext();
   const { addNotification } = useNotification();
   const [openPopups, setOpenPopups] = useState([]);
 
-  // kullanılacak bileşenler
   const popupComponents = [AdPopupVPN, AdPopupPrize, AdPopupCleaner, AdPopupCard];
 
   useEffect(() => {
@@ -77,14 +88,22 @@ const PopupThrower = () => {
     if (!isAdwareActive) return;
 
     const scheduleNext = () => {
-      const randomDelay = Math.floor(Math.random() * 5000) + 10000; // 20–50s
+      const delay = Math.floor(Math.random() * 5000) + 10000; // 10–15s
 
       setTimeout(() => {
-        const isPopup = Math.random() < 0.5;
+        const showPopup = Math.random() < 0.5;
 
-        if (isPopup) {
+        if (showPopup) {
           const Component = popupComponents[Math.floor(Math.random() * popupComponents.length)];
-          setOpenPopups(prev => [...prev, { id: Date.now(), Component }]);
+          const newPopup = {
+            id: Date.now(),
+            Component,
+            position: {
+              top: `${Math.floor(Math.random() * 300) + 50}px`,
+              left: `${Math.floor(Math.random() * 600) + 100}px`
+            }
+          };
+          setOpenPopups(prev => [...prev, newPopup]);
         } else {
           const notif = fakeNotifications[Math.floor(Math.random() * fakeNotifications.length)];
           addNotification({
@@ -96,11 +115,11 @@ const PopupThrower = () => {
           });
         }
 
-        scheduleNext(); // tekrar kur
-      }, randomDelay);
+        scheduleNext();
+      }, delay);
     };
 
-    scheduleNext(); // ilk çağrı
+    scheduleNext();
   }, [viruses]);
 
   const closePopup = (id) => {
@@ -109,14 +128,14 @@ const PopupThrower = () => {
 
   return (
     <>
-      {openPopups.map(({ id, Component }) => (
+      {openPopups.map(({ id, Component, position }) => (
         <div
           key={id}
           className="adware-browser-popup"
           style={{
             position: "fixed",
-            top: `${Math.floor(Math.random() * 300) + 50}px`,
-            left: `${Math.floor(Math.random() * 600) + 100}px`,
+            top: position.top,
+            left: position.left,
             width: "480px",
             height: "320px",
             background: "#fff",

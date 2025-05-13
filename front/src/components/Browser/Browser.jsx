@@ -12,11 +12,11 @@ export const useBrowser = () => {
 
 const CachedComponents = {}; // 📌 Bileşenleri cachelemek için bir obje oluşturduk
 
-const Browser = ({ closeHandler, style }) => {
-  const [url, setUrl] = useState("https://www.google.com");
-  const [currentUrl, setCurrentUrl] = useState("https://www.google.com");
+const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }) => {
+  const [url, setUrl] = useState(initialUrl);
+  const [currentUrl, setCurrentUrl] = useState(initialUrl);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState(["https://www.google.com"]);
+  const [history, setHistory] = useState(initialUrl);
   const [matchedSites, setMatchedSites] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const browserRef = useRef(null);
