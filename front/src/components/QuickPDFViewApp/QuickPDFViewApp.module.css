@@ -2,10 +2,10 @@
   position: absolute;
   width: 720px;
   height: 500px;
-  background: #1e1e1e;
-  color: #f1f1f1;
+  background: #1d1b1f;
+  color: #f3f3f3;
   border-radius: 12px;
-  border: 1px solid #ff7043;
+  border: 1px solid #ec407a;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
@@ -18,32 +18,35 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  background-color: #2a1c1a;
-  color: #ffab91;
+  background-color: #2a1c27;
+  color: #ff80ab;
   font-size: 18px;
   font-weight: bold;
-  border-bottom: 1px solid #ff7043;
+  border-bottom: 1px solid #ec407a;
 }
-.headerLeft{
+
+.headerLeft {
   display: flex;
   gap: 10px;
 }
 
-.headerLeft img{
+.headerLeft img {
   width: 32px;
   height: 32px;
 }
-.headerLeft h2{
-    margin: 0;
-    font-size: 18px;
-    color: #ffd8c2;
-    align-self: flex-end;
+
+.headerLeft h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #ffc1e3;
+  align-self: flex-end;
 }
+
 .closeButton {
   background: transparent;
   border: none;
   font-size: 20px;
-  color: #ffccbc;
+  color: #ffbcd9;
   cursor: pointer;
 }
 
@@ -85,8 +88,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #2a1c1a;
-  border: 1px solid #ff5722;
+  background-color: #2a1c27;
+  border: 1px solid #ec407a;
   border-radius: 8px;
   padding: 10px;
   cursor: pointer;
@@ -94,7 +97,7 @@
 }
 
 .item:hover {
-  background-color: #3b2624;
+  background-color: #3d2634;
 }
 
 .item img {
@@ -105,12 +108,12 @@
 .filename {
   font-size: 16px;
   font-weight: 500;
-  color: #ffd8c2;
+  color: #ffc1e3;
 }
 
 .meta {
   font-size: 13px;
-  color: #ffbca5;
+  color: #f8bbd0;
 }
 
 .viewer {
@@ -120,15 +123,38 @@
 }
 
 .viewerHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #ffccbc;   
+  color: #ffcdd2;
   margin-top: 12px;
 }
 
+.fakeToolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #2c1a24;
+  border-bottom: 1px solid #ec407a;
+  padding: 8px 8px;
+}
+
+.toolButton {
+  background-color: #3b2a33;
+  border: 1px solid #ec407a;
+  border-radius: 6px;
+  color: #ffc1e3;
+  font-size: 13px;
+  padding: 4px 10px;
+  cursor: default;
+  user-select: none;
+  transition: background 0.2s;
+  opacity: 0.9;
+}
+
+.toolButton:hover {
+  background-color: #4b2d3b;
+}
+
 .backButton {
-  background: #ff5722;
+  background: #ec407a;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -138,47 +164,20 @@
 }
 
 .backButton:hover {
-  background: #a83613;
+  background: #ad1457;
 }
 
 .fakePreview {
-  background-color: #2c1e1c;
-  border: 1px solid #ff7043;
+  background-color: #2b1b26;
+  border: 1px solid #ec407a;
   border-radius: 10px;
-  color: #ffd8c2;
+  color: #ffc1e3;
   font-size: 15px;
   padding: 20px;
   height: 100%;
   width: 100%;
-  overflow-y: auto;         /* Dikey taşmaları kaydırılabilir yapar */
-  overflow-x: hidden;       /* Yatayda taşma varsa gizler */
-  white-space: pre-wrap;    /* Satırları kır, taşma olmasın */
-  word-break: break-word;   /* Uzun kelimeleri kır */
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
   box-sizing: border-box;
-}
-
-.fakeToolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background-color: #241b1a;
-  border-bottom: 1px solid #3a2a29;
-  padding: 8px 8px;
-}
-
-.toolButton {
-  background-color: #3a2a29;
-  border: 1px solid #ff7043;
-  border-radius: 6px;
-  color: #ffd8c2;
-  font-size: 13px;
-  padding: 4px 10px;
-  cursor: default; /* tıklanamaz gibi göstermek için */
-  user-select: none;
-  transition: background 0.2s;
-  opacity: 0.8;
-}
-
-.toolButton:hover {
-  background-color: #4b2f2e;
 }

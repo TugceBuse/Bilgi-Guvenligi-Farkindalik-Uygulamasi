@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from './DocuLite.module.css';
 import { useFileContext } from "../../Contexts/FileContext";
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
@@ -6,10 +6,12 @@ import FeatureCard from './FeatureCard';
 
 const DocuLiteSite = () => {
   const { updateAvailableStatus } = useWindowConfig();
+
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const intervalRef = useRef(null);
+
 
   const startDownload = () => {
     setDownloading(true);
@@ -20,6 +22,7 @@ const DocuLiteSite = () => {
           clearInterval(intervalRef.current);
           setShowPopup(true);
           updateAvailableStatus("pdfviewer", { available: true });
+          console.log("PDF Viewer indirildi.");
           setTimeout(() => setShowPopup(false), 3000);
           setDownloading(false);
           return 100;

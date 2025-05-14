@@ -167,27 +167,6 @@ const sites = {
   isSponsored: false,
   seoScore: 85
 },
-"http://doculite.com": {
-  title: "DocuLite PDF Viewer",
-  type: "component",
-  component: "DocuLite",
-  statement: "Hafif, güvenli ve ücretsiz PDF görüntüleyici — ekstra izin olmadan!",
-  searchKeys: [
-    "pdf", 
-    "doculite", 
-    "pdf viewer", 
-    "belge görüntüleyici", 
-    "dosya açıcı", 
-    "reader", 
-    "güvenli pdf indir", 
-    "açık kaynak pdf uygulaması"
-  ],
-  clickable: true,
-  protocol: "https",
-  color: "#4CAF50", // Güven veren yeşil tonu
-  isSponsored: false,
-  seoScore: 87
-},
 "https://novabank-indir.com": {
   title: "NovaBank",
   type: "component",
@@ -215,9 +194,49 @@ const sites = {
   color: "#0A3D91", // Koyu mavi: finansal güven çağrıştırır
   isSponsored: true,
   seoScore: 65
+},
+"https://doculite.com": {
+  title: "DocuLite PDF Viewer",
+  type: "component",
+  component: "DocuLite",
+  statement: "Hafif, güvenli ve ücretsiz PDF görüntüleyici — ekstra izin olmadan!",
+  searchKeys: [
+    "pdf", 
+    "doculite", 
+    "pdf viewer", 
+    "belge görüntüleyici", 
+    "dosya açıcı", 
+    "reader", 
+    "güvenli pdf indir", 
+    "açık kaynak pdf uygulaması"
+  ],
+  clickable: true,
+  protocol: "https",
+  color: "#4CAF50", // Güven veren yeşil tonu
+  isSponsored: false,
+  seoScore: 88
+},
+"http://quickpdfview-download.net": {
+  title: "QuickPDFView",
+  type: "component",
+  component: "QuickPDFView",
+  statement: "Hızlı ve pratik PDF görüntüleyici — hemen indirip kullanın!",
+  searchKeys: [
+    "pdf görüntüleyici",
+    "quickpdf",
+    "ücretsiz pdf indir",
+    "reader indir",
+    "pdf aç",
+    "en iyi pdf programı",
+    "hızlı pdf okuyucu",
+    "pdf setup"
+  ],
+  clickable: true,
+  protocol: "http", 
+  color: "#ec407a", 
+  isSponsored: true,
+  seoScore: 42 
 }
-
-
 };
 
 export default sites;

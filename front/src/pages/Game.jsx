@@ -9,6 +9,7 @@ import { VirusProvider } from '../Contexts/VirusContext.js';
 import { WindowConfigProvider } from '../Contexts/WindowConfigContext.js';
 import { NotificationProvider } from '../Contexts/NotificationContext';
 import { PhoneProvider } from '../Contexts/PhoneContext.js';
+import { TodoProvider } from '../Contexts/TodoContext.js';
 
 const Game = () => {
   // Sağ tıklamayı engellemek ve sol click tetikleme
@@ -32,9 +33,11 @@ const Game = () => {
               <WindowConfigProvider>
                 <PhoneProvider>
                   <GameContextProvider>
-                    <div className="game">
-                      <Desktop />
-                    </div>
+                    <TodoProvider>
+                      <div className="game">
+                        <Desktop />
+                      </div>
+                    </TodoProvider>
                   </GameContextProvider>
                 </PhoneProvider>
               </WindowConfigProvider>

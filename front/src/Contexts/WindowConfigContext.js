@@ -9,6 +9,7 @@ import Antivirus, { useAntivirus } from '../components/Antivirus/Antivirus';
 import NovabankApp, { useNovabankApp } from '../components/NovabankApp/NovabankApp';
 import PhoneApp, { usePhoneApp } from '../components/PhoneApp/PhoneApp';
 import DocuLiteApp, { useDocuLiteApp } from '../components/DocuLiteApp/DocuLiteApp';
+import QuickPDFViewApp, { useQuickPDFViewApp } from '../components/QuickPDFViewApp/QuickPDFViewApp';
 
 const WindowConfigContext = createContext();
 
@@ -103,7 +104,16 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: false
-  }
+  },
+  quickpdfviewer: {
+  icon: '/PDFViewer/pdf-logo.png',
+  label: 'QuickPDFView',
+  component: QuickPDFViewApp,
+  useComponent: useQuickPDFViewApp,
+  location: 'desktop',
+  clickable: true,
+  available: false
+}
 };
 
 export const WindowConfigProvider = ({ children }) => {
