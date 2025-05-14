@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useVirusContext } from "../../Contexts/VirusContext";
 import { useNotification } from "../../Contexts/NotificationContext";
+import { useUIContext } from "../../Contexts/UIContext";
+import "./PopupThrower.css";
 
 // Sahte sistem bildirimleri
 const fakeNotifications = [
@@ -14,7 +16,7 @@ const fakeNotifications = [
     title: "Güncelleme Mevcut",
     message: "Sistem bileşenleriniz güncel değil.",
     type: "info",
-    icon: "/icons/update.png"
+    icon: "/icons/info.png"
   },
   {
     title: "Güvenlik Uyarısı",
@@ -26,52 +28,52 @@ const fakeNotifications = [
     title: "Tarayıcı Önerisi",
     message: "NovaSecure Browser ile daha hızlı, güvenli ve reklamsız gezinme!",
     type: "info",
-    icon: "/icons/browser.png"
+    icon: "/icons/info.png"
   }
 ];
 
 // Reklam popup içerikleri
-const AdPopupVPN = () => (
+const AdPopupVPN = ({ onClick }) => (
   <div>
     <h3>🔒 NovaVPN - 6 Aylık Ücretsiz!</h3>
     <p>
       Tüm cihazlarınızda sınırsız koruma. <br />
       Kimliğinizi gizleyin, internet özgürlüğünün tadını çıkarın.
     </p>
-    <button className="popup-btn">Şimdi Etkinleştir</button>
+    <button className="popup-btn" onClick={onClick}>Şimdi Etkinleştir</button>
   </div>
 );
 
-const AdPopupPrize = () => (
+const AdPopupPrize = ({ onClick }) => (
   <div>
     <h3>🎁 1000 TL Değerinde Alışveriş Çeki!</h3>
     <p>
       Sadece bugün için geçerli! <br />
       Şanslı 100 kişiden biri siz olun. Numaranızı doğrulayın.
     </p>
-    <button className="popup-btn">Ödülümü Al</button>
+    <button className="popup-btn" onClick={onClick}>Ödülümü Al</button>
   </div>
 );
 
-const AdPopupCleaner = () => (
+const AdPopupCleaner = ({ onClick }) => (
   <div>
     <h3>🧼 NovaCleaner - Ücretsiz Sistem Temizleyici</h3>
     <p>
       Bilgisayarınız yavaşladı mı? <br />
       Tek tıkla derin temizlik, gereksiz dosyalardan kurtulun!
     </p>
-    <button className="popup-btn">Temizlemeye Başla</button>
+    <button className="popup-btn" onClick={onClick}>Temizlemeye Başla</button>
   </div>
 );
 
-const AdPopupCard = () => (
+const AdPopupCard = ({ onClick }) => (
   <div>
     <h3>💳 Kart Aidatı Geri Ödeme</h3>
     <p>
       Banka aidatlarınızı geri alın. <br />
       Başvurunuzu yapın, son 6 ayın ücretlerini anında iade alın!
     </p>
-    <button className="popup-btn">Geri Ödeme Talep Et</button>
+    <button className="popup-btn" onClick={onClick}>Geri Ödeme Talep Et</button>
   </div>
 );
 
@@ -79,9 +81,15 @@ const AdPopupCard = () => (
 const PopupThrower = () => {
   const { viruses } = useVirusContext();
   const { addNotification } = useNotification();
+  const { toggleWindow } = useUIContext();
   const [openPopups, setOpenPopups] = useState([]);
 
-  const popupComponents = [AdPopupVPN, AdPopupPrize, AdPopupCleaner, AdPopupCard];
+  const popupComponents = [
+  { component: AdPopupVPN, url: "https://novasecure.com/vpn-promo" },
+  { component: AdPopupPrize, url: "https://novasecure.com/prize" },
+  { component: AdPopupCleaner, url: "https://novasecure.com/cleaner" },
+  { component: AdPopupCard, url: "https://novasecure.com/card-refund" }
+];
 
   useEffect(() => {
     const isAdwareActive = viruses.some(v => v.type === "adware");
@@ -94,16 +102,18 @@ const PopupThrower = () => {
         const showPopup = Math.random() < 0.5;
 
         if (showPopup) {
-          const Component = popupComponents[Math.floor(Math.random() * popupComponents.length)];
+          const ComponentSet = popupComponents[Math.floor(Math.random() * popupComponents.length)];
           const newPopup = {
             id: Date.now(),
-            Component,
+            Component: ComponentSet.component,
+            url: ComponentSet.url,
             position: {
               top: `${Math.floor(Math.random() * 300) + 50}px`,
               left: `${Math.floor(Math.random() * 600) + 100}px`
             }
           };
           setOpenPopups(prev => [...prev, newPopup]);
+
         } else {
           const notif = fakeNotifications[Math.floor(Math.random() * fakeNotifications.length)];
           addNotification({
@@ -128,7 +138,7 @@ const PopupThrower = () => {
 
   return (
     <>
-      {openPopups.map(({ id, Component, position }) => (
+      {openPopups.map(({ id, Component, position, url }) => (
         <div
           key={id}
           className="adware-browser-popup"
@@ -162,7 +172,10 @@ const PopupThrower = () => {
             </button>
           </div>
           <div style={{ padding: "16px", fontSize: "14px", overflowY: "auto", flexGrow: 1 }}>
-            <Component />
+            <Component onClick={() => {
+              toggleWindow("browser", { initialUrl: url });
+              closePopup(id);
+            }} />
           </div>
         </div>
       ))}

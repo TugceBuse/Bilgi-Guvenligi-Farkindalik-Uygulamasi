@@ -30,6 +30,19 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
   useEffect(() => {
     console.log("History güncellendi:", history);
   }, [history]);
+  // Yönlendirilmiş URL geldiğinde tarayıcı ayarları
+  useEffect(() => {
+    const init = async () => {
+      if (initialUrl !== "https://www.google.com") {
+        await startLoading();
+        setCurrentUrl(initialUrl);
+        setHistory([initialUrl]);
+        setUrl(initialUrl);
+        setCurrentIndex(0);
+      }
+    };
+    init();
+  }, [initialUrl]);
 
   // 📌 Yükleme fonksiyonu: 1 saniye bekletir, sonra devam eder
   const startLoading = async () => {

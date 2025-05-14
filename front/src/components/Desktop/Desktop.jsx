@@ -15,7 +15,7 @@ import PopupThrower from '../PopupThrower/PopupThrower';
 
 const Desktop = () => {
   const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, visibleWindows, handleIconClick, zindex, setZindex } = useUIContext();
+  const { openWindows, visibleWindows, handleIconClick, zindex, setZindex, windowProps } = useUIContext();
   const { openedFiles, closeFile, files } = useFileContext();
   const { viruses } = useVirusContext();
 
@@ -123,20 +123,21 @@ const Desktop = () => {
       <TodoProvider>
         {/* 📂 **Açılan Uygulamalar (windowConfig içindekiler) ** */}
         {openWindows.map((windowKey) => {
-          if (!windowConfig[windowKey]) {
-            console.warn(`windowConfig içinde bulunamayan pencere: ${windowKey}`);
-            return null;
-          }
+          if (!windowConfig[windowKey]) return null;
           const { component: WindowComponent } = windowConfig[windowKey];
           const { closeHandler } = handlers[windowKey];
+          const props = windowProps[windowKey] || {}; // 👈 ekstra props al
+
           return (
             <WindowComponent
               key={windowKey}
               closeHandler={closeHandler}
               style={windowPositions[windowKey] || {}}
+              {...props} // 👈 props'u geçir
             />
           );
         })}
+
 
         {/* 📂 **Açılan Dosyalar İçin Pencere Yönetimi** */}
         {openedFiles.map((fileName) => {

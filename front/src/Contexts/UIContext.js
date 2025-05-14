@@ -7,7 +7,9 @@ export const UIContextProvider = ({ children }) => {
   const [visibleWindows, setVisibleWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
   const [zindex, setZindex] = useState(100);
+  const [windowProps, setWindowProps] = useState({});
   const [mouseLocked, setMouseLocked] = useState(false);
+  
 
   useEffect(() => {
     if (openWindows.length === 0 || visibleWindows.length === 0) return;
@@ -66,7 +68,7 @@ export const UIContextProvider = ({ children }) => {
     return () => document.removeEventListener('mousemove', handleMove);
   };
 
-  const toggleWindow = (windowName) => {
+  const toggleWindow = (windowName, props = {}) => {
     setOpenWindows((prev) =>
       prev.includes(windowName)
         ? prev.filter((name) => name !== windowName)
@@ -77,7 +79,10 @@ export const UIContextProvider = ({ children }) => {
         ? prev.filter((name) => name !== windowName)
         : [...prev, windowName]
     );
+    setWindowProps((prev) => ({ ...prev, [windowName]: props }));
+
     handleIconClick(windowName);
+    
   };
 
   const handleIconClick = (windowName) => {
@@ -103,7 +108,8 @@ export const UIContextProvider = ({ children }) => {
         zindex, setZindex,
         toggleWindow, handleIconClick,
         lockMouse, unlockMouse, mouseLocked,
-        trackGhostMouse
+        trackGhostMouse,
+        windowProps, setWindowProps,
       }}
     >
       {children}
