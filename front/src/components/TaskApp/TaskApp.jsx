@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './TaskApp.css';
 import { useGameContext } from '../../Contexts/GameContext';
+import { useTodoContext } from '../../Contexts/TodoContext'; 
 
 const TaskApp = () => {
   const { isTaskAppInstalled } = useGameContext();
+  const { todos, setTodos } = useTodoContext(); // görevler context'ten geliyor
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
-
-  const tasks = [
-    { title: '🔐 Antivirüs Kur', completed: false },
-    { title: '📄 Oyundaki sanal çalışan profilinize ait kişisel bilgileri içeren PDF dosyasını indirip inceleyin. Bu bilgiler, ileride girişlerde kullanılacaktır.', completed: false },
-    { title: '📩 Mail Kutunu Kontrol Et', completed: false },
-    { title: '💾 Güvenli Şifre Oluştur', completed: false },
-    { title: '📁 Güvenilir Dosya İndir', completed: false },
-  ];
+  
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -27,6 +22,7 @@ const TaskApp = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isTaskAppInstalled]);
 
+ 
   const handleClose = () => {
     setClosing(true);
     setTimeout(() => {
@@ -43,7 +39,6 @@ const TaskApp = () => {
             <h2>TaskApp</h2>
             <button className="close-button" onClick={handleClose}>×</button>
         </div>
-        
         <div className="task-icon-container">
           <div className="task-icon-wrapper">
             <img src="/icons/task-list.png" alt="Task List Icon" className="task-icon-img" />
@@ -52,18 +47,25 @@ const TaskApp = () => {
         </div>
         
         <div className="task-app-content">
-        {tasks.length > 0 ? (
-            <ul className="task-list">
-            {tasks.map((task, idx) => (
-                <li key={idx} className={`task-item ${task.completed ? 'completed' : ''}`}>
-                {task.title}
-                </li>
+        {todos.length > 0 ? (
+          <ul className="task-list">
+            {todos.map((task) => (
+              <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                {task.completed && (
+                  <img
+                    src="/icons/mission-complete.png"
+                    alt="Tamamlandı"
+                    className="task-status-icon"
+                  />
+                )}
+                {task.text}
+              </li>
             ))}
-            </ul>
+          </ul>
         ) : (
-            <p className="no-tasks">Henüz bir görevin yok!</p>
+          <p className="no-tasks">Henüz bir görevin yok!</p>
         )}
-        </div>
+      </div>
     </div>
   );
 };

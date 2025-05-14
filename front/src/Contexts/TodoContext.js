@@ -5,10 +5,12 @@ const TodoContext = createContext();
 
 export const TodoProvider = ({ children }) => {
   const [todos, setTodos] = useState([
-    { text: 'Yeni kurduğumuz ağ aktif olmalı', completed: false },
-    { text: 'test 2', completed: false },
-    { text: 'tst 3', completed: false },
-  ]);
+  { id: 'antivirus', text: '🔐 Antivirüs Kur', completed: false, notified: false },
+  { id: 'profile-pdf', text: '📄 Oyundaki sanal çalışan profilinize ait kişisel bilgileri içeren PDF dosyasını indirip inceleyin.', completed: false, notified: false },
+  { id: 'check-mail', text: '📩 Mail Kutunu Kontrol Et', completed: false, notified: false },
+  { id: 'create-password', text: '💾 Güvenli Şifre Oluştur', completed: false, notified: false },
+  { id: 'download-safe-file', text: '📁 Güvenilir Dosya İndir', completed: false, notified: false },
+]);
 
   return (
     <TodoContext.Provider value={{ todos, setTodos }}>
