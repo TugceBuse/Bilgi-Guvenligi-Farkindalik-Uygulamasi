@@ -120,8 +120,8 @@ const Folder = ({ closeHandler, style }) => {
                     )}
                     
                     {currentView === VIEW_TYPES.DEFAULT && (
-                        <div className="folder-content-right-inside" onClick={() => setCurrentView(VIEW_TYPES.DOWNLOAD)}>
-                            <div className='Icons'>
+                        <div className="folder-content-right-inside" >
+                            <div className='Icons' onClick={() => setCurrentView(VIEW_TYPES.DOWNLOAD)}>
                                 <img 
                                 src="/icons/inbox (1).png" alt="Inbox Icon" />
                                 <span>İndirilenler</span>
