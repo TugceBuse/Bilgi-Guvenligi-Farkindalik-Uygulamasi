@@ -76,7 +76,7 @@ const ComputerCanvas= () =>{
   };
 
   return(
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "76vh" }}>
+    <div className="canvas-container">
       <Canvas 
         className="canvas"
         style={{height: "600px", width: "100vw"}}

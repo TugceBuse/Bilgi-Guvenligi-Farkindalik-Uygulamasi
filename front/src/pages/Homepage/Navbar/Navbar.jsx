@@ -51,9 +51,10 @@ const Navbar = () => {
       <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
         <div className="logo-container">
           <div className="logo" onClick={handleLogoClick}></div>
+          <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet"></link>
+          <h1 className="h1">PhishVille</h1>
         </div>
-
-        <h1 className="h1">PhishVille</h1>
+     
 
         <div className="rightPart">
           <a href="https://www.w3schools.com/" className="a">
@@ -75,17 +76,17 @@ const Navbar = () => {
                   className="avatar"
                 />
                 <span className="username">{user.username}</span>
+
                 {menuOpen && (
                   <div className="dropdown-menu">
-                    <a href="/profile">Profil</a>
-                    <button onClick={logout}>Çıkış</button>
+                    <a href="/profile">👤 Profil</a>
+                    <button onClick={logout}>🚪 Çıkış Yap</button>
                   </div>
                 )}
               </div>
             ) : (
               <button className="login" onClick={handleLoginClick}>
                 GİRİŞ
-                <span></span>
               </button>
             )}
           </div>

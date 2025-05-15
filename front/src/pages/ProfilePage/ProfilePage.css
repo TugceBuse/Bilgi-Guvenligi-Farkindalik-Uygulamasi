@@ -71,6 +71,7 @@ html, body {
     gap: 10px;
     border-bottom: 1px solid #b4b1c9; /* Alt çizgi ekler */
     padding-bottom: 10px;
+    color: #13194b;
   }
 
   .profile-page strong {

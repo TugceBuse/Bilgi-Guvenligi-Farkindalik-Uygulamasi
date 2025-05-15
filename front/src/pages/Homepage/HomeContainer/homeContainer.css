@@ -1,111 +1,217 @@
-.canvas{
-    padding: 20px;
-    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
-}
-.canvas:hover{
-    transition: transform 0.3s ease-in-out background-color 0.3s ease-in-out;
-}
-
-body{
-    background-color: rgb(168, 185, 199);
-    overflow-x: hidden;
-    display: flex;
-}
-
-.my-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: rgb(91, 91, 134);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 10px;
-  }
-  
-  .my-button:hover {
-    background-color: rgb(107, 107, 128);
-  }
-
-  @keyframes moveBackground {
-    0% {
-        background-position: 0 0;
-      }
-      100% {
-        background-position: 100% 100%;
-      }
-
-  }
-  
-  .moving-background {
-    background: linear-gradient(45deg, #ff9a9e 60%, #fad0c4 100%);
-    background-size: cover;
-    background-repeat: no-repeat; 
-    height: 100%;
-    width: 100vw;
-    display: flex;
+@media (max-width: 768px) {
+  .FirstPart {
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    background-image: url('/public/hb9.png');
-  }
-
-  .circle {
-    width: 25px; /* Genişlik */
-    height: 25px; /* Yükseklik */
-    background-image: radial-gradient(rgb(241, 236, 236),rgb(198, 201, 212),rgb(168, 167, 180), rgb(255, 255, 255));
-    border-radius: 50%; /* Köşeleri yuvarla */
-    display: flex;
-    justify-content: center;
   }
 
   .line {
-    width: 3px;
-    height: 250px;
-    background-image: radial-gradient(rgb(249, 249, 255),rgb(245, 245, 245),rgb(208, 207, 219), rgb(5, 5, 5));
-    border-radius: 5px;
-    margin-top: 24.7px;
+    display: none;
   }
+}
 
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0f172a; /* ESKİ: rgb(168, 185, 199) */
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+  overflow-x: hidden;
+  display: flex;
+}
 
-  .FirstPart{
-    display: flex;
-    flex-direction: row;
-    gap: 1px;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding-top: 4%;
-    margin-top: 3%;
-    margin-left: 4%;
-  }
+.my-button {
+  padding: 14px 28px;
+  font-size: 18px;
+  color: white;
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: transform 0.2s, background 0.3s;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
 
-  .FirstPart h1{
-    color: rgb(123, 89, 177);
-    font-size: 34px;
-    padding-left: 1%;
-    padding-bottom: 2%;
-    text-shadow: 1px 1px 2px #272727;
-    letter-spacing: 2px; 
-  }
+.my-button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #1d4ed8, #2563eb);
+}
 
-  .FirstPart h3{
-    color: white;
-    font-size: 25px;
-    padding-left: 1%;
-    letter-spacing: 1px; 
-    text-shadow: 1px 1px 2px #272727;
-    text-align: left;
-    text-decoration: dotted;
-  }
+.canvas-container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
 
-  .FirstPart h4{
-    padding-top: 2%;
-    color: rgb(165, 70, 70);
-    font-size: 28px;
-    padding-left: 1%;
-    letter-spacing: 1px; 
-    text-shadow: 1px 1px 2px #272727;
-    text-align: left;
-    text-decoration: dotted;
-  }
+.canvas {
+  height: 500px !important;
+  padding: 20px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+}
+
+.canvas:hover {
+  transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.moving-background {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #1e293b, #334155);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 120px;
+  box-sizing: border-box;
+}
+.FirstPart {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 80%;
+  gap: 15px;
+  padding: 20px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  margin-left: -130px;
+  margin-top: -20px;
+  margin-bottom: -30px;
+}
+
+/* 🔄 GÜNCELLENDİ: Modern renk ve gölge */
+.FirstPart h1 {
+  font-size: 36px;
+  color: #60a5fa; /* ESKİ: rgb(123, 89, 177) */
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+/* 🔄 GÜNCELLENDİ: Boyut ve görünüm iyileştirildi */
+.FirstPart h3 {
+  font-size: 20px;
+  margin: 6px 0;
+  color: #e2e8f0;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+/* 🔄 GÜNCELLENDİ: Daha modern kırmızı ton */
+.FirstPart h4 {
+  margin-top: 20px;
+  font-size: 22px;
+  color: #f87171; /* ESKİ: rgb(165, 70, 70) */
+  text-shadow: 1px 1px 2px #000000;
+}
+
+/* Yazı kısmı geniş ve dengeli olsun */
+.text-section {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-self: center;
+}
+
+/* Model kısmı geniş yer kaplamasın */
+.canvas-section {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Line ortada görünür */
+.line {
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, #cbd5e1, #64748b);
+  border-radius: 5px;
+}
+
+.info-cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  position: relative;
+  gap: 0;
+}
+
+.info-card {
+  position: relative;
+  width: 220px;
+  height: 260px;
+  margin-left: -50px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #334155;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s ease;
+  z-index: 1;
+  flex-shrink: 0;
+  opacity: 1;
+  filter: none;
+}
+
+/* Tüm kartlara hover geldiğinde diğerlerini sola kaydır */
+.info-cards:hover .info-card {
+  transform: translateX(-60px);
+  opacity: 1;
+  filter: none;
+}
+
+/* Hover edilen kart sabit kalır ve büyür */
+.info-card:hover {
+  transform: scale(1.12) translateX(0);
+  z-index: 10;
+  background: #334155;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+  border-color: #475569;
+}
+
+/* Hover edilen kartın SAĞINDA kalanları sağa kaydır (ama yalnızca sağındakiler!) */
+.info-card:hover ~ .info-card {
+  transform: translateX(100px);
+  opacity: 0.6;
+  filter: blur(0.5px);
+}
+
+/* Hover edilmeyen, solda kalan kartlar sola kaymasın */
+.info-card:not(:hover):not(:focus):not(:active) {
+  transition: all 0.3s ease;
+}
+
+.info-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #e0f2fe;
+  transition: color 0.3s ease;
+}
+
+.info-card:hover h3 {
+  color: #ffffff;
+}
+
+.info-card p {
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  transition: color 0.3s ease;
+}
+
+.info-card:hover p {
+  color: #f8fafc;
+}
+
+.info-card:nth-child(1) { background: linear-gradient(to bottom right, #334155, #475569); }
+.info-card:nth-child(2) { background: linear-gradient(to bottom right, #1e40af, #3b82f6); }
+.info-card:nth-child(3) { background: linear-gradient(to bottom right, #0f766e, #14b8a6); }
+.info-card:nth-child(4) { background: linear-gradient(to bottom right, #78350f, #f59e0b); }
+.info-card:nth-child(5) { background: linear-gradient(to bottom right, #5b21b6, #8b5cf6); }
+.info-card:nth-child(6) { background: linear-gradient(to bottom right, #991b1b, #f87171); }
+.info-card:nth-child(7) { background: linear-gradient(to bottom right, #0f172a, #1e293b); }
