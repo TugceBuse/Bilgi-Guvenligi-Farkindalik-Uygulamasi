@@ -23,31 +23,64 @@
   }
 }
 
+@keyframes slideInFromRight {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 0;
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    right: 0;
+  }
+  to {
+    right: -100%;
+  }
+}
+
 
 .task-app-container {
   width: 30%;
-  height: 60%;
-  background: linear-gradient(145deg, #1f1f2f, #2b2b45);
-  border: 2px solid #444;
-  border-radius: 16px;
-  padding: 20px;
-  color: #fff;
+  height: 70%;
+   background: rgba(47, 47, 80, 0.7);
+  backdrop-filter: blur(6px) brightness(1.05);
   display: flex;
-  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 25px 0 0 25px;
+  flex-direction: row; /* 🆕 yatay olarak ikiye ayır */
   position: fixed;
-  top: 30.5%;
-  left: 85%;
-  transform: translate(-50%, -50%);
+  top: 12.5%;
+  right: 0;
   z-index: 9999;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-  animation: slideInSmooth 0.6s ease-out;
-  overflow: hidden;
-  will-change: transform, opacity;
+  animation: slideInFromRight 0.6s ease-out forwards;
 }
 
+
 .task-app-container.closing {
-  animation: slideOutSmooth 0.5s ease-in-out forwards;
+  animation: slideOutToRight 0.4s ease-in-out forwards;
 }
+
+.rotated-header {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: #f0f0f0;
+  padding: 40px 8px 20px;
+  border-right: 1px solid #555;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 
 .task-app-header {
   display: flex;
@@ -64,6 +97,16 @@
   font-weight: 600;
   color: #f0f0f0;
 }
+
+.task-app-panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #555;
+  color : #f0f0f0;
+  padding: 20px;
+}
+
 .task-icon-container {
   display: flex;
   justify-content: center;
@@ -118,7 +161,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.1);
   }
 }
 
@@ -149,7 +192,7 @@
   gap: 10px;
   z-index: 999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  animation: fadeInOut 3s ease-in-out;
+  animation: InOut 3s ease-in-out;
 }
 
 .task-popup img {
@@ -176,18 +219,29 @@
   }
 }
 
-.close-button {
+.slide-close-button {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   background: transparent;
   border: none;
-  color: #bbb;
   font-size: 22px;
   cursor: pointer;
-  transition: color 0.2s ease;
+  color: #ccc;
+  transition: transform 0.3s ease, color 0.2s ease;
 }
 
-.close-button:hover {
-  color: #ff5555;
+.slide-close-button::before {
+  content: '◀' ;
+  display: inline-block;
+  /* transition: transform 0.3s ease; */
 }
+
+/* .slide-close-button:hover::before {
+  transform: rotate(180deg);
+  color: #fff;
+} */
 
 .task-app-content {
   flex: 1;
@@ -211,19 +265,35 @@
   height: 20px;
 }
 
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+  
+
+
 .task-item {
-  padding: 12px 12px 12px 40px; /* sola boşluk ver ikon için */
+  padding: 12px 12px 12px 40px;
   position: relative;
   margin-bottom: 12px;
-  background-color: #343457;
-  border-radius: 10px;
-  transition: background-color 0.3s ease, transform 0.2s;
+  background-color: #3a3a5e;
+  border-radius: 12px;
+  transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.2s;
   font-size: 15px;
+  animation: fadeSlideIn 0.4s ease;
 }
 
 .task-item:hover {
-  background-color: #3f3f6e;
-  transform: translateX(3px);
+  background-color: #464676;
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 .task-item.completed {
