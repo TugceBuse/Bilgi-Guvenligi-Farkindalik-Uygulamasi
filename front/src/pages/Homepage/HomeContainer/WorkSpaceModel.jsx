@@ -99,7 +99,7 @@ const ComputerCanvas= () =>{
 
           <Html position={[0, -10, 0]}>
             <button className="my-button" onClick={handleSimulationClick}>
-              Start Animation
+              Simülasyonu Başlat
             </button>
           </Html>   
 
