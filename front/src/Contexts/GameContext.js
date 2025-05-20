@@ -46,6 +46,8 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
+    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
+    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
   });
 
   // SKILLFORGEHUB - Kullanıcı bilgileri (sadece context içinde tutuluyor)
@@ -59,6 +61,8 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
+    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
+    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
   });
 
   // POSTİFY - Kullanıcı bilgileri (sadece context içinde tutuluyor)
@@ -73,6 +77,8 @@ export const GameContextProvider = ({ children }) => {
     isLoggedIn: false,
     isPasswordStrong: false,
     privacySettings: "Herkese Açık",
+    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
+    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
   });
 
    // TECHDEPO - Kullanıcı bilgileri (sadece context içinde tutuluyor)
@@ -91,7 +97,9 @@ export const GameContextProvider = ({ children }) => {
     cardExpiryDate: constUser.cardExpiryDate,
     cardCVV: constUser.cardCVV,
     saveCard: false,
-    adres: constUser.adres
+    adres: constUser.adres,
+    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
+    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
   });
 
   const [productInfo, setProductInfo] = useState({
@@ -101,6 +109,8 @@ export const GameContextProvider = ({ children }) => {
   const [BankInfo, setBankInfo] = useState({
     rememberMe: false,
     savedTcNo: '',
+    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
+    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
   });
 
   useEffect(() => {
