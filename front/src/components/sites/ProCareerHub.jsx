@@ -23,7 +23,9 @@ const ProCareerHub = () => {
   const [newPassword, setNewPassword] = useState("");
   const [successPassword, setSuccessPassword] = useState("");
 
+  const [codeTimer, setCodeTimer] = useState(120);
   const [errorMessage, setErrorMessage] = useState("");
+  const [lockMessage, setLockMessage] = useState("");
 
   const email = ProCareerHubInfo.email;
 
@@ -48,6 +50,63 @@ const ProCareerHub = () => {
     }, 2000);
   };
 
+  const getLockoutRemainingMinutes = () => {
+    if (!ProCareerHubInfo.lockoutUntil) return 0;
+    const diff = ProCareerHubInfo.lockoutUntil - Date.now();
+    return diff > 0 ? Math.ceil(diff / 60000) : 0;
+  };
+  
+ useEffect(() => {
+    if (ProCareerHubInfo.lockoutUntil && Date.now() >= ProCareerHubInfo.lockoutUntil) {
+      setProCareerHubInfo(prev => ({ ...prev, lockoutUntil: null, loginAttempts: 0 }));
+    }
+  }, [ProCareerHubInfo.lockoutUntil]);
+
+    useEffect(() => {
+    if (is2FAwaiting && codeTimer > 0) {
+      const interval = setInterval(() => setCodeTimer(prev => prev - 1), 1000);
+      return () => clearInterval(interval);
+    }
+    if (codeTimer === 0) {
+      setLockMessage("⏱ Kod süresi doldu. Lütfen tekrar giriş yapın.");
+      setTimeout(() => {
+        setIs2FAwaiting(false);
+        setLockMessage("");
+        setTwoFACodeInput("");
+        setProCareerHubInfo(prev => ({ ...prev, loginAttempts: 0 }));
+      }, 2000);
+    }
+  }, [is2FAwaiting, codeTimer, ProCareerHubInfo]);
+
+  const handle2FACheck = () => {
+    if (twoFACodeInput === lastCodes["procareerhub"]) {
+      setProCareerHubInfo(prev => ({ ...prev, isLoggedIn: true, loginAttempts: 0 }));
+      setIs2FAwaiting(false);
+      clearCode("procareerhub");
+      setCodeTimer(120);
+      setTwoFACodeInput("");
+      setLockMessage("");
+    } else {
+      if (ProCareerHubInfo.loginAttempts >= 2) {
+        const unlockAt = Date.now() + 10 * 60 * 1000;
+        setProCareerHubInfo(prev => ({ ...prev, lockoutUntil: unlockAt, loginAttempts: 0 }));
+        setLockMessage("🚫 Çok fazla deneme yapıldı!");
+        setTimeout(() => {
+          setIs2FAwaiting(false);
+          setLockMessage("");
+          clearCode("procareerhub");
+          setPassword("");
+          setTwoFACodeInput("");
+        }, 2000);
+      } else {
+        setProCareerHubInfo(prev => ({ ...prev, loginAttempts: prev.loginAttempts + 1 }));
+        setErrorMessage("⚠ Kod hatalı!");
+        setTimeout(() => setErrorMessage(""), 1500);
+        setTwoFACodeInput("");
+      }
+    }
+  };
+
   const handleAuth = () => {
     if (!isLogin) {
       if (ProCareerHubInfo.isRegistered && ProCareerHubInfo.email === email) {
@@ -58,7 +117,7 @@ const ProCareerHub = () => {
         showTemporaryError("Lütfen tüm alanları doldurun!");
         return;
       }
-  
+
       setProCareerHubInfo({
         ...ProCareerHubInfo,
         name,
@@ -68,7 +127,6 @@ const ProCareerHub = () => {
         is2FAEnabled: false,
         isRegistered: true,
         isLoggedIn: true,
-        isPasswordStrong: passwordStrong,
       });
       setErrorMessage("");
     } else {
@@ -81,22 +139,14 @@ const ProCareerHub = () => {
         return;
       }
 
-      // Eğer 2FA aktifse, kod üret
       if (ProCareerHubInfo.is2FAEnabled) {
         generateCodeMessage("ProCareerHub", "procareerhub");
         setIs2FAwaiting(true);
+        setCodeTimer(120);
         return;
       }
 
-      // 2FA yoksa doğrudan girişe izin ver
-      setProCareerHubInfo({ ...ProCareerHubInfo, isLoggedIn: true });
-      setErrorMessage("");
-
-  
-      setProCareerHubInfo({
-        ...ProCareerHubInfo,
-        isLoggedIn: true,
-      });
+      setProCareerHubInfo(prev => ({ ...prev, isLoggedIn: true }));
       setErrorMessage("");
     }
   };
@@ -110,15 +160,14 @@ const ProCareerHub = () => {
   }, []);
 
   const handleLogout = () => {
-    setProCareerHubInfo({
-      ...ProCareerHubInfo,
-      isLoggedIn: false,
-    });
+    setProCareerHubInfo(prev => ({ ...prev, isLoggedIn: false }));
     setName("");
     setSurname("");
     setPassword("");
+    setNewPassword("");
+    setSuccessPassword("");
     setShowSettings(false);
-    setIsLogin("Giriş Yap");
+    setIsLogin(true);
   };
 
   const toggleSettings = () => {
@@ -255,10 +304,19 @@ const ProCareerHub = () => {
 
           <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
           <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
+          <button
+            onClick={handleAuth}
+            disabled={isLogin && ProCareerHubInfo.lockoutUntil && Date.now() < ProCareerHubInfo.lockoutUntil}
+          >
+            {isLogin ? "Giriş Yap" : "Kayıt Ol"}
+          </button>
 
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
-
+          {ProCareerHubInfo.lockoutUntil && Date.now() < ProCareerHubInfo.lockoutUntil && isLogin && (
+            <p className={styles.twoFAError}>
+              🚫 Çok fazla deneme yapıldı. <b>{getLockoutRemainingMinutes()}</b> dakika sonra tekrar deneyin.
+            </p>
+          )}
           <p onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
           </p>
@@ -274,20 +332,12 @@ const ProCareerHub = () => {
             value={twoFACodeInput}
             onChange={(e) => setTwoFACodeInput(e.target.value)}
           />
-          <button onClick={() => {
-            if (twoFACodeInput === lastCodes["procareerhub"]) {
-              setProCareerHubInfo({ ...ProCareerHubInfo, isLoggedIn: true });
-              setIs2FAwaiting(false);
-              setTwoFACodeInput("");
-              clearCode("procareerhub");
-            } else {
-              setErrorMessage("⚠ Kod hatalı!");
-              setTimeout(() => setErrorMessage(""), 2000);
-            }
-          }}>
-            Giriş Yap
-          </button>
-
+          <p className={styles.timerText}>
+            ⏳ Kalan süre: {Math.floor(codeTimer / 60).toString().padStart(2, "0")}
+            :{(codeTimer % 60).toString().padStart(2, "0")}
+          </p>
+          <button onClick={handle2FACheck}>Giriş Yap</button>
+          {lockMessage && <span className={styles.twoFAError}>{lockMessage}</span>}
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
         </div>
       )}
@@ -335,5 +385,3 @@ const ProCareerHub = () => {
 };
 
 export default ProCareerHub;
-
-

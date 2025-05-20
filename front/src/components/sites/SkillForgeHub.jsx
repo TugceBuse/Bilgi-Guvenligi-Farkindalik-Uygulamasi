@@ -298,11 +298,11 @@ const SkillForgeHub = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button onClick={handleAuth} disabled={SkillForgeHubInfo.lockoutUntil && Date.now() < SkillForgeHubInfo.lockoutUntil}>
+          <button onClick={handleAuth} disabled={isLogin &&   SkillForgeHubInfo.lockoutUntil && Date.now() < SkillForgeHubInfo.lockoutUntil}>
             {isLogin ? "Giriş Yap" : "Kayıt Ol"}
           </button>
 
-          {SkillForgeHubInfo.lockoutUntil && Date.now() < SkillForgeHubInfo.lockoutUntil && (
+          {SkillForgeHubInfo.lockoutUntil && Date.now() < SkillForgeHubInfo.lockoutUntil && isLogin && (
             <p className={styles.twoFAError}>
               🚫 Çok fazla deneme yapıldı. <b>{getLockoutRemainingMinutes()}</b> dakika sonra tekrar deneyin.
             </p>
@@ -320,7 +320,13 @@ const SkillForgeHub = () => {
               ? "Hesabınız yok mu? Kayıt olun!"
               : "Zaten üye misiniz? Giriş yapın!"}
           </p>
-          <button onClick={() => setIsLoginOpen(false)}>Kapat</button>
+          <button 
+            onClick={() => {
+              setIsLoginOpen(false); 
+              setIsLogin(true);
+            }}>
+            Kapat
+          </button>
         </div>
       )}
 
