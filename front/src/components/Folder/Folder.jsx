@@ -19,7 +19,7 @@ export const useFolder = () => {
 };
 
 const Folder = ({ closeHandler, style }) => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow} = useUIContext();
     const FolderRef = useRef(null);
     MakeDraggable(FolderRef, '.folder-header');
 

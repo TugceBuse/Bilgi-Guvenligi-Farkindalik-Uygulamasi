@@ -81,7 +81,7 @@ const AdPopupCard = ({ onClick }) => (
 const PopupThrower = () => {
   const { viruses } = useVirusContext();
   const { addNotification } = useNotification();
-  const { toggleWindow } = useUIContext();
+  const { openWindow, closeWindow } = useUIContext();
   const [openPopups, setOpenPopups] = useState([]);
 
   const popupComponents = [
@@ -174,7 +174,7 @@ const PopupThrower = () => {
           <div style={{ padding: "16px", fontSize: "14px", overflowY: "auto", flexGrow: 1 }}>
             <div className="ad-popup-content">
               <Component onClick={() => {
-                toggleWindow("browser", { initialUrl: url });
+                openWindow("browser", { initialUrl: url });
                 closePopup(id);
               }} />
             </div>

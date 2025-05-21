@@ -5,7 +5,7 @@ import NovaBankAppSetup from '../exefiles/NovaBankAppSetup/NovaBankAppSetup';
 const FileContext = createContext();
 
 export const FileContextProvider = ({ children }) => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow } = useUIContext();
 
     // Dosya ve Özellikleri
     const [files, setFiles] = useState({
@@ -164,7 +164,7 @@ export const FileContextProvider = ({ children }) => {
     const openFile = (fileName) => {
         if (files[fileName] && !openedFiles.includes(fileName)) {
             setOpenedFiles([...openedFiles, fileName]); // Açılan dosyalar listesine ekle
-            toggleWindow(fileName); // 📌 UIContext ile pencere yönetimine entegre et
+            openWindow(fileName); // 📌 UIContext ile pencere yönetimine entegre et
         }
     };
 
@@ -172,7 +172,7 @@ export const FileContextProvider = ({ children }) => {
     const closeFile = (fileName) => {
         console.log('📌 Dosya kapatılıyor:', fileName);
         setOpenedFiles(openedFiles.filter(file => file !== fileName)); // Açılan dosyalar listesinden çıkar
-        toggleWindow(fileName); // 📌 UIContext ile Taskbar ve pencereyi kapat
+        closeWindow(fileName); // 📌 UIContext ile Taskbar ve pencereyi kapat
     };
 
     return (
