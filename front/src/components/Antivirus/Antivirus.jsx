@@ -19,10 +19,11 @@ const icons = [
 ];
 
 export const useAntivirus = () => {
-  const { toggleWindow } = useUIContext();
+  const { openWindow, closeWindow } = useUIContext();
+
   return {
-    openHandler: () => toggleWindow('antivirus'),
-    closeHandler: () => toggleWindow('antivirus')
+    openHandler: () => openWindow('antivirus'),
+    closeHandler: () => closeWindow('antivirus')
   };
 };
 

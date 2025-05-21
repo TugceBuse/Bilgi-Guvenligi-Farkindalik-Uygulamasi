@@ -6,8 +6,8 @@ import sites from "../../utils/sites";
 import { useGameContext } from "../../Contexts/GameContext";
 
 export const useBrowser = () => {
-  const { toggleWindow } = useUIContext();
-  return { openHandler: () => toggleWindow("browser"), closeHandler: () => toggleWindow("browser") };
+  const { openWindow, closeWindow } = useUIContext();
+  return { openHandler: () => openWindow("browser"), closeHandler: () => closeWindow("browser") };
 };
 
 const CachedComponents = {}; // 📌 Bileşenleri cachelemek için bir obje oluşturduk

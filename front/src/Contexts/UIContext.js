@@ -9,13 +9,12 @@ export const UIContextProvider = ({ children }) => {
   const [zindex, setZindex] = useState(100);
   const [windowProps, setWindowProps] = useState({});
   const [mouseLocked, setMouseLocked] = useState(false);
-  
 
   useEffect(() => {
     if (openWindows.length === 0 || visibleWindows.length === 0) return;
     setActiveWindow(visibleWindows[visibleWindows.length - 1]);
     updateZindex();
-  }, [openWindows]);
+  }, [openWindows, visibleWindows]);
 
   const blockEvent = (e) => {
     e.preventDefault();
@@ -51,39 +50,38 @@ export const UIContextProvider = ({ children }) => {
     setMouseLocked(false);
   };
 
-  const trackGhostMouse = () => {
-    const handleMove = (e) => {
-      const ghost = document.createElement('div');
-      ghost.className = 'ghost-cursor';
-      ghost.style.left = `${e.clientX}px`;
-      ghost.style.top = `${e.clientY}px`;
-      document.body.appendChild(ghost);
+  // YENİ: Açma fonksiyonu
+  const openWindow = (windowName, props = {}) => {
+  setOpenWindows((prev) => {
+    if (!prev.includes(windowName)) return [...prev, windowName];
+    return prev;
+  });
+  setVisibleWindows((prev) => {
+    if (!prev.includes(windowName)) return [...prev, windowName];
+    return prev;
+  });
+  setWindowProps((prev) => ({ ...prev, [windowName]: props }));
+  setActiveWindow(windowName);
+  updateZindex();
+};
 
-      setTimeout(() => {
-        ghost.remove();
-      }, 800);
-    };
-
-    document.addEventListener('mousemove', handleMove);
-    return () => document.removeEventListener('mousemove', handleMove);
-  };
-
-  const toggleWindow = (windowName, props = {}) => {
-    setOpenWindows((prev) =>
-      prev.includes(windowName)
-        ? prev.filter((name) => name !== windowName)
-        : [...prev, windowName]
+  const closeWindow = (windowName) => {
+  setOpenWindows((prev) => prev.filter((name) => name !== windowName));
+  setVisibleWindows((prev) => {
+    const updated = prev.filter((name) => name !== windowName);
+    setActiveWindow((currActive) =>
+      currActive === windowName
+        ? (updated.length > 0 ? updated[updated.length - 1] : null)
+        : currActive
     );
-    setVisibleWindows((prev) =>
-      prev.includes(windowName)
-        ? prev.filter((name) => name !== windowName)
-        : [...prev, windowName]
-    );
-    setWindowProps((prev) => ({ ...prev, [windowName]: props }));
-
-    handleIconClick(windowName);
-    
-  };
+    return updated;
+  });
+  // setWindowProps(prev => {
+  //   const updated = { ...prev };
+  //   delete updated[windowName];
+  //   return updated;
+  // });
+};
 
   const handleIconClick = (windowName) => {
     setActiveWindow((prev) => (prev === windowName ? null : windowName));
@@ -106,9 +104,9 @@ export const UIContextProvider = ({ children }) => {
         visibleWindows, setVisibleWindows,
         activeWindow, setActiveWindow,
         zindex, setZindex,
-        toggleWindow, handleIconClick,
+        openWindow, closeWindow,     // güncel
+        handleIconClick,
         lockMouse, unlockMouse, mouseLocked,
-        trackGhostMouse,
         windowProps, setWindowProps,
       }}
     >

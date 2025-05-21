@@ -6,15 +6,15 @@ import { useUIContext } from '../../Contexts/UIContext';
 
 
 export const useScanner = () => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow } = useUIContext();
     
 
     const openHandler = () => {
-        toggleWindow('scanner');
+        openWindow('scanner');
     };
     
     const closeHandler = () => {
-        toggleWindow('scanner');
+        closeWindow('scanner');
     };
     
     return { openHandler, closeHandler };

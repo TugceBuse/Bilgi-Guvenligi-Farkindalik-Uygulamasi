@@ -44,14 +44,14 @@ const formatTime = (dateObj) => {
 
 
 export const useChatApp = () => {
-  const { toggleWindow } = useUIContext();
+  const { openWindow, closeWindow } = useUIContext();
 
   const openHandler = () => {
-    toggleWindow('chatapp');
+    openWindow('chatapp');
   };
 
   const closeHandler = () => {
-    toggleWindow('chatapp');
+    closeWindow('chatapp');
   };
 
   return { openHandler, closeHandler };

@@ -6,14 +6,14 @@ import { useGameContext } from '../../Contexts/GameContext';
 import { usePhoneContext } from '../../Contexts/PhoneContext';
 
 export const usePhoneApp = () => {
-  const { toggleWindow } = useUIContext();
+  const { openWindow, closeWindow } = useUIContext();
 
   const openHandler = () => {
-    toggleWindow('phoneapp');
+    openWindow('phoneapp');
   };
 
   const closeHandler = () => {
-    toggleWindow('phoneapp');
+    closeWindow('phoneapp');
   };
 
   return { openHandler, closeHandler };

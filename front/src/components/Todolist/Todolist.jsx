@@ -5,14 +5,14 @@ import { useUIContext } from "../../Contexts/UIContext";
 import { useTodoContext } from '../../Contexts/TodoContext';
 
   export const useTodoList = () => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow } = useUIContext();
 
     const openHandler = () => {
-        toggleWindow('todolist');
+        openWindow('todolist');
     };
     
     const closeHandler = () => {
-        toggleWindow('todolist');
+        closeWindow('todolist');
     };
     
     return { openHandler, closeHandler };

@@ -4,14 +4,14 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 
 export const useDocuLiteApp = () => {
-  const { toggleWindow } = useUIContext();
+  const { openWindow, closeWindow } = useUIContext();
 
   const openHandler = () => {
-    toggleWindow('pdfviewer');
+    openWindow('pdfviewer');
   };
 
   const closeHandler = () => {
-    toggleWindow('pdfviewer');
+    closeWindow('pdfviewer');
   };
 
   return { openHandler, closeHandler };

@@ -8,14 +8,14 @@ import { resetScroll } from '../../utils/resetScroll';
 import { use } from 'react';
 
 export const useMailbox = () => {
-  const { toggleWindow } = useUIContext();
+  const { openWindow, closeWindow } = useUIContext();
 
   const openHandler = () => {
-    toggleWindow('mailbox');
+    openWindow('mailbox');
   };
 
   const closeHandler = () => {
-    toggleWindow('mailbox');
+    closeWindow('mailbox');
   };
 
   return { openHandler, closeHandler };

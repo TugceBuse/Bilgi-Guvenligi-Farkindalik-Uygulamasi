@@ -5,14 +5,14 @@ import { useFileContext } from '../../Contexts/FileContext';
 import { useUIContext } from '../../Contexts/UIContext';
 
 export const useFolder = () => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow } = useUIContext();
     
     const openHandler = () => {
-        toggleWindow('folder');
+        openWindow('folder');
     };
     
     const closeHandler = () => {
-        toggleWindow('folder');
+        closeWindow('folder');
     };
     
     return { openHandler, closeHandler };

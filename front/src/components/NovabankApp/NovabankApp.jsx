@@ -6,14 +6,14 @@ import { useGameContext } from '../../Contexts/GameContext';
 import { usePhoneContext } from '../../Contexts/PhoneContext';
 
 export const useNovabankApp = () => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow } = useUIContext();
   
     const openHandler = () => {
-      toggleWindow('novabankapp');
+      openWindow('novabankapp');
     };
   
     const closeHandler = () => {
-      toggleWindow('novabankapp');
+      closeWindow('novabankapp');
     };
   
     return { openHandler, closeHandler };

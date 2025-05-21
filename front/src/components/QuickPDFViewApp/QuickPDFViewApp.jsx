@@ -4,14 +4,14 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 
 export const useQuickPDFViewApp = () => {
-  const { toggleWindow } = useUIContext();
+  const { openWindow, closeWindow } = useUIContext();
 
   const openHandler = () => {
-    toggleWindow('quickpdfviewer');
+    openWindow('quickpdfviewer');
   };
 
   const closeHandler = () => {
-    toggleWindow('quickpdfviewer');
+    closeWindow('quickpdfviewer');
   };
 
   return { openHandler, closeHandler };
