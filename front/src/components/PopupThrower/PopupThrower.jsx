@@ -81,7 +81,7 @@ const AdPopupCard = ({ onClick }) => (
 const PopupThrower = () => {
   const { viruses } = useVirusContext();
   const { addNotification } = useNotification();
-  const { openWindow, closeWindow } = useUIContext();
+  const { openWindows, openWindow, setWindowProps, setActiveWindow } = useUIContext();
   const [openPopups, setOpenPopups] = useState([]);
 
   const popupComponents = [
@@ -90,6 +90,15 @@ const PopupThrower = () => {
   { component: AdPopupCleaner, url: "https://novasecure.com/cleaner" },
   { component: AdPopupCard, url: "https://novasecure.com/card-refund" }
 ];
+
+  const handleBrowserOpen = (url) => {
+    if (openWindows.includes("browser")) {
+      setWindowProps(prev => ({ ...prev, browser: { initialUrl: url } }));
+      setActiveWindow("browser");
+    } else {
+      openWindow("browser", { initialUrl: url });
+    }
+  };
 
   useEffect(() => {
     const isAdwareActive = viruses.some(v => v.type === "adware");
@@ -174,7 +183,7 @@ const PopupThrower = () => {
           <div style={{ padding: "16px", fontSize: "14px", overflowY: "auto", flexGrow: 1 }}>
             <div className="ad-popup-content">
               <Component onClick={() => {
-                openWindow("browser", { initialUrl: url });
+                handleBrowserOpen(url);
                 closePopup(id);
               }} />
             </div>
