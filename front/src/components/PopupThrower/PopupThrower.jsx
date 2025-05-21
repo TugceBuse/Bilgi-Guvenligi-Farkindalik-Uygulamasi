@@ -172,10 +172,12 @@ const PopupThrower = () => {
             </button>
           </div>
           <div style={{ padding: "16px", fontSize: "14px", overflowY: "auto", flexGrow: 1 }}>
-            <Component onClick={() => {
-              toggleWindow("browser", { initialUrl: url });
-              closePopup(id);
-            }} />
+            <div className="ad-popup-content">
+              <Component onClick={() => {
+                toggleWindow("browser", { initialUrl: url });
+                closePopup(id);
+              }} />
+            </div>
           </div>
         </div>
       ))}

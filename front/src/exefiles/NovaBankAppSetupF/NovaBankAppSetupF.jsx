@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useVirusContext } from '../../Contexts/VirusContext';
 import { useFileContext } from '../../Contexts/FileContext';
+import  NovaBankAppSetup  from '../NovaBankAppSetup/NovaBankAppSetup';
 
 const NovaBankAppSetupF = ({ fileName }) => {
   const { addVirus } = useVirusContext();
@@ -18,12 +19,9 @@ const NovaBankAppSetupF = ({ fileName }) => {
         severity: 'low',
         startTime: Date.now(),
     });
-
-    // Kendi penceresini kapat
-    closeFile(fileName);
   }, [addVirus, closeFile, fileName]);
 
-  return null; // Hiçbir pencere göstermiyoruz
+  return <NovaBankAppSetup fileName = {fileName}/>;
 };
 
 export default NovaBankAppSetupF;
