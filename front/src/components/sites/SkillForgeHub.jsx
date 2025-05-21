@@ -5,8 +5,11 @@ import { usePhoneContext } from "../../Contexts/PhoneContext";
 
 const SkillForgeHub = () => {
   const { SkillForgeHubInfo, setSkillForgeHubInfo } = useGameContext();
-
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+
+  const [codeTimer, setCodeTimer] = useState(120);
+  const [attemptsLeft, setAttemptsLeft] = useState(3);
+  const [lockMessage, setLockMessage] = useState("");
   const [is2FAwaiting, setIs2FAwaiting] = useState(false);
   const [twoFACodeInput, setTwoFACodeInput] = useState("");
 
@@ -14,38 +17,55 @@ const SkillForgeHub = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-
   const [password, setPassword] = useState("");
-  const isPasswordStrongEnough = (password) => {
-    return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
-  };
-  const passwordStrong = isPasswordStrongEnough(password);
   const [newPassword, setNewPassword] = useState("");
   const [successPassword, setSuccessPassword] = useState("");
-  
   const [showSettings, setShowSettings] = useState(false);
-  const email = SkillForgeHubInfo.email;
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Hata mesajını göster ve 2 saniye sonra temizle
+  const isPasswordStrongEnough = (password) =>
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
+  const passwordStrong = isPasswordStrongEnough(password);
+
+  const email = SkillForgeHubInfo.email;
+
+  const getLockoutRemainingMinutes = () => {
+    if (!SkillForgeHubInfo.lockoutUntil) return 0;
+    const diff = SkillForgeHubInfo.lockoutUntil - Date.now();
+    return diff > 0 ? Math.ceil(diff / 60000) : 0;
+  };
+
   const showTemporaryError = (msg) => {
     setErrorMessage(msg);
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 2000);
+    setTimeout(() => setErrorMessage(""), 2000);
   };
 
   const handleAuth = () => {
+    if (
+      SkillForgeHubInfo.lockoutUntil &&
+      Date.now() < SkillForgeHubInfo.lockoutUntil
+    ) {
+      showTemporaryError(
+        "🚫 Çok fazla deneme. Lütfen 10 dakika sonra tekrar deneyin."
+      );
+      return;
+    }
+
     if (!isLogin) {
-      if (SkillForgeHubInfo.isRegistered && SkillForgeHubInfo.email === email) {
-        showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
+      if (
+        SkillForgeHubInfo.isRegistered &&
+        SkillForgeHubInfo.email === email
+      ) {
+        showTemporaryError(
+          "Bu e-posta adresi ile zaten bir hesap oluşturulmuş!"
+        );
         return;
       }
       if (!name || !surname || !password) {
         showTemporaryError("Lütfen tüm alanları doldurun!");
         return;
       }
-  
+
       setSkillForgeHubInfo({
         ...SkillForgeHubInfo,
         name,
@@ -57,10 +77,13 @@ const SkillForgeHub = () => {
         isLoggedIn: true,
         isPasswordStrong: passwordStrong,
       });
-      setErrorMessage("");
+      setIsLoginOpen(false);
     } else {
-      if (!SkillForgeHubInfo.isRegistered || SkillForgeHubInfo.email !== email) {
-        showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
+      if (
+        !SkillForgeHubInfo.isRegistered ||
+        SkillForgeHubInfo.email !== email
+      ) {
+        showTemporaryError("Bu e-posta ile kayıtlı bir hesap yok.");
         return;
       }
       if (!password || password !== SkillForgeHubInfo.password) {
@@ -68,31 +91,66 @@ const SkillForgeHub = () => {
         return;
       }
 
-
       if (SkillForgeHubInfo.is2FAEnabled) {
         generateCodeMessage("SkillForgeHub", "skillforgehub");
         setIs2FAwaiting(true);
+        setCodeTimer(120);
+        setIsLoginOpen(false);
         return;
       }
-  
+
       setSkillForgeHubInfo({
         ...SkillForgeHubInfo,
         isLoggedIn: true,
       });
-      setErrorMessage("");
+      setIsLoginOpen(false);
     }
   };
 
   useEffect(() => {
-    return () => {
-      clearCode("skillforgehub");
-    };
-  }, []);
+    if (
+      SkillForgeHubInfo.lockoutUntil &&
+      Date.now() >= SkillForgeHubInfo.lockoutUntil
+    ) {
+      setSkillForgeHubInfo((prev) => ({
+        ...prev,
+        lockoutUntil: null,
+        loginAttempts: 0,
+      }));
+    }
+  }, [SkillForgeHubInfo.lockoutUntil]);
+
+  useEffect(() => {
+    if (is2FAwaiting && codeTimer > 0) {
+      const interval = setInterval(() => {
+        setCodeTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+
+    if (codeTimer === 0) {
+      setLockMessage("⏱ Kod süresi doldu. Lütfen tekrar giriş yapın.");
+      setSkillForgeHubInfo(prev => ({
+        ...prev,
+        loginAttempts: 0
+      }));
+      setTimeout(() => {
+        setIs2FAwaiting(false);
+        setLockMessage("");
+        setPassword("");
+        setTwoFACodeInput("");
+      }, 2000);
+    }
+  }, [is2FAwaiting, codeTimer]);
 
   useEffect(() => {
     setName("");
     setSurname("");
     setPassword("");
+    setNewPassword("");
+    setTwoFACodeInput("");
+    setErrorMessage("");
+    setLockMessage("");
   }, [isLogin]);
 
   const handleLogout = () => {
@@ -126,30 +184,42 @@ const SkillForgeHub = () => {
 
   return (
     <div className={styles.skillContainer}>
-      {/* Header */}
       <header className={styles.header}>
         <h1>🚀 SkillForgeHub</h1>
         <p>Geleceğe hazır olmak için becerilerini geliştir!</p>
       </header>
 
-      {/* Kullanıcı Paneli */}
       {SkillForgeHubInfo.isLoggedIn && (
         <div className={styles.userPanel}>
           <p className={styles.userName}>👤 {SkillForgeHubInfo.name}</p>
-          <button className={styles.settingsButton} onClick={() => setShowSettings(!showSettings)}>⚙ Ayarlar</button>
-          <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
+          <button
+            className={styles.settingsButton}
+            onClick={() => setShowSettings(!showSettings)}
+          >
+            ⚙ Ayarlar
+          </button>
+          <button className={styles.logoutButton} onClick={handleLogout}>
+            Çıkış Yap
+          </button>
         </div>
       )}
 
-      {/* Ayarlar Menüsü */}
       {showSettings && (
-        <div className={`${styles.settingsMenu} ${showSettings ? styles.active : ""}`}>
+        <div className={`${styles.settingsMenu} ${styles.active}`}>
           <div className={styles.settingsHeader}>
             <h3>⚙ Kullanıcı Ayarları</h3>
-            <span className={styles.closeIcon} onClick={() => setShowSettings(false)}>✖</span>
+            <span
+              className={styles.closeIcon}
+              onClick={() => setShowSettings(false)}
+            >
+              ✖
+            </span>
           </div>
           <p>📧 E-posta: {SkillForgeHubInfo.email}</p>
-          <p>📷 Profil Fotoğrafı: <button className={styles.profilePictureButton}>Değiştir</button></p>
+          <p>
+            📷 Profil Fotoğrafı:{" "}
+            <button className={styles.profilePictureButton}>Değiştir</button>
+          </p>
           <p>📱 Telefon Numarası:</p>
           <input type="text" value={SkillForgeHubInfo.phone} disabled />
 
@@ -161,10 +231,13 @@ const SkillForgeHub = () => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
-             {successPassword && <p className={styles.successMessage}>{successPassword}</p>}
-
+            {successPassword && (
+              <p className={styles.successMessage}>{successPassword}</p>
+            )}
             <button onClick={handlePasswordUpdate}>Güncelle</button>
-            <p>📢 Bildirimler: <button>Değiştir</button></p>
+            <p>
+              📢 Bildirimler: <button>Değiştir</button>
+            </p>
           </div>
 
           <button
@@ -181,15 +254,24 @@ const SkillForgeHub = () => {
         </div>
       )}
 
-      {/* Giriş / Kayıt Butonu */}
       {!SkillForgeHubInfo.isLoggedIn && (
-        <button className={styles.loginButton} onClick={() => setIsLoginOpen(true)}>
+        <button
+          className={styles.loginButton}
+          onClick={() => setIsLoginOpen(true)}
+        >
           Giriş Yap | Kayıt Ol
         </button>
       )}
 
+      {isLoginOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => setIsLoginOpen(false)}
+        ></div>
+      )}
+
       {!SkillForgeHubInfo.isLoggedIn && isLoginOpen && !is2FAwaiting && (
-        <div className={`${styles.authBox} ${isLoginOpen ? styles.active : ""}`}>
+        <div className={`${styles.authBox} ${styles.active}`}>
           <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
 
           {!isLogin && (
@@ -209,30 +291,42 @@ const SkillForgeHub = () => {
             </>
           )}
 
-          <input
-            type="email"
-            placeholder="E-posta adresiniz"
-            value={SkillForgeHubInfo.email}
-            disabled
-          />
+          <input type="email" value={SkillForgeHubInfo.email} disabled />
           <input
             type="password"
             placeholder="Şifreniz"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button onClick={handleAuth}>
+          <button onClick={handleAuth} disabled={isLogin &&   SkillForgeHubInfo.lockoutUntil && Date.now() < SkillForgeHubInfo.lockoutUntil}>
             {isLogin ? "Giriş Yap" : "Kayıt Ol"}
           </button>
+
+          {SkillForgeHubInfo.lockoutUntil && Date.now() < SkillForgeHubInfo.lockoutUntil && isLogin && (
+            <p className={styles.twoFAError}>
+              🚫 Çok fazla deneme yapıldı. <b>{getLockoutRemainingMinutes()}</b> dakika sonra tekrar deneyin.
+            </p>
+          )}
 
           {errorMessage && (
             <span className={styles.errorMessage}>{errorMessage}</span>
           )}
 
-          <p onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
+          <p
+            className={styles.authBoxText}
+            onClick={() => setIsLogin(!isLogin)}
+          >
+            {isLogin
+              ? "Hesabınız yok mu? Kayıt olun!"
+              : "Zaten üye misiniz? Giriş yapın!"}
           </p>
-          <button onClick={() => setIsLoginOpen(false)}>Kapat</button>
+          <button 
+            onClick={() => {
+              setIsLoginOpen(false); 
+              setIsLogin(true);
+            }}>
+            Kapat
+          </button>
         </div>
       )}
 
@@ -247,34 +341,85 @@ const SkillForgeHub = () => {
               value={twoFACodeInput}
               onChange={(e) => setTwoFACodeInput(e.target.value)}
             />
+            <p className={styles.timerText}>
+              ⏳ Kalan süre: {Math.floor(codeTimer / 60)
+                .toString()
+                .padStart(2, "0")}
+              :{(codeTimer % 60).toString().padStart(2, "0")}
+            </p>
             <button
               onClick={() => {
                 if (twoFACodeInput === lastCodes["skillforgehub"]) {
-                  setSkillForgeHubInfo({ ...SkillForgeHubInfo, isLoggedIn: true });
+                  setSkillForgeHubInfo({
+                    ...SkillForgeHubInfo,
+                    isLoggedIn: true,
+                    loginAttempts: 0,
+                  });
                   setIs2FAwaiting(false);
-                  setTwoFACodeInput("");
                   clearCode("skillforgehub");
+                  setCodeTimer(120);
+                  setTwoFACodeInput("");
+                  setLockMessage("");
+                  setSkillForgeHubInfo(prev => ({
+                    ...prev,
+                    isLoggedIn: true,
+                    loginAttempts: 0
+                  }));
                 } else {
-                  setErrorMessage("⚠ Kod hatalı!");
-                  setTimeout(() => setErrorMessage(""), 2000);
+                  if (SkillForgeHubInfo.loginAttempts >= 2) {
+                    setLockMessage("🚫 Çok fazla deneme yapıldı!");
+                    const unlockAt = Date.now() + 10 * 60 * 1000;
+
+                    setSkillForgeHubInfo((prev) => ({
+                      ...prev,
+                      lockoutUntil: unlockAt,
+                      loginAttempts: 0
+                    }));
+
+                    setTimeout(() => {
+                      setIs2FAwaiting(false);
+                      setLockMessage("");
+                      setPassword("");
+                      clearCode("skillforgehub");
+                    }, 1500);
+                  } else {
+                    setErrorMessage("⚠ Kod hatalı!");
+                    setTimeout(() => setErrorMessage(""), 1500);
+                    setTwoFACodeInput("");
+                    setSkillForgeHubInfo(prev => ({
+                      ...prev,
+                      loginAttempts: prev.loginAttempts + 1
+                    }));
+                  }
                 }
               }}
             >
               Giriş Yap
             </button>
             <button
-            onClick={() => {
-              setIs2FAwaiting(false);
-              setTwoFACodeInput(""); // input alanını temizle
-            }}
-          >
-            Kapat
-          </button>
+              onClick={() => {
+                setIs2FAwaiting(false);
+                setTwoFACodeInput("");
+                setSkillForgeHubInfo(prev => ({
+                  ...prev,
+                  loginAttempts: 0
+                }));
+                setCodeTimer(120);
+                setLockMessage("");
+                clearCode("skillforgehub");
+                setPassword("");
+              }}
+            >
+              Kapat
+            </button>
+
             {errorMessage && (
               <span className={styles.errorMessage}>{errorMessage}</span>
             )}
+            {lockMessage && (
+              <span className={styles.twoFAError}>{lockMessage}</span>
+            )}
           </div>
-          
         </div>
       )}
 
@@ -316,7 +461,6 @@ const SkillForgeHub = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className={styles.footer}>
         <p>© 2025 SkillForgeHub | Tüm hakları saklıdır.</p>
       </footer>

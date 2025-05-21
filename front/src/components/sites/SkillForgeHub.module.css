@@ -227,8 +227,8 @@
   }
   
   /* Giriş / Kayıt Paneli */
-.authBox {
-    position: relative;
+  .authBox {
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -236,18 +236,28 @@
     padding: 25px;
     width: 350px;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     text-align: center;
-    display: none;
     z-index: 1000;
+    display: none;
   }
   
   /* Açıldığında Görünür Hale Getirme */
   .authBox.active {
-    display: block;
-    animation: fadeIn 0.5s ease-in-out;
+  display: block;
+  animation: fadeIn 0.5s ease-in-out;
   }
 
+  .overlay {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 30, 30, 0.6);
+    z-index: 999;
+    border-radius: 15px; 
+  }
   /* Başlık */
   .authBox h2 {
     font-size: 22px;
@@ -276,7 +286,6 @@
   .authBox button {
     width: 100%;
     padding: 12px;
-    margin-top: 10px;
     background: linear-gradient(135deg, #ff6f00, #ff8f00);
     color: white;
     border: none;
@@ -292,10 +301,18 @@
     transform: scale(1.03);
   }
   
+  .authBox button:disabled {
+  background: #797979;
+  color: #202020;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+  }
+
   /* Kapatma Butonu */
   .authBox button:last-child {
     background: #e65100;
-    margin-top: 15px;
   }
   
   .authBox button:last-child:hover {
@@ -304,7 +321,10 @@
   .authBox p{
     color: #ff6f00;
     font-size: 14px;
-    margin-top: 10px;
+    margin-top: 10px; 
+  }
+  .authBoxText{
+    cursor: pointer;
   }
 
   /* Açılış Animasyonu */
@@ -343,8 +363,8 @@
   /* Ayarlar Menüsü */
 .settingsMenu {
   position: absolute;
-  top: 33%;
-  left: 50%;
+  top: 30%;
+  left: 89%;
   transform: translate(-50%, -50%);
   width: 300px;
   background: #f8f9fa;
@@ -475,7 +495,6 @@
 .errorMessage {
   color: rgb(223, 66, 66);
   font-size: 0.9rem;
-  margin-top: 10px;
   font-weight: bold;
   text-decoration: none;
 }
@@ -495,7 +514,14 @@
   gap: 12px;
   animation: fadeIn 0.3s ease-in-out;
 }
-
+.timerText {
+  font-size: 15px;
+  color: #ffcc80;
+  background-color: #3e2723;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: none;
+}
 .twoFAInputArea p {
   color: #ffe0b2;
   font-size: 16px;
@@ -521,18 +547,6 @@
   box-shadow: 0 0 5px #ffa726;
 }
 
-.twoFAInputArea button {
-  padding: 10px 20px;
-  font-size: 16px;
-  margin-top: 10px;
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
-}
-
 .twoFAInputArea button:hover {
   background-color: #fb8c00;
   transform: scale(1.02);
@@ -540,4 +554,16 @@
 
 .twoFAInputArea button:active {
   transform: scale(0.98);
+}
+
+.twoFAError {
+  color: #ff5722;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+  background: #fff3e0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ff5722;
 }
