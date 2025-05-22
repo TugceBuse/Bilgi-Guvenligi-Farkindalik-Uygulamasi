@@ -10,36 +10,45 @@ const TaskApp = () => {
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
+    if (!isTaskAppInstalled) return;
+
     const handleKeyDown = (e) => {
-      if (e.key === 'Tab' && isTaskAppInstalled) {
+      if (e.key === 'Tab') {
         e.preventDefault();
         setVisible(true);
+        setClosing(false); // tekrar Tab'a basınca hemen açılır
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isTaskAppInstalled]);
 
-  const handleClose = () => {
-    setClosing(true);
-    setTimeout(() => {
-      setVisible(false);
-      setClosing(false);
-    }, 400);
-  };
+    const handleKeyUp = (e) => {
+      if (e.key === 'Tab') {
+        setClosing(true);
+        setTimeout(() => {
+          setVisible(false);
+          setClosing(false);
+        }, 400);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isTaskAppInstalled]);
 
   if (!isTaskAppInstalled || !visible) return null;
 
   return (
     <div className={`task-app-container ${closing ? 'closing' : ''}`}>
       <div className="rotated-header">
-        <button className="slide-close-button" onClick={handleClose}></button>
+        {/* Onclick kaldırıldı sadece taba basılı tutmakla açılıyor */}
+        <button className="slide-close-button" ></button>
         TaskApp
       </div>
 
       <div className="task-app-panel-content">
-        
-
         <div className="task-icon-container">
           <div className="task-icon-wrapper">
             <img src="/icons/task-list.png" alt="Task List Icon" className="task-icon-img" />
@@ -65,7 +74,6 @@ const TaskApp = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
