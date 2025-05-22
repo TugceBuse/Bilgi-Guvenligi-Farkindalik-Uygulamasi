@@ -34,10 +34,11 @@ const OpenLitePDF = () => {
   return (
     <div className={styles.page}>
       <div className={styles.headerSection}>
-        <h1>OpenLite PDF Tools</h1>
+        
+        <h1><img src="/PDFViewer/pdf-logo-open.png" alt="OpenLitePDF logo" /> OpenLite PDF Tools</h1>
         <p className={styles.slogan}>Gelişmiş, sade ve güvenli PDF çözümü</p>
       </div>
-
+     
       <div className={styles.infoGrid}>
         <div className={styles.infoBox}>
           <h3>📂 Dosya Desteği</h3>
@@ -56,7 +57,12 @@ const OpenLitePDF = () => {
           <p>4.8 / 5 — 6.430 değerlendirme</p>
         </div>
       </div>
-
+      <img src="/PDFViewer/pdf-download.png" alt="PDF Download Icon" />
+      İndirme işlemi için kaydırın!
+      <div className={styles.continueNote}>
+        Yazılım yüklendikten sonra masaüstünüzde <strong>OpenLite PDF</strong> simgesi belirecek.
+        İndirme işlemi tamamlandıktan sonra simgeye çift tıklayarak yazılımı başlatabilirsiniz.
+      </div>
       <div className={styles.sectionRow}>
         <div className={styles.sectionBox}>
           <h3>📌 Neden OpenLite?</h3>
@@ -85,7 +91,7 @@ const OpenLitePDF = () => {
           </ul>
         </div>
       </div>
-
+      <img src="/PDFViewer/pdf-download.png" alt="PDF Download Icon" /><br />
       <div className={styles.downloadSection}>
         <h2>OpenLitePDF.exe</h2>
         <p className={styles.desc}>Kurulum 14.3MB — Kurulumda kamera ve mikrofon izni istenebilir.</p>

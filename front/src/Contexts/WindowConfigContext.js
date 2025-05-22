@@ -116,7 +116,7 @@ const initialWindowConfig = {
   available: false
 },
   openlitepdfviewer: {
-  icon: '/PDFViewer/openlite-logo.png',
+  icon: '/PDFViewer/pdf-logo-open.png',
   label: 'OpenLite PDF',
   component: OpenLitePDFApp,
   useComponent: useOpenLitePDFApp,

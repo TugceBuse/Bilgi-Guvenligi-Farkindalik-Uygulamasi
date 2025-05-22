@@ -77,8 +77,8 @@ export const GameContextProvider = ({ children }) => {
     isLoggedIn: false,
     isPasswordStrong: false,
     privacySettings: "Herkese Açık",
-    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
-    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
+    lockoutUntil: null,      
+    loginAttempts: 0          
   });
 
    // TECHDEPO - Kullanıcı bilgileri (sadece context içinde tutuluyor)
@@ -98,8 +98,8 @@ export const GameContextProvider = ({ children }) => {
     cardCVV: constUser.cardCVV,
     saveCard: false,
     adres: constUser.adres,
-    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
-    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
+    lockoutUntil: null,   
+    loginAttempts: 0   
   });
 
   const [productInfo, setProductInfo] = useState({
@@ -109,8 +109,17 @@ export const GameContextProvider = ({ children }) => {
   const [BankInfo, setBankInfo] = useState({
     rememberMe: false,
     savedTcNo: '',
-    lockoutUntil: null,       // timestamp (örnek: Date.now() + 10dk)
-    loginAttempts: 0          // kaç kez yanlış deneme yapıldı
+    lockoutUntil: null,  
+    loginAttempts: 0         
+  });
+
+  const [openlitePermissions, setOpenlitePermissions] = useState({
+    permissionsOpened: true,
+    fileAccess: true,
+    printAccess: true,
+    annotationAccess: true,
+    microphone: true,
+    camera: true
   });
 
   useEffect(() => {
@@ -192,6 +201,8 @@ export const GameContextProvider = ({ children }) => {
         constUser,
         BankInfo,
         setBankInfo,
+        openlitePermissions,
+        setOpenlitePermissions,
       }}
     >
       {children}
