@@ -236,6 +236,27 @@ const sites = {
   color: "#ec407a", 
   isSponsored: true,
   seoScore: 42 
+},
+"http://openlitepdf-tools.net": {
+  title: "OpenLite PDF Tools",
+  type: "component",
+  component: "OpenLitePDF",
+  statement: "Kapsamlı PDF yönetimi — tek tıkla indir, tüm belgeleri kolayca aç!",
+  searchKeys: [
+    "pdf araçları",
+    "openlite pdf",
+    "gelişmiş pdf uygulaması",
+    "ücretsiz pdf düzenleyici",
+    "aşırı hızlı pdf okuyucu",
+    "pdf araç kutusu",
+    "pdf convert",
+    "openlite indir"
+  ],
+  clickable: true,
+  protocol: "http",
+  color: "#9c27b0", // Mor ton — sofistike ama dikkat çeker
+  isSponsored: false,
+  seoScore: 45
 }
 };
 

@@ -10,6 +10,7 @@ import NovabankApp, { useNovabankApp } from '../components/NovabankApp/NovabankA
 import PhoneApp, { usePhoneApp } from '../components/PhoneApp/PhoneApp';
 import DocuLiteApp, { useDocuLiteApp } from '../components/DocuLiteApp/DocuLiteApp';
 import QuickPDFViewApp, { useQuickPDFViewApp } from '../components/QuickPDFViewApp/QuickPDFViewApp';
+import OpenLitePDFApp, { useOpenLitePDFApp } from '../components/OpenLitePDFApp/OpenLitePDFApp';
 
 const WindowConfigContext = createContext();
 
@@ -110,6 +111,15 @@ const initialWindowConfig = {
   label: 'QuickPDFView',
   component: QuickPDFViewApp,
   useComponent: useQuickPDFViewApp,
+  location: 'desktop',
+  clickable: true,
+  available: false
+},
+  openlitepdfviewer: {
+  icon: '/PDFViewer/openlite-logo.png',
+  label: 'OpenLite PDF',
+  component: OpenLitePDFApp,
+  useComponent: useOpenLitePDFApp,
   location: 'desktop',
   clickable: true,
   available: false
