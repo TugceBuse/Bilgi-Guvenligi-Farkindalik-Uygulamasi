@@ -220,6 +220,8 @@ const TechDepo = ({scrollRef}) => {
   // kodlar için gerekli useState'ler
   const [twoFACodeInput, setTwoFACodeInput] = useState("");
   const [is2FAwaiting, setIs2FAwaiting] = useState(false);
+  const [codeTimer, setCodeTimer] = useState(120);
+  const [lockMessage, setLockMessage] = useState("");
 
   const [is3DChecked, setIs3DChecked] = useState(false);
   const [is3DWaiting, setIs3DWaiting] = useState(false);
@@ -267,11 +269,72 @@ const TechDepo = ({scrollRef}) => {
 
   // 3D kod kısmı page değişkeni değiştiğinde sıfırlanır
   useEffect(() => {
-  if (page !== "payment" && is3DWaiting) {
-    setIs3DWaiting(false);
-    setPayment2FACode(""); 
-  }
-}, [page, is3DWaiting]);
+    if (page !== "payment" && is3DWaiting) {
+      setIs3DWaiting(false);
+      setPayment2FACode(""); 
+    }
+  }, [page, is3DWaiting]);
+
+  // 2FA kısıtlama bitimi kod girişimlerini sıfırlar
+  useEffect(() => {
+    if (TechInfo.lockoutUntil && Date.now() >= TechInfo.lockoutUntil) {
+      setTechInfo(prev => ({
+        ...prev,
+        lockoutUntil: null,
+        loginAttempts: 0,
+      }));
+    }
+  }, [TechInfo.lockoutUntil]);
+
+  // 🕐 Kod sayacı
+  useEffect(() => {
+    if (is2FAwaiting && codeTimer > 0) {
+      const interval = setInterval(() => setCodeTimer(prev => prev - 1), 1000);
+      return () => clearInterval(interval);
+    }
+    if (codeTimer === 0) {
+      setLockMessage("⏱ Kod süresi doldu. Ana sayfaya yönlendiriliyorsunuz.");
+      setTimeout(() => {
+        setIs2FAwaiting(false);
+        setTwoFACodeInput("");
+        setPage("welcome");
+        setCodeTimer(120);
+        clearCode("techdepo");
+        setLockMessage("");
+      }, 2500);
+    }
+  }, [is2FAwaiting, codeTimer]);
+
+  useEffect(() => {
+    if (is3DWaiting && codeTimer > 0) {
+      const interval = setInterval(() => setCodeTimer(prev => prev - 1), 1000);
+      return () => clearInterval(interval);
+    }
+    if (codeTimer === 0 && is3DWaiting) {
+      setLockMessage("⏱ Kod süresi doldu. Ana sayfaya yönlendiriliyorsunuz.");
+      setTimeout(() => {
+        setCardNumber("");
+        setCardName("");
+        setExpiryDate("");
+        setCVV("");
+        setSelectedShipping("");
+        setAcceptedTerms(false);
+        setSaveCard(false);
+        setSelectedShippingPrice(0);
+        setCartItems([]);
+        setPage("welcome");
+        setIs3DChecked(false);
+        setIs3DWaiting(false);
+        setIsPaying(false);
+        setIs3DWaiting(false);
+        setPayment2FACode("");
+        setCodeTimer(120);
+        setLockMessage("");
+        setPage("welcome");
+        clearCode("techdepo-payment");
+      }, 2500);
+    }
+  }, [is3DWaiting, codeTimer]);
 
   // Hata mesajını göster ve 2 saniye sonra temizle
   const showTemporaryError = (msg) => {
@@ -279,6 +342,13 @@ const TechDepo = ({scrollRef}) => {
     setTimeout(() => {
       setErrorMessage("");
     }, 2000);
+  };
+
+  // 2FA kodu gönderme süresi
+  const getLockoutRemainingMinutes = () => {
+    if (!TechInfo.lockoutUntil) return 0;
+    const diff = TechInfo.lockoutUntil - Date.now();
+    return diff > 0 ? Math.ceil(diff / 60000) : 0;
   };
 
   const handleAuth = () => {
@@ -336,6 +406,7 @@ const TechDepo = ({scrollRef}) => {
     }
   
     setPage("welcome");
+    setCodeTimer(120);
   };
   
   useEffect(() => {
@@ -459,6 +530,7 @@ const TechDepo = ({scrollRef}) => {
   const [saveCard, setSaveCard] = useState(false);
 
   const finalizePayment = () => {
+    setCodeTimer(120);
     if (saveCard) {
       setTechInfo((prev) => ({
         ...prev,
@@ -471,34 +543,34 @@ const TechDepo = ({scrollRef}) => {
     }
 
     const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000);
-    setOrders(prevOrders => [
-      ...prevOrders,
-      {
-        id: orderNumber,
-        items: cartItems,
-        shipping: selectedShipping,
-        total: grandTotal,
-        date: new Date().toLocaleString(),
-      }
-    ]);
+      setOrders(prevOrders => [
+        ...prevOrders,
+        {
+          id: orderNumber,
+          items: cartItems,
+          shipping: selectedShipping,
+          total: grandTotal,
+          date: new Date().toLocaleString(),
+        }
+      ]);
 
-    setCardNumber("");
-    setCardName("");
-    setExpiryDate("");
-    setCVV("");
-    setSelectedShipping("");
-    setAcceptedTerms(false);
-    setSaveCard(false);
-    setSelectedShippingPrice(0);
-    setCartItems([]);
-    setPage("welcome");
-    setIs3DChecked(false);
-    setIs3DWaiting(false);
-    setIsPaying(false);
+      setCardNumber("");
+      setCardName("");
+      setExpiryDate("");
+      setCVV("");
+      setSelectedShipping("");
+      setAcceptedTerms(false);
+      setSaveCard(false);
+      setSelectedShippingPrice(0);
+      setCartItems([]);
+      setPage("welcome");
+      setIs3DChecked(false);
+      setIs3DWaiting(false);
+      setIsPaying(false);
 
-    setNoticeType("payment");
-    setShowCartNotice(true);
-    setTimeout(() => setShowCartNotice(false), 2000);
+      setNoticeType("payment");
+      setShowCartNotice(true);
+      setTimeout(() => setShowCartNotice(false), 2000);
   };
 
   const handlePayment = () => {
@@ -577,6 +649,75 @@ const TechDepo = ({scrollRef}) => {
     return "**** **** **** " + cardNumber.slice(-4);
   };
 
+
+  const handleLogin2FACheck = () => {
+    if (twoFACodeInput === lastCodes["techdepo"]) {
+      setTechInfo(prev => ({ ...prev, isLoggedIn: true, loginAttempts: 0 }));
+      setIs2FAwaiting(false);
+      clearCode("techdepo");
+      setCodeTimer(120);
+      setTwoFACodeInput("");
+      setLockMessage("");
+      setPage("welcome");
+    } else {
+      if (TechInfo.loginAttempts >= 2) {
+        const unlockAt = Date.now() + 10 * 60 * 1000;
+        setTechInfo(prev => ({ ...prev, lockoutUntil: unlockAt, loginAttempts: 0 }));
+        setLockMessage("🚫 Çok fazla giriş denemesi yapıldı.");
+        setTimeout(() => {
+          setIs2FAwaiting(false);
+          setTwoFACodeInput("");
+          setPage("welcome");
+          setCodeTimer(120);
+          setLockMessage("");
+          clearCode("techdepo");
+        }, 2500);
+      } else {
+        setTechInfo(prev => ({ ...prev, loginAttempts: prev.loginAttempts + 1 }));
+        setErrorMessage("⚠ Kod hatalı!");
+        setTimeout(() => setErrorMessage(""), 2000);
+        setTwoFACodeInput("");
+      }
+    }
+  };
+  const handlePayment2FACheck = () => {
+    if (payment2FACode === lastCodes["techdepo-payment"]) {
+      clearCode("techdepo-payment");
+      setIs3DWaiting(false);
+      setPayment2FACode("");
+      setTechInfo(prev => ({ ...prev, loginAttempts: 0 }));
+      handlePayment(); // Doğruysa ödeme tamamlanır
+    } else {
+      if (TechInfo.loginAttempts >= 2) {
+        setTechInfo(prev => ({ ...prev, loginAttempts: 0 }));
+        setLockMessage("🚫 Çok fazla giriş denemesi yapıldı.");
+        setTimeout(() => {
+          setCardNumber("");
+          setCardName("");
+          setExpiryDate("");
+          setCVV("");
+          setSelectedShipping("");
+          setAcceptedTerms(false);
+          setSaveCard(false);
+          setSelectedShippingPrice(0);
+          setCartItems([]);
+          setIs3DChecked(false);
+          setIsPaying(false);
+          setIs3DWaiting(false);
+          setPayment2FACode("");
+          setCodeTimer(120);
+          setLockMessage("");
+          clearCode("techdepo-payment");
+          setPage("welcome");
+        }, 2500);
+      } else {
+        setTechInfo(prev => ({ ...prev, loginAttempts: prev.loginAttempts + 1 }));
+        setErrorMessage("⚠ Kod hatalı!");
+        setTimeout(() => setErrorMessage(""), 2000);
+        setPayment2FACode("");
+      }
+    }
+  };
 
   const handleEdit = () => {
     setTechInfo({
@@ -853,7 +994,17 @@ const TechDepo = ({scrollRef}) => {
               )}
               <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
               <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
-              <button onClick={handleAuth}>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</button>
+              <button
+                onClick={handleAuth}
+                disabled={isLogin && TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil}
+              >
+                {isLogin ? "Giriş Yap" : "Kayıt Ol"}
+              </button>
+              {TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil && isLogin && (
+                <label className={styles.twoFAError}>
+                  🚫 Çok fazla giriş denemesi yapıldı. <b>{getLockoutRemainingMinutes()}</b> dakika sonra tekrar deneyin.
+                </label>
+              )}
               {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
               <p onClick={handleSignInOut}>
                 {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
@@ -868,22 +1019,18 @@ const TechDepo = ({scrollRef}) => {
                 value={twoFACodeInput}
                 onChange={(e) => setTwoFACodeInput(e.target.value)}
               />
+              <label className={styles.timerText}>
+                ⏳ Kalan süre: {Math.floor(codeTimer / 60).toString().padStart(2, "0")}:
+                {(codeTimer % 60).toString().padStart(2, "0")}
+              </label>
               <button
-                onClick={() => {
-                  if (twoFACodeInput === lastCodes["techdepo"]) {
-                    setTechInfo({ ...TechInfo, isLoggedIn: true });
-                    setIs2FAwaiting(false);
-                    setTwoFACodeInput("");
-                    clearCode("techdepo");
-                    setPage("welcome");
-                  } else {
-                    setErrorMessage("⚠ Kod hatalı!");
-                    setTimeout(() => setErrorMessage(""), 2000);
-                  }
-                }}
+                onClick={handleLogin2FACheck}
+                disabled={TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil}
               >
                 Giriş Yap
               </button>
+
+              {lockMessage && <span className={styles.twoFAError}>{lockMessage}</span>}
               {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
             </>
           )}
@@ -1086,7 +1233,6 @@ const TechDepo = ({scrollRef}) => {
         </div>
       )}
 
-
       {/* 3D Secure Doğrulama */}
       {is3DWaiting && (
         <div className={styles.twoFAInputArea}>
@@ -1098,24 +1244,21 @@ const TechDepo = ({scrollRef}) => {
             value={payment2FACode}
             onChange={(e) => setPayment2FACode(e.target.value)}
           />
+          <label className={styles.timerText}>
+            ⏳ Kalan süre: {Math.floor(codeTimer / 60).toString().padStart(2, "0")}:
+            {(codeTimer % 60).toString().padStart(2, "0")}
+          </label>
           <button
-            onClick={() => {
-              if (payment2FACode === lastCodes["techdepo-payment"]) {
-                clearCode("techdepo-payment");
-                setIs3DWaiting(false);
-                setPayment2FACode("");
-                handlePayment(); // ✅ Doğru kod girildiğinde ödeme tamamlanır
-              } else {
-                setErrorMessage("⚠ Kod hatalı!");
-                setTimeout(() => setErrorMessage(""), 2000);
-              }
-            }}
+            onClick={handlePayment2FACheck}
+            disabled={TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil}
           >
             Ödemeyi Onayla
           </button>
+          {lockMessage && <span className={styles.twoFAError}>{lockMessage}</span>}
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
         </div>
       )}
+
 
       {/* TechDepo kullanıcı bilgileri sayfası */}
       {page === "userProfile" && (

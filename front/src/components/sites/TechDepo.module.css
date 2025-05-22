@@ -88,7 +88,7 @@
     right: -5px;
   }
   .cartNotice {
-    position: fixed;
+    position: sticky;
     top: 25%;
     right: 12%;
     background-color: #2ecc71;
@@ -824,6 +824,15 @@
   .loginButton:hover,
   .loginForm button:hover{
     background-color: #27ae60;
+  }
+
+  .loginForm button:disabled {
+  background: #d6d6d6;
+  color: #202020;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
   }
   
   .loginForm p {
