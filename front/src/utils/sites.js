@@ -19,6 +19,31 @@ const sites = {
     seoScore: 95
   },
 
+  "https://filevault.com": {
+    title: "FileVault",
+    type: "component",
+    component: "FileVault",
+    statement: "Yedeklediğiniz önemli dosyalarınıza yalnızca size özel token ile erişebilirsiniz.",
+    searchKeys: [
+      "filevault",
+      "cloud backup",
+      "bulut yedekleme",
+      "kişisel dosya kasası",
+      "token ile erişim",
+      "güvenli dosya",
+      "yedekleme",
+      "private vault",
+      "file backup"
+    ],
+    clickable: true,
+    protocol: "https",
+    color: "#3A76D2",
+    isSponsored: false,
+    seoScore: 82
+  },
+
+
+
   "https://shieldsecure.com": { 
     title: "ShieldSecure", 
     type: "component", 
