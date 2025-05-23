@@ -16,10 +16,11 @@
   background: #1b1f26;
   border-radius: 20px;
   color: #fff6c0;
-  width: 900px;
+  width: 1300px;
+  height: 80%;
   max-width: 95vw;
   max-height: 90vh;
-  overflow: hidden;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 38px #000d;

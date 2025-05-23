@@ -12,7 +12,10 @@ import SystemSettings from '../SystemSettings/SystemSettings';
 
 const TaskBar = ({windowConfig}) => {
   const [time, setTime] = useState(new Date());
+
   const [showStartMenu, setShowStartMenu] = useState(false);
+  const startMenuRef = useRef(null); // Başlat menüsü penceresine referans
+
   const [shuttingDown, setShuttingDown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showWifiList, setShowWifiList] = useState(false);
@@ -264,6 +267,25 @@ const TaskBar = ({windowConfig}) => {
     }
   }, [inboxMails, isWificonnected]);
 
+ useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      showStartMenu &&
+      startMenuRef.current &&
+      !startMenuRef.current.contains(event.target)
+    ) {
+      setShowStartMenu(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [showStartMenu]);
+
+
+
   // useEffect(() => {
   //   console.log("Popup Queue:", popupQueue);
   // }, [popupQueue]);
@@ -370,7 +392,7 @@ const TaskBar = ({windowConfig}) => {
     </div>
 
     {showStartMenu && (
-      <div className="start-menu-window">
+      <div className="start-menu-window" ref={startMenuRef}>
         <h2>Başlat Menüsü</h2>
 
       <div className="start-menu-container">
@@ -379,7 +401,10 @@ const TaskBar = ({windowConfig}) => {
           <p style={{marginLeft:-12}}>Yedekle</p>
         </div>
         <div className="start-menu-item" 
-             onClick={() => setShowSystemSettings(true)}>
+          onClick={() => {
+          setShowSystemSettings(true);
+        }}
+        >
           <img src="/icons/system-settings.png" alt="Firewall Icon" 
                />
           <p>Sistem Ayarları</p>

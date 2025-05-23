@@ -3,7 +3,7 @@
   background: #191c22;
   border-radius: 18px;
   color: #ffe088;
-  padding: 20px 28px;
+  padding: 15px 24px;
   box-shadow: inset 0 0 0 1px #2b2f3a;
   height: 100%;
   overflow-y: auto;
@@ -18,26 +18,9 @@
   border-top-left-radius: 22px;
   border-top-right-radius: 22px;
   font-size: 20px;
-  border-bottom: 1.5px solid #444;
+  border-bottom: 3px solid #444;
   gap: 12px;
 }
-
-.closeButton {
-  background: #dc3545;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 20px;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-.closeButton:hover { background: #ff4d5c; }
 
 .body {
   padding: 30px 38px 16px 38px;
@@ -130,3 +113,29 @@
 }
 .safe { color: #44ca5e; font-weight: bold; }
 .danger { color: #dc3545; font-weight: bold; }
+
+.sectionTitle {
+  font-size: 20px;
+  margin-bottom: 12px;
+  font-weight: bold;
+  color: #ffe088;
+  border-bottom: 1px solid #444;
+  padding-bottom: 4px;
+}
+
+.networkGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 0;
+  border: #585858 1px solid;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.networkLabel {
+  font-size: 16px;
+  color: #ffe088;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
