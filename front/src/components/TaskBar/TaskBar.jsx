@@ -7,7 +7,7 @@ import "./Taskbar.css";
 import { useMailContext } from '../../Contexts/MailContext'; 
 import { useFileContext } from '../../Contexts/FileContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
-import FirewallSettings from '../FirewallSettings/FirewallSettings';
+import SystemSettings from '../SystemSettings/SystemSettings';
 
 
 const TaskBar = ({windowConfig}) => {
@@ -20,7 +20,9 @@ const TaskBar = ({windowConfig}) => {
   const [selectedWifi, setSelectedWifi] = useState('');
   const [showPassAlert, setShowPassAlert] = useState(false);
   const [showWifiAlert, setShowWifiAlert] = useState(false);
-  const [showFirewall, setShowFirewall] = useState(false);
+
+ const [showSystemSettings, setShowSystemSettings] = useState(false);
+
   const [wifiname, setwifiname] = useState('');
   const { toggleWindow } = useUIContext();
   const [popupQueue, setPopupQueue] = useState([]); // 📌 Pop-up bildirimi yöneten state
@@ -371,19 +373,20 @@ const TaskBar = ({windowConfig}) => {
       <div className="start-menu-window">
         <h2>Başlat Menüsü</h2>
 
-        <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}}>
-          <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/synchronize.png" alt="Synchronize Icon"/>
+      <div className="start-menu-container">
+        <div className="start-menu-item">
+          <img src="/icons/synchronize.png" alt="Synchronize Icon"/>
           <p style={{marginLeft:-12}}>Yedekle</p>
         </div>
-        <div style={{display:"flex", flexDirection:"column", gap: 10, padding: 30, justifyItems:"center"}} 
-             onClick={() => setShowFirewall(true)}>
-          <img style={{width: 30, height: 30, cursor: "pointer"}} src="/icons/firewall.png" alt="Firewall Icon" 
+        <div className="start-menu-item" 
+             onClick={() => setShowSystemSettings(true)}>
+          <img src="/icons/system-settings.png" alt="Firewall Icon" 
                />
-          <p style={{marginLeft:-12}}>Güvenlik</p>
+          <p>Sistem Ayarları</p>
         </div>
-
-        {showFirewall && (
-          <FirewallSettings onClose={() => setShowFirewall(false)} />
+      </div>
+        {showSystemSettings && (
+          <SystemSettings onClose={() => setShowSystemSettings(false)} />
         )}
 
         <div className="shutdown-button" onClick={handleShutdownClick}>

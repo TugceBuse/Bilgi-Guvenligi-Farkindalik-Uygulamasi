@@ -10,6 +10,7 @@
   width: 100%;
   z-index: 888;
 }
+
 .taskbar-icons {
   display: inline-flex;
   align-items: center;
@@ -323,13 +324,28 @@
 }
 
 /* Start Menu */
-.start-menu {
-  cursor: pointer;
-}
 
-.start-menu img {
-  width: 48px;
-  height: 48px;
+.start-menu-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1000;
+}
+.start-menu-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  cursor: pointer;
+  padding: 8px;
+}
+.start-menu-item img{
+  width: 40px;
+  height: 40px;
+  padding: 2px;
+  border-radius: 50%;
 }
 
 .start-menu-window {
