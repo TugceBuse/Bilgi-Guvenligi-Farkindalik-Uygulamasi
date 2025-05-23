@@ -1,0 +1,135 @@
+.overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(10,10,20,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.firewallWindow {
+  background: #191c22;
+  border-radius: 22px;
+  box-shadow: 0 8px 38px #000d;
+  color: #ffe088;
+  min-width: 400px;
+  max-width: 90vw;
+  padding-bottom: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px 10px 28px;
+  background: #23262d;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+  font-size: 20px;
+  border-bottom: 1.5px solid #444;
+}
+
+.closeButton {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 26px;
+  width: 40px; height: 40px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.closeButton:hover { background: #ff4d5c; }
+
+.body {
+  padding: 30px 38px 16px 38px;
+  font-size: 17px;
+}
+
+.headerIcon {
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 0 3px #0ff6);
+  margin-right: 5px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #373b44;
+  margin: 14px 0 8px 0;
+  opacity: 0.65;
+}
+
+.switchLabel {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 8px;
+  font-size: 19px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.switchInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.switchSlider {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 30px;
+  background: #272b36;
+  border-radius: 22px;
+  box-shadow: 0 2px 10px #0007;
+  transition: background 0.28s cubic-bezier(.51,1.29,.51,1.29);
+  margin-right: 12px;
+  vertical-align: middle;
+  border: 2px solid #333b;
+}
+
+.switchSlider::before {
+  content: "";
+  position: absolute;
+  left: 1.5px;
+  top: 2.5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1.5px 6px #44ca5e44, 0 1.5px 16px #0006;
+  transition: transform 0.28s cubic-bezier(.51,1.29,.51,1.29), background 0.22s;
+  z-index: 1;
+}
+
+/* Switch açıkken animasyonlar ve renkler */
+.switchInput:checked + .switchSlider {
+  background: linear-gradient(90deg, #2eec71 35%, #08b0d5 100%);
+  border-color: #2ecc71;
+  box-shadow: 0 2px 18px #1fee9950;
+}
+.switchInput:checked + .switchSlider::before {
+  background: linear-gradient(135deg, #2ecc71 65%, #10d0e9 100%);
+  transform: translateX(22px) scale(1.05);
+  box-shadow: 0 2px 12px #1fee99a0;
+}
+.switchInput:checked + .switchSlider > .switchKnobIcon {
+  left: 29px;
+  filter: drop-shadow(0 0 4px #09ff8e);
+  opacity: 1;
+}
+
+.on { color: #44ca5e; font-weight: bold; }
+.off { color: #dc3545; font-weight: bold; }
+
+.info {
+  margin-top: 7px;
+  color: #ffe088;
+  font-size: 16px;
+}
+.safe { color: #44ca5e; font-weight: bold; }
+.danger { color: #dc3545; font-weight: bold; }

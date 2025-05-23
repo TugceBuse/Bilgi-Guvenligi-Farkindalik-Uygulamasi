@@ -70,8 +70,8 @@ const LoginPage = () => {
         <span></span>
         <form className="inputPart" onSubmit={handleLogin}>
           <img
-            src="/logo2.png"
-            alt="SafeClicksLogo"
+            src="/phishville.png"
+            alt="PhishVilleLogo"
             className="backHome"
             title="www.safeClicks.com"
             onClick={() => navigate("/")}

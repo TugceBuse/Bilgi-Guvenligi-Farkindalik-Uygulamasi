@@ -9,7 +9,8 @@ export const VirusProvider = ({ children }) => {
     const [realTimeProtection, setRealTimeProtection] = useState(false);
     const [antivirusUpdated, setAntivirusUpdated] = useState(false);
     const [antivirusUpdating, setAntivirusUpdating] = useState(false);
-    const [fullProtection, setFullProtection] = useState(false); 
+    const [fullProtection, setFullProtection] = useState(false);
+    const [firewallEnabled, setFirewallEnabled] = useState(true);
 
     //realtime açık ve antivirüs güncel ise tam koruma sağlanır.
     useEffect(() => {
@@ -75,9 +76,12 @@ export const VirusProvider = ({ children }) => {
     return (
         <VirusContext.Provider value=
         {{ viruses, addVirus, removeVirus,
-         scanLogs, setScanLogs, realTimeProtection, setRealTimeProtection,
-          antivirusUpdated, setAntivirusUpdated,antivirusUpdating, setAntivirusUpdating,
-           fullProtection }}>
+            scanLogs, setScanLogs, realTimeProtection, setRealTimeProtection,
+            antivirusUpdated, setAntivirusUpdated,antivirusUpdating, setAntivirusUpdating,
+            fullProtection,
+            firewallEnabled, setFirewallEnabled
+        }}>
+
             {children}
         </VirusContext.Provider>
     );

@@ -129,7 +129,7 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
-        <img src="/logo2.png" alt="SafeClicksLogo" className="backHomeProfile" title="www.safeClicks.com" onClick={() => navigate("/")}/>
+        <img src="/phishville.png" alt="PhishVilleLogo" className="backHomeProfile" title="www.safeClicks.com" onClick={() => navigate("/")}/>
         {isEditing && <h1>Düzenle</h1>}
         {!isEditing && <h1>Profil Sayfası</h1>}
         {showPasswordInput && <h2>Kullanıcı Şifre Değişikliği</h2>}
