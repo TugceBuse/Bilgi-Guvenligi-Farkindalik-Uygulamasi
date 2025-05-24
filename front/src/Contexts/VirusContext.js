@@ -10,7 +10,9 @@ export const VirusProvider = ({ children }) => {
     const [antivirusUpdated, setAntivirusUpdated] = useState(false);
     const [antivirusUpdating, setAntivirusUpdating] = useState(false);
     const [fullProtection, setFullProtection] = useState(false);
-    const [firewallEnabled, setFirewallEnabled] = useState(true);
+    const [domainNetworkEnabled, setDomainNetworkEnabled] = useState(true);
+    const [privateNetworkEnabled, setPrivateNetworkEnabled] = useState(true);
+    const [publicNetworkEnabled, setPublicNetworkEnabled] = useState(true);     
 
     //realtime açık ve antivirüs güncel ise tam koruma sağlanır.
     useEffect(() => {
@@ -79,7 +81,9 @@ export const VirusProvider = ({ children }) => {
             scanLogs, setScanLogs, realTimeProtection, setRealTimeProtection,
             antivirusUpdated, setAntivirusUpdated,antivirusUpdating, setAntivirusUpdating,
             fullProtection,
-            firewallEnabled, setFirewallEnabled
+            domainNetworkEnabled, setDomainNetworkEnabled,
+            privateNetworkEnabled, setPrivateNetworkEnabled,
+            publicNetworkEnabled, setPublicNetworkEnabled
         }}>
 
             {children}
