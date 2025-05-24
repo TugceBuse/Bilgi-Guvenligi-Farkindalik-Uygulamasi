@@ -7,6 +7,25 @@ const FileContext = createContext();
 export const FileContextProvider = ({ children }) => {
     const { openWindow, closeWindow } = useUIContext();
 
+    // Standart dosya şeması
+const defaultFileSchema = {
+    available: true,
+    quarantined: false,
+    clickable: true,
+    infected: false,
+    detectable: false,
+    virusType: null,
+    type: "txt",
+    size: "1KB",
+    location: "downloads",
+    label: "",
+    icon: "/icons/txt.png",
+    content: null,
+    exeType: null,
+    specialView: null,
+    extra: {}
+};
+
     // Dosya ve Özellikleri
     const [files, setFiles] = useState({
         benioku: { 
@@ -137,6 +156,25 @@ export const FileContextProvider = ({ children }) => {
         }
     });
 
+    const addFile = (fileName, fileData) => {
+        setFiles(prevFiles => ({
+            ...prevFiles,
+            [fileName]: {
+                ...defaultFileSchema,
+                ...fileData
+            }
+        }));
+    };
+
+    const deleteFile = (fileName) => {
+        setFiles(prevFiles => {
+            const newFiles = { ...prevFiles };
+            delete newFiles[fileName];
+            return newFiles;
+        });
+        setOpenedFiles(prev => prev.filter(f => f !== fileName));
+    };
+
     useEffect(() => {
         console.log('Files:', files);
     }
@@ -176,7 +214,7 @@ export const FileContextProvider = ({ children }) => {
     };
 
     return (
-        <FileContext.Provider value={{ files,setFiles, openedFiles, updateFileStatus, openFile, closeFile }}>
+        <FileContext.Provider value={{ files,setFiles, openedFiles, updateFileStatus, openFile, closeFile, addFile, deleteFile }}>
             {children}
         </FileContext.Provider>
     );
