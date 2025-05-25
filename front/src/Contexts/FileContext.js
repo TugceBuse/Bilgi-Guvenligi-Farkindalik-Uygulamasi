@@ -125,7 +125,7 @@ const defaultFileSchema = {
             infected: false, 
             type: "jpg", 
             size: "363KB", 
-            location: "downloads", 
+            location: "personal", 
             label: "Ofis Fotoğrafı", 
             icon: "/icons/image.png", 
             content: "/images/office.jpg"
@@ -214,7 +214,7 @@ const defaultFileSchema = {
     };
 
     return (
-        <FileContext.Provider value={{ files,setFiles, openedFiles, updateFileStatus, openFile, closeFile, addFile, deleteFile }}>
+        <FileContext.Provider value={{ files, setFiles, openedFiles, updateFileStatus, openFile, closeFile, addFile, deleteFile }}>
             {children}
         </FileContext.Provider>
     );

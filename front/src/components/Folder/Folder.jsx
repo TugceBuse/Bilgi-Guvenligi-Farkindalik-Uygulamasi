@@ -29,6 +29,7 @@ const Folder = ({ closeHandler, style }) => {
     const VIEW_TYPES = {
         DEFAULT: 'default',
         DOWNLOAD: 'download',
+        PERSONAL: 'personal',
         // ... Diğer view'ler
     };
     const [currentView, setCurrentView] = useState(VIEW_TYPES.DEFAULT);
@@ -132,14 +133,14 @@ const Folder = ({ closeHandler, style }) => {
                                     <span>Masaüstü</span>
                                 </div>
 
-                                <div className='Icons'>
+                                <div className='Icons' onClick={() => setCurrentView(VIEW_TYPES.PERSONAL)}>
                                     <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                    <span>Proje</span>
+                                    <span>Kişisel</span>
                                 </div>
 
                                 <div className='Icons'>
                                     <img src="/icons/folder2.png" alt="Folder Icon" /> 
-                                    <span>Kişisel</span>
+                                    <span>Proje</span>
                                 </div>
 
                                 <div className='Icons'>
@@ -166,7 +167,24 @@ const Folder = ({ closeHandler, style }) => {
                                 return null;
                             })}
                         </div>
-                    )}              
+                    )}
+                    {currentView === VIEW_TYPES.PERSONAL && (
+                        <div className="folder-content-right-inside">
+                            {Object.keys(files).map(fileName => {
+                                const file = files[fileName];
+                                if (file.available && file.location === "personal") {
+                                    return (
+                                        <div key={fileName} className='Icons' onClick={() => openFile(fileName)}>
+                                            <img src={file.icon} alt={`${file.label} Icon`} />
+                                            <span>{file.label}</span>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })}
+                        </div>
+                    )}
+
                 </div>
             </div>
         </div>

@@ -1,0 +1,297 @@
+.container {
+  background: rgba(35, 51, 72, 0.95);
+  backdrop-filter: blur(5px) saturate(140%);
+  border-radius: 28px;
+  box-shadow: 0 10px 48px #0072b150, 0 1.5px 10px #18365028;
+  width: 680px;
+  max-width: 98vw;
+  min-width: 340px;
+  margin: 34px auto 0 auto;
+  padding: 0 0 36px 0;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  color: #eaf2fb;
+  border: 2px solid #2271b1;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 32px 44px 16px 44px;
+  border-bottom: 1px solid #33597a;
+}
+
+.logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  background: #eaf6ff;
+  border: 2.5px solid #49a6ff;
+  object-fit: cover;
+  box-shadow: 0 2px 12px #1276c022;
+}
+
+.title {
+  font-size: 2.18rem;
+  font-weight: 800;
+  color: #43b9fa;
+  letter-spacing: 1.2px;
+}
+.slogan {
+  font-size: 1.07rem;
+  color: #8fcaff;
+  margin-left: 2px;
+}
+
+.authBox {
+  background: rgba(39, 64, 107, 0.97);
+  border-radius: 20px;
+  margin: 40px auto 0 auto;
+  width: 350px;
+  max-width: 92vw;
+  box-shadow: 0 3px 14px #29507c18;
+  padding: 28px 32px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.authTitle {
+  font-size: 1.33rem;
+  font-weight: 600;
+  color: #36b6fa;
+  margin-bottom: 16px;
+}
+
+.authBox form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.authBox input {
+  background: #1d2d48;
+  border: 1.5px solid #49a6ff66;
+  color: #eaf6ff;
+  font-size: 1rem;
+  border-radius: 9px;
+  padding: 8px 12px;
+  margin-bottom: 2px;
+  outline: none;
+  transition: border 0.18s;
+}
+
+.authBox input:focus {
+  border: 2px solid #3bb6ff;
+  background: #203859;
+}
+
+.authBox button {
+  background: linear-gradient(90deg, #49a6ff 70%, #1796ed 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.06rem;
+  padding: 9px 0;
+  cursor: pointer;
+  box-shadow: 0 2px 10px #3bb6ff22;
+  margin-top: 6px;
+  transition: background 0.22s;
+}
+.authBox button:hover {
+  background: linear-gradient(90deg, #1fa6ff 70%, #1469a5 100%);
+}
+
+.switchMode {
+  color: #b6e6ff;
+  margin-top: 14px;
+  font-size: 0.98rem;
+}
+.switchMode span {
+  color: #49b7ff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 4px;
+  text-decoration: underline dotted;
+}
+
+.error {
+  color: #ffaeae;
+  background: #2b191a;
+  border: 1.2px solid #b3222a;
+  border-radius: 7px;
+  font-size: 0.96rem;
+  margin: 7px 0 3px 0;
+  padding: 5px 10px;
+}
+
+.section {
+  margin: 28px 42px 0 42px;
+}
+
+.section h3 {
+  color: #49b7ff;
+  margin-bottom: 16px;
+  font-size: 1.13rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.folderBox {
+  background: rgba(26, 36, 51, 0.98);
+  border-radius: 14px;
+  box-shadow: 0 2px 10px #29507c14;
+  padding: 19px 22px;
+  margin-bottom: 12px;
+}
+.folderTitle {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #84cbff;
+  margin-bottom: 11px;
+  letter-spacing: 0.4px;
+}
+.folderContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px 26px;
+}
+.folderFile {
+  font-size: 1.03rem;
+  color: #eaf2fb;
+  background: #203359;
+  padding: 5px 17px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 5px #22223318;
+}
+
+.uploadAllBtn {
+  background: linear-gradient(90deg, #53c0fa 70%, #2577ff 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.07rem;
+  padding: 10px 32px;
+  border: none;
+  border-radius: 9px;
+  margin: 15px 0 0 0;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 10px #47caff24;
+}
+.uploadAllBtn:disabled {
+  opacity: 0.68;
+}
+.uploadAllBtn:hover {
+  background: linear-gradient(90deg, #1fa5f3 70%, #114d80 100%);
+}
+
+.uploadList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+@media (max-width: 900px) {
+  .uploadList { grid-template-columns: 1fr; }
+}
+
+.uploadCard {
+  background: rgba(34, 48, 76, 0.97);
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #17344c16;
+  padding: 13px 17px 10px 19px;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.uploadFileInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.04rem;
+  color: #eaf6ff;
+}
+
+.fileIcon {
+  font-size: 1.38rem;
+  margin-right: 5px;
+}
+
+.uploadStatus {
+  margin-top: 2px;
+}
+.uploaded {
+  color: #8ffd9a;
+  font-weight: 600;
+}
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.progressBar {
+  width: 70px;
+  height: 9px;
+  background: #2e4664;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-right: 4px;
+}
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #66eaff 65%, #27baff 100%);
+  transition: width 0.16s;
+}
+.progressText {
+  color: #82e0ff;
+  font-size: 0.95rem;
+  width: 34px;
+}
+
+.uploadPerms {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.uploadPerms label {
+  margin-right: 14px;
+  font-size: 0.97rem;
+  color: #99e3ff;
+}
+.fileLink {
+  font-size: 0.93rem;
+  color: #44bbff;
+  background: #17283e;
+  padding: 3px 11px;
+  border-radius: 6px;
+  word-break: break-all;
+}
+.copyBtn {
+  margin-left: 8px;
+  background: #1553b1;
+  color: #eaf6ff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.97rem;
+  font-weight: 600;
+  padding: 3px 13px;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.copyBtn:hover {
+  background: #26a1f1;
+}
+@media (max-width: 700px) {
+  .container { width: 99vw; min-width: 0; padding-left: 2vw; padding-right: 2vw; }
+  .header { padding: 18px 10vw 10px 7vw; }
+  .section { margin-left: 3vw; margin-right: 3vw; }
+  .authBox { width: 97vw; min-width: 0; }
+}

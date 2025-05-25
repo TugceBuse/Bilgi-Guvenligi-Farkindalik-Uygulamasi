@@ -42,7 +42,28 @@ const sites = {
     seoScore: 82
   },
 
-
+  "https://cloudbox.com": {
+    title: "CloudBox",
+    type: "component",
+    component: "CloudBox",
+    statement: "Kayıt olarak kişisel dosyalarını yedekle, paylaş ve yönet. Güvenli ve kolay bulut depolama deneyimi!",
+    searchKeys: [
+      "bulut yedekleme",
+      "cloudbox",
+      "dosya yükleme",
+      "cloud kayıt",
+      "dosya paylaş",
+      "file backup",
+      "yedekleme",
+      "cloud backup",
+      "kişisel bulut depolama",
+    ],
+    clickable: true,
+    protocol: "https",
+    color: "#24bfff",
+    isSponsored: false,
+    seoScore: 91
+  },
 
   "https://shieldsecure.com": { 
     title: "ShieldSecure", 
