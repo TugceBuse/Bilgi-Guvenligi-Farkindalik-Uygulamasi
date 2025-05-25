@@ -141,9 +141,11 @@ export const GameContextProvider = ({ children }) => {
     password: "",
     isLoggedIn: false
   });
-  const [cloudFiles, setCloudFiles] = useState([
-    // { ...fileContext'ten, link, permissions: { isPublic, canDownload } }
-  ]);
+  const [cloudBoxBackup, setCloudBoxBackup] = useState({
+    files: [],
+    packageLink: "",
+    permissions: { isPublic: false, canDownload: true },
+  });
 
   // Oyun süresi arttırıcı
   useEffect(() => {
@@ -187,7 +189,7 @@ export const GameContextProvider = ({ children }) => {
         BankInfo, setBankInfo,
         openlitePermissions, setOpenlitePermissions,
         cloudUser, setCloudUser,
-        cloudFiles, setCloudFiles
+        cloudBoxBackup, setCloudBoxBackup,
       }}
     >
       {children}

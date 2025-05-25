@@ -65,6 +65,15 @@ const sites = {
     seoScore: 91
   },
 
+  "^https://cloudbox.com/package/([a-zA-Z0-9]+)$": {
+    title: "CloudBox Yedek Paketi",
+    type: "component",
+    component: "CloudBoxPackageDisplay",
+    statement: "Paylaşılan yedek dosya paketi.",
+    clickable: true,
+    protocol: "https"
+  },
+
   "https://shieldsecure.com": { 
     title: "ShieldSecure", 
     type: "component", 
