@@ -16,7 +16,7 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
   const [url, setUrl] = useState(initialUrl);
   const [currentUrl, setCurrentUrl] = useState(initialUrl);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState(initialUrl);
+  const [history, setHistory] = useState([initialUrl]);
   const [matchedSites, setMatchedSites] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const browserRef = useRef(null);
