@@ -1,37 +1,61 @@
 import React from "react";
 import { useGameContext } from "../../Contexts/GameContext";
-import styles from "./CloudBox.module.css";
+import styles from "./CloudBoxPackageDisplay.module.css";
 
+// url prop: "https://cloudbox.com/package/xxxx"
 const CloudBoxPackageDisplay = ({ url }) => {
-  // URL'den link kodunu ayıkla
-  const packageCode = url.split("/package/")[1];
   const { cloudBoxBackup } = useGameContext();
 
-  // Doğru paket mi kontrol et
-  if (!cloudBoxBackup.packageLink.endsWith(packageCode)) {
-    return <div className={styles.container}>
-      <h2>Paket Bulunamadı</h2>
-      <div>Böyle bir yedek paketi mevcut değil veya bağlantı süresi dolmuş olabilir.</div>
-    </div>;
+  // Paketin kodunu URL'den ayıkla
+  const packageCode = url?.split("/package/")[1];
+  const myCode = cloudBoxBackup.packageLink?.split("/package/")[1];
+
+  // 1) Paket var mı, public mi?
+  if (!packageCode || packageCode !== myCode) {
+    return (
+      <div className={styles.displayContainer}>
+        <h2>Paket Bulunamadı</h2>
+        <div>Bağlantı geçersiz veya paket artık mevcut değil.</div>
+      </div>
+    );
+  }
+  if (!cloudBoxBackup.permissions.isPublic) {
+    return (
+      <div className={styles.displayContainer}>
+        <h2>Paket Gizli</h2>
+        <div>Bu yedek paketi sahibi tarafından gizlenmiş.</div>
+      </div>
+    );
   }
 
+  // 2) Dosyaları göster
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <span className={styles.title}>CloudBox</span>
-        <span className={styles.slogan}>Yedek Paketi İçeriği</span>
+    <div className={styles.displayContainer}>
+      <div className={styles.displayHeader}>
+        <img src="/icons/cloudbox-logo.svg" alt="CloudBox" className={styles.displayLogo} />
+        <span className={styles.displayTitle}>CloudBox</span>
+        <span className={styles.displaySlogan}>Yedek Paketi</span>
       </div>
-      <div className={styles.section}>
-        <h3>Paket İçindeki Dosyalar</h3>
-        <div className={styles.uploadList}>
-          {cloudBoxBackup.files.map(file => (
-            <div className={styles.uploadCard} key={file.label}>
-              <span className={styles.fileIcon}>
-                {file.type === "pdf" ? "📄" : file.type === "jpg" ? "🖼️" : "📁"}
-              </span>
-              <span>{file.label} ({file.size})</span>
-            </div>
-          ))}
+      <div className={styles.displaySection}>
+        <h3>Paket Dosyaları</h3>
+        <div className={styles.displayList}>
+          {cloudBoxBackup.files.length === 0
+            ? <span className={styles.noFile}>Paket boş.</span>
+            : cloudBoxBackup.files.map((file, idx) => (
+              <div key={file.label} className={styles.displayCard}>
+                <span className={styles.fileIcon}>
+                  {file.type === "pdf" ? "📄" : file.type === "jpg" ? "🖼️" : "📁"}
+                </span>
+                <span>{file.label} ({file.size})</span>
+                {cloudBoxBackup.permissions.canDownload &&
+                  <button
+                    className={styles.downloadBtn}
+                    onClick={() => alert(`İndirme başlatılıyor: ${file.label}`)}
+                  >İndir</button>}
+                {!cloudBoxBackup.permissions.canDownload &&
+                  <span className={styles.downloadDisabled}>İndirme kapalı</span>}
+              </div>
+            ))}
         </div>
       </div>
     </div>

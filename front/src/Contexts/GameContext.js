@@ -144,7 +144,7 @@ export const GameContextProvider = ({ children }) => {
   const [cloudBoxBackup, setCloudBoxBackup] = useState({
     files: [],
     packageLink: "",
-    permissions: { isPublic: false, canDownload: true },
+    permissions: { isPublic: true, canDownload: true },
   });
 
   // Oyun süresi arttırıcı

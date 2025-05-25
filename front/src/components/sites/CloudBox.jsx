@@ -1,18 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useGameContext } from "../../Contexts/GameContext";
 import { useFileContext } from "../../Contexts/FileContext";
 import styles from "./CloudBox.module.css";
 
-// Random paylaşım linki oluştur
 const generatePackageLink = () =>
   "https://cloudbox.com/package/" + Math.random().toString(36).slice(2, 10);
 
 const CloudBox = () => {
-  // Global state'ler
-  const { cloudUser, setCloudUser, cloudFiles, setCloudFiles } = useGameContext();
+  const { cloudUser, setCloudUser, cloudBoxBackup, setCloudBoxBackup } = useGameContext();
   const { files } = useFileContext();
-
-  // Sadece personal konumdaki dosyalar
   const personalFiles = Object.values(files).filter(f => f.location === "personal");
 
   // Local UI state
@@ -22,16 +18,13 @@ const CloudBox = () => {
   const [error, setError] = useState("");
   const [showUpload, setShowUpload] = useState(false);
   const [uploadState, setUploadState] = useState({});
-  const [packageLink, setPackageLink] = useState("");
-  const [permissions, setPermissions] = useState({ isPublic: false, canDownload: true });
-
-  // Login/Register işlemleri
+  
+  // login/register işlemleri
   const handleRegister = (e) => {
     e.preventDefault();
     if (email.length < 6 || !email.includes("@")) return setError("Geçerli bir e-posta girin.");
     if (password.length < 4) return setError("Şifre en az 4 karakter olmalı.");
     setCloudUser({ email, password, isLoggedIn: true });
-    setCloudFiles([]);
     setError("");
   };
   const handleLogin = (e) => {
@@ -43,36 +36,33 @@ const CloudBox = () => {
     setCloudUser({ ...cloudUser, isLoggedIn: true });
     setError("");
   };
-
   const logout = () => {
     setCloudUser({ ...cloudUser, isLoggedIn: false });
-    setCloudFiles([]);
-    setPackageLink("");
+    setCloudBoxBackup({ files: [], packageLink: "", permissions: { isPublic: false, canDownload: true } });
     setUploadState({});
     setShowUpload(false);
   };
 
-  // Yedekleme animasyonu ve tek paylaşım linki
+  // Yedekleme işlemi (tek paket, progress animasyonlu)
   const handleUploadAll = () => {
     let newUploadState = {};
     personalFiles.forEach(file => {
-      newUploadState[file.label] = { progress: 0, status: "uploading", timer: null };
+      newUploadState[file.label] = { progress: 0, status: "uploading" };
     });
     setUploadState(newUploadState);
 
-    // Bütün dosyaları bir pakete yükleme animasyonu
     let progressAll = 0;
-    const step = Math.max(2, Math.floor(100 / (personalFiles.length * 8 + 7)));
+    const step = Math.max(2, Math.floor(100 / (personalFiles.length * 7 + 6)));
     const interval = setInterval(() => {
       progressAll += step;
       if (progressAll >= 100) {
         clearInterval(interval);
-        // Hepsini CloudFiles'a ekle
-        setCloudFiles(personalFiles.map(file => ({
-          ...file,
-        })));
+        setCloudBoxBackup({
+          files: personalFiles,
+          packageLink: generatePackageLink(),
+          permissions: { isPublic: false, canDownload: true }
+        });
         setUploadState({});
-        setPackageLink(generatePackageLink());
         setShowUpload(false);
       } else {
         setUploadState(prev =>
@@ -85,15 +75,18 @@ const CloudBox = () => {
     }, 48);
   };
 
-  // İzin toggle
+  // İzin toggle işlemleri
   const togglePermission = (perm) => {
-    setPermissions(prev => ({
+    setCloudBoxBackup(prev => ({
       ...prev,
-      [perm]: !prev[perm]
+      permissions: {
+        ...prev.permissions,
+        [perm]: !prev.permissions[perm]
+      }
     }));
   };
 
-  // Kullanıcı girişi yoksa login/register ekranı
+  // Login ekranı
   if (!cloudUser?.isLoggedIn) {
     return (
       <div className={styles.container}>
@@ -135,7 +128,7 @@ const CloudBox = () => {
     );
   }
 
-  // Ana ekran: Kullanıcı giriş yaptıysa
+  // Ana ekran
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -155,7 +148,7 @@ const CloudBox = () => {
         </button>
       </div>
 
-      {/* Dosya yükleme modal */}
+      {/* Modal */}
       {showUpload && (
         <div className={styles.modalOverlay}>
           <div className={styles.uploadModal}>
@@ -204,10 +197,10 @@ const CloudBox = () => {
       <div className={styles.section}>
         <h3>Yedeklenen Dosyalarım</h3>
         <div className={styles.uploadList}>
-          {cloudFiles.length === 0 ? (
+          {cloudBoxBackup.files.length === 0 ? (
             <span className={styles.noFile}>Henüz dosya yedeklenmedi.</span>
           ) : (
-            cloudFiles.map((file, idx) => (
+            cloudBoxBackup.files.map((file, idx) => (
               <div key={file.label} className={styles.uploadCard}>
                 <div className={styles.uploadFileInfo}>
                   <span className={styles.fileIcon}>
@@ -224,30 +217,30 @@ const CloudBox = () => {
 
       <div className={styles.section}>
         <h3>Yedek Paketi Linki & İzinler</h3>
-        {packageLink ? (
+        {cloudBoxBackup.packageLink ? (
           <div className={styles.packageLinkBox}>
             <b>Yedek Paketi Linki:</b>
-            <span className={styles.fileLink}>{packageLink}</span>
+            <span className={styles.fileLink}>{cloudBoxBackup.packageLink}</span>
             <button className={styles.copyBtn}
-              onClick={() => navigator.clipboard.writeText(packageLink)}>
+              onClick={() => navigator.clipboard.writeText(cloudBoxBackup.packageLink)}>
               Kopyala
             </button>
             <div className={styles.perms}>
               <label>
                 <input
                   type="checkbox"
-                  checked={permissions.isPublic}
+                  checked={cloudBoxBackup.permissions.isPublic}
                   onChange={() => togglePermission("isPublic")}
                 />
-                Public
+                Herkese Açık
               </label>
               <label>
                 <input
                   type="checkbox"
-                  checked={permissions.canDownload}
+                  checked={cloudBoxBackup.permissions.canDownload}
                   onChange={() => togglePermission("canDownload")}
                 />
-                Downloadable
+                İndirilebilir
               </label>
             </div>
           </div>
