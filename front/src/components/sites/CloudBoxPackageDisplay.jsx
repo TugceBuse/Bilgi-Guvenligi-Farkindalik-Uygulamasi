@@ -13,18 +13,22 @@ const CloudBoxPackageDisplay = ({ url }) => {
   // 1) Paket var mı, public mi?
   if (!packageCode || packageCode !== myCode) {
     return (
-      <div className={styles.displayContainer}>
-        <h2>Paket Bulunamadı</h2>
-        <div>Bağlantı geçersiz veya paket artık mevcut değil.</div>
-      </div>
+    <div className={styles.displayContainer}>
+        <div className={styles.centeredCard}>
+            Paket Bulunamadı
+            <small>Bağlantı geçersiz veya paket artık mevcut değil.</small>
+        </div>
+    </div>
     );
   }
   if (!cloudBoxBackup.permissions.isPublic) {
     return (
-      <div className={styles.displayContainer}>
-        <h2>Paket Gizli</h2>
-        <div>Bu yedek paketi sahibi tarafından gizlenmiş.</div>
-      </div>
+    <div className={styles.displayContainer}>
+        <div className={styles.centeredCard}>
+            Paket Gizli
+            <small>Bu yedek paketi sahibi tarafından gizlenmiş.</small>
+        </div>
+    </div>
     );
   }
 

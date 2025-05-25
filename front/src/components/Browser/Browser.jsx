@@ -10,7 +10,7 @@ export const useBrowser = () => {
   return { openHandler: () => openWindow("browser"), closeHandler: () => closeWindow("browser") };
 };
 
-const CachedComponents = {}; // 📌 Bileşenleri cachelemek için bir obje oluşturduk
+const CachedComponents = {};
 
 const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }) => {
   const [url, setUrl] = useState(initialUrl);
@@ -24,27 +24,19 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
   const browserScrollRef = useRef(null);
 
   MakeDraggable(browserRef, ".browser-header");
-
   const { isWificonnected } = useGameContext();
 
   useEffect(() => {
-    console.log("History güncellendi:", history);
-  }, [history]);
-  // Yönlendirilmiş URL geldiğinde tarayıcı ayarları
-  useEffect(() => {
-    const init = async () => {
-      if (initialUrl !== "https://www.google.com") {
-        await startLoading();
+    if (initialUrl !== "https://www.google.com") {
+      startLoading().then(() => {
         setCurrentUrl(initialUrl);
         setHistory([initialUrl]);
         setUrl(initialUrl);
         setCurrentIndex(0);
-      }
-    };
-    init();
+      });
+    }
   }, [initialUrl]);
 
-  // 📌 Yükleme fonksiyonu: 1 saniye bekletir, sonra devam eder
   const startLoading = async () => {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -67,10 +59,8 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
 
   const handleGoogleSearch = async (searchText, addToHistory = true) => {
     if (!searchText || !searchText.trim()) return;
-  
     const searchQuery = normalizeText(searchText.trim());
     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-  
     setUrl(searchUrl);
     await startLoading();
     setCurrentUrl(searchUrl);
@@ -80,62 +70,65 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
       setCurrentIndex(currentIndex + 1);
     }
   };
-  
 
   const handleGoClick = async (newUrl = url, addToHistory = true) => {
     await startLoading(); 
-  
     const cleanedUrl = newUrl.trim().replace(/^(www\.)?|\/$/g, '');
     const hasProtocol = /^https?:\/\//i.test(cleanedUrl);
     const finalUrl = hasProtocol ? cleanedUrl : `https://${cleanedUrl}`;
     const normalizedUrl = normalizeText(finalUrl);
-  
-    if (normalizedUrl.startsWith("https://www.google.com/search?q=") || normalizedUrl.startsWith("google.com/search?q=")) {
-      setCurrentUrl(normalizedUrl);
-      setUrl(normalizedUrl);
-    } else {
-      const matchedSite = sites[finalUrl] || null;
-      setCurrentUrl(matchedSite ? finalUrl : "404");
-      setUrl(finalUrl);
+
+    // REGEX destekli eşleşme
+    let matchedSite = sites[finalUrl];
+    let dynamicUrl = null;
+
+    if (!matchedSite) {
+      for (const [pattern, siteConfig] of Object.entries(sites)) {
+        if (pattern.startsWith("^")) {
+          const regex = new RegExp(pattern);
+          if (regex.test(finalUrl)) {
+            matchedSite = siteConfig;
+            dynamicUrl = finalUrl;
+            break;
+          }
+        }
+      }
     }
-  
+
+    setCurrentUrl(matchedSite ? (dynamicUrl || finalUrl) : "404");
+    setUrl(finalUrl);
+
     if (addToHistory) {
       setHistory([...history.slice(0, currentIndex + 1), finalUrl]);
       setCurrentIndex(currentIndex + 1);
     }
   };
 
-  // 📌 Ana sayfaya gitme fonksiyonu
   const goHome = async () => {
     const googleUrl = "https://www.google.com";
     setUrl(googleUrl);
     await startLoading();
     setCurrentUrl(googleUrl);
-  
     setHistory([...history.slice(0, currentIndex + 1), googleUrl]);
     setCurrentIndex(currentIndex + 1);
   };
-  
 
   useEffect(() => {
     if (currentUrl.startsWith("https://www.google.com/search?q=")) {
       const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
-  
       const filteredSites = Object.entries(sites)
-      .filter(([key, site]) =>
-        site.searchKeys?.some((k) => normalizeText(k).includes(searchQuery))
-      )
-      .map(([key, site]) => ({
-        key,
-        site,
-        score: (site.isSponsored ? 1000 : 0) + (site.seoScore || 0)
-      }))
-      .sort((a, b) => b.score - a.score); // yüksek puanlı en üstte
-  
+        .filter(([key, site]) =>
+          site.searchKeys?.some((k) => normalizeText(k).includes(searchQuery))
+        )
+        .map(([key, site]) => ({
+          key,
+          site,
+          score: (site.isSponsored ? 1000 : 0) + (site.seoScore || 0)
+        }))
+        .sort((a, b) => b.score - a.score);
       setMatchedSites(filteredSites);
     }
   }, [currentUrl]);
-  
 
   const handleBackClick = async () => {
     if (currentIndex > 0) {
@@ -158,7 +151,6 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
   };
 
   const renderContent = () => {
-
     if (!isWificonnected) {
       return (
         <div className="no-internet">
@@ -168,7 +160,6 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
         </div>
       );
     }
-    
 
     if (loading) {
       return <div className="browser-loading">
@@ -192,7 +183,6 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
     if (currentUrl.startsWith("https://www.google.com/search?q=")) {
       const searchedText = decodeURIComponent(currentUrl.split("search?q=")[1]);
       return (
-        
         <div className="download-pages">
           <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
             <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
@@ -218,7 +208,6 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
             <h3>Haberler</h3>
             <h3>Web</h3>
           </div>
-          {/* <h2>Arama Sonuçları</h2> */}
           {matchedSites.length > 0 ? (
             matchedSites.map(({ key, site }) => {
               return (
@@ -254,7 +243,6 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
           ) : (
             <p>Aradığınız - <strong>{searchedText}</strong> - ile ilgili hiçbir arama sonucu mevcut değil.</p>
           )}
-
         </div>
       );
     }
@@ -279,22 +267,36 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
         </div>
       );
     }
-    // 📌 Eğer sitenin tipi "component" ise, ilgili bileşeni yükle
-    // 📌 Farklı site tipleri eklenirse buraya kod parçası eklenecek
-    const site = sites[currentUrl];
-    if (!site) return <div className="not-found">404 - Sayfa Bulunamadı</div>;
 
-    switch (site.type) {
-      case "component":
-        if (!CachedComponents[site.component]) {
-          CachedComponents[site.component] = lazy(() => import(`../sites/${site.component}.jsx`));
+    // REGEX destekli component render bölümü
+    let site = sites[currentUrl];
+    let dynamicUrl = null;
+    let matchedSite = site;
+
+    if (!site) {
+      for (const [pattern, siteConfig] of Object.entries(sites)) {
+        if (pattern.startsWith("^")) {
+          const regex = new RegExp(pattern);
+          if (regex.test(currentUrl)) {
+            matchedSite = siteConfig;
+            dynamicUrl = currentUrl;
+            break;
+          }
         }
+      }
+    }
 
-        const SiteComponent = CachedComponents[site.component];
+    if (!matchedSite) return <div className="not-found">404 - Sayfa Bulunamadı</div>;
 
+    switch (matchedSite.type) {
+      case "component":
+        if (!CachedComponents[matchedSite.component]) {
+          CachedComponents[matchedSite.component] = lazy(() => import(`../sites/${matchedSite.component}.jsx`));
+        }
+        const SiteComponent = CachedComponents[matchedSite.component];
         return (
-          <Suspense /*fallback={<div className="browser-loading">Yükleniyor...</div>}*/>
-            <SiteComponent scrollRef={browserScrollRef} />
+          <Suspense>
+            <SiteComponent scrollRef={browserScrollRef} url={dynamicUrl || currentUrl} />
           </Suspense>
         );
       default:
@@ -302,7 +304,6 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
     }
   };
 
-  // Tarayıcı Render Return yeri
   return (
     <div className="browser-window" style={style} ref={browserRef} data-window="browser">
       <div className="browser-header">
@@ -315,24 +316,20 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
           src="./icons/arrow.png" alt="Arrow Logo" 
           onClick={handleBackClick}
         />
-
         <img 
           className={`nav-arrow ${currentIndex < history.length - 1 ? "" : "disabled"}`}
           src="./icons/right-arrow (1).png" 
           alt="Right Arrow Logo" 
           onClick={currentIndex < history.length - 1 ? handleForwardClick : null}
         />
-           
         <img 
-        className="home-icon"
-        src="./icons/home.png" alt="Home" 
-        onClick={goHome}
+          className="home-icon"
+          src="./icons/home.png" alt="Home" 
+          onClick={goHome}
         />
-        
         <input className="browser-url-input" type="text" value={url} onChange={handleUrlChange} onKeyDown={handleKeyDown} placeholder="Enter URL" />
         <button className="browser-go-button" onClick={() => handleGoClick(url)}>Go</button>
       </div>
-     
       <div className="browser-content" ref={browserScrollRef}>{renderContent()}</div>
     </div>
   );
