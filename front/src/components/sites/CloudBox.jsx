@@ -6,25 +6,62 @@ import styles from "./CloudBox.module.css";
 const generatePackageLink = () =>
   "https://cloudbox.com/package/" + Math.random().toString(36).slice(2, 10);
 
+const InfoScreen = ({ onLogin, onRegister }) => (
+  <div className={styles.infoWrapper}>
+    <div className={styles.infoHeader}>
+      <img src="/icons/cloudbox-logo.svg" alt="CloudBox" className={styles.siteLogo} />
+      <div>
+        <h1 className={styles.siteTitle}>CloudBox</h1>
+        <div className={styles.siteSubtitle}>Kişisel Bulut Yedekleme Merkezi</div>
+      </div>
+    </div>
+    <div className={styles.infoBody}>
+      <div className={styles.infoBox}>
+        <b>CloudBox</b> ile önemli dosyalarınızı <b>güvenli ve şifreli</b> şekilde yedekleyin.<br /><br />
+        Hesabınıza giriş yaptıktan sonra yüklediğiniz dosyalar <b>yalnızca size ait</b> olarak saklanır.<br />
+        <b>Paylaşım linklerinin izin ve gizlilik ayarları tamamen sizin kontrolünüzdedir.</b>
+        <ul>
+          <li>Dosya ve yedek paketlerinizi <b>tek tıkla</b> paylaşabilirsiniz.</li>
+          <li>Bağlantılarınızın <b>gizli veya herkese açık</b> olmasını siz belirlersiniz.</li>
+          <li>İzin vermedikçe <b>hiçbir dosya paylaşılmaz</b> veya görüntülenmez.</li>
+        </ul>
+        <span className={styles.infoHighlight}>
+          CloudBox, modern bulut güvenlik standartları ve <b>gizlilik önceliği</b> ile tasarlanmıştır.
+        </span>
+      </div>
+    </div>
+    <div className={styles.infoFooter}>
+      <button onClick={onLogin} className={styles.loginButton}>Giriş Yap</button>
+      <button onClick={onRegister} className={styles.registerButton}>Kayıt Ol</button>
+    </div>
+    <footer className={styles.footer}>
+      <span>© {new Date().getFullYear()} CloudBox - Güvenli Yedekleme</span>
+      <span style={{fontSize:12}}>CloudBox Teknolojileri A.Ş. tarafından geliştirilmiştir.</span>
+    </footer>
+  </div>
+);
+
+
 const CloudBox = () => {
   const { cloudUser, setCloudUser, cloudBoxBackup, setCloudBoxBackup } = useGameContext();
   const { files } = useFileContext();
   const personalFiles = Object.values(files).filter(f => f.location === "personal");
 
   // Local UI state
-  const [mode, setMode] = useState("login"); // "login" / "register"
+  const [page, setPage] = useState("info"); // "info" / "login" / "register" / "main"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showUpload, setShowUpload] = useState(false);
   const [uploadState, setUploadState] = useState({});
-  
+
   // login/register işlemleri
   const handleRegister = (e) => {
     e.preventDefault();
     if (email.length < 6 || !email.includes("@")) return setError("Geçerli bir e-posta girin.");
     if (password.length < 4) return setError("Şifre en az 4 karakter olmalı.");
     setCloudUser({ email, password, isLoggedIn: true });
+    setPage("main");
     setError("");
   };
   const handleLogin = (e) => {
@@ -34,11 +71,12 @@ const CloudBox = () => {
       return;
     }
     setCloudUser({ ...cloudUser, isLoggedIn: true });
+    setPage("main");
     setError("");
   };
   const logout = () => {
     setCloudUser({ ...cloudUser, isLoggedIn: false });
-    setCloudBoxBackup({ files: [], packageLink: "", permissions: { isPublic: false, canDownload: true } });
+    setPage("info");
     setUploadState({});
     setShowUpload(false);
   };
@@ -86,8 +124,16 @@ const CloudBox = () => {
     }));
   };
 
-  // Login ekranı
+  // Ana sayfa ve auth ekran yönetimi
   if (!cloudUser?.isLoggedIn) {
+    if (page === "info") {
+      return (
+        <InfoScreen
+          onLogin={() => setPage("login")}
+          onRegister={() => setPage("register")}
+        />
+      );
+    }
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -96,8 +142,8 @@ const CloudBox = () => {
           <span className={styles.slogan}>Kişisel Bulut Yedekleme Merkezi</span>
         </div>
         <div className={styles.authBox}>
-          <div className={styles.authTitle}>{mode === "login" ? "Giriş Yap" : "Kayıt Ol"}</div>
-          <form onSubmit={mode === "login" ? handleLogin : handleRegister}>
+          <div className={styles.authTitle}>{page === "login" ? "Giriş Yap" : "Kayıt Ol"}</div>
+          <form onSubmit={page === "login" ? handleLogin : handleRegister}>
             <input
               type="email"
               required
@@ -112,15 +158,15 @@ const CloudBox = () => {
               placeholder="Şifre"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              autoComplete={page === "login" ? "current-password" : "new-password"}
             />
             {error && <div className={styles.error}>{error}</div>}
-            <button type="submit">{mode === "login" ? "Giriş Yap" : "Kayıt Ol"}</button>
+            <button type="submit">{page === "login" ? "Giriş Yap" : "Kayıt Ol"}</button>
           </form>
           <div className={styles.switchMode}>
-            {mode === "login"
-              ? <>Hesabın yok mu? <span onClick={() => setMode("register")}>Kayıt Ol</span></>
-              : <>Zaten hesabın var mı? <span onClick={() => setMode("login")}>Giriş Yap</span></>
+            {page === "login"
+              ? <>Hesabın yok mu? <span onClick={() => setPage("register")}>Kayıt Ol</span></>
+              : <>Zaten hesabın var mı? <span onClick={() => setPage("login")}>Giriş Yap</span></>
             }
           </div>
         </div>
