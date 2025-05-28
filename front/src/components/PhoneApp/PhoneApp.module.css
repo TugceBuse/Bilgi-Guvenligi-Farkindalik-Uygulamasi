@@ -12,33 +12,12 @@
     font-family: 'Segoe UI', sans-serif;
     color: #f5f5f5;
   }
-  
-  .phoneHeader {
-    background-color: #b14d40;
-    color: white;
-    padding: 12px 16px;
-    font-size: 16px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    user-select: none;
-  }
-  
   .phoneClose {
     background: none;
     border: none;
     color: white;
     font-size: 20px;
     cursor: pointer;
-  }
-  
-  .phoneBody {
-    display: flex;
-    flex-direction: column;
-    background-color: #1e1e1e;
-    padding: 10px;
-    border-top: 1px solid #444;
   }
   
   .phoneStatus {
@@ -59,22 +38,41 @@
   }
   
   .messageList {
-    height: 460px;
-    padding: 12px;
+    height: 520px;
+    padding-left: 10px;
+    padding-right: 10px;
     overflow-y: auto;
     background-color: #1e1e1e;
-    border-top: 1px solid #444;
+    border-top: 2px solid #444;
+    scroll-behavior: smooth;
   }
   
   .phoneMessages {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background-color: #1e1e1e;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 6px 0;
+    flex-direction: column;
+    gap: 10px;
+    padding: 6px 0px 2px 6px;
     border-bottom: 1px solid #444;
   }
+
+  .phoneMessagesTitle{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
   
+  .phoneMessages h4 {
+    font-size: 14px;
+    color: #eed2cf;
+    font-weight: bold;
+    margin: 0;
+  }
   .phoneMessages img {
     width: 22px;
     height: 22px;
@@ -103,7 +101,6 @@
     border: 2px solid #ff3b3b; /* her taraf kırmızı çerçeve */
     background-color: #2a2a2a;
   }
-
   /* ✅ Okunmuş (tıklanmış) mesajlar */
   .messageItem.read {
     border: none;
@@ -112,7 +109,7 @@
   }
     
   .messageItem:hover {
-    transform: scale(1.01);
+    transform:translate(-1px, -1px);
     cursor: pointer;
   }
 
@@ -156,4 +153,71 @@
     color: #aaa;
     text-align: right;
   }
-  
+
+.phoneStatusBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #111;
+  color: #ccc;
+  padding: 12px 18px;
+  height: 32px;
+  font-size: 13px;
+}
+
+.phoneClock {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-weight: 700;
+}
+
+.phoneCamera {
+  width: 18px;
+  height: 18px;
+  background-color: #444444;
+  border-radius: 50%;
+  align-content: center;
+  justify-items: center;
+}
+.phoneCameraCircle {
+  width: 12px;
+  height: 12px;
+  background-color: #8a8a8a;
+  border-radius: 50%;
+}
+.statusRightArea {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phoneStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: none;
+}
+
+.phoneImage {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  filter: brightness(1.2);
+  opacity: 0.9;
+}
+
+.unreadInfo {
+  background:#535353;
+  color: #fff;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+  letter-spacing: 0.4px;
+  /* Kaybolacak, scroll'da sabit değil */
+}
