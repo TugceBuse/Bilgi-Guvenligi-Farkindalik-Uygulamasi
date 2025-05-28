@@ -21,13 +21,14 @@ export const usePhoneApp = () => {
 
 const PhoneApp = ({ closeHandler, style }) => {
   const PhoneAppRef = useRef(null);
-  MakeDraggable(PhoneAppRef, `.${styles.phoneStatusBar}`);
+  MakeDraggable(PhoneAppRef, `.${styles.phoneWindow}`);
 
   const { messages, markMessageAsRead, readMessages, getUnreadCount } = usePhoneContext();
 
   return (
-    <div className={styles.phoneFrame}>
-      <div className={styles.phoneWindow} style={style} ref={PhoneAppRef} data-window="phoneapp">
+    <div className={styles.phoneFrame} ref={PhoneAppRef} data-window="phoneapp" style={style}>
+      <div className={styles.phoneSpeaker}></div>
+      <div className={styles.phoneWindow}>
         
         <div className={styles.phoneStatusBar}>
           <span className={styles.phoneClock}>
@@ -80,6 +81,7 @@ const PhoneApp = ({ closeHandler, style }) => {
           ))}
         </div>
       </div>
+      <div className={styles.phoneHomeButton}></div>
     </div>
   );
 };
