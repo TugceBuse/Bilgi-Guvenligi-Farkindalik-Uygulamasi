@@ -212,7 +212,7 @@ const cards = [
 
 
 const TechDepo = ({scrollRef}) => {
-  const { TechInfo, setTechInfo } = useGameContext();
+  const { TechInfo, setTechInfo, cardBalance, setCardBalance } = useGameContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -524,13 +524,43 @@ const TechDepo = ({scrollRef}) => {
   const grandTotal = cartTotal + selectedShippingPrice;
   
   const [isPaying, setIsPaying] = useState(false);
+
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [saveCard, setSaveCard] = useState(false);
 
+  // Hata geldikçe scroll o hataya kayar
+  useEffect(() => {
+    if (page === "payment" && Object.keys(errors).length > 0 && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [errors]);
+
+
   const finalizePayment = () => {
     setCodeTimer(120);
+    if (cardBalance < grandTotal) {
+      setErrors({ balance: "Kart bakiyesi yetersiz." });
+      
+      setCardNumber("");
+      setCardName("");
+      setExpiryDate("");
+      setCVV("");
+      setSelectedShipping("");
+      setAcceptedTerms(false);
+      setSaveCard(false);
+      setSelectedShippingPrice(0);
+      setCartItems([]);
+      setIs3DChecked(false);
+      setIs3DWaiting(false);
+
+      setIsPaying(false);
+      setTimeout(() => {
+        setErrors({});
+      }, 3000);
+      return;
+    }
     if (saveCard) {
       setTechInfo((prev) => ({
         ...prev,
@@ -554,6 +584,8 @@ const TechDepo = ({scrollRef}) => {
         }
       ]);
 
+      setCardBalance(prev => prev - grandTotal);
+
       setCardNumber("");
       setCardName("");
       setExpiryDate("");
@@ -571,6 +603,7 @@ const TechDepo = ({scrollRef}) => {
       setNoticeType("payment");
       setShowCartNotice(true);
       setTimeout(() => setShowCartNotice(false), 2000);
+      console.log(productInfo.productID, "ödeme tamamlandı");
   };
 
   const handlePayment = () => {
@@ -599,7 +632,7 @@ const TechDepo = ({scrollRef}) => {
         newErrors.registeredCard = "Kart bilgileri kayıtlı bilgilerle eşleşmiyor.";
       }
     }
-  
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     
@@ -629,7 +662,7 @@ const TechDepo = ({scrollRef}) => {
       }, 1000); // 1 saniye sonra 3D aşamasına geç
       return;
     }
-        
+
     // Hatalar yoksa işlemi başlat
     setErrors({});
     setIsPaying(true);
@@ -680,7 +713,9 @@ const TechDepo = ({scrollRef}) => {
       }
     }
   };
+
   const handlePayment2FACheck = () => {
+
     if (payment2FACode === lastCodes["techdepo-payment"]) {
       clearCode("techdepo-payment");
       setIs3DWaiting(false);
@@ -1038,7 +1073,7 @@ const TechDepo = ({scrollRef}) => {
       )}
 
       {/* TechDepo ödeme sayfası */}
-      {page === "payment" && !is3DWaiting && (
+      {page === "payment" && !is3DWaiting &&  (
         <div className={styles.paymentForm}>
           {/* Sol taraf */}
           <div className={styles.paymentLeft}>
@@ -1112,7 +1147,6 @@ const TechDepo = ({scrollRef}) => {
               </label>
             </div>
             {errors.shipping && <p ref={errorRef} className={styles.errorMessage}>{errors.shipping}</p>}
-
 
             {/* 4. Ödeme Bilgileri */}
             <div className={styles.paymentSection}>
@@ -1206,6 +1240,7 @@ const TechDepo = ({scrollRef}) => {
               <button className={styles.paymentButton} onClick={handlePayment} disabled={isPaying}>
                 {isPaying ? "⏳ Ödeme İşleniyor..." : "💳 Ödemeyi Tamamla"}
               </button>
+              {errors.balance && <p ref={errorRef} className={styles.errorMessage}>{errors.balance}</p>}
             </div>
           </div>
 
@@ -1248,7 +1283,7 @@ const TechDepo = ({scrollRef}) => {
             ⏳ Kalan süre: {Math.floor(codeTimer / 60).toString().padStart(2, "0")}:
             {(codeTimer % 60).toString().padStart(2, "0")}
           </label>
-          <button
+         <button
             onClick={handlePayment2FACheck}
             disabled={TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil}
           >

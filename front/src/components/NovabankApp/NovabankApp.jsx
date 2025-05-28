@@ -20,7 +20,7 @@ export const useNovabankApp = () => {
   };
 
 const NovabankApp = ({ closeHandler, style }) => {
-  const { constUser, BankInfo, setBankInfo } = useGameContext(); // GameContext'ten constUser'ı çekiyoruz
+  const { constUser, BankInfo, setBankInfo, cardBalance } = useGameContext(); // GameContext'ten constUser'ı çekiyoruz
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext(); // 2FA için
 
   const [is2FAwaiting, setIs2FAwaiting] = useState(false); // Kod bekleniyor mu?
@@ -36,6 +36,14 @@ const NovabankApp = ({ closeHandler, style }) => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); // Kod hatası gösterimi
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("tr-TR", {
+      style: "currency",
+      currency: "TRY",
+      minimumFractionDigits: 2
+    }).format(price);
+  };
 
   // Error state'ler
   const [errors, setErrors] = useState({
@@ -232,7 +240,7 @@ const NovabankApp = ({ closeHandler, style }) => {
             </div>
             <div className={styles.cardInfo}>
               <h3>Bakiye</h3>
-              <p>₺ 12.345,67</p>
+              <p>{formatPrice(cardBalance)}</p>
             </div>
           </section>
 

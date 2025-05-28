@@ -9,7 +9,7 @@ export const TodoProvider = ({ children }) => {
   { id: 'profile-pdf', text: '📄 Oyundaki sanal çalışan profilinize ait kişisel bilgileri içeren PDF dosyasını indirip inceleyin.', completed: false, notified: false },
   { id: 'check-mail', text: ' 📩 Ofis içi bilgilendirme ve görevlerinizi takip edebilmek için gelen kutunuzu kontrol edin.', completed: false, notified: false },
   { id: 'create-password', text: '🖥️ Ofiste eksik olan donanımlar için satın alma işlemi sizden istendi. IT destek ekibinin yönlendirdiği çevrim içi mağazadan gerekli ürünü seçip siparişi tamamlayın.', completed: false, notified: false },
-  { id: 'download-safe-file', text: '📁 Departman yöneticiniz, işe başlamadan önce gerekli yazılım kurulum dosyasını sizinle paylaştı. İndirin ve çalıştırın', completed: false, notified: false },
+  { id: 'download-safe-file', text: '📁 Departmandaki raporların çıktısını alabilmek için renkli baskı destekli bir yazıcı satın al. (Banka uygulamandan bakiyene bakmayı unutma, maillerinden ya da sosyal medya üzerinden fırsatları yakalamayı da ihmal etme! Ne kadar ucuz o kadar iyi...', completed: false, notified: false },
 ]);
 
   return (
