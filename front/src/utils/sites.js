@@ -74,6 +74,28 @@ const sites = {
     protocol: "https"
   },
 
+  "https://opendrop.com": {
+    title: "OpenDrop",
+    type: "component",
+    component: "OpenDrop",
+    statement: "Herkese açık dosya paylaşım platformu.",
+    searchKeys: [
+      "opendrop",
+      "drop",
+      "public file sharing",
+      "dosya paylaş",
+      "dosya yükle",
+      "public dosya",
+      "link paylaşım",
+      "file drop"
+    ],
+    clickable: true,
+    protocol: "https",
+    color: "#23a2e3",
+    isSponsored: false,
+    seoScore: 92
+  },
+
   "https://shieldsecure.com": { 
     title: "ShieldSecure", 
     type: "component", 
