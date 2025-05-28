@@ -21,6 +21,20 @@ export const UIContextProvider = ({ children }) => {
     e.stopPropagation();
   };
 
+  useEffect(() => {
+    if (openWindows.length === 0) return;
+    openWindows.forEach((windowName) => {
+      const el = document.querySelector(`[data-window="${windowName}"]`);
+      if (el) {
+        const z = window.getComputedStyle(el).zIndex;
+        console.log(`[${windowName}] z-index: ${z}`, el);
+      } else {
+        console.log(`[${windowName}] => DOM'da bulunamadı.`);
+      }
+    });
+  }, [openWindows,visibleWindows]);
+
+
   const lockMouse = () => {
     const existing = document.getElementById('mouse-lock-overlay');
     if (existing) return;
