@@ -37,6 +37,16 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
     }
   }, [initialUrl]);
 
+  useEffect(() => {
+    const handleOpenUrl = async (e) => {
+      const newUrl = e.detail;
+      await handleGoClick(newUrl); // mevcut go fonksiyonunu tetikle
+    };
+
+    window.addEventListener("open-browser-url", handleOpenUrl);
+    return () => window.removeEventListener("open-browser-url", handleOpenUrl);
+  }, []);
+
   const startLoading = async () => {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));

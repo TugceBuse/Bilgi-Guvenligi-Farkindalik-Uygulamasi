@@ -116,7 +116,10 @@ export const GameContextProvider = ({ children }) => {
     saveCard: false,
     adres: constUser.adres,
     lockoutUntil: null,
-    loginAttempts: 0
+    loginAttempts: 0,
+    tckn: "",
+    birthDate: "",
+    motherMaiden: ""
   });
 
   const [productInfo, setProductInfo] = useState({
