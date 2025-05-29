@@ -1240,3 +1240,54 @@
 .twoFAInputArea button:active {
   transform: scale(0.98);
 }
+
+
+/* Fake TechDepo için ek CSS */
+.fakeCampaignBox {
+  background-color: #292929;
+  border: 2px dashed #ffaa00;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  color: #fff9e6;
+  box-shadow: 0 0 8px rgba(255, 170, 0, 0.3);
+  font-size: 14px;
+}
+
+.fakeCampaignBox h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #ffd36e;
+}
+
+.fakeCampaignBox label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fakeCampaignBox input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #ffaa00;
+}
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #f3f3f3;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #00ccff;
+}
+
+.checkboxLabel p {
+  margin: 0;
+  line-height: 1.4;
+}

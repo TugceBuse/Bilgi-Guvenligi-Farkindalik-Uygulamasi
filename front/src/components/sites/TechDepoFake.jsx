@@ -592,6 +592,9 @@ const TechDepo = ({scrollRef}) => {
     } else if (!/^[a-zA-ZğüşıöçĞÜŞİÖÇ]$/.test(TechInfo.motherMaiden)) {
      newErrors.motherMaiden = "Yalnızca harf girilmelidir.";
     }
+    if (!TechInfo.acceptedCampaignTerms) {
+     newErrors.campaignTerms = "Kampanya şartlarını onaylamalısınız.";
+    }
 
     // Kayıtlı kartla eşleşme kontrolü
     if (TechInfo) {
@@ -1078,6 +1081,19 @@ const TechDepo = ({scrollRef}) => {
 
             {/* 4. Ödeme Bilgileri */}
             <div className={styles.paymentSection}>
+              <div className={styles.fakeCampaignBox}>
+                <h4>🎁 Ön Onaylı Kampanyadan Faydalanmak İster misiniz?</h4>
+                <label>
+                    <input
+                    type="checkbox"
+                    checked={TechInfo.acceptedPreApprovedLoan}
+                    onChange={(e) =>
+                        setTechInfo((prev) => ({ ...prev, acceptedPreApprovedLoan: e.target.checked }))
+                    }
+                    />
+                    <p>TC ve doğum tarihinize göre size özel %10 indirim fırsatını değerlendirmek istiyorum.</p>
+                </label>
+              </div>
               <h3><span>3</span>💳 Ödeme Bilgileri</h3>
               <div className={styles.paymentSectionCard}>
                 <h4>Kredi Kartı</h4>
@@ -1155,6 +1171,18 @@ const TechDepo = ({scrollRef}) => {
                 <p><b>Gizlilik Sözleşmesini</b> ve <b>Satış Sözleşmesini</b> okudum, onaylıyorum.</p>
               </label>                                  
               </div>
+              <label className={styles.checkboxLabel}>
+                <input
+                    type="checkbox"
+                    checked={TechInfo.acceptedCampaignTerms}
+                    onChange={(e) =>
+                    setTechInfo(prev => ({ ...prev, acceptedCampaignTerms: e.target.checked }))
+                    }
+                />
+                <p><b>Kampanya Katılım Şartlarını</b> okudum ve onaylıyorum.</p>
+              </label>
+
+              {errors.campaignTerms && <p className={styles.errorMessage}>{errors.campaignTerms}</p>}
               {errors.terms && <p className={styles.errorMessage}>{errors.terms}</p>}
 
               <button className={styles.paymentButton} onClick={handlePayment} disabled={isPaying}>

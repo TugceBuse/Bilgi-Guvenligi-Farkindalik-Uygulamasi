@@ -119,7 +119,9 @@ export const GameContextProvider = ({ children }) => {
     loginAttempts: 0,
     tckn: "",
     birthDate: "",
-    motherMaiden: ""
+    motherMaiden: "",
+    acceptedPreApprovedLoan: false,
+    acceptedCampaignTerms: false,
   });
 
   const [productInfo, setProductInfo] = useState({
