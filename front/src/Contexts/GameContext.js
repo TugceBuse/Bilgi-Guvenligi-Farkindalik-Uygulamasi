@@ -11,6 +11,8 @@ export const GameContextProvider = ({ children }) => {
   const [wifiMailSent, setWifiMailSent] = useState(false);
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addMailToMailbox } = useMailContext();
+  const [cardBalance, setCardBalance] = useState("12345"); // Başlangıç bakiyesi
+
 
   const [gameStart, setGameStart] = useState(() => {
     const now = new Date();
@@ -120,11 +122,11 @@ export const GameContextProvider = ({ children }) => {
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
+  
   const [BankInfo, setBankInfo] = useState({
     rememberMe: false,
-    savedTcNo: '',
     lockoutUntil: null,
-    loginAttempts: 0
+    loginAttempts: 0,
   });
   const [openlitePermissions, setOpenlitePermissions] = useState({
     permissionsOpened: true,
@@ -206,7 +208,8 @@ export const GameContextProvider = ({ children }) => {
         openlitePermissions, setOpenlitePermissions,
         cloudUser, setCloudUser,
         cloudBoxBackup, setCloudBoxBackup,
-        openDropPublicFiles, setOpenDropPublicFiles
+        openDropPublicFiles, setOpenDropPublicFiles,
+        cardBalance, setCardBalance,
       }}
     >
       {children}
