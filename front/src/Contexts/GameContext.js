@@ -147,6 +147,22 @@ export const GameContextProvider = ({ children }) => {
     permissions: { isPublic: true, canDownload: true },
   });
 
+  const [openDropPublicFiles, setOpenDropPublicFiles] = useState([
+  // Demo public dosyalar (başkasının yüklediği gibi görünenler)
+  {
+    label: "YeniÇıkanlar2025.pdf",
+    type: "pdf",
+    size: "2.1 MB",
+    url: "https://opendrop.com/file/yenicikanlar2025ab2x",
+  },
+  {
+    label: "EtkinlikPosteri.jpg",
+    type: "jpg",
+    size: "1.4 MB",
+    url: "https://opendrop.com/file/etkinlikposteri9sd7",
+  }
+]);
+
   // Oyun süresi arttırıcı
   useEffect(() => {
     const interval = setInterval(() => {
@@ -190,6 +206,7 @@ export const GameContextProvider = ({ children }) => {
         openlitePermissions, setOpenlitePermissions,
         cloudUser, setCloudUser,
         cloudBoxBackup, setCloudBoxBackup,
+        openDropPublicFiles, setOpenDropPublicFiles
       }}
     >
       {children}

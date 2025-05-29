@@ -87,11 +87,13 @@ const sites = {
       "dosya yükle",
       "public dosya",
       "link paylaşım",
-      "file drop"
+      "file drop",
+      "cloud",
+      "bulut"
     ],
     clickable: true,
     protocol: "https",
-    color: "#23a2e3",
+    color: "#2ff2e3",
     isSponsored: false,
     seoScore: 92
   },

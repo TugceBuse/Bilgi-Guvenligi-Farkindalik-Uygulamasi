@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { useFileContext } from "../../Contexts/FileContext";
+import { useGameContext } from "../../Contexts/GameContext";
 import styles from "./OpenDrop.module.css";
 
-const generateLink = (label) => "https://opendrop.com/file/" + label.toLowerCase().replace(/[^a-z0-9]/g, '') + Math.random().toString(36).substr(2,4);
+const generateLink = (label) =>
+  "https://opendrop.com/file/" +
+  label.toLowerCase().replace(/[^a-z0-9]/g, '') +
+  Math.random().toString(36).substr(2, 4);
 
 const OpenDrop = () => {
   const { files } = useFileContext();
   const personalFiles = Object.values(files).filter(f => f.location === "personal");
 
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const { openDropPublicFiles, setOpenDropPublicFiles } = useGameContext();
+
   const [showModal, setShowModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -29,19 +34,19 @@ const OpenDrop = () => {
         clearInterval(interval);
         setUploading(false);
         setShowModal(false);
-        // Dosyaları public olarak ekle
+        // Dosyaları public olarak context'e ekle
         const uploaded = personalFiles.map(f => ({
           ...f,
-          url: generateLink(f.label)
+          url: generateLink(f.label),
         }));
-        setUploadedFiles(uploaded.concat(uploadedFiles));
+        setOpenDropPublicFiles(prev => {
+          const newList = [...uploaded, ...prev];
+          return newList.slice(0, 3); // Sadece son 3 dosyayı tutar
+        });
         setProgress(0);
       }
     }, 60);
   };
-
-  // Public link tıklandığında, yine OpenDrop componenti o dosya detayıyla açılır (yönlendirme yok, simülasyon)
-  // (Burada, url ile gelen parametreye göre dosya gösterme özelliğini ekleyebilirsin. Şimdilik sadece listeleniyor.)
 
   return (
     <div className={styles.container}>
@@ -77,56 +82,56 @@ const OpenDrop = () => {
 
       {/* Yükleme Modalı */}
       {showModal && (
-  <div className={styles.modalOverlay}>
-    <div className={styles.folderModal}>
-      <div className={styles.folderHeader}>
-        <span className={styles.folderIcon}>📁</span>
-        <span className={styles.folderTitle}>Kişisel Dosyalarım</span>
-      </div>
-      <div className={styles.folderGrid}>
-        {personalFiles.length === 0 ? (
-          <span className={styles.noFile}>Yedeklenecek kişisel dosya yok.</span>
-        ) : (
-          personalFiles.map((f, i) => (
-            <div key={f.label} className={styles.folderFile}>
-              <div className={styles.bigIcon}>
-                {f.type === "pdf" ? "📄" : f.type === "jpg" ? "🖼️" : "📁"}
-              </div>
-              <div className={styles.fileMeta}>
-                <span className={styles.fileName}>{f.label}</span>
-                <span className={styles.fileSize}>{f.size}</span>
-              </div>
+        <div className={styles.modalOverlay}>
+          <div className={styles.folderModal}>
+            <div className={styles.folderHeader}>
+              <span className={styles.folderIcon}>📁</span>
+              <span className={styles.folderTitle}>Kişisel Dosyalarım</span>
             </div>
-          ))
-        )}
-      </div>
-      {personalFiles.length > 0 && (
-        <button className={styles.uploadAllBtn} onClick={handleUploadAll} disabled={uploading}>
-          Tümünü Yükle
-        </button>
-      )}
-      <button className={styles.cancelBtn} onClick={() => setShowModal(false)} disabled={uploading}>
-        Kapat
-      </button>
-      {uploading && (
-        <div className={styles.progressWrap}>
-          <div className={styles.progressBar}>
-            <div className={styles.progress} style={{ width: `${progress}%` }} />
+            <div className={styles.folderGrid}>
+              {personalFiles.length === 0 ? (
+                <span className={styles.noFile}>Yedeklenecek kişisel dosya yok.</span>
+              ) : (
+                personalFiles.map((f, i) => (
+                  <div key={f.label} className={styles.folderFile}>
+                    <div className={styles.bigIcon}>
+                      {f.type === "pdf" ? "📄" : f.type === "jpg" ? "🖼️" : "📁"}
+                    </div>
+                    <div className={styles.fileMeta}>
+                      <span className={styles.fileName}>{f.label}</span>
+                      <span className={styles.fileSize}>{f.size}</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            {personalFiles.length > 0 && (
+              <button className={styles.uploadAllBtn} onClick={handleUploadAll} disabled={uploading}>
+                Tümünü Yükle
+              </button>
+            )}
+            <button className={styles.cancelBtn} onClick={() => setShowModal(false)} disabled={uploading}>
+              Kapat
+            </button>
+            {uploading && (
+              <div className={styles.progressWrap}>
+                <div className={styles.progressBar}>
+                  <div className={styles.progress} style={{ width: `${progress}%` }} />
+                </div>
+                <span className={styles.progressText}>{progress}%</span>
+              </div>
+            )}
           </div>
-          <span className={styles.progressText}>{progress}%</span>
         </div>
       )}
-    </div>
-  </div>
-)}
 
       <section className={styles.listSection}>
         <div className={styles.listTitle}>Son Paylaşılan Dosyalar</div>
         <div className={styles.fileList}>
-          {uploadedFiles.length === 0
+          {openDropPublicFiles.length === 0
             ? <div className={styles.noFile}>Henüz dosya yüklenmedi.</div>
-            : uploadedFiles.slice(0, 8).map((file, idx) => (
-              <div key={file.url} className={styles.fileCard}>
+            : openDropPublicFiles.slice(0, 8).map((file, idx) => (
+              <div key={file.url + idx} className={styles.fileCard}>
                 <span className={styles.fileIcon}>
                   {file.type === "pdf" ? "📄" : file.type === "jpg" ? "🖼️" : "📁"}
                 </span>
