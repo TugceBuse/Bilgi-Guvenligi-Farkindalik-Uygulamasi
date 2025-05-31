@@ -549,7 +549,6 @@ const TechDepo = ({scrollRef}) => {
     if (cardBalance < grandTotal) {
       setErrors({ balance: "Kart bakiyesi yetersiz." });
       addMessage("NovaBank", "💳 Bakiyeniz yetersiz olduğundan ödemeniz gerçekleştirilemedi.");
-
       
       setCardNumber("");
       setCardName("");

@@ -223,7 +223,7 @@ const TechDepo = ({scrollRef}) => {
   const [payment2FACode, setPayment2FACode] = useState("");
 
   // Context hook
-  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+  const { addMessage, clearCode } = usePhoneContext();
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
@@ -470,7 +470,28 @@ const TechDepo = ({scrollRef}) => {
 
   const finalizePayment = () => {
     setCodeTimer(120);
-    
+
+    if (cardBalance < grandTotal) {
+      setErrors({ balance: "Kart bakiyesi yetersiz." });
+      addMessage("NovaBank", "💳 Bakiyeniz yetersiz olduğundan ödemeniz gerçekleştirilemedi.");
+
+      setCardNumber("");
+      setCardName("");
+      setExpiryDate("");
+      setCVV("");
+      setSelectedShipping("");
+      setAcceptedTerms(false);
+      setSaveCard(false);
+      setSelectedShippingPrice(0);
+      setCartItems([]);
+
+      setIsPaying(false);
+      setTimeout(() => {
+        setErrors({});
+      }, 3000);
+      return;
+    }
+
     if (saveCard) {
       setTechInfoF((prev) => ({
         ...prev,
