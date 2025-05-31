@@ -27,7 +27,7 @@ const TaskBar = ({windowConfig}) => {
  const [showSystemSettings, setShowSystemSettings] = useState(false);
 
   const [wifiname, setwifiname] = useState('');
-  const { toggleWindow } = useUIContext();
+  const { openWindow } = useUIContext();
   const [popupQueue, setPopupQueue] = useState([]); // 📌 Pop-up bildirimi yöneten state
   const popupTimeout = useRef(null);
 
@@ -193,7 +193,7 @@ const TaskBar = ({windowConfig}) => {
     );    
   
     if (!openWindows.includes('mailbox')) {
-      toggleWindow('mailbox');
+      openWindow('mailbox');
     }
   
     setNotifiedMails(prevNotifiedMails => 

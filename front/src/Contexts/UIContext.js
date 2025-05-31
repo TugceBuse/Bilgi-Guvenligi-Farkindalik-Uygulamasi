@@ -118,7 +118,7 @@ export const UIContextProvider = ({ children }) => {
         visibleWindows, setVisibleWindows,
         activeWindow, setActiveWindow,
         zindex, setZindex,
-        openWindow, closeWindow,     // güncel
+        openWindow, closeWindow,   
         handleIconClick,
         lockMouse, unlockMouse, mouseLocked,
         windowProps, setWindowProps,
