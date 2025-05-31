@@ -6,13 +6,13 @@ import { FileContextProvider } from '../Contexts/FileContext.js';
 import { UIContextProvider } from '../Contexts/UIContext.js';
 import { MailContextProvider } from '../Contexts/MailContext.js';
 import { VirusProvider } from '../Contexts/VirusContext.js';
+import { SecurityProvider } from '../Contexts/SecurityContext.js'; // EKLEDİN!
 import { WindowConfigProvider } from '../Contexts/WindowConfigContext.js';
 import { NotificationProvider } from '../Contexts/NotificationContext';
 import { PhoneProvider } from '../Contexts/PhoneContext.js';
 import { TodoProvider } from '../Contexts/TodoContext.js';
 
 const Game = () => {
-  // Sağ tıklamayı engellemek ve sol click tetikleme
   useEffect(() => {
     const handleContextMenu = (event) => {
       event.preventDefault();
@@ -25,25 +25,27 @@ const Game = () => {
 
   return (
     <NotificationProvider>
-      <Notification /> 
+      <Notification />
       <UIContextProvider>
-        <FileContextProvider>
-          <MailContextProvider>
-            <VirusProvider>
+        <SecurityProvider>
+          <VirusProvider>
+            <FileContextProvider>
               <WindowConfigProvider>
-                <PhoneProvider>
-                  <GameContextProvider>
-                    <TodoProvider>
-                      <div className="game">
-                        <Desktop />
-                      </div>
-                    </TodoProvider>
-                  </GameContextProvider>
-                </PhoneProvider>
-              </WindowConfigProvider>
-            </VirusProvider>
-          </MailContextProvider>
-        </FileContextProvider>
+                <MailContextProvider>
+                  <PhoneProvider>
+                    <GameContextProvider>
+                      <TodoProvider>
+                        <div className="game">
+                          <Desktop />
+                        </div>
+                      </TodoProvider>
+                    </GameContextProvider>
+                  </PhoneProvider>
+                </MailContextProvider>
+              </WindowConfigProvider> 
+            </FileContextProvider>
+          </VirusProvider>
+        </SecurityProvider>
       </UIContextProvider>
     </NotificationProvider>
   );

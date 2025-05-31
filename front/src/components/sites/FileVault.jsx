@@ -57,8 +57,7 @@ const FileVault = () => {
         const newProgress = Math.min(prev[file.name].progress + step, 100);
         if (newProgress >= 100) {
           clearInterval(prev[file.name].timer);
-          // addFile({ ...file });
-          // BU KISIMDA DOSYA EKLEME İŞLEMİ YAPILACAK
+          // addFile({ ...file }); // Yüklenen dosyayı ekleyebilirsin
         }
         return {
           ...prev,
@@ -71,7 +70,7 @@ const FileVault = () => {
         };
       });
     }, 45);
-    
+
     setDownloadState(prev => ({
       ...prev,
       [file.name]: { ...prev[file.name], status: "downloading", progress: 0, timer }
@@ -150,6 +149,24 @@ const FileVault = () => {
                   </div>
                 </div>
                 <div className={styles.actionRow}>
+                  {/* İndirme sırasında animasyon + iptal */}
+                  {state.status === "downloading" && (
+                    <div className={styles.downloadArea}>
+                      <div className={styles.progressWrapper}>
+                        <div className={styles.progressBar}>
+                          <div
+                            className={styles.progress}
+                            style={{ width: `${state.progress}%` }}
+                          />
+                        </div>
+                        <span className={styles.progressText}>{state.progress}%</span>
+                      </div>
+                      <button className={styles.cancelButton} onClick={() => handleCancel(file)}>
+                        İptal
+                      </button>
+                    </div>
+                  )}
+                  {/* Hazırsa */}
                   {state.status === "idle" && (
                     <button
                       className={styles.downloadButton}
@@ -158,6 +175,7 @@ const FileVault = () => {
                       İndir
                     </button>
                   )}
+                  {/* Bitti ise */}
                   {state.status === "done" && (
                     <button className={styles.downloadedButton} disabled>
                       İndirildi

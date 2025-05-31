@@ -4,7 +4,7 @@ import TaskAppSetup from '../exefiles/TaskAppSetup/TaskAppSetup';
 import TaskAppSetupF from '../exefiles/TaskAppSetupF/TaskAppSetupF';
 import NovaBankAppSetup from '../exefiles/NovaBankAppSetup/NovaBankAppSetup';
 import NovaBankAppSetupF from '../exefiles/NovaBankAppSetupF/NovaBankAppSetupF';
-
+import AppInstaller from './AppInstaller';
 
 // EXE bileşenlerini tanımlayalım
 const exeComponents = {
@@ -16,10 +16,11 @@ const exeComponents = {
     // Yeni EXE bileşenleri buraya eklenebilir
 };
 
-const ExeViewer = ({ file, fileName }) => {
-    const ExeComponent = exeComponents[file.exeType];
+const ExeViewer = ({ file, fileName, ...props }) => {
+    // exeType key'i küçük harfe çevrilmiş şekilde alınmalı
+    const exeTypeKey = file.exeType?.toLowerCase();
 
-    if (!ExeComponent) {
+    if (!exeTypeKey || !exeComponents[exeTypeKey]) {
         return (
             <div className="window exe-window">
                 <h2>{file.label}</h2>
@@ -28,7 +29,14 @@ const ExeViewer = ({ file, fileName }) => {
         );
     }
 
-    return <ExeComponent file={file} fileName={fileName} />;
+    // AppInstaller ile render ediyoruz
+    return (
+        <AppInstaller
+            fileName={fileName}
+            setupType={exeTypeKey}  // ör: "taskappsetupf"
+            {...props}              // Diğer prop'ları da aktar
+        />
+    );
 };
 
 export default ExeViewer;

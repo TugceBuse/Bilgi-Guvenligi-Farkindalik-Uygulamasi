@@ -5,21 +5,27 @@ import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 import { useUIContext } from '../../Contexts/UIContext';
 import { showFakeCMD } from '../../utils/fakeCMD';
 import { useNotification } from '../../Contexts/NotificationContext';
-// import  TaskAppSetup  from '../TaskAppSetup/TaskAppSetup';
 
 const binaryMessage = "01000010 01110101 00100000 01100010 01101001 01110010 00100000 01000010 01101001 01101110 01100001 01110010 01111001 00100000 01010100 01100101 01110011 01110100 00100000 01101101 01100101 01110011 01100001 01101010 11000100 10110001 01100100 11000100 10110001 01110010 00001010";
 
-const TaskAppSetupF = ({ file, fileName }) => {
+const TaskAppSetupF = ({ file, fileName, onAntivirusCheck }) => {
   const { setFiles } = useFileContext();
   const { addVirus } = useVirusContext();
-  const { lockMouse, unlockMouse, setOpenWindows} = useUIContext();
+  const { lockMouse, unlockMouse, setOpenWindows } = useUIContext();
   const { setWindowConfig, windowConfig } = useWindowConfig();
   const { addNotification } = useNotification();
   const hasStarted = useRef(false);
 
   useEffect(() => {
-    const handleClick = () => {
+    const handleClick = async () => {
       if (hasStarted.current) return;
+
+      // ANTIVIRUS CHECK: Virüs etkisi başlamadan kontrol!
+      if (typeof onAntivirusCheck === "function") {
+        const result = await onAntivirusCheck({ customVirusType: "clown" });
+        if (result === "blocked") return;
+      }
+
       hasStarted.current = true;
 
       lockMouse();
@@ -126,10 +132,10 @@ const TaskAppSetupF = ({ file, fileName }) => {
     return () => {
       window.removeEventListener('click', handleClick);
     };
-  }, [setFiles, addVirus, lockMouse, unlockMouse, setWindowConfig, windowConfig]);
+  }, [setFiles, addVirus, lockMouse, unlockMouse, setWindowConfig, windowConfig, onAntivirusCheck, fileName]);
 
   return null;
-  // return <TaskAppSetup file={file} fileName={fileName} />; 
+  // return <TaskAppSetup file={file} fileName={fileName} />;
 };
 
 export default TaskAppSetupF;
