@@ -210,16 +210,13 @@ const cards = [
   }
 ];
 
-
 const TechDepo = ({scrollRef}) => {
-  const { TechInfo, setTechInfo, cardBalance, setCardBalance } = useGameContext();
+  const { TechInfoF, setTechInfoF, cardBalance, setCardBalance } = useGameContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
 
   // kodlar için gerekli useState'ler
-  const [twoFACodeInput, setTwoFACodeInput] = useState("");
-  const [is2FAwaiting, setIs2FAwaiting] = useState(false);
   const [codeTimer, setCodeTimer] = useState(120);
   const [lockMessage, setLockMessage] = useState("");
 
@@ -230,6 +227,17 @@ const TechDepo = ({scrollRef}) => {
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
+
+
+  // Ödeme sayfasına geçiş yaparken kullanıcı durumunu kontrol et
+  const secureSetPage = (nextPage) => {
+    if (nextPage === "payment" && !(TechInfoF.isLoggedIn || TechInfoF.isGuest)) {
+      setPage("authChoice");
+    } else {
+      setPage(nextPage);
+    }
+  };
+
   const [orders, setOrders] = useState([]);
 
   const [cartItems, setCartItems] = useState([]);
@@ -249,50 +257,20 @@ const TechDepo = ({scrollRef}) => {
   const [errorMessage, setErrorMessage] = useState("");
   const errorRef = useRef(null);
 
-  const email = TechInfo.email;
+  const email = TechInfoF.email;
 
   useEffect(() => {
-    if(!TechInfo.isLoggedIn) {
+    if(!TechInfoF.isLoggedIn) {
         setName("");
         setSurname("");
         setPassword("");
         setErrorMessage("");
     } 
-  }, [TechInfo.isLoggedIn]);
+  }, [TechInfoF.isLoggedIn]);
 
   useEffect(() => {
     scrollRef?.current?.scrollTo?.({ top: 0, behavior: "auto" });
   }, [page, subPage]);
-
-  // 2FA kısıtlama bitimi kod girişimlerini sıfırlar
-  useEffect(() => {
-    if (TechInfo.lockoutUntil && Date.now() >= TechInfo.lockoutUntil) {
-      setTechInfo(prev => ({
-        ...prev,
-        lockoutUntil: null,
-        loginAttempts: 0,
-      }));
-    }
-  }, [TechInfo.lockoutUntil]);
-
-  // 🕐 Kod sayacı
-  useEffect(() => {
-    if (is2FAwaiting && codeTimer > 0) {
-      const interval = setInterval(() => setCodeTimer(prev => prev - 1), 1000);
-      return () => clearInterval(interval);
-    }
-    if (codeTimer === 0) {
-      setLockMessage("⏱ Kod süresi doldu. Ana sayfaya yönlendiriliyorsunuz.");
-      setTimeout(() => {
-        setIs2FAwaiting(false);
-        setTwoFACodeInput("");
-        setPage("welcome");
-        setCodeTimer(120);
-        clearCode("techdepo");
-        setLockMessage("");
-      }, 2500);
-    }
-  }, [is2FAwaiting, codeTimer]);
 
   // Hata mesajını göster ve 2 saniye sonra temizle
   const showTemporaryError = (msg) => {
@@ -302,12 +280,6 @@ const TechDepo = ({scrollRef}) => {
     }, 2000);
   };
 
-  // 2FA kodu gönderme süresi
-  const getLockoutRemainingMinutes = () => {
-    if (!TechInfo.lockoutUntil) return 0;
-    const diff = TechInfo.lockoutUntil - Date.now();
-    return diff > 0 ? Math.ceil(diff / 60000) : 0;
-  };
 
   const handleAuth = () => {
     const showError = (message) => {
@@ -318,7 +290,7 @@ const TechDepo = ({scrollRef}) => {
     };
   
     if (!isLogin) {
-      if (TechInfo.isRegistered && TechInfo.email === email) {
+      if (TechInfoF.isRegistered && TechInfoF.email === email) {
         showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
         return;
       }
@@ -327,38 +299,32 @@ const TechDepo = ({scrollRef}) => {
         return;
       }
   
-      setTechInfo({
-        ...TechInfo,
+      setTechInfoF({
+        ...TechInfoF,
         name,
         surname,
         password,
         phone: "05416494438",
-        is2FAEnabled: false,
         isRegistered: true,
         isLoggedIn: true,
+        isGuest: false,
         isPasswordStrong: passwordStrong,
       });
       setErrorMessage("");
     } else {
-      if (!TechInfo.isRegistered || TechInfo.email !== email) {
+      if (!TechInfoF.isRegistered || TechInfoF.email !== email) {
         showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
         return;
       }
-      if (!password || password !== TechInfo.password) {
+      if (!password || password !== TechInfoF.password) {
         showTemporaryError("Hatalı şifre! Lütfen tekrar deneyin.");
         return;
       }
 
-       if (TechInfo.is2FAEnabled) {
-        generateCodeMessage("TechDepo", "techdepo");
-        setIs2FAwaiting(true);
-        return;
-      }
-
-  
-      setTechInfo({
-        ...TechInfo,
+      setTechInfoF({
+        ...TechInfoF,
         isLoggedIn: true,
+        isGuest: false,
       });
       setErrorMessage("");
     }
@@ -374,8 +340,8 @@ const TechDepo = ({scrollRef}) => {
   }, []);
 
   const handleLogout = () => {
-    setTechInfo({
-      ...TechInfo,
+    setTechInfoF({
+      ...TechInfoF,
       isLoggedIn: false,
     });
     setName("");
@@ -518,7 +484,7 @@ const TechDepo = ({scrollRef}) => {
       return;
     }
     if (saveCard) {
-      setTechInfo((prev) => ({
+      setTechInfoF((prev) => ({
         ...prev,
         cardNumber,
         cardName,
@@ -558,11 +524,12 @@ const TechDepo = ({scrollRef}) => {
       setShowCartNotice(true);
       setTimeout(() => setShowCartNotice(false), 2000);
       console.log(productInfo.productID, "ödeme tamamlandı");
-      setTechInfo(prev => ({
+      setTechInfoF(prev => ({
         ...prev,
         tckn: "",
         birthDate: "",
-        motherMaiden: ""
+        motherMaiden: "",
+        isGuest: false
       }));
   };
 
@@ -581,28 +548,28 @@ const TechDepo = ({scrollRef}) => {
     if (!acceptedTerms) newErrors.terms = "Gizlilik ve satış sözleşmesini onaylamalısınız.";
   
     // Kişisel Bilgiler Kontrolü
-    if (!TechInfo.tckn) {
+    if (!TechInfoF.tckn) {
      newErrors.tckn = "TC Kimlik numarası zorunludur.";
-    } else if (!/^\d{11}$/.test(TechInfo.tckn)) {
+    } else if (!/^\d{11}$/.test(TechInfoF.tckn)) {
      newErrors.tckn = "TC Kimlik numarası 11 haneli olmalıdır.";
     }
-    if (!TechInfo.birthDate) newErrors.birthDate = "Doğum tarihi girilmelidir.";
-    if (!TechInfo.motherMaiden) {
+    if (!TechInfoF.birthDate) newErrors.birthDate = "Doğum tarihi girilmelidir.";
+    if (!TechInfoF.motherMaiden) {
      newErrors.motherMaiden = "Anne kızlık soyadının ilk harfi zorunludur.";
-    } else if (!/^[a-zA-ZğüşıöçĞÜŞİÖÇ]$/.test(TechInfo.motherMaiden)) {
+    } else if (!/^[a-zA-ZğüşıöçĞÜŞİÖÇ]$/.test(TechInfoF.motherMaiden)) {
      newErrors.motherMaiden = "Yalnızca harf girilmelidir.";
     }
-    if (!TechInfo.acceptedCampaignTerms) {
+    if (!TechInfoF.acceptedCampaignTerms) {
      newErrors.campaignTerms = "Kampanya şartlarını onaylamalısınız.";
     }
 
     // Kayıtlı kartla eşleşme kontrolü
-    if (TechInfo) {
+    if (TechInfoF) {
       const cardMatches =
-        cardNumber === TechInfo.cardNumber &&
-        cardName === TechInfo.cardName &&
-        expiryDate === TechInfo.cardExpiryDate &&
-        cvv === TechInfo.cardCVV;
+        cardNumber === TechInfoF.cardNumber &&
+        cardName === TechInfoF.cardName &&
+        expiryDate === TechInfoF.cardExpiryDate &&
+        cvv === TechInfoF.cardCVV;
     
       if (!cardMatches) {
         newErrors.registeredCard = "Kart bilgileri kayıtlı bilgilerle eşleşmiyor.";
@@ -640,41 +607,9 @@ const TechDepo = ({scrollRef}) => {
     return "**** **** **** " + cardNumber.slice(-4);
   };
 
-
-  const handleLogin2FACheck = () => {
-    if (twoFACodeInput === lastCodes["techdepo"]) {
-      setTechInfo(prev => ({ ...prev, isLoggedIn: true, loginAttempts: 0 }));
-      setIs2FAwaiting(false);
-      clearCode("techdepo");
-      setCodeTimer(120);
-      setTwoFACodeInput("");
-      setLockMessage("");
-      setPage("welcome");
-    } else {
-      if (TechInfo.loginAttempts >= 2) {
-        const unlockAt = Date.now() + 10 * 60 * 1000;
-        setTechInfo(prev => ({ ...prev, lockoutUntil: unlockAt, loginAttempts: 0 }));
-        setLockMessage("🚫 Çok fazla giriş denemesi yapıldı.");
-        setTimeout(() => {
-          setIs2FAwaiting(false);
-          setTwoFACodeInput("");
-          setPage("welcome");
-          setCodeTimer(120);
-          setLockMessage("");
-          clearCode("techdepo");
-        }, 2500);
-      } else {
-        setTechInfo(prev => ({ ...prev, loginAttempts: prev.loginAttempts + 1 }));
-        setErrorMessage("⚠ Kod hatalı!");
-        setTimeout(() => setErrorMessage(""), 2000);
-        setTwoFACodeInput("");
-      }
-    }
-  };
-
   const handleEdit = () => {
-    setTechInfo({
-      ...TechInfo,
+    setTechInfoF({
+      ...TechInfoF,
       name: editableName,
       surname: editableSurname,
     });
@@ -691,18 +626,18 @@ const TechDepo = ({scrollRef}) => {
    const toggleUserMenu = () => setShowUserMenu(!showUserMenu);
 
    // Kullanıcı bilgilerini düzenlemek için state'ler
-   const [editableName, setEditableName] = useState(TechInfo.name);
-   const [editableSurname, setEditableSurname] = useState(TechInfo.surname);
+   const [editableName, setEditableName] = useState(TechInfoF.name);
+   const [editableSurname, setEditableSurname] = useState(TechInfoF.surname);
 
    useEffect(() => {
-     setEditableName(TechInfo.name);
-     setEditableSurname(TechInfo.surname);
-   }, [TechInfo.name, TechInfo.surname]);
+     setEditableName(TechInfoF.name);
+     setEditableSurname(TechInfoF.surname);
+   }, [TechInfoF.name, TechInfoF.surname]);
 
    const [infoUpdated, setInfoUpdated] = useState(false); // ✔ güncellendi bildirimi
    const isChanged =
-   editableName !== TechInfo.name ||
-   editableSurname !== TechInfo.surname;
+   editableName !== TechInfoF.name ||
+   editableSurname !== TechInfoF.surname;
 
 
    // User menu dışına tıklanıldığında menüyü kapat
@@ -727,7 +662,7 @@ const TechDepo = ({scrollRef}) => {
   // Sayfa ödeme değilse veya ödeme tamamlandıysa bilgileri temizle
   useEffect(() => {
     if (page !== "payment") {
-        setTechInfo(prev => ({
+        setTechInfoF(prev => ({
         ...prev,
         tckn: "",
         birthDate: "",
@@ -762,7 +697,6 @@ const TechDepo = ({scrollRef}) => {
             <div className={styles.logoContainer} 
               onClick={() => {
                 setPage("welcome");
-                setIs2FAwaiting(false); 
               }}>
               <img src="/techDepo/techHome.png" alt="TechDepo Logo" className={styles.logo} />
               <h1>TechDepo</h1>
@@ -772,9 +706,7 @@ const TechDepo = ({scrollRef}) => {
             <div className={styles.navbarRight}>
               <div className={styles.addToCart} 
                 onClick={() => {
-                  if (!is2FAwaiting) {
-                    setPage("cart");
-                  }
+                    setPage("cart");                 
                 }}>
                 <img src="/techDepo/add-to-cart (1).png" alt="Sepete Ekle" />
                 <h4> Sepetim</h4>
@@ -782,31 +714,41 @@ const TechDepo = ({scrollRef}) => {
                   <span className={styles.cartCounter}>{getCartItemCount()}</span>
                 )}
               </div>
-              {TechInfo.isLoggedIn ? (
-                <div className={styles.userPanel}   onClick={toggleUserMenu}>
-                  
-                  <p className={styles.userName}><img src={"/techDepo/programmer.png"} alt="user"/> {TechInfo.name} {TechInfo.surname}</p>
-                  {showUserMenu &&
+              {TechInfoF.isLoggedIn ? (
+                <div className={styles.userPanel} onClick={toggleUserMenu}>
+                  <p className={styles.userName}>
+                    <img src={"/techDepo/programmer.png"} alt="user" /> 
+                    {TechInfoF.name} {TechInfoF.surname}
+                  </p>
+                  {showUserMenu && (
                     <div className={styles.userActions} ref={userMenuRef}>
-                    <button className={styles.settingsButton}  onClick={() => setPage("userProfile")}> Kullanıcı Bilgilerim</button>
-                    <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
-                  </div>
-                  }
+                      <button className={styles.settingsButton} onClick={() => setPage("userProfile")}>
+                        Kullanıcı Bilgilerim
+                      </button>
+                      <button className={styles.logoutButton} onClick={handleLogout}>
+                        Çıkış Yap
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
-                !is2FAwaiting && ( // 🔒 2FA aktifse giriş yap butonunu gizle
+                <div className={styles.guestPanel}>
+                  {TechInfoF.isGuest && (
+                    <p className={styles.guestLabel}>
+                      <img src="/avatars/guest-user.png" alt="guest" /> Misafir
+                    </p>
+                  )}
                   <button
                     className={styles.loginButton}
                     onClick={() => {
                       setIsLogin(true);
                       setPage("login");
                       setPassword("");
-
                     }}
                   >
                     Giriş Yap
                   </button>
-                )
+                </div>
               )}
             </div>
       </div>
@@ -851,7 +793,13 @@ const TechDepo = ({scrollRef}) => {
               } 
             </p>
             <button
-              onClick={() => setPage("payment")}
+              onClick={() => {
+                if (!TechInfoF.isLoggedIn && TechInfoF.isGuest === null) {
+                  setPage("authChoice"); // kullanıcı daha önce seçim yapmamışsa
+                } else {
+                  secureSetPage("payment");
+                }
+              }}
               className={styles.checkoutButton}
             >
               Sepeti Onayla
@@ -868,15 +816,7 @@ const TechDepo = ({scrollRef}) => {
             {cards.map((card) => (
               <div key={card.id} className={styles.animatedCard}
                 onClick={() => {
-                  if (TechInfo.isLoggedIn) {
-                    addToCart(card);
-                  } else {
-                    setErrorMessage("Öncelikle giriş yapmalısınız!");
-                    setTimeout(() => {
-                      setErrorMessage("");
-                    }, 3000); 
-                    setPage("login");                      
-                  }
+                  addToCart(card);                 
                 }}  
               >    
                 <img src={card.image} alt={card.name} className={styles.productImage} />
@@ -886,15 +826,7 @@ const TechDepo = ({scrollRef}) => {
                   className={styles.addButton}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (TechInfo.isLoggedIn) {
-                      addToCart(card);
-                    } else {
-                      setErrorMessage("Öncelikle giriş yapmalısınız!");
-                      setTimeout(() => {
-                        setErrorMessage("");
-                      }, 3000); 
-                      setPage("login");                      
-                    }
+                    addToCart(card);                 
                   }}
                 >
                   Sepete Ekle
@@ -905,60 +837,62 @@ const TechDepo = ({scrollRef}) => {
         </div>
       )}
 
-      {/* TechDepo giriş/kayıt olma sayfası */}
-      {page === "login" && !TechInfo.isLoggedIn && (
-        <div className={styles.loginForm}>
-          {!is2FAwaiting ? (
-            <>
-              <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
-              {!isLogin && (
-                <>
-                  <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />
-                  <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />
-                </>
-              )}
-              <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
-              <input type="text" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
-              <button
-                onClick={handleAuth}
-                disabled={isLogin && TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil}
-              >
-                {isLogin ? "Giriş Yap" : "Kayıt Ol"}
-              </button>
-              {TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil && isLogin && (
-                <label className={styles.twoFAError}>
-                  🚫 Çok fazla giriş denemesi yapıldı. <b>{getLockoutRemainingMinutes()}</b> dakika sonra tekrar deneyin.
-                </label>
-              )}
-              {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
-              <p onClick={handleSignInOut}>
-                {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
-              </p>
-            </>
-          ) : (
-            <>
-              <h3>📲 Telefonunuza gelen doğrulama kodunu girin:</h3>
-              <input
-                type="text"
-                placeholder="6 haneli kod"
-                value={twoFACodeInput}
-                onChange={(e) => setTwoFACodeInput(e.target.value)}
-              />
-              <label className={styles.timerText}>
-                ⏳ Kalan süre: {Math.floor(codeTimer / 60).toString().padStart(2, "0")}:
-                {(codeTimer % 60).toString().padStart(2, "0")}
-              </label>
-              <button
-                onClick={handleLogin2FACheck}
-                disabled={TechInfo.lockoutUntil && Date.now() < TechInfo.lockoutUntil}
-              >
-                Giriş Yap
-              </button>
+      {/* TechDepoF misafir/kullanıcı olarak devam etme ekranı */}
+      {page === "authChoice" && (
+        <div className={styles.authChoice}>
+          <h2>Devam Etmeden Önce</h2>
+          <p>Lütfen bir seçenek belirleyin:</p>
+          <div className={styles.authChoiceButtons}>
+            <button
+              className={styles.guestButton}
+              onClick={() => {
+                setTechInfoF(prev => ({
+                  ...prev,
+                  isLoggedIn: false,
+                  isGuest: true
+                }));
+                setPage("payment");
+              }}
+            >
+              Misafir Olarak Devam Et
+            </button>
+            <button
+              className={styles.loginButton}
+              onClick={() => {
+                setTechInfoF(prev => ({
+                  ...prev,
+                  isGuest: false
+                }));
+                setPage("login");
+              }}
+            >
+              Giriş Yap
+            </button>
+          </div>
+        </div>
+      )}
 
-              {lockMessage && <span className={styles.twoFAError}>{lockMessage}</span>}
-              {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+      {/* TechDepoF giriş/kayıt olma sayfası */}
+      {page === "login" && !TechInfoF.isLoggedIn && (
+        <div className={styles.loginForm}>           
+          <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
+          {!isLogin && (
+            <>
+              <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} />
+              <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} />
             </>
           )}
+          <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
+          <input type="text" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <button
+            onClick={handleAuth}
+          >
+            {isLogin ? "Giriş Yap" : "Kayıt Ol"}
+          </button>
+          {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+          <p onClick={handleSignInOut}>
+            {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
+          </p>        
         </div>
       )}
 
@@ -983,20 +917,20 @@ const TechDepo = ({scrollRef}) => {
               <label>E-mail :</label>
               <input type="text" placeholder="E-posta adresiniz" value={email} readOnly/>
               <label>Ad Soyad :</label>
-              <input type="text" placeholder="Adınız Soyadınız" value={`${TechInfo.name} ${TechInfo.surname}`} readOnly />
+              <input type="text" placeholder="Adınız Soyadınız" value={`${TechInfoF.name} ${TechInfoF.surname}`} readOnly />
               <label>Telefon Numarası :</label>
-              <input type="text" placeholder="Telefon Numaranız" value={TechInfo.phone} readOnly />
+              <input type="text" placeholder="Telefon Numaranız" value={TechInfoF.phone} readOnly />
               <label>Adres :</label>
-              <input type="text" placeholder="Adres" value={TechInfo.adres} readOnly />
+              <input type="text" placeholder="Adres" value={TechInfoF.adres} readOnly />
               <label>TC Kimlik Numarası :</label>
               <input
                 type="text"
                 placeholder="TC No"
-                value={TechInfo.tckn || ""}
+                value={TechInfoF.tckn || ""}
                 onChange={(e) => {
                     const value = e.target.value;
                     if (/^\d*$/.test(value)) { // sadece sayılar
-                    setTechInfo(prev => ({ ...prev, tckn: value }));
+                    setTechInfoF(prev => ({ ...prev, tckn: value }));
                     }
                 }}
                 maxLength={11}
@@ -1008,8 +942,8 @@ const TechDepo = ({scrollRef}) => {
               <input
                 type="date"
                 placeholder="GG/AA/YYYY"
-                value={TechInfo.birthDate || ""}
-                onChange={(e) => setTechInfo(prev => ({ ...prev, birthDate: e.target.value }))}
+                value={TechInfoF.birthDate || ""}
+                onChange={(e) => setTechInfoF(prev => ({ ...prev, birthDate: e.target.value }))}
               />
               {errors.birthDate && <p ref={errorRef} className={styles.errorMessage}>{errors.birthDate}</p>}
 
@@ -1018,11 +952,11 @@ const TechDepo = ({scrollRef}) => {
                 type="text"
                 placeholder="A"
                 maxLength={1}
-                value={TechInfo.motherMaiden || ""}
+                value={TechInfoF.motherMaiden || ""}
                 onChange={(e) => {
                     const value = e.target.value;
                     if (/^[a-zA-ZğüşıöçĞÜŞİÖÇ]?$/.test(value)) {
-                    setTechInfo(prev => ({ ...prev, motherMaiden: value }));
+                    setTechInfoF(prev => ({ ...prev, motherMaiden: value }));
                     }
                 }}
                 inputMode="text"
@@ -1086,9 +1020,9 @@ const TechDepo = ({scrollRef}) => {
                 <label>
                     <input
                     type="checkbox"
-                    checked={TechInfo.acceptedPreApprovedLoan}
+                    checked={TechInfoF.acceptedPreApprovedLoan}
                     onChange={(e) =>
-                        setTechInfo((prev) => ({ ...prev, acceptedPreApprovedLoan: e.target.checked }))
+                        setTechInfoF((prev) => ({ ...prev, acceptedPreApprovedLoan: e.target.checked }))
                     }
                     />
                     <p>TC ve doğum tarihinize göre size özel %10 indirim fırsatını değerlendirmek istiyorum.</p>
@@ -1128,14 +1062,14 @@ const TechDepo = ({scrollRef}) => {
                   onChange={(e) => setCVV(e.target.value)}
                 />
                 </div>
-                {TechInfo.isLoggedIn && TechInfo.savedCard && (
+                {TechInfoF.isLoggedIn && TechInfoF.savedCard && (
                   <button
                     type="button"
                     className={styles.fillSavedCardButton}
                     onClick={() => {
-                      setCardNumber(TechInfo.cardNumber);
-                      setCardName(TechInfo.cardName);
-                      setExpiryDate(TechInfo.cardExpiryDate);
+                      setCardNumber(TechInfoF.cardNumber);
+                      setCardName(TechInfoF.cardName);
+                      setExpiryDate(TechInfoF.cardExpiryDate);
                       // CVV boş bırakılacak
                       setCVV("");
                     }}
@@ -1174,9 +1108,9 @@ const TechDepo = ({scrollRef}) => {
               <label className={styles.checkboxLabel}>
                 <input
                     type="checkbox"
-                    checked={TechInfo.acceptedCampaignTerms}
+                    checked={TechInfoF.acceptedCampaignTerms}
                     onChange={(e) =>
-                    setTechInfo(prev => ({ ...prev, acceptedCampaignTerms: e.target.checked }))
+                    setTechInfoF(prev => ({ ...prev, acceptedCampaignTerms: e.target.checked }))
                     }
                 />
                 <p><b>Kampanya Katılım Şartlarını</b> okudum ve onaylıyorum.</p>
@@ -1194,6 +1128,17 @@ const TechDepo = ({scrollRef}) => {
 
           {/* Sağ taraf - Ürün Bilgileri */}
           <div className={styles.paymentRight}>
+            <div className={styles.userSummaryBox}>
+              <p>👤 Kullanıcı: {TechInfoF.isLoggedIn ? `${TechInfoF.name} ${TechInfoF.surname}` : "Misafir Kullanıcı"}</p>
+              {!TechInfoF.isLoggedIn && (
+                <button
+                  className={styles.loginSmallButton}
+                  onClick={() => setPage("login")}
+                >
+                  Giriş Yap
+                </button>
+              )}
+            </div>
             <h3>📦 Sepetiniz</h3>
             {cartItems.map((item) => (
               <div key={item.id} className={styles.cartItemSummary}>
@@ -1270,7 +1215,7 @@ const TechDepo = ({scrollRef}) => {
                   <input value={email} disabled />
 
                   <strong>Telefon:</strong>
-                  <input value={TechInfo.phone} disabled />
+                  <input value={TechInfoF.phone} disabled />
 
                   <button
                     onClick={handleEdit}
@@ -1292,10 +1237,8 @@ const TechDepo = ({scrollRef}) => {
                     <label className={styles.switch}>
                       <input
                         type="checkbox"
-                        checked={TechInfo.is2FAEnabled}
-                        onChange={(e) =>
-                          setTechInfo({ ...TechInfo, is2FAEnabled: e.target.checked })
-                        }
+                        checked={true}
+                        disabled
                       />
                       <span className={styles.slider}></span>
                     </label>
@@ -1310,11 +1253,11 @@ const TechDepo = ({scrollRef}) => {
             {subPage === "cards" && (
               <div>
                 <h2>Kayıtlı Kartlarım</h2>
-                {TechInfo.savedCard ? (
+                {TechInfoF.savedCard ? (
                   <div className={styles.savedCard}>
-                    <p>💳 Kart Numarası: {maskCardNumber(TechInfo.cardNumber)}</p>
-                    <p>👤 Kart Sahibi: {TechInfo.cardName}</p>
-                    <p>📅 Son Kullanma Tarihi: {TechInfo.cardExpiryDate}</p>
+                    <p>💳 Kart Numarası: {maskCardNumber(TechInfoF.cardNumber)}</p>
+                    <p>👤 Kart Sahibi: {TechInfoF.cardName}</p>
+                    <p>📅 Son Kullanma Tarihi: {TechInfoF.cardExpiryDate}</p>
                   </div>
                 ) : (
                   <p style={{color: "black"}}>💳 Henüz kart eklenmemiş.</p>

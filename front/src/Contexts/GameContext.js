@@ -117,11 +117,29 @@ export const GameContextProvider = ({ children }) => {
     adres: constUser.adres,
     lockoutUntil: null,
     loginAttempts: 0,
+  });
+
+  const [TechInfoF, setTechInfoF] = useState({
+    name: '',
+    surname: '',
+    email: constUser.email,
+    password: '',
+    phone: constUser.phone,
+    isRegistered: false,
+    isLoggedIn: false,
+    isPasswordStrong: false,
+    cardNumber: constUser.cardNumber,
+    cardName: constUser.cardName,
+    cardExpiryDate: constUser.cardExpiryDate,
+    cardCVV: constUser.cardCVV,
+    saveCard: false,
+    adres: constUser.adres,
     tckn: "",
     birthDate: "",
     motherMaiden: "",
     acceptedPreApprovedLoan: false,
     acceptedCampaignTerms: false,
+    isGuest: null
   });
 
   const [productInfo, setProductInfo] = useState({
@@ -206,6 +224,7 @@ export const GameContextProvider = ({ children }) => {
         SkillForgeHubInfo, setSkillForgeHubInfo,
         PostifyInfo, setPostifyInfo,
         TechInfo, setTechInfo,
+        TechInfoF, setTechInfoF,
         getRelativeDate,
         productInfo, setProductInfo,
         constUser,
