@@ -62,7 +62,7 @@ const sites = {
     protocol: "https",
     color: "#24bfff",
     isSponsored: false,
-    seoScore: 91
+    seoScore: 89
   },
 
   "^https://cloudbox.com/package/([a-zA-Z0-9]+)$": {
@@ -96,6 +96,29 @@ const sites = {
     color: "#2ff2e3",
     isSponsored: false,
     seoScore: 92
+  },
+
+  "https://syncnest.com": {
+    title: "SyncNest",
+    type: "component",
+    component: "SyncNest",
+    statement: "Dosyalarınızı güvenle yedekleyin, yönetin ve istediğiniz zaman erişin! SyncNest ile modern bulut deneyimi.",
+    searchKeys: [
+      "syncnest",
+      "bulut depolama",
+      "cloud backup",
+      "yedekleme",
+      "güvenli yedekleme",
+      "dosya yükle",
+      "cloud kayıt",
+      "kişisel bulut",
+      "dosya paylaş"
+    ],
+    clickable: true,
+    protocol: "https",
+    color: "#78bafc",
+    isSponsored: false,
+    seoScore: 90
   },
 
   "https://shieldsecure.com": { 
