@@ -290,14 +290,14 @@ const TechDepo = ({scrollRef}) => {
     };
   
     if (!isLogin) {
-      if (TechInfoF.isRegistered && TechInfoF.email === email) {
-        showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
-        return;
-      }
-      if (!name || !surname || !password) {
-        showTemporaryError("Lütfen tüm alanları doldurun!");
-        return;
-      }
+      // if (TechInfoF.isRegistered && TechInfoF.email === email) {
+      //   showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
+      //   return;
+      // }
+      // if (!name || !surname || !password) {
+      //   showTemporaryError("Lütfen tüm alanları doldurun!");
+      //   return;
+      // }
   
       setTechInfoF({
         ...TechInfoF,
@@ -312,14 +312,14 @@ const TechDepo = ({scrollRef}) => {
       });
       setErrorMessage("");
     } else {
-      if (!TechInfoF.isRegistered || TechInfoF.email !== email) {
-        showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
-        return;
-      }
-      if (!password || password !== TechInfoF.password) {
-        showTemporaryError("Hatalı şifre! Lütfen tekrar deneyin.");
-        return;
-      }
+      // if (!TechInfoF.isRegistered || TechInfoF.email !== email) {
+      //   showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
+      //   return;
+      // }
+      // if (!password || password !== TechInfoF.password) {
+      //   showTemporaryError("Hatalı şifre! Lütfen tekrar deneyin.");
+      //   return;
+      // }
 
       setTechInfoF({
         ...TechInfoF,
@@ -450,7 +450,6 @@ const TechDepo = ({scrollRef}) => {
   const [isPaying, setIsPaying] = useState(false);
 
   const [errors, setErrors] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [saveCard, setSaveCard] = useState(true);
 
@@ -534,7 +533,6 @@ const TechDepo = ({scrollRef}) => {
   };
 
   const handlePayment = () => {
-    setIsSubmitted(true);
     let newErrors = {};
     
     // Kart Bilgileri Kontrolü

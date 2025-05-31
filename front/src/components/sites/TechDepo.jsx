@@ -525,7 +525,6 @@ const TechDepo = ({scrollRef}) => {
   const [isPaying, setIsPaying] = useState(false);
 
   const [errors, setErrors] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [saveCard, setSaveCard] = useState(false);
 
@@ -606,7 +605,6 @@ const TechDepo = ({scrollRef}) => {
   };
 
   const handlePayment = () => {
-    setIsSubmitted(true);
     let newErrors = {};
     
     // Kart Bilgileri Kontrolü
