@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
 import { useVirusContext } from '../../Contexts/VirusContext';
-import { useFileContext } from '../../Contexts/FileContext';
 import NovaBankAppSetup from '../NovaBankAppSetup/NovaBankAppSetup';
 
-const NovaBankAppSetupF = ({ fileName }) => {
+const NovaBankAppSetupF = ({ fileName, onAntivirusCheck }) => {
   const { addVirus } = useVirusContext();
   const virusAdded = useRef(false);
 
@@ -25,7 +24,8 @@ const NovaBankAppSetupF = ({ fileName }) => {
   return (
     <NovaBankAppSetup
       fileName={fileName}
-      onInstallComplete={handleAdwareInstall} // burada adware kurulumu tetiklenir
+      onInstallComplete={handleAdwareInstall}
+      onAntivirusCheck={onAntivirusCheck} // <-- burada prop geçiriliyor
     />
   );
 };

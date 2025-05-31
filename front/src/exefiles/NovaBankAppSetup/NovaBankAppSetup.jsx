@@ -4,8 +4,7 @@ import { useUIContext } from '../../Contexts/UIContext';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 
-// onInstallComplete prop'u eklendi!
-const NovaBankAppSetup = ({ fileName, onInstallComplete }) => {
+const NovaBankAppSetup = ({ fileName, onInstallComplete, onAntivirusCheck }) => {
   const { closeFile } = useFileContext();
   const { updateAvailableStatus, windowConfig } = useWindowConfig();
   const SetupRef = useRef(null);
@@ -13,6 +12,7 @@ const NovaBankAppSetup = ({ fileName, onInstallComplete }) => {
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(0);
   const [installing, setInstalling] = useState(false);
+  const [blocked, setBlocked] = useState(false); // eklenen alan
   const intervalRef = useRef(null);
 
   // Kurulum tamamlandığında onInstallComplete çağrılır (adware burada eklenir)
@@ -46,7 +46,15 @@ const NovaBankAppSetup = ({ fileName, onInstallComplete }) => {
     }
   };
 
-  const startInstallation = () => {
+  // ANTIVIRUS CHECK ENTEGRASYONU
+  const startInstallation = async () => {
+    if (typeof onAntivirusCheck === "function") {
+      const result = await onAntivirusCheck({ customVirusType: "adware" });
+      if (result === "blocked") {
+        setBlocked(true);
+        return;
+      }
+    }
     setInstalling(true);
     setProgress(0);
     intervalRef.current = setInterval(() => {
@@ -69,6 +77,26 @@ const NovaBankAppSetup = ({ fileName, onInstallComplete }) => {
     setProgress(0);
   };
 
+  if (blocked) {
+    return (
+      <div className="novabanksetup-overlay">
+        <div className="novabanksetup-window" ref={SetupRef}>
+          <div className="novabanksetup-header">
+            <div className="novabanksetup-header-left">
+              <img className="novabanksetup-img" src="/novaBank/NovaBankAppSetup.png" alt="Bank" />
+              <h2>NovaBank Uygulama Kurulumu</h2>
+            </div>
+            <button className="novabanksetup-close" onClick={handleClose}>×</button>
+          </div>
+          <div className="novabanksetup-container">
+            <h4>Kurulum Tehlikeden Dolayı Durduruldu</h4>
+            <button onClick={handleClose}>Kapat</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="novabanksetup-overlay">
       <div className="novabanksetup-window" ref={SetupRef}>
@@ -79,13 +107,9 @@ const NovaBankAppSetup = ({ fileName, onInstallComplete }) => {
           </div>
           <button className="novabanksetup-close" onClick={handleClose}>×</button>
         </div>
-
         <div className="novabanksetup-content">
-          <div
-            className="novabanksetup-content-left"
-            style={{
-              backgroundImage: `url('/novaBank/NovaBankAppSetup.png')` }}>
-          </div>
+          <div className="novabanksetup-content-left"
+            style={{ backgroundImage: `url('/novaBank/NovaBankAppSetup.png')` }} />
           <div className="novabanksetup-container">
             {step === 0 && (
               <div className="novabanksetup-step">
@@ -134,7 +158,6 @@ const NovaBankAppSetup = ({ fileName, onInstallComplete }) => {
                     <button onClick={cancelInstallation}>İptal Et</button>
                   )}
                 </div>
-
                 {installing && (
                   <div className="progress-bar3-wrapper">
                     <div className="progress-bar3">
