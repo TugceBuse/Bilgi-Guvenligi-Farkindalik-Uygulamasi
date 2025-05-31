@@ -4,10 +4,12 @@ import { useFileContext } from '../Contexts/FileContext';
 import './EnableContentDocx.css';
 import { MakeDraggable } from '../utils/Draggable';
 import { useNotification } from '../Contexts/NotificationContext';
+import { useSecurityContext } from '../Contexts/SecurityContext';
 
 
 const EnableContentDocx = ({ file, fileName }) => {
-    const { addVirus, fullProtection  } = useVirusContext();
+    const { fullProtection  } = useSecurityContext();
+    const { addVirus } = useVirusContext();
     const [enabled, setEnabled] = useState(false);
     const { closeFile } = useFileContext();
     const docxRef = useRef(null);

@@ -4,6 +4,7 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
 import { useFileContext } from '../../Contexts/FileContext';
+import { useSecurityContext } from '../../Contexts/SecurityContext';
 
 const icons = [
   "/icons/folder-home.png",
@@ -43,13 +44,15 @@ const Antivirus = ({ closeHandler, style }) => {
   const [updateProgress, setUpdateProgress] = useState(0);
   const updateIntervalRef = useRef(null); // İptal etmek için referans
 
+  const { viruses, removeVirus,} = useVirusContext();
+  
   const { 
-    viruses, removeVirus,
-    scanLogs,setScanLogs,
+    scanLogs, setScanLogs,
     realTimeProtection, setRealTimeProtection,
     antivirusUpdated, setAntivirusUpdated,
-    antivirusUpdating, setAntivirusUpdating,
-  } = useVirusContext();
+    antivirusUpdating, setAntivirusUpdating, 
+        } = useSecurityContext();
+
   const { files, updateFileStatus } = useFileContext();
 
   useEffect(() => {
