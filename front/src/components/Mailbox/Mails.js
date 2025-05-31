@@ -438,33 +438,7 @@ export const mails = [
             },
 
             /* 16.Mail Content*/
-          {id: 18, from:'updates@shieldsecure.com',
-            title: 'test2', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
-            content: 
-            (
-              <div className="mail-content">
-                  <pre>
-                      <b>Merhaba,</b><br/><br/>
-                      Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
-                      
-                      Daha hızlı tarama ve tehdit algılama<br/>
-                      <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
-                      <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
-                      <div className='lines' ></div>
-                      ShieldSecure 2.0’a yükseltmek için: 
-                      
-                      <span 
-                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
-                      </span><br/><br/>
-                    
-                      Sorunsuz bir dijital deneyim dileriz!<br/>
-                      <b>ShieldSecure Destek Ekibi</b>
-                    </pre>
-              </div>
-            )
-            },
-            /* 17.Mail Content*/
-          {id: 16, from:'updates@shieldsecure.com',
+            {id: 16, from:'updates@shieldsecure.com',
             title: 'test3', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
             content: 
             (
@@ -490,59 +464,87 @@ export const mails = [
             )
             },
 
-            /* 18.Mail Content*/
-          {id: 17, from:'updates@shieldsecure.com',
-            title: 'test4', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
-            content: 
-            (
-              <div className="mail-content">
-                  <pre>
-                      <b>Merhaba,</b><br/><br/>
-                      Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
+            /* 17.Mail Content*/
+            {id: 17, from:'updates@shieldsecure.com',
+              title: 'test4', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
+              content: 
+              (
+                <div className="mail-content">
+                    <pre>
+                        <b>Merhaba,</b><br/><br/>
+                        Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
+                        
+                        Daha hızlı tarama ve tehdit algılama<br/>
+                        <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
+                        <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
+                        <div className='lines' ></div>
+                        ShieldSecure 2.0’a yükseltmek için: 
+                        
+                        <span 
+                        title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
+                        </span><br/><br/>
                       
-                      Daha hızlı tarama ve tehdit algılama<br/>
-                      <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
-                      <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
-                      <div className='lines' ></div>
-                      ShieldSecure 2.0’a yükseltmek için: 
-                      
-                      <span 
-                      title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
-                      </span><br/><br/>
-                    
-                      Sorunsuz bir dijital deneyim dileriz!<br/>
-                      <b>ShieldSecure Destek Ekibi</b>
-                    </pre>
-              </div>
-            )
-            },
+                        Sorunsuz bir dijital deneyim dileriz!<br/>
+                        <b>ShieldSecure Destek Ekibi</b>
+                      </pre>
+                </div>
+              )
+              },
+                
+              /* 18.Mail Content*/
+              {id: 18, from:'updates@shieldsecure.com',
+                title: 'test2', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
+                content: 
+                (
+                  <div className="mail-content">
+                      <pre>
+                          <b>Merhaba,</b><br/><br/>
+                          Antivirüs programımız ShieldSecure’un yeni sürümü artık hazır! İşte 2.0 sürümümüzle gelen yeniliklerden bazıları:<br/><br/>
+                          
+                          Daha hızlı tarama ve tehdit algılama<br/>
+                          <div className='lines' ></div>Gerçek zamanlı koruma özellikleri<br/>
+                          <div className='lines' ></div>Tamamen yenilenmiş kullanıcı arayüzü<br/>
+                          <div className='lines' ></div>
+                          ShieldSecure 2.0’a yükseltmek için: 
+                          
+                          <span 
+                          title='support@wellchcek.com ' style={{color:"orange", cursor:"pointer"}}> Yükseltme İşlemi
+                          </span><br/><br/>
+                        
+                          Sorunsuz bir dijital deneyim dileriz!<br/>
+                          <b>ShieldSecure Destek Ekibi</b>
+                        </pre>
+                  </div>
+                )
+                },
 
             /* 19.Mail Content*/
-          {id: 17, from:'updates@shieldsecure.com',
-            title: 'test4', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
-            content: 
-            (
-              <div className="mail-content">
-                <pre>
-                    <b>Merhaba Onur,</b><br/><br/>
-                    🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
+            {id: 19, from:'updates@shieldsecure.com',
+              title: 'test4', precontent: `-Yeni Sürüm: ShieldSecure 2.0!`, readMail: false, notified: false, used: false,
+              content: 
+              (
+                <div className="mail-content">
+                  <pre>
+                      <b>Merhaba Onur,</b><br/><br/>
+                      🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
 
-                    Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
-                    Amacın: Görevleri başarıyla tamamlayarak tuzaklardan kaçmak ve sistemi güvence altına almak!<br/><br/>
+                      Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
+                      Amacın: Görevleri başarıyla tamamlayarak tuzaklardan kaçmak ve sistemi güvence altına almak!<br/><br/>
 
-                    Unutma: Dış görünüş her zaman gerçeği yansıtmayabilir. 😉
-                    Her tıkladığın bağlantı, her verdiğin bilgi ve her atladığın detay sonuçlarını doğrudan etkileyecek.<br/><br/>
+                      Unutma: Dış görünüş her zaman gerçeği yansıtmayabilir. 😉
+                      Her tıkladığın bağlantı, her verdiğin bilgi ve her atladığın detay sonuçlarını doğrudan etkileyecek.<br/><br/>
 
-                    Şimdi kemerlerini bağla, şüpheciliğini kuşan ve oyuna başla! 🚀<br/><br/>
+                      Şimdi kemerlerini bağla, şüpheciliğini kuşan ve oyuna başla! 🚀<br/><br/>
 
-                    <b>İyi şanslar dileriz,<br/>
-                    PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
-                    <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phishville.com</span><br/>
-                    <b>Telefon:</b> +90 212 123 4567
-                </pre>
-              </div>
-            )
-            },
+                      <b>İyi şanslar dileriz,<br/>
+                      PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
+                      <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phishville.com</span><br/>
+                      <b>Telefon:</b> +90 212 123 4567
+                  </pre>
+                </div>
+              )
+              },
+
             /* 20.Mail Content*/
             {id: 20, from:'IT.Destek@globalbank-support.com',
               title: 'IT Departmanı', precontent: `-Hesabınız Geçici Olarak Askıya Alındı!`, readMail: false, notified: false, used: false,
@@ -570,7 +572,7 @@ export const mails = [
                },
 
             /* 21.Mail Content*/
-            {id: 2, from:'info@shipmenttracker.com',
+            {id: 21, from:'info@shipmenttracker.com',
               title: 'UPS Kargo Şirketi', precontent: `-Paketiniz Teslim Edilemedi!`, readMail: false, notified: false, used: false,
                content: 
                (
@@ -601,6 +603,124 @@ export const mails = [
                  </div>
                )
               },
+
+              {
+                id: 101,
+                from: 'info@cargonova.com',
+                title: 'CargoNova Kargo Takip',
+                precontent: 'Yazıcınız yolda! CargoNova ile gönderiniz işleme alındı.',
+                readMail: false, notified: false, used: false,
+                content: (
+                  <div className="mail-content">
+                    <pre>
+                      <b>Sayın Onur,</b><br/><br/>
+                      Sipariş ettiğiniz <b>JetPrint 220 Renkli Yazıcı</b> CargoNova kargo firmamız tarafından işleme alınmıştır.<br/><br/>
+
+                      🚚 <b>Takip No:</b> CN2025001TR<br/>
+                      📦 <b>Kargo Durumu:</b> Yola çıktı - Teslimat 1-2 iş günü içinde gerçekleşecek<br/><br/>
+
+                      Departmandaki raporların çıktısını alabileceğiniz bu yazıcı, yüksek çözünürlüklü renkli baskı desteği sunar. 
+                      Yalnızca fiyat olarak avantajlı değil, aynı zamanda hızlı ve ekonomik teslimat fırsatıyla da sizi destekliyoruz!<br/><br/>
+
+                      Paketinizi takip etmek için:
+                      <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}> cargoNova.com/takip</span><br/><br/>
+
+                      <b>CargoNova Ekibi</b>
+                    </pre>
+                  </div>
+                )
+            },
+            {
+              id: 102,
+              from: 'takip@flykargo.net',
+              title: 'FlyTakip Gönderi Bilgisi',
+              precontent: 'FlyTakip ile gönderiniz çıktı almayı bekliyor!',
+              readMail: false, notified: false, used: false,
+              content: (
+                <div className="mail-content">
+                  <pre>
+                    <b>Merhaba,</b><br/><br/>
+                    Sipariş ettiğiniz <b>JetPrint 220 Yazıcı</b> FlyTakip kargo sistemi ile kargolanmıştır.<br/><br/>
+
+                    📦 <b>Takip Kodu:</b> FLY-93210578-TR<br/>
+                    📍 <b>Durum:</b> Dağıtıma çıktı - Bugün teslim edilmesi planlanıyor.<br/><br/>
+
+                    Renkli baskı destekli bu yazıcı sayesinde artık raporlarınızı daha net ve profesyonelce sunabileceksiniz. 
+                    Sınırlı süreli kampanya fiyatından faydalandığınız için sizi tebrik ederiz!<br/><br/>
+
+                    Gönderinizi online takip etmek için:
+                    <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}> flytakip.net/gonderi</span><br/><br/>
+
+                    <b>FlyTakip Kargo Departmanı</b>
+                  </pre>
+                </div>
+              )
+            },
+
+            {
+              id: 103,
+              from: 'gonderi@trendytasima.com',
+              title: 'TrendyTaşıma Gönderi Detayı',
+              precontent: 'Yazıcınız TrendyTaşıma ile yola çıktı!',
+              readMail: false, notified: false, used: false,
+              content: (
+                <div className="mail-content">
+                  <pre>
+                    <b>Değerli Müşterimiz,</b><br/><br/>
+                    TrendyTaşıma ile JetPrint 220 renkli yazıcınız kargoya verildi. 
+                    Siparişiniz kısa süre içerisinde adresinize ulaştırılacaktır.<br/><br/>
+
+                    🚛 <b>Takip Numarası:</b> TRDY-10982-TR<br/>
+                    📅 <b>Tahmini Teslimat:</b> 1 iş günü içinde teslim edilir.<br/><br/>
+
+                    Yazıcınız, departman raporlarının kaliteli renkli çıktıları için mükemmel bir tercihtir. 
+                    Görevinizi başarıyla tamamlamak için teknik ihtiyaçlarınız bizden, dikkatli analiz sizden!<br/><br/>
+
+                    Kargo takip sayfası:
+                    <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}> trendytasima.com/takip</span><br/><br/>
+
+                    <b>TrendyTaşıma Ekibi</b>
+                  </pre>
+                </div>
+              )
+            },
+
+            {
+              id: 104,
+              from: 'faturalar@techdepo.com',
+              title: 'TechDepo - Satın Alma Faturanız',
+              precontent: 'JetPrint 220 yazıcıya ait fatura belgeniz ektedir.',
+              readMail: false, notified: false, used: false,
+              content: (
+                <div className="mail-content">
+                  <pre>
+                    <b>Sayın Onur Karaca,</b><br/><br/>
+
+                    Aşağıda, TechDepo üzerinden yapmış olduğunuz alışverişe ait e-fatura bilgilerinizi bulabilirsiniz.<br/><br/>
+
+                    🧾 <b>Fatura Numarası:</b> TD-2025-001472<br/>
+                    📦 <b>Sipariş No:</b> 8927316503<br/>
+                    📅 <b>Sipariş Tarihi:</b> {new Date().toLocaleDateString()}<br/><br/>
+
+                    <b>Fatura Detayı:</b><br/>
+                    ───────────────────────────────<br/>
+                    🔹 JetPrint 220 Renkli Yazıcı (1 adet)      4.899,00 TL<br/>
+                    🔸 KDV (%20)                                979,80 TL<br/>
+                    <b>Genel Toplam:</b>                         <b>5.878,80 TL</b><br/>
+                    ───────────────────────────────<br/><br/>
+
+                    Bu belge, Vergi Usul Kanunu hükümlerine göre düzenlenmiş olup elektronik ortamda oluşturulmuştur. 
+                    Islak imza ve kaşe gerektirmez.<br/><br/>
+
+                    <b>TechDepo A.Ş.</b><br/>
+                    Vergi No: 456 123 7890<br/>
+                    İletişim: faturalar@techdepo.com<br/>
+                    Adres: Teknokent Mah. Siber Sok. No:42, İstanbul<br/><br/>
+                  </pre>
+                </div>
+              )
+            }
+
   ];
 
 
