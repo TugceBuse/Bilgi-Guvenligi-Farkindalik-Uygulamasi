@@ -99,6 +99,8 @@ export const GameContextProvider = ({ children }) => {
     lockoutUntil: null,
     loginAttempts: 0
   });
+
+  const [orders, setOrders] = useState([]);
   const [TechInfo, setTechInfo] = useState({
     name: '',
     surname: '',
@@ -225,6 +227,7 @@ export const GameContextProvider = ({ children }) => {
         PostifyInfo, setPostifyInfo,
         TechInfo, setTechInfo,
         TechInfoF, setTechInfoF,
+        orders, setOrders,
         getRelativeDate,
         productInfo, setProductInfo,
         constUser,

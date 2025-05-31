@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext"; 
+import { useMailContext } from '../../Contexts/MailContext';
 
 const cards = [
   {
@@ -212,7 +213,8 @@ const cards = [
 
 
 const TechDepo = ({scrollRef}) => {
-  const { TechInfo, setTechInfo, cardBalance, setCardBalance } = useGameContext();
+  const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders } = useGameContext();
+  const { addMailToMailbox } = useMailContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -232,7 +234,6 @@ const TechDepo = ({scrollRef}) => {
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
-  const [orders, setOrders] = useState([]);
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -611,6 +612,30 @@ const TechDepo = ({scrollRef}) => {
       setShowCartNotice(true);
       setTimeout(() => setShowCartNotice(false), 2000);
       console.log(productInfo.productID, "ödeme tamamlandı");
+
+      const printerIncluded = cartItems.some(item => item.id === 15);
+
+      if (printerIncluded) {
+        const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; // 1-3 dk
+        const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) + 120000; // 2-4 dk
+
+        // 🧾 Fatura maili
+        setTimeout(() => {
+          addMailToMailbox("inbox", 104);
+        }, invoiceDelay);
+
+        // 📦 Kargo maili
+        setTimeout(() => {
+          if (selectedShipping === "CargoNova") {
+            addMailToMailbox("inbox", 101);
+          } else if (selectedShipping === "FlyTakip") {
+            addMailToMailbox("inbox", 102);
+          } else if (selectedShipping === "TrendyTasima") {
+            addMailToMailbox("inbox", 103);
+          }
+        }, cargoDelay);
+      }
+
   };
 
   const handlePayment = () => {

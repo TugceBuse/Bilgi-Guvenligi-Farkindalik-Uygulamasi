@@ -283,14 +283,20 @@
 /* Bildirim sayacı */
 .notification-count {
   position: absolute;
+  display: flex;
+  height: 20px;
+  width: 20px;
   top: 15px;
-  left: 15px;
+  left: 20px;
   background-color: red;
   color: white;
-  font-size: 11px;
-  padding: 2px 3px;
+  font-size: 12px;
+  padding: 5px;
   border-radius: 50%;
   font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .mail-notification-close {
