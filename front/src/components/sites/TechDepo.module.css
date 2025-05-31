@@ -88,9 +88,9 @@
     right: -5px;
   }
   .cartNotice {
-    position: sticky;
-    top: 25%;
-    right: 12%;
+    position: absolute;
+    width: 95.3%;
+    top: 20%;
     background-color: #2ecc71;
     color: white;
     padding: 10px 16px;
@@ -1240,3 +1240,159 @@
 .twoFAInputArea button:active {
   transform: scale(0.98);
 }
+
+
+/* Fake TechDepo için ek CSS */
+.fakeCampaignBox {
+  background-color: #292929;
+  border: 2px dashed #ffaa00;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  color: #fff9e6;
+  box-shadow: 0 0 8px rgba(255, 170, 0, 0.3);
+  font-size: 14px;
+}
+
+.fakeCampaignBox h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #ffd36e;
+}
+
+.fakeCampaignBox label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fakeCampaignBox input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #ffaa00;
+}
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #f3f3f3;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #00ccff;
+}
+
+.checkboxLabel p {
+  margin: 0;
+  line-height: 1.4;
+}
+.authChoice {
+  text-align: center;
+  padding: 48px 24px;
+  color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.authChoice h2 {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: #c2deff;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.authChoice p {
+  font-size: 18px;
+  margin-bottom: 28px;
+  color: #cfcfcf;
+  font-weight: 500;
+}
+
+.authChoiceButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 500px;
+}
+
+.guestButton {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s ease;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.guestButton {
+  background: linear-gradient(145deg, #444, #333);
+  color: #fff;
+}
+
+.guestButton:hover {
+  background: linear-gradient(145deg, #555, #3a3a3a);
+  transform: translateY(-2px);
+}
+
+.userSummaryBox {
+  background-color: #222;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+.loginSmallButton {
+  background-color: #ffcc00;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.guestPanel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.guestLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #2d2d2d;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #f0f0f0;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.2s ease;
+}
+
+.guestLabel img {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 2px solid #555;
+}
+

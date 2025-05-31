@@ -6,6 +6,7 @@ const products = [
   { id: 2, name: "Bluetooth Kulaklık", price: 749, image: "/techDepo/head2.jpg", category: "headphone" },
   { id: 3, name: "Gaming Mouse", price: 299, image: "/techDepo/mouse2.jpg", category: "mouse" },
   { id: 4, name: "RGB Ergonomik Klavye", price: 529, image: "/techDepo/key3.jpg", category: "keyboard" },
+  { id: 5, name: "JetPrint Yazıcı", price: 2499, image: "/techDepo/printer1.jpg", category: "printer" },
 ];
 
 const NovaTekno = () => {
@@ -78,6 +79,7 @@ const NovaTekno = () => {
               <li onClick={() => setSelectedCategory("headphone")} className={`${styles.categoryItem} ${selectedCategory === "headphone" ? styles.active : ""}`}>Kulaklık</li>
               <li onClick={() => setSelectedCategory("mouse")} className={`${styles.categoryItem} ${selectedCategory === "mouse" ? styles.active : ""}`}>Fare</li>
               <li onClick={() => setSelectedCategory("keyboard")} className={`${styles.categoryItem} ${selectedCategory === "keyboard" ? styles.active : ""}`}>Klavye</li>
+              <li onClick={() => setSelectedCategory("printer")} className={`${styles.categoryItem} ${selectedCategory === "printer" ? styles.active : ""}`}>Yazıcı</li>
             </ul>
           </aside>
 

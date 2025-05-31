@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import styles from './Postify.module.css';
 import { useGameContext } from "../../Contexts/GameContext";
 import PostifyAuth from './PostifyAuth';
+import { useUIContext } from "../../Contexts/UIContext";
+import { useWindowConfig } from "../../Contexts/WindowConfigContext";
 
 const initialPosts = [
   {
@@ -18,7 +20,18 @@ const initialPosts = [
         💻 Laptoplar, 🎮 Oyuncu ekipmanları, 🎧 Kulaklıklar ve daha fazlası %30’e varan indirimlerle!<br/><br/>
         🎯 Güvenli ödeme seçenekleri, hızlı kargo ve 7/24 destek garantisi!<br/><br/>
         ✨ Şimdi alışverişe başla!<br/><br/>
-        👉 <a href="#" title="https://techdepo.com" className={styles.officialLink}>techdepo.com</a>
+        👉 <a
+              href="#"
+              title="http://tech-depo.com"
+              className={styles.officialLink}
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("open-browser-url", { detail: "http://tech-depo.com" })
+                );
+              }}
+            >
+              tech-depo.com
+            </a>
       </span>
     ),
     likes: 310,
@@ -170,6 +183,10 @@ const Postify = () => {
 
   const [newPostContent, setNewPostContent] = useState('');
   const [timestamps, setTimestamps] = useState({});
+  
+  const { openWindow } = useUIContext();
+  const { setWindowConfig } = useWindowConfig();
+
 
   const toggleLike = (postId) => {
     setLikes((prev) => {

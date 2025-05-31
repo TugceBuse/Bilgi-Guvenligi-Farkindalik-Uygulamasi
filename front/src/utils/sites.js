@@ -229,6 +229,18 @@ const sites = {
   isSponsored: false,
   seoScore: 87
 },
+ "http://tech-depo.com": {
+  title: "TechDepo",
+  type: "component",
+  component: "TechDepoFake",
+  statement: "Bilgisayar ve ofis ekipmanlarında güvenilir alışverişin adresi.",
+  searchKeys: ["tech shop", "bilgisayar parçaları", "ofis ekipmanları", "indirimli teknoloji, techdepo, tech, depo"],
+  clickable: true,
+  protocol: "http",
+  color: "#1E90FF",
+  isSponsored: false,
+  seoScore: 80
+},
 "http://novatekno.com": {
   title: "NovaTekno",
   type: "component",

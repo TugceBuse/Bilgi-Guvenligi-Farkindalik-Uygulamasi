@@ -9,7 +9,7 @@ const generatePackageLink = () =>
 const InfoScreen = ({ onLogin, onRegister }) => (
   <div className={styles.infoWrapper}>
     <div className={styles.infoHeader}>
-      <img src="/icons/cloudbox-logo.svg" alt="CloudBox" className={styles.siteLogo} />
+      <img src="/Cloud/cloud-hosting.png" alt="CloudBox" className={styles.siteLogo} />
       <div>
         <h1 className={styles.siteTitle}>CloudBox</h1>
         <div className={styles.siteSubtitle}>Kişisel Bulut Yedekleme Merkezi</div>
