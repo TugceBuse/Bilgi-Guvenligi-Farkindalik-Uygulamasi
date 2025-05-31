@@ -18,7 +18,7 @@ const setupComponents = {
 };
 
 const AppInstaller = ({ fileName, setupType, onInstallComplete, ...props }) => {
-  const { files, updateFileStatus } = useFileContext();
+  const { files, updateFileStatus, closeFile } = useFileContext();
   const { viruses, removeVirus } = useVirusContext();
   const { fullProtection, scanLogs, setScanLogs } = useSecurityContext();
   const { addNotification } = useNotification();
@@ -48,7 +48,7 @@ const AppInstaller = ({ fileName, setupType, onInstallComplete, ...props }) => {
       return new Promise((resolve) => {
         addNotification({
         type: "warning",
-        message: `Tehlikeli dosya tespit edildi: ${fileName} (${relatedVirus ? relatedVirus.type : (file?.virusType || customVirusType || "Bilinmeyen tür")})`,
+        message: `Şüpheli dosya tespit edildi: ${fileName} (${relatedVirus ? relatedVirus.type : (file?.virusType || customVirusType || "Bilinmeyen tür")})`,
         actions: [
             {
             label: "Karantinaya Al ve Durdur",
@@ -70,6 +70,7 @@ const AppInstaller = ({ fileName, setupType, onInstallComplete, ...props }) => {
                 setBlocked(true);
                 setAllowed(false);
                 if (onInstallComplete) onInstallComplete(false);
+                closeFile(fileName);
                 resolve("blocked");
             },
             },
