@@ -364,6 +364,13 @@ const TechDepo = ({scrollRef}) => {
   const [showCartNotice, setShowCartNotice] = useState(false);
   const [noticeType, setNoticeType] = useState(""); // "" | "cart" | "payment"
 
+  const cartNoticeRef = useRef(null);
+
+  useEffect(() => {
+    if (showCartNotice && cartNoticeRef.current) {
+      cartNoticeRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [showCartNotice]);
 
   // Sepete ekleme bildirimi için fonksiyon
   const addToCart = (product) => {
@@ -463,25 +470,7 @@ const TechDepo = ({scrollRef}) => {
 
   const finalizePayment = () => {
     setCodeTimer(120);
-    if (cardBalance < grandTotal) {
-      setErrors({ balance: "Kart bakiyesi yetersiz." });
-      
-      setCardNumber("");
-      setCardName("");
-      setExpiryDate("");
-      setCVV("");
-      setSelectedShipping("");
-      setAcceptedTerms(false);
-      setSaveCard(false);
-      setSelectedShippingPrice(0);
-      setCartItems([]);
-
-      setIsPaying(false);
-      setTimeout(() => {
-        setErrors({});
-      }, 3000);
-      return;
-    }
+    
     if (saveCard) {
       setTechInfoF((prev) => ({
         ...prev,
@@ -685,7 +674,7 @@ const TechDepo = ({scrollRef}) => {
 
       {/* Sepete ürün eklendi bildirimi */}
       {showCartNotice && (
-        <div className={styles.cartNotice}>
+        <div className={styles.cartNotice} ref={cartNoticeRef}>
           {noticeType === "payment" ? "✅ Ödemeniz başarıyla gerçekleştirildi!" : "✅ Sepetiniz başarıyla güncellendi!"}
         </div>
       )}

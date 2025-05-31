@@ -85,7 +85,7 @@ const initialWindowConfig = {
     useComponent: useNovabankApp,
     location: 'desktop',
     clickable: true,
-    available: false,
+    available: true,
   },
 
   phoneapp: {

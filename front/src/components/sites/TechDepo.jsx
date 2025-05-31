@@ -228,7 +228,7 @@ const TechDepo = ({scrollRef}) => {
   const [payment2FACode, setPayment2FACode] = useState("");
 
   // Context hook
-  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+  const { generateCodeMessage, lastCodes, clearCode, addMessage } = usePhoneContext();
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
@@ -239,6 +239,8 @@ const TechDepo = ({scrollRef}) => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  
+  const email = TechInfo.email;
 
   const [password, setPassword] = useState("");
   const isPasswordStrongEnough = (password) => {
@@ -250,8 +252,6 @@ const TechDepo = ({scrollRef}) => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const errorRef = useRef(null);
-
-  const email = TechInfo.email;
 
   useEffect(() => {
     if(!TechInfo.isLoggedIn) {
@@ -439,6 +439,14 @@ const TechDepo = ({scrollRef}) => {
   const [showCartNotice, setShowCartNotice] = useState(false);
   const [noticeType, setNoticeType] = useState(""); // "" | "cart" | "payment"
 
+  const cartNoticeRef = useRef(null);
+
+  useEffect(() => {
+    if (showCartNotice && cartNoticeRef.current) {
+      cartNoticeRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [showCartNotice]);
+
 
   // Sepete ekleme bildirimi için fonksiyon
   const addToCart = (product) => {
@@ -540,6 +548,8 @@ const TechDepo = ({scrollRef}) => {
     setCodeTimer(120);
     if (cardBalance < grandTotal) {
       setErrors({ balance: "Kart bakiyesi yetersiz." });
+      addMessage("NovaBank", "💳 Bakiyeniz yetersiz olduğundan ödemeniz gerçekleştirilemedi.");
+
       
       setCardNumber("");
       setCardName("");
@@ -820,7 +830,7 @@ const TechDepo = ({scrollRef}) => {
 
       {/* Sepete ürün eklendi bildirimi */}
       {showCartNotice && (
-        <div className={styles.cartNotice}>
+        <div className={styles.cartNotice}  ref={cartNoticeRef}>
           {noticeType === "payment" ? "✅ Ödemeniz başarıyla gerçekleştirildi!" : "✅ Sepetiniz başarıyla güncellendi!"}
         </div>
       )}
