@@ -4,7 +4,8 @@ import { useUIContext } from '../../Contexts/UIContext';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 
-const NovaBankAppSetup = ({ fileName }) => {
+// onInstallComplete prop'u eklendi!
+const NovaBankAppSetup = ({ fileName, onInstallComplete }) => {
   const { closeFile } = useFileContext();
   const { updateAvailableStatus, windowConfig } = useWindowConfig();
   const SetupRef = useRef(null);
@@ -13,6 +14,15 @@ const NovaBankAppSetup = ({ fileName }) => {
   const [progress, setProgress] = useState(0);
   const [installing, setInstalling] = useState(false);
   const intervalRef = useRef(null);
+
+  // Kurulum tamamlandığında onInstallComplete çağrılır (adware burada eklenir)
+  useEffect(() => {
+    if (step === 4 && typeof onInstallComplete === 'function') {
+      onInstallComplete();
+    }
+    // Sadece step değişince tetiklenir
+    // eslint-disable-next-line
+  }, [step]);
 
   const handleClose = () => {
     clearInterval(intervalRef.current);
@@ -30,9 +40,9 @@ const NovaBankAppSetup = ({ fileName }) => {
   const handleBack = () => {
     setStep(prev => prev - 1);
     if (progress > 0) {
-        setProgress(0);
-        setInstalling(false);
-        clearInterval(intervalRef.current);
+      setProgress(0);
+      setInstalling(false);
+      clearInterval(intervalRef.current);
     }
   };
 
@@ -71,11 +81,11 @@ const NovaBankAppSetup = ({ fileName }) => {
         </div>
 
         <div className="novabanksetup-content">
-            <div
+          <div
             className="novabanksetup-content-left"
             style={{
-                backgroundImage: `url('/novaBank/NovaBankAppSetup.png')`}}>
-            </div>
+              backgroundImage: `url('/novaBank/NovaBankAppSetup.png')` }}>
+          </div>
           <div className="novabanksetup-container">
             {step === 0 && (
               <div className="novabanksetup-step">
@@ -126,12 +136,12 @@ const NovaBankAppSetup = ({ fileName }) => {
                 </div>
 
                 {installing && (
-                <div className="progress-bar3-wrapper">
+                  <div className="progress-bar3-wrapper">
                     <div className="progress-bar3">
-                        <div className="progress-bar3-inner" style={{ width: `${progress}%` }} />
-                        <span className="progress-bar3-label">% {progress}</span>
+                      <div className="progress-bar3-inner" style={{ width: `${progress}%` }} />
+                      <span className="progress-bar3-label">% {progress}</span>
                     </div>
-                </div>
+                  </div>
                 )}
               </div>
             )}

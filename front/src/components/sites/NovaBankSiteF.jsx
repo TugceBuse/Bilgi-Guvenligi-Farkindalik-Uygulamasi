@@ -74,7 +74,7 @@ const NovaBankSiteF = () => {
 
         <div className={styles.downloadArea}>
           <button onClick={downloading ? cancelDownload : startDownload} className={styles.downloadBtn}>
-            {downloading ? `${progress}% İndiriliyor...` : "NovaSecure.exe"}
+            {downloading ? `${progress}% İndiriliyor...` : "NovaBankSetup.exe"}
           </button>
           <div className={styles.updateNote}>📦 Son Güncelleme: 2 gün önce</div>
 
