@@ -5,11 +5,18 @@ const NotificationContext = createContext();
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
-  // type: info, warning, danger, error, success... (renk için)
-  // appType: system, mail, phone  (kaynak/kategori)
+  // Varsayılan ikon seçici
+  const getDefaultIcon = (appType) => {
+    if (appType === "mail") return "/icons/mail.png";
+    if (appType === "phone") return "/PhoneApp/comment.png";
+    if (appType === "system") return "/icons/info.png";
+    return "/icons/info.png";
+  };
+
+  // Bildirim ekle
   const addNotification = ({
-    type = "info",        // RENK
-    appType = "system",   // KATEGORİ
+    type = "info",
+    appType = "system",
     title,
     message,
     icon,
@@ -37,20 +44,13 @@ export const NotificationProvider = ({ children }) => {
     };
     setNotifications(prev => [...prev, notification]);
 
-    // Popup ise otomatik kaldır
+    // Otomatik kaldırma (action yoksa)
     if (isPopup && actions.length === 0) {
       setTimeout(() => {
         setNotifications(prev => prev.filter(n => n.id !== id));
       }, duration);
     }
     return id;
-  };
-
-  const getDefaultIcon = (appType) => {
-    if (appType === "mail") return "/icons/mail.png";
-    if (appType === "phone") return "/PhoneApp/comment.png";
-    if (appType === "system") return "/icons/info.png";
-    return "/icons/info.png";
   };
 
   const markAsRead = (id) => {
@@ -63,7 +63,7 @@ export const NotificationProvider = ({ children }) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
-  // Filtreleyici fonksiyonlar:
+  // Filtreler
   const popupNotifications = notifications.filter(n => n.isPopup);
   const taskbarNotifications = notifications.filter(n => n.isTaskbar && !n.read);
   const unreadTaskbarCount = taskbarNotifications.length;
