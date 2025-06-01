@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from '../../Contexts/GameContext';
 import { useUIContext } from '../../Contexts/UIContext';
 import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
-import { useMailContext } from '../../Contexts/MailContext'; 
+import { useMailContext } from '../../Contexts/MailContext';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
 import SystemSettings from '../SystemSettings/SystemSettings';
-import { useNotificationContext } from '../../Contexts/NotificationContext'; // YENİ!
+import { useNotificationContext } from '../../Contexts/NotificationContext';
 
-const TaskBar = ({windowConfig}) => {
+const TaskBar = ({ windowConfig }) => {
   const [time, setTime] = useState(new Date());
   const [showStartMenu, setShowStartMenu] = useState(false);
   const startMenuRef = useRef(null);
@@ -22,29 +22,33 @@ const TaskBar = ({windowConfig}) => {
   const [showPassAlert, setShowPassAlert] = useState(false);
   const [showWifiAlert, setShowWifiAlert] = useState(false);
   const [showSystemSettings, setShowSystemSettings] = useState(false);
-  const [wifiname, setwifiname] = useState('');
+  const [wifiname, setWifiname] = useState('');
 
   const pass = "1234";
   const navigate = useNavigate();
+
+  // Contextler
   const {
     isWificonnected, setIsWificonnected,
     updating_antivirus
   } = useGameContext();
 
-  const { antivirusUpdated , antivirusUpdating } = useVirusContext();
+  const { antivirusUpdated, antivirusUpdating } = useVirusContext();
 
   const { setSelectedMail, inboxMails, setInboxMails } = useMailContext();
+
   const {
     openWindows, activeWindow, setActiveWindow,
     visibleWindows, setVisibleWindows,
     handleIconClick, zindex, setZindex,
     openWindow
   } = useUIContext();
+
   const { openedFiles, files } = useFileContext();
 
-  // Yeni NotificationContext:
+  // Bildirim context
   const {
-    notifications, // tüm notificationlar
+    notifications,
     removeNotification
   } = useNotificationContext();
 
@@ -93,7 +97,7 @@ const TaskBar = ({windowConfig}) => {
       setShowPasswordPrompt(true);
     } else {
       setIsWificonnected(true);
-      setwifiname(wifiName);
+      setWifiname(wifiName);
     }
   };
 
@@ -112,15 +116,15 @@ const TaskBar = ({windowConfig}) => {
   // Taskbarda bir ikona tıklandığında pencereyi öne al/gizle
   const handleIconClickWithVisibility = (windowName) => {
     const isFile = files[windowName] !== undefined;
-    const innerSelector = isFile 
-      ? `[data-filename="${windowName}"]` 
+    const innerSelector = isFile
+      ? `[data-filename="${windowName}"]`
       : `[data-window="${windowName}"]`;
     const innerElement = document.querySelector(innerSelector);
-    const element = isFile 
-      ? innerElement?.closest('.file-window') 
+    const element = isFile
+      ? innerElement?.closest('.file-window')
       : innerElement;
 
-    if(!element) {
+    if (!element) {
       console.log(`.${windowName}-window elementi bulunamadı`);
       return;
     }
@@ -154,6 +158,7 @@ const TaskBar = ({windowConfig}) => {
     }
   };
 
+  // Mail bildirimi tıklandığında açma
   const handleOpenMailNotification = (notification) => {
     if (!isWificonnected) {
       setShowWifiAlert(true);
@@ -176,10 +181,19 @@ const TaskBar = ({windowConfig}) => {
     setShowNotifications(false);
   };
 
+  // SMS bildirimi tıklandığında PhoneApp açma
+  const handleOpenSmsNotification = (notification) => {
+    openWindow('phoneapp');
+    removeNotification(notification.id);
+    setShowNotifications(false);
+  };
 
-  // Bildirim sayacı
+  // Bildirim türlerine göre ayır
   const mailNotifications = notifications.filter(n => n.appType === "mail" && n.isTaskbar && !n.read);
   const systemNotifications = notifications.filter(n => n.appType === "system" && n.isTaskbar && !n.read);
+  const phoneNotifications = notifications.filter(n => n.appType === "phone" && n.isTaskbar && !n.read);
+
+  const totalNotificationCount = mailNotifications.length + systemNotifications.length + phoneNotifications.length;
 
   // Aktif pencereyi güncelle
   useEffect(() => {
@@ -245,22 +259,22 @@ const TaskBar = ({windowConfig}) => {
   };
   const { icon: antivirusIcon, tooltip: antivirusTooltip } = setAntivirus();
 
-  const wifiIcon = isWificonnected 
-    ? <img src="/icons/wifi.png" alt="Wifi Connected Icon" /> 
+  const wifiIcon = isWificonnected
+    ? <img src="/icons/wifi.png" alt="Wifi Connected Icon" />
     : <img src="/icons/no-wifi.png" alt="Wifi Disconnected Icon" />;
   const wifiTooltip = isWificonnected
     ? (
-        <>
-          <b>{wifiname}</b>
-          <br />
-          Internet erişimi
-        </>
-      )
+      <>
+        <b>{wifiname}</b>
+        <br />
+        Internet erişimi
+      </>
+    )
     : "WiFi Bağlı Değil";
 
   return (
     <div className="taskbar">
-      {/* Bildirim Sayacı */}
+      {/* Başlat Menüsü */}
       <div className="taskbar-icons" onClick={handleStartButtonClick}>
         <img src="/icons/menu (1).png" alt="Start Button" />
       </div>
@@ -269,13 +283,13 @@ const TaskBar = ({windowConfig}) => {
           <h2>Başlat Menüsü</h2>
           <div className="start-menu-container">
             <div className="start-menu-item">
-              <img src="/icons/synchronize.png" alt="Synchronize Icon"/>
-              <p style={{marginLeft:-12}}>Yedekle</p>
+              <img src="/icons/synchronize.png" alt="Synchronize Icon" />
+              <p style={{ marginLeft: -12 }}>Yedekle</p>
             </div>
-            <div className="start-menu-item" 
+            <div className="start-menu-item"
               onClick={() => setShowSystemSettings(true)}
             >
-              <img src="/icons/system-settings.png" alt="Firewall Icon"/>
+              <img src="/icons/system-settings.png" alt="Firewall Icon" />
               <p>Sistem Ayarları</p>
             </div>
           </div>
@@ -297,7 +311,7 @@ const TaskBar = ({windowConfig}) => {
       <div className="taskbar-icons">{renderIcons()}</div>
 
       <div className="taskbar-right">
-        {windowConfig.antivirus.available && (
+        {windowConfig.antivirus?.available && (
           <div className="taskbar-antivirus">
             {antivirusIcon}
             {antivirusTooltip}
@@ -324,26 +338,25 @@ const TaskBar = ({windowConfig}) => {
 
         <div className="taskbar-status">
           <div className="taskbar-clock">
-            <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' ,hour12: false })}</div>
+            <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</div>
             <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
           </div>
 
           <div className="taskbar-notifications" onClick={toggleNotifications}>
-            <img src="/icons/notification_blck.png" alt="Notification Icon"  />
+            <img src="/icons/notification_blck.png" alt="Notification Icon" />
             {/* Toplam okunmamış bildirim sayısı */}
-            {(mailNotifications.length + systemNotifications.length) > 0 && 
+            {totalNotificationCount > 0 &&
               <span className="notification-count">
-                {mailNotifications.length + systemNotifications.length}
+                {totalNotificationCount}
               </span>
             }
-
             {showNotifications && (
               <div className="notifications-window">
                 <h3>Bildirimler</h3>
-                {(mailNotifications.length + systemNotifications.length) > 0 ? (
+                {(totalNotificationCount > 0) ? (
                   <>
                     {/* Mail Bildirimleri */}
-                    {mailNotifications.map((notif, index) => (
+                    {mailNotifications.map((notif) => (
                       <div key={notif.id} className="notification-item"
                         onClick={() => handleOpenMailNotification(notif)}>
                         <strong>
@@ -360,11 +373,28 @@ const TaskBar = ({windowConfig}) => {
                       </div>
                     ))}
                     {/* Sistem Bildirimleri */}
-                    {systemNotifications.map((notif, index) => (
+                    {systemNotifications.map((notif) => (
                       <div key={notif.id} className="notification-item">
                         <strong>
                           <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
                             <img style={{ width: 30, height: 30 }} src={notif.icon || "/icons/info.png"} alt="Info Icon" />
+                            {notif.title}
+                            <p
+                              className='mail-notification-close'
+                              onClick={e => { e.stopPropagation(); removeNotification(notif.id); }}
+                            >x</p>
+                          </div>
+                        </strong>
+                        <p>{notif.message}</p>
+                      </div>
+                    ))}
+                    {/* SMS/Phone Bildirimleri */}
+                    {phoneNotifications.map((notif) => (
+                      <div key={notif.id} className="notification-item"
+                        onClick={() => handleOpenSmsNotification(notif)}>
+                        <strong>
+                          <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
+                            <img style={{ width: 30, height: 30 }} src={notif.icon || "/PhoneApp/sms.png"} alt="SMS Icon" />
                             {notif.title}
                             <p
                               className='mail-notification-close'
@@ -398,8 +428,8 @@ const TaskBar = ({windowConfig}) => {
           </form>
         </div>
       )}
-      <Alert show={showPassAlert} handleClose={() => setShowPassAlert(false)} message={'Şifre yanlış'}></Alert>
-      <Alert show={showWifiAlert} handleClose={() => setShowWifiAlert(false)} message={'İnternet bağlantısı bulunamadı'}></Alert>
+      <Alert show={showPassAlert} handleClose={() => setShowPassAlert(false)} message={'Şifre yanlış'} />
+      <Alert show={showWifiAlert} handleClose={() => setShowWifiAlert(false)} message={'İnternet bağlantısı bulunamadı'} />
     </div>
   );
 };

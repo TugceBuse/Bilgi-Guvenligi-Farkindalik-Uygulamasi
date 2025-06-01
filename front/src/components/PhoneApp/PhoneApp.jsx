@@ -1,20 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import styles from './PhoneApp.module.css';
 import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
-import { useGameContext } from '../../Contexts/GameContext';
 import { usePhoneContext } from '../../Contexts/PhoneContext';
+import { useNotificationContext } from '../../Contexts/NotificationContext';
 
 export const usePhoneApp = () => {
   const { openWindow, closeWindow } = useUIContext();
 
-  const openHandler = () => {
-    openWindow('phoneapp');
-  };
-
-  const closeHandler = () => {
-    closeWindow('phoneapp');
-  };
+  const openHandler = () => openWindow('phoneapp');
+  const closeHandler = () => closeWindow('phoneapp');
 
   return { openHandler, closeHandler };
 };
@@ -22,21 +17,23 @@ export const usePhoneApp = () => {
 const PhoneApp = ({ closeHandler, style }) => {
   const PhoneAppRef = useRef(null);
   MakeDraggable(PhoneAppRef, `.${styles.phoneWindow}`);
-
+  const { markAsRead, closePopupNotification } = useNotificationContext();
   const { messages, markMessageAsRead, readMessages, getUnreadCount } = usePhoneContext();
+
+  // Okunmamış sms varsa barı kırmızı yap
+  const unreadCount = getUnreadCount();
 
   return (
     <div className={styles.phoneFrame} ref={PhoneAppRef} data-window="phoneapp" style={style}>
       <div className={styles.phoneSpeaker}></div>
       <div className={styles.phoneWindow}>
-        
         <div className={styles.phoneStatusBar}>
           <span className={styles.phoneClock}>
             {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
-
-          <div className={styles.phoneCamera}><div className={styles.phoneCameraCircle}></div></div>
-
+          <div className={styles.phoneCamera}>
+            <div className={styles.phoneCameraCircle}></div>
+          </div>
           <div className={styles.statusRightArea}>
             <div className={styles.phoneStatus}>
               <img src="/PhoneApp/wifi-slash.png" alt="Wifi Icon" className={styles.phoneImage} />
@@ -48,9 +45,13 @@ const PhoneApp = ({ closeHandler, style }) => {
           </div>
         </div>
 
-        <div className={styles.unreadInfo}>
-          {getUnreadCount() > 0 
-            ? `${getUnreadCount()} adet okunmamış mesajınız var` 
+        <div
+          className={`${styles.unreadInfo} ${
+            unreadCount > 0 ? styles.hasUnread : ''
+          }`}
+        >
+          {unreadCount > 0
+            ? `${unreadCount} adet okunmamış mesajınız var`
             : "Tüm mesajlar okundu"}
         </div>
 
@@ -59,15 +60,19 @@ const PhoneApp = ({ closeHandler, style }) => {
             <div className={styles.phoneMessagesTitle}>
               <img src="/PhoneApp/comment.png" alt="Mesajlar" />
               <h2>Mesajlar</h2>
-            </div>           
+            </div>
             <h4>Gelen Kutusu</h4>
           </div>
-          
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`${styles.messageItem} ${readMessages.includes(msg.id) ? styles.read : styles.unread}`}
-              onClick={() => markMessageAsRead(msg.id)}
+              className={`${styles.messageItem} ${
+                readMessages.includes(msg.id) ? styles.read : styles.unread
+              }`}
+              onClick={() => { markMessageAsRead(msg.id); markAsRead(msg.id); closePopupNotification(msg.id); }}
+              tabIndex={0}
+              role="button"
+              aria-label={`Mesaj ${msg.sender} - ${msg.content}`}
             >
               <div className={styles.messageSender}>{msg.sender}</div>
               <div className={styles.messageContentRow}>
