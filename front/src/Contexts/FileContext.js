@@ -153,6 +153,58 @@ const defaultFileSchema = {
             label: "Toplantı Fotoğrafı", 
             icon: "/icons/image.png", 
             content: "/images/meeting.jpg"
+        },
+        kisiselKullaniciBilgileri: {
+            available: true,
+            quarantined: false,
+            clickable: true,
+            infected: false,
+            virusType: null,
+            type: "pdf",
+            size: "740KB",
+            location: "docs", // istersen farklı klasör adı da verebilirsin
+            label: "Kişisel Kullanıcı Bilgileri.pdf",
+            icon: "/icons/pdf.png",
+            content: "/files/Kişisel_Kullanıcı_Bilgileri.txt"
+        },
+        isSozlesmesi: {
+            available: true,
+            quarantined: false,
+            clickable: true,
+            infected: false,
+            virusType: null,
+            type: "pdf",
+            size: "1.2MB",
+            location: "docs",
+            label: "İş Sözleşmesi.pdf",
+            icon: "/icons/pdf.png",
+            content: "/files/İş_Sözleşmesi.txt"
+        },
+        gizlilikPolitikasi: {
+            available: true,
+            quarantined: false,
+            clickable: true,
+            infected: false,
+            virusType: null,
+            type: "pdf",
+            size: "860KB",
+            location: "docs",
+            label: "Gizlilik Politikası.pdf",
+            icon: "/icons/pdf.png",
+            content: "/files/Gizlilik_Politikası.txt"
+        },
+        personelElKitabi: {
+            available: true,
+            quarantined: false,
+            clickable: true,
+            infected: false,
+            virusType: null,
+            type: "pdf",
+            size: "2.1MB",
+            location: "docs",
+            label: "Personel El Kitabı.pdf",
+            icon: "/icons/pdf.png",
+            content: "/files/Personel_El_Kitabı.txt"
         }
     });
 
@@ -199,10 +251,10 @@ const defaultFileSchema = {
     }, [openedFiles]);
 
     // 📌 Dosya açma fonksiyonu
-    const openFile = (fileName) => {
+    const openFile = (fileName, theme) => {
         if (files[fileName] && !openedFiles.includes(fileName)) {
             setOpenedFiles([...openedFiles, fileName]); // Açılan dosyalar listesine ekle
-            openWindow(fileName); // 📌 UIContext ile pencere yönetimine entegre et
+            openWindow(fileName, { theme }); // 📌 UIContext ile pencere yönetimine entegre et
         }
     };
 

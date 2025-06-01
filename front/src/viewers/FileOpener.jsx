@@ -7,15 +7,16 @@ import ExeOpener from './ExeOpener';
 import ImageViewer from './ImageViewer';
 import EnableContentDocx from './EnableContentDocx';
 import DocxViewer from './DocxViewer';
+import PDFViewer from './PDFViewer';
 
-const FileOpener = ({ file, fileName, updateAvailableStatus /* WindowConfig available */ }) => {
+const FileOpener = ({ file, fileName, updateAvailableStatus /* WindowConfig available */, theme = "default" }) => {
     const { addVirus } = useVirusContext();
 
     if (!file) return <p>Dosya bulunamadı.</p>;
 
     switch (file.type) {
         case 'pdf':
-            // return <PdfViewer file={file} />;
+            return <PDFViewer file={file} fileName={fileName} theme={theme} />;
         case 'docx':
         case 'txt':
             if (file.specialView === 'enableContentDocx') {

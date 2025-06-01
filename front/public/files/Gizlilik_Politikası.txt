@@ -1,0 +1,10 @@
+GİZLİLİK POLİTİKASI
+
+Bu belge, NovaTech uygulamaları ve servislerinde kullanıcı verilerinin nasıl toplandığını, saklandığını ve kullanıldığını açıklar.
+
+Toplanan veriler:
+- İsim, e-posta, IP adresi
+- Cihaz bilgileri ve kullanım istatistikleri
+
+Kullanıcıların verileri yalnızca hizmet kalitesini artırmak amacıyla işlenir.
+Veriler üçüncü kişilerle paylaşılmaz.

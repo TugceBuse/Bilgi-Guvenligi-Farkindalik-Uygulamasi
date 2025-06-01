@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import styles from './OpenLitePDFApp.module.css';
 import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
+import { useFileContext } from '../../Contexts/FileContext';
 import { useGameContext } from '../../Contexts/GameContext';
 
 export const useOpenLitePDFApp = () => {
@@ -18,60 +19,23 @@ export const useOpenLitePDFApp = () => {
   return { openHandler, closeHandler };
 };
 
-const dummyFiles = [
-  {
-    name: 'Yeni Çalışan Giriş Rehberi.pdf',
-    size: '610KB',
-    modified: '13.05.2025',
-    content: `
-    HOŞ GELDİNİZ!
-
-    📌 İlk Gün Kontrolleri
-    ✅ Hesap bilgileri ve e-posta kurulumu
-    ✅ Güvenlik politikası okundu
-    ✅ VPN bağlantısı sağlandı
-
-    Lütfen şifrelerinizi kimseyle paylaşmayın.
-    `
-  },
-  {
-    name: 'Erişim Protokolleri.pdf',
-    size: '1.0MB',
-    modified: '12.05.2025',
-    content: `
-    GİZLİ ERİŞİM PROTOKOLLERİ
-
-    - VPN Kullanımı
-    - Çok Faktörlü Doğrulama
-    - Şifre Yedekleme ve Güvenlik Kuralları
-    `
-  },
-  {
-    name: 'Bilgi Güvenliği Talimatı.pdf',
-    size: '890KB',
-    modified: '10.05.2025',
-    content: `
-    🔐 GÜVENLİK TALİMATLARI
-
-    - Dış USB kullanımı yasaktır.
-    - Kötü amaçlı yazılım tespiti için antivirüs yüklenmelidir.
-    - E-postalardaki ekler açılmadan önce kontrol edilmelidir.
-    `
-  }
-];
-
 const OpenLitePDFApp = ({ closeHandler, style }) => {
-
   const { openlitePermissions, setOpenlitePermissions } = useGameContext();
   const [page, setPage] = useState(openlitePermissions.permissionsOpened ? 'permissions' : 'viewer');
-
-  const [selectedFile, setSelectedFile] = useState(null);
   const [search, setSearch] = useState('');
   const appRef = useRef(null);
   MakeDraggable(appRef, `.${styles.header}`);
 
-  const filtered = dummyFiles.filter(file =>
-    file.name.toLowerCase().includes(search.toLowerCase())
+  // Dosyalar FileContext'ten
+  const { files, openFile } = useFileContext();
+
+  // Sadece pdf ve uygun olanları filtrele
+  const pdfFiles = Object.values(files).filter(
+    file => file.type === "pdf" && file.available
+  );
+
+  const filtered = pdfFiles.filter(file =>
+    file.label.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -132,38 +96,28 @@ const OpenLitePDFApp = ({ closeHandler, style }) => {
               <div className={styles.empty}>Hiçbir belge bulunamadı.</div>
             ) : (
               <div className={styles.list}>
-                {filtered.map((file, index) => (
-                  <div key={index} className={styles.item} onClick={() => setSelectedFile(file)}>
-                    <img src="/PDFViewer/pdf-format-open.png" alt="PDF" />
-                    <div>
-                      <div className={styles.filename}>{file.name}</div>
-                      <div className={styles.meta}>{file.size} • {file.modified}</div>
+                {filtered.map((file) => {
+                  // files objesindeki key'i bul
+                  const fileKey = Object.keys(files).find(key => files[key] === file);
+                  return (
+                    <div
+                      key={file.label}
+                      className={styles.item}
+                      onClick={() => openFile(fileKey, "openlite")}
+                    >
+                      <img src="/PDFViewer/pdf-format-open.png" alt="PDF" />
+                      <div>
+                        <div className={styles.filename}>{file.label}</div>
+                        <div className={styles.meta}>{file.size} • {file.modified}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {selectedFile && (
-              <div className={styles.viewer}>
-                <div className={styles.fakeToolbar}>
-                  <button onClick={() => setSelectedFile(null)} className={styles.backButton}>← Geri</button>
-                  <button className={styles.toolButton}>%100</button>
-                  <button className={styles.toolButton}>🖨 Yazdır</button>
-                  <button className={styles.toolButton}>✏️ Not Al</button>
-                </div>
-                <div className={styles.viewerHeader}>
-                  <span>{selectedFile.name}</span>
-                </div>
-                <div className={styles.fakePreview}>
-                  <div>{selectedFile.content}</div>
-                </div>
+                  );
+                })}
               </div>
             )}
           </>
         )}
       </div>
-
     </div>
   );
 };

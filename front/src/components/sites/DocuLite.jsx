@@ -76,13 +76,13 @@ const DocuLiteSite = () => {
        </div>
 
       <button className={styles.downloadButton} onClick={startDownload} disabled={downloading}>
-        {downloading ? `İndiriliyor... %${progress}` : "Ücretsiz İndir (.exe)"}
+        {downloading ? `İndiriliyor... %${progress}` : "Ücretsiz İndir"}
       </button>
 
       {showPopup && (
         <div className={styles.popup}>
           <img src="/PDFViewer/checklist.png" alt="PDF Icon" className={styles.popupIcon} />
-          DocuLiteSetup.exe başarıyla indirildi!
+          DocuLitePDF başarıyla indirildi!
         </div>
       )}
     </div>

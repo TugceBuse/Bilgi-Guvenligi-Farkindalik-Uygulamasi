@@ -7,8 +7,10 @@ import NovaBankAppSetup from "../exefiles/NovaBankAppSetup/NovaBankAppSetup";
 import TaskAppSetupF from "../exefiles/TaskAppSetupF/TaskAppSetupF";
 import NovaBankAppSetupF from "../exefiles/NovaBankAppSetupF/NovaBankAppSetupF";
 import TaskAppSetup from "../exefiles/TaskAppSetup/TaskAppSetup";
+import AntivirusSetup from "../exefiles/AntivirusSetup/AntivirusSetup"; 
 
 const setupComponents = {
+  antivirussetup: AntivirusSetup, 
   novabankappsetup: NovaBankAppSetup,
   novabankappsetupf: NovaBankAppSetupF,
   taskappsetup: TaskAppSetup,

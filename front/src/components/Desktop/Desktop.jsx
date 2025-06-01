@@ -146,8 +146,7 @@ const Desktop = () => {
             <div key={fileName} className="window file-window" 
             style={windowPositions[fileName] || {}}
             >
-              <FileOpener file={file} fileName={fileName}/>
-              <button className="close-btn" onClick={() => closeFile(fileName)}>X</button>
+              <FileOpener file={file} fileName={fileName} {...(windowProps[fileName] || {})}/>
             </div>
           );
         })}
