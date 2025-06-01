@@ -24,30 +24,30 @@ const Game = () => {
   }, []);
 
   return (
-    <NotificationProvider>
-      <Notification />
-      <UIContextProvider>
-        <SecurityProvider>
-          <VirusProvider>
-            <FileContextProvider>
-              <WindowConfigProvider>
-                <MailContextProvider>
-                  <PhoneProvider>
-                    <GameContextProvider>
-                      <TodoProvider>
-                        <div className="game">
-                          <Desktop />
-                        </div>
-                      </TodoProvider>
-                    </GameContextProvider>
-                  </PhoneProvider>
-                </MailContextProvider>
-              </WindowConfigProvider> 
-            </FileContextProvider>
-          </VirusProvider>
-        </SecurityProvider>
-      </UIContextProvider>
-    </NotificationProvider>
+    <UIContextProvider>
+      <NotificationProvider>
+        <Notification /> 
+          <SecurityProvider>
+            <VirusProvider>
+              <FileContextProvider>
+                <WindowConfigProvider>
+                  <MailContextProvider>
+                    <PhoneProvider>
+                      <GameContextProvider>
+                        <TodoProvider>
+                          <div className="game">
+                            <Desktop />
+                          </div>
+                        </TodoProvider>
+                      </GameContextProvider>
+                    </PhoneProvider>
+                  </MailContextProvider>
+                </WindowConfigProvider> 
+              </FileContextProvider>
+            </VirusProvider>
+          </SecurityProvider>
+      </NotificationProvider>
+    </UIContextProvider>
   );
 };
 
