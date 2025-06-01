@@ -1,0 +1,103 @@
+.mail-popup-stack {
+  position: fixed;
+  bottom: 64px; /* Taskbar’ın üstü */
+  right: 28px;
+  z-index: 12000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  pointer-events: none; /* Diğer tıklamalara engel olmasın */
+}
+
+.mail-popup {
+  background: #202945;
+  color: #fff;
+  border-radius: 10px;
+  min-width: 285px;
+  max-width: 350px;
+  min-height: 64px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+  box-sizing: border-box;
+  padding: 18px 16px 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  opacity: 0.93;
+  transform: translateY(30px) scale(0.97);
+  pointer-events: auto; /* butonlara tıklanabilsin */
+  position: relative;
+  animation: mailPopupIn 0.49s cubic-bezier(.49,1.65,.32,1.01);
+  transition: opacity 0.5s, transform 0.4s;
+}
+
+@keyframes mailPopupIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(60px) scale(0.93);
+    filter: blur(5px);
+  }
+  to   { 
+    opacity: 0.96; 
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+.mail-popup-icon img {
+  width: 36px; height: 36px;
+  margin-top: 2px;
+}
+
+.mail-popup-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mail-popup-title {
+  font-weight: bold;
+  font-size: 16.5px;
+  min-height: 22px; 
+  margin-bottom: 2px;
+}
+
+.mail-popup-msg {
+  font-size: 14px;
+  color: #cde1fc;
+  white-space: pre-line;
+}
+
+.mail-popup-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  padding: 2px 7px;
+  opacity: 0.73;
+}
+
+.mail-popup-btn {
+  background: #204de7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 7px;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background 0.18s;
+}
+.mail-popup-btn:hover {
+  background: #153396;
+}
+
+

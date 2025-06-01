@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useVirusContext } from "../../Contexts/VirusContext";
-import { useNotification } from "../../Contexts/NotificationContext";
+import { useNotificationContext } from "../../Contexts/NotificationContext";
 import { useUIContext } from "../../Contexts/UIContext";
 import "./PopupThrower.css";
 
@@ -10,7 +10,7 @@ const fakeNotifications = [
     title: "Sistem Performansı",
     message: "RAM kullanımı %97 seviyesine ulaştı!",
     type: "warning",
-    icon: "/icons/caution.png"
+    icon: "/icons/warning.png"
   },
   {
     title: "Güncelleme Mevcut",
@@ -77,19 +77,18 @@ const AdPopupCard = ({ onClick }) => (
   </div>
 );
 
-// Ana bileşen
 const PopupThrower = () => {
   const { viruses } = useVirusContext();
-  const { addNotification } = useNotification();
+  const { addNotification } = useNotificationContext();
   const { openWindows, openWindow, setWindowProps, setActiveWindow } = useUIContext();
   const [openPopups, setOpenPopups] = useState([]);
 
   const popupComponents = [
-  { component: AdPopupVPN, url: "https://novasecure.com/vpn-promo" },
-  { component: AdPopupPrize, url: "https://novasecure.com/prize" },
-  { component: AdPopupCleaner, url: "https://novasecure.com/cleaner" },
-  { component: AdPopupCard, url: "https://novasecure.com/card-refund" }
-];
+    { component: AdPopupVPN, url: "https://novasecure.com/vpn-promo" },
+    { component: AdPopupPrize, url: "https://novasecure.com/prize" },
+    { component: AdPopupCleaner, url: "https://novasecure.com/cleaner" },
+    { component: AdPopupCard, url: "https://novasecure.com/card-refund" }
+  ];
 
   const handleBrowserOpen = (url) => {
     if (openWindows.includes("browser")) {
@@ -122,15 +121,20 @@ const PopupThrower = () => {
             }
           };
           setOpenPopups(prev => [...prev, newPopup]);
-
         } else {
           const notif = fakeNotifications[Math.floor(Math.random() * fakeNotifications.length)];
+
+          // GÜNCEL YAPI: type = renk/seviye, appType = system!
           addNotification({
+            type: notif.type,           // info/warning/danger
+            appType: "system",          // kaynağı belirt
             title: notif.title,
             message: notif.message,
-            type: notif.type,
             icon: notif.icon,
-            duration: 10000
+            isPopup: true,
+            isTaskbar: false,
+            duration: 10000,
+            actions: []
           });
         }
 
@@ -139,6 +143,7 @@ const PopupThrower = () => {
     };
 
     scheduleNext();
+    // Cleanup için fonksiyon dönmene gerek yok çünkü interval yok ve state yönetiliyor.
   }, [viruses]);
 
   const closePopup = (id) => {

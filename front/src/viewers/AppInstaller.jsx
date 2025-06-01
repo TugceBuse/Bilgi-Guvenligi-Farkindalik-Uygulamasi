@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSecurityContext } from "../Contexts/SecurityContext";
 import { useVirusContext } from "../Contexts/VirusContext";
 import { useFileContext } from "../Contexts/FileContext";
-import { useNotification } from "../Contexts/NotificationContext";
+import { useNotificationContext } from "../Contexts/NotificationContext"; // GÜNCEL HOOK!
 import NovaBankAppSetup from "../exefiles/NovaBankAppSetup/NovaBankAppSetup";
 import TaskAppSetupF from "../exefiles/TaskAppSetupF/TaskAppSetupF";
 import NovaBankAppSetupF from "../exefiles/NovaBankAppSetupF/NovaBankAppSetupF";
@@ -13,7 +13,6 @@ const setupComponents = {
   novabankappsetupf: NovaBankAppSetupF,
   taskappsetup: TaskAppSetup,
   taskappsetupf: TaskAppSetupF,
-
   // diğer setuplar...
 };
 
@@ -21,7 +20,7 @@ const AppInstaller = ({ fileName, setupType, onInstallComplete, ...props }) => {
   const { files, updateFileStatus, closeFile } = useFileContext();
   const { viruses, removeVirus } = useVirusContext();
   const { fullProtection, scanLogs, setScanLogs } = useSecurityContext();
-  const { addNotification } = useNotification();
+  const { addNotification } = useNotificationContext(); // GÜNCEL HOOK!
 
   const [blocked, setBlocked] = useState(false);
   const [allowed, setAllowed] = useState(false);
@@ -30,7 +29,6 @@ const AppInstaller = ({ fileName, setupType, onInstallComplete, ...props }) => {
   const handleAntivirusCheck = ({ customVirusType }) => {
     // fullProtection kontrolü burada
     if (!fullProtection){
-        console.log("Antivirüs koruması devre dışı, kurulum devam ediyor.");
         return Promise.resolve("allowed");
     }
 
@@ -44,49 +42,54 @@ const AppInstaller = ({ fileName, setupType, onInstallComplete, ...props }) => {
         v.sourcefile.toLowerCase() === fileName.toLowerCase()
     );
 
-    if (isDetectableInfected || relatedVirus || customVirusType) {
+    if (isDetectableInfected || relatedVirus) {
       return new Promise((resolve) => {
         addNotification({
-        type: "warning",
-        message: `Şüpheli dosya tespit edildi: ${fileName} (${relatedVirus ? relatedVirus.type : (file?.virusType || customVirusType || "Bilinmeyen tür")})`,
-        actions: [
+          type: "danger",          // RENK VE İKON (danger=Kırmızı, error=Kırmızı, warning=Turuncu, info=Mavi)
+          appType: "system",       // BİLDİRİMİN KAYNAĞI (kategori)
+          title: "Antivirüs Uyarısı",
+          message: `Şüpheli dosya tespit edildi: ${fileName} (${relatedVirus ? relatedVirus.type : (file?.virusType || customVirusType || "Bilinmeyen tür")})`,
+          icon: "/icons/danger.png",
+          isPopup: true,
+          isTaskbar: false,
+          actions: [
             {
-            label: "Karantinaya Al ve Durdur",
-            onClick: () => {
+              label: "Karantinaya Al ve Durdur",
+              onClick: () => {
                 updateFileStatus(fileName, { quarantined: true, available: false });
                 if (relatedVirus) removeVirus(relatedVirus.id);
                 setScanLogs([
-                ...scanLogs,
-                {
+                  ...scanLogs,
+                  {
                     date: new Date().toLocaleString("tr-TR"),
                     files: [
-                    {
+                      {
                         fileName,
                         virusType: relatedVirus ? relatedVirus.type : (file?.virusType || customVirusType || "unknown"),
-                    },
+                      },
                     ],
-                },
+                  },
                 ]);
                 setBlocked(true);
                 setAllowed(false);
                 if (onInstallComplete) onInstallComplete(false);
                 closeFile(fileName);
                 resolve("blocked");
-            },
+              },
             },
             {
-            label: "Yine de Devam Et",
-            onClick: () => {
+              label: "Yine de Devam Et",
+              onClick: () => {
                 setAllowed(true);
                 setBlocked(false);
                 resolve("allowed");
+              },
             },
-            },
-        ],
+          ],
         });
-
       });
-    } else {
+    }
+ else {
       return Promise.resolve("allowed");
     }
   };

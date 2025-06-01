@@ -4,16 +4,16 @@ import { useVirusContext } from '../../Contexts/VirusContext';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 import { useUIContext } from '../../Contexts/UIContext';
 import { showFakeCMD } from '../../utils/fakeCMD';
-import { useNotification } from '../../Contexts/NotificationContext';
+import { useNotificationContext } from '../../Contexts/NotificationContext';
 
-const binaryMessage = "01000010 01110101 00100000 01100010 01101001 01110010 00100000 01000010 01101001 01101110 01100001 01110010 01111001 00100000 01010100 01100101 01110011 01110100 00100000 01101101 01100101 01110011 01100001 01101010 11000100 10110001 01100100 11000100 10110001 01110010 00001010";
+const binaryMessage = "01000010 01110101 00100000 01100010 01101001 01110010 00100000 01000010 01101001 01101110 01100001 01110010 01111001 00100000 01010100 01100101 01110011 01110100 00101101 01101101 01100101 01110011 01100001 01101010 11000100 10110001 01100100 11000100 10110001 01110010 00001010";
 
 const TaskAppSetupF = ({ file, fileName, onAntivirusCheck }) => {
   const { setFiles } = useFileContext();
   const { addVirus } = useVirusContext();
   const { lockMouse, unlockMouse, setOpenWindows } = useUIContext();
   const { setWindowConfig, windowConfig } = useWindowConfig();
-  const { addNotification } = useNotification();
+  const { addNotification } = useNotificationContext();
   const hasStarted = useRef(false);
 
   useEffect(() => {
@@ -52,12 +52,20 @@ const TaskAppSetupF = ({ file, fileName, onAntivirusCheck }) => {
         });
       }, 5000);
 
-      addNotification({
-        title: "Sistem Sıcaklığı Yüksek",
-        message: "CPU sıcaklığı 99°C'ye ulaştı. Bilgisayarınız aşırı ısınabilir.",
-        type: "warning",
-        icon: "/icons/caution.png"
-      });
+      // ---- BİLDİRİM KISMI ----
+      setTimeout(() => {  
+        addNotification({
+          type: "warning",                // <-- RENK (ÖNEMLİ!)
+          appType: "system",              // <-- KATEGORİ (Kaynak)
+          title: "Sistem Sıcaklığı Yüksek",
+          message: "CPU sıcaklığı 99°C'ye ulaştı. Bilgisayarınız aşırı ısınabilir.",
+          icon: "/icons/warning.png",
+          isPopup: true,
+          isTaskbar: false,
+          duration: 6000
+        });
+      }, 3500);
+      // ---- SON ----
 
       setTimeout(async () => {
         setOpenWindows([]);
@@ -132,10 +140,9 @@ const TaskAppSetupF = ({ file, fileName, onAntivirusCheck }) => {
     return () => {
       window.removeEventListener('click', handleClick);
     };
-  }, [setFiles, addVirus, lockMouse, unlockMouse, setWindowConfig, windowConfig, onAntivirusCheck, fileName]);
+  }, [setFiles, addVirus, lockMouse, unlockMouse, setWindowConfig, windowConfig, onAntivirusCheck, fileName, addNotification]);
 
   return null;
-  // return <TaskAppSetup file={file} fileName={fileName} />;
 };
 
 export default TaskAppSetupF;
