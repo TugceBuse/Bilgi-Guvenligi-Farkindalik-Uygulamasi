@@ -84,8 +84,8 @@
   padding: 10px 22px;
   cursor: pointer;
   font-size: 16px;
+  min-width: 25px;
   font-weight: 500;
-  min-width: 120px;
   box-shadow: 0 1.5px 9px rgba(40,100,230,0.07);
   transition: background 0.15s, color 0.15s, transform 0.09s;
 }

@@ -5,38 +5,82 @@ const NotificationContext = createContext();
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
+  // type: info, warning, danger, error, success... (renk için)
+  // appType: system, mail, phone  (kaynak/kategori)
   const addNotification = ({
+    type = "info",        // RENK
+    appType = "system",   // KATEGORİ
     title,
     message,
-    type = "info",
-    icon = `/icons/${type}.png`,
+    icon,
+    isPopup = false,
+    isTaskbar = false,
+    actions = [],
     duration = 5000,
-    actions
+    appData,
   }) => {
-    const id = Date.now();
-    const newNotification = { id, title, message, type, icon, actions };
+    const id = Date.now() + Math.random();
+    const notification = {
+      id,
+      type,
+      appType,
+      title,
+      message,
+      icon: icon || getDefaultIcon(appType),
+      isPopup,
+      isTaskbar,
+      actions,
+      read: false,
+      duration,
+      appData,
+      createdAt: new Date()
+    };
+    setNotifications(prev => [...prev, notification]);
 
-    setNotifications(prev => [...prev, newNotification]);
-
-    // Eğer buton/aksiyon yoksa otomatik kapanır, varsa kalıcı!
-    if (!actions || actions.length === 0) {
+    // Popup ise otomatik kaldır
+    if (isPopup && actions.length === 0) {
       setTimeout(() => {
-        setNotifications(prev => prev.filter(notif => notif.id !== id));
+        setNotifications(prev => prev.filter(n => n.id !== id));
       }, duration);
     }
+    return id;
   };
 
+  const getDefaultIcon = (appType) => {
+    if (appType === "mail") return "/icons/mail.png";
+    if (appType === "phone") return "/PhoneApp/comment.png";
+    if (appType === "system") return "/icons/info.png";
+    return "/icons/info.png";
+  };
 
-  // Kapatma fonksiyonu (özellikle aksiyon sonrası kullanmak için)
+  const markAsRead = (id) => {
+    setNotifications(prev =>
+      prev.map(n => n.id === id ? { ...n, read: true } : n)
+    );
+  };
+
   const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
+    setNotifications(prev => prev.filter(n => n.id !== id));
   };
+
+  // Filtreleyici fonksiyonlar:
+  const popupNotifications = notifications.filter(n => n.isPopup);
+  const taskbarNotifications = notifications.filter(n => n.isTaskbar && !n.read);
+  const unreadTaskbarCount = taskbarNotifications.length;
 
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
+    <NotificationContext.Provider value={{
+      notifications,
+      addNotification,
+      removeNotification,
+      markAsRead,
+      popupNotifications,
+      taskbarNotifications,
+      unreadTaskbarCount,
+    }}>
       {children}
     </NotificationContext.Provider>
   );
 };
 
-export const useNotification = () => useContext(NotificationContext);
+export const useNotificationContext = () => useContext(NotificationContext);

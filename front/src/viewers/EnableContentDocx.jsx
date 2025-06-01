@@ -3,9 +3,8 @@ import { useVirusContext } from '../Contexts/VirusContext';
 import { useFileContext } from '../Contexts/FileContext';
 import './EnableContentDocx.css';
 import { MakeDraggable } from '../utils/Draggable';
-import { useNotification } from '../Contexts/NotificationContext';
+import { useNotificationContext } from '../Contexts/NotificationContext'; // <-- GÜNCEL HOOK!
 import { useSecurityContext } from '../Contexts/SecurityContext';
-
 
 const EnableContentDocx = ({ file, fileName }) => {
     const { fullProtection  } = useSecurityContext();
@@ -13,7 +12,7 @@ const EnableContentDocx = ({ file, fileName }) => {
     const [enabled, setEnabled] = useState(false);
     const { closeFile } = useFileContext();
     const docxRef = useRef(null);
-    const { addNotification } = useNotification();
+    const { addNotification } = useNotificationContext(); // <-- GÜNCEL HOOK!
     const { updateFileStatus } = useFileContext();
 
     MakeDraggable(docxRef, '.docx-header');
@@ -21,13 +20,16 @@ const EnableContentDocx = ({ file, fileName }) => {
     const handleEnableClick = () => {
         setEnabled(true);
         if (file.infected && file.virusType) {
-            if( fullProtection ) {
+            if (fullProtection) {
                 updateFileStatus(fileName, { quarantined: true, available: false });
                 addNotification({
+                    apptype: 'system',        // KATEGORİ
                     title: 'Şüpheli Dosya!',
                     message: `"${fileName}.${file.type}" dosyasında ${file.virusType} tespit edildi ve karantinaya alındı.`,
-                    icon: '/icons/caution.png',
-                    type: 'danger',
+                    icon: '/icons/danger.png',
+                    type: 'danger',             // TÜR
+                    isPopup: true,              // SADECE POPUP
+                    isTaskbar: false,           // TASKBARA DÜŞMEZ
                     duration: 7000
                 });
                 return;
@@ -47,7 +49,6 @@ const EnableContentDocx = ({ file, fileName }) => {
     const handleClose = () => {
         closeFile(fileName);
     };
-
 
     return (
         <div className="docx-window" ref={docxRef} data-filename={fileName}>
