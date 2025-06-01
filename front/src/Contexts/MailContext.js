@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { mails as initialMails, sentMails as initialSentMails, spamMails as initialSpamMails } from '../components/Mailbox/Mails';
 import { useNotificationContext } from './NotificationContext';
-import { useUIContext } from './UIContext'; // EKLENDİ
+import { useUIContext } from './UIContext';
 
 const MailContext = createContext();
 
@@ -13,13 +13,23 @@ export const MailContextProvider = ({ children }) => {
   const [spamboxMails, setSpamboxMails] = useState(initialSpamMails.filter(mail => mail.used));
   const [selectedMail, setSelectedMail] = useState(null);
 
-  const { addNotification, markAsRead, removeNotification } = useNotificationContext();
-  const { openWindow } = useUIContext(); // EKLENDİ
+  const { addNotification, removeNotification } = useNotificationContext();
+  const { openWindow } = useUIContext();
 
-  // 📬 Yeni mail geldiğinde notification oluştur (CALLBACK YÖNTEMİ)
+  // 📧 Mail okundu işaretle + bildirimden kaldır
+  const markMailAsReadAndRemoveNotification = (mailId) => {
+    setInboxMails(prev =>
+      prev.map(m =>
+        m.id === mailId ? { ...m, readMail: true } : m
+      )
+    );
+    removeNotification(mailId);
+  };
+
+  // Bildirimli yeni mail ekle (Sadece inbox!)
   const notifyNewMail = (mail) => {
     addNotification({
-      id : mail.id,
+      id: mail.id, // id = mail.id olmalı!
       type: "info",
       appType: "mail",
       title: mail.title,
@@ -31,11 +41,10 @@ export const MailContextProvider = ({ children }) => {
       actions: [
         {
           label: "Oku",
-          // CALLBACK: openWindow ve setSelectedMail birlikte tetikleniyor
           onClick: () => {
             openWindow('mailbox');
             setSelectedMail(mail);
-            markAsRead && markAsRead(mail.id); // Bildirimi okunduya işaretle (güvenlik için kontrol)
+            markMailAsReadAndRemoveNotification(mail.id);
           }
         },
         {
@@ -47,7 +56,6 @@ export const MailContextProvider = ({ children }) => {
     });
   };
 
-  // Mail ekleme fonksiyonunu güncelle (yeni gelen maile notification düşsün)
   const addMailToMailbox = (type, id) => {
     if (type === 'inbox') {
       const mailToAdd = initMail.find(mail => mail.id === id);
@@ -58,7 +66,7 @@ export const MailContextProvider = ({ children }) => {
           )
         );
         setInboxMails(prevMails => [...prevMails, { ...mailToAdd, used: true }]);
-        notifyNewMail({ ...mailToAdd, used: true }); // AÇIKLAMALI
+        notifyNewMail({ ...mailToAdd, used: true }); // Sadece inbox için!
       }
     } else if (type === 'spam') {
       const spamToAdd = initspamMails.find(mail => mail.id === id);
@@ -69,6 +77,7 @@ export const MailContextProvider = ({ children }) => {
           )
         );
         setSpamboxMails(prevMails => [...prevMails, { ...spamToAdd, used: true }]);
+        // Spam için notification yok!
       }
     }
   };
@@ -82,12 +91,11 @@ export const MailContextProvider = ({ children }) => {
       spamboxMails, setSpamboxMails,
       selectedMail, setSelectedMail,
       addMailToMailbox,
+      markMailAsReadAndRemoveNotification, // export ettik
     }}>
       {children}
     </MailContext.Provider>
   );
 };
 
-export const useMailContext = () => {
-  return useContext(MailContext);
-};
+export const useMailContext = () => useContext(MailContext);

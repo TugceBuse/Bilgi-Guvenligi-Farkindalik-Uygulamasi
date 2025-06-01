@@ -5,7 +5,6 @@ const NotificationContext = createContext();
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
-  // Varsayılan ikon seçici
   const getDefaultIcon = (appType) => {
     if (appType === "mail") return "/icons/mail.png";
     if (appType === "phone") return "/PhoneApp/comment.png";
@@ -13,8 +12,8 @@ export const NotificationProvider = ({ children }) => {
     return "/icons/info.png";
   };
 
-  // Bildirim ekle
   const addNotification = ({
+    id, // id dışarıdan gelirse onu kullan (mail.id olmalı!)
     type = "info",
     appType = "system",
     title,
@@ -26,9 +25,10 @@ export const NotificationProvider = ({ children }) => {
     duration = 5000,
     appData,
   }) => {
-    const id = Date.now() + Math.random();
+    // id parametresi dışarıdan gelmezse oluştur
+    const notificationId = id !== undefined ? id : (Date.now() + Math.random());
     const notification = {
-      id,
+      id: notificationId,
       type,
       appType,
       title,
@@ -41,7 +41,7 @@ export const NotificationProvider = ({ children }) => {
       duration,
       appData,
       createdAt: new Date(),
-      popupClosed: false, // 🔴 Eklendi!
+      popupClosed: false,
     };
     setNotifications(prev => [...prev, notification]);
 
@@ -49,35 +49,30 @@ export const NotificationProvider = ({ children }) => {
     if (isPopup && actions.length === 0) {
       setTimeout(() => {
         setNotifications(prev =>
-          prev.map(n => n.id === id ? { ...n, popupClosed: true } : n)
+          prev.map(n => n.id === notificationId ? { ...n, popupClosed: true } : n)
         );
       }, duration);
     }
-    return id;
+    return notificationId;
   };
 
-  // Sadece popup'ı kapat (taskbar'dan silmez!)
   const closePopupNotification = (id) => {
     setNotifications(prev =>
       prev.map(n => n.id === id ? { ...n, popupClosed: true } : n)
     );
   };
 
-  // Taskbar veya bildirim listesinden tamamen kaldır
   const removeNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
-  // Bildirimi okundu olarak işaretle (taskbar'dan kaybolur)
   const markAsRead = (id) => {
     setNotifications(prev =>
       prev.map(n => n.id === id ? { ...n, read: true } : n)
     );
   };
 
-  // Sadece popup'ta gösterilecekler (popupClosed:false)
   const popupNotifications = notifications.filter(n => n.isPopup && !n.popupClosed);
-  // Sadece taskbar'da gösterilecekler (read:false)
   const taskbarNotifications = notifications.filter(n => n.isTaskbar && !n.read);
   const unreadTaskbarCount = taskbarNotifications.length;
 
@@ -87,7 +82,7 @@ export const NotificationProvider = ({ children }) => {
       addNotification,
       removeNotification,
       markAsRead,
-      closePopupNotification, // 🔴 Popup'ı kapatmak için yeni fonksiyon
+      closePopupNotification,
       popupNotifications,
       taskbarNotifications,
       unreadTaskbarCount,

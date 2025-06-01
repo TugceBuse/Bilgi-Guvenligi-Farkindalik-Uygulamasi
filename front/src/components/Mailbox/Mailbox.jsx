@@ -5,6 +5,7 @@ import { useUIContext } from '../../Contexts/UIContext';
 import { useMailContext } from '../../Contexts/MailContext';
 import { useGameContext } from '../../Contexts/GameContext';
 import { resetScroll } from '../../utils/resetScroll';
+import { useNotificationContext } from '../../Contexts/NotificationContext';
 
 export const useMailbox = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -21,7 +22,8 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const [activeTab, setActiveTab] = useState('inbox');
   const [showSpamMenu, setShowSpamMenu] = useState(false);
-
+  
+  const { removeNotification } = useNotificationContext();
   // Context
   const {
     inboxMails, setInboxMails,
@@ -46,13 +48,14 @@ const Mailbox = ({ closeHandler, style }) => {
     if (!isWificonnected) return;
     setSelectedMail(mail);
 
-    // Okundu olarak işaretle
+    // Okundu olarak işaretle ve bildirimi kaldır
     if (activeTab === "inbox") {
       setInboxMails(prev =>
         prev.map(m =>
           m.id === mail.id ? { ...m, readMail: true } : m
         )
       );
+      removeNotification(mail.id); // okunduysa bildirimi kaldır
     } else if (activeTab === "spam") {
       setSpamboxMails(prev =>
         prev.map(m =>
@@ -60,7 +63,6 @@ const Mailbox = ({ closeHandler, style }) => {
         )
       );
     }
-    // Bildirim kaldırma artık context'te "Oku"ya basınca oluyor, burada gerek yok.
   };
 
   const handleTabClick = (tab) => {
