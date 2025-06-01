@@ -108,12 +108,41 @@ export const MailContextProvider = ({ children }) => {
         content: createInvoiceMail(params)
       };
     }
-    // ...diğer tipler için de ekle
+    // ...diğer türler
+
     if (mailObj) {
       setInitMail(prev => [...prev, mailObj]);
       setInboxMails(prev => [...prev, mailObj]);
+      // **YENİ: Bildirim ekle**
+      addNotification({
+        id: mailObj.id,
+        type: "info",
+        appType: "mail",
+        title: mailObj.title,
+        message: mailObj.precontent,
+        icon: "/icons/mail.png",
+        isPopup: true,
+        isTaskbar: true,
+        duration: 7000,
+        actions: [
+          {
+            label: "Oku",
+            onClick: () => {
+              openWindow('mailbox');
+              setSelectedMail(mailObj);
+              markMailAsReadAndRemoveNotification(mailObj.id);
+            }
+          },
+          {
+            label: "Bildirimden Kaldır",
+            onClick: () => removeNotification(mailObj.id)
+          }
+        ],
+        appData: { mailId: mailObj.id },
+      });
     }
   };
+
 
   return (
     <MailContext.Provider value={{
