@@ -57,9 +57,10 @@
     height: 24px;
   }
   .mailbox-inwindow {
+    flex: 1 1 auto;
     top: 6%;
     width: 100%;
-    height: 94%;
+    height: 100%;
     background-color: rgb(146, 146, 146);
     border: 5px solid #6b6b6b;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.153);

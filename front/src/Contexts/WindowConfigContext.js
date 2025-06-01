@@ -23,6 +23,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: false
   },
   mailbox: {
     icon: '/icons/mail.png',
@@ -32,6 +33,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: true
   },
   browser: {
     icon: '/icons/internet.png',
@@ -41,6 +43,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: true
   },
   chatapp: {
     icon: '/icons/speak.png',
@@ -50,6 +53,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: true
   },
   folder: {
     icon: '/icons/folder.png',
@@ -59,6 +63,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: false
   },
   scanner: {
     icon: '/icons/qr-code.png',
@@ -68,6 +73,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: false
   },
   antivirus: {
     icon: '/icons/shieldSecure.png',
@@ -77,6 +83,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: false
   },
   novabankapp: {
     icon: '/novaBank/novaLogo.png',
@@ -86,8 +93,8 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: true
   },
-
   phoneapp: {
     icon: '/PhoneApp/chat.png',
     label: 'Telefon Bağlantısı',
@@ -96,6 +103,7 @@ const initialWindowConfig = {
     location: 'desktop',
     clickable: true,
     available: true,
+    requiresInternet: true
   },
   pdfviewer: {
     icon: '/PDFViewer/pdf.png',
@@ -104,26 +112,29 @@ const initialWindowConfig = {
     useComponent: useDocuLiteApp,
     location: 'desktop',
     clickable: true,
-    available: false
+    available: false,
+    requiresInternet: false
   },
   quickpdfviewer: {
-  icon: '/PDFViewer/pdf-logo.png',
-  label: 'QuickPDFView',
-  component: QuickPDFViewApp,
-  useComponent: useQuickPDFViewApp,
-  location: 'desktop',
-  clickable: true,
-  available: false
-},
+    icon: '/PDFViewer/pdf-logo.png',
+    label: 'QuickPDFView',
+    component: QuickPDFViewApp,
+    useComponent: useQuickPDFViewApp,
+    location: 'desktop',
+    clickable: true,
+    available: false,
+    requiresInternet: false
+  },
   openlitepdfviewer: {
-  icon: '/PDFViewer/pdf-logo-open.png',
-  label: 'OpenLite PDF',
-  component: OpenLitePDFApp,
-  useComponent: useOpenLitePDFApp,
-  location: 'desktop',
-  clickable: true,
-  available: false
-}
+    icon: '/PDFViewer/pdf-logo-open.png',
+    label: 'OpenLite PDF',
+    component: OpenLitePDFApp,
+    useComponent: useOpenLitePDFApp,
+    location: 'desktop',
+    clickable: true,
+    available: false,
+    requiresInternet: false
+  }
 };
 
 export const WindowConfigProvider = ({ children }) => {
@@ -139,8 +150,29 @@ export const WindowConfigProvider = ({ children }) => {
     }));
   };
 
+ const addWindowApp = (appName, appConfig) => {          // ÖRNEK KULLANIM:
+  setWindowConfig((prevConfig) => {                      // addWindowApp("custompdfviewer", {
+    if (prevConfig[appName]) {                           // icon: '/icons/custompdf.png',
+      // Eğer zaten varsa available'ı true yap           // label: 'Custom PDF Viewer',
+      return {                                           // component: CustomPDFViewer,
+        ...prevConfig,                                   // useComponent: useCustomPDFViewer, 
+        [appName]: {                                     // location: 'desktop',  
+          ...prevConfig[appName],                        // clickable: true,  
+          available: true                                // available: true,
+        }                                                // requiresInternet: false
+      };                                                 // });
+    }
+    // Yoksa normal ekle
+    return {
+      ...prevConfig,
+      [appName]: appConfig,
+    };
+  });
+};
+
+
   return (
-    <WindowConfigContext.Provider value={{ windowConfig, setWindowConfig, updateAvailableStatus }}>
+    <WindowConfigContext.Provider value={{ windowConfig, setWindowConfig, updateAvailableStatus, addWindowApp }}>
       {children}
     </WindowConfigContext.Provider>
   );

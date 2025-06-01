@@ -4,38 +4,37 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
 import { usePhoneContext } from '../../Contexts/PhoneContext';
+import ConnectionOverlay from '../../utils/ConnectionOverlay'; // import path projene göre ayarlanmalı
 
 export const useNovabankApp = () => {
-    const { openWindow, closeWindow } = useUIContext();
-  
-    const openHandler = () => {
-      openWindow('novabankapp');
-    };
-  
-    const closeHandler = () => {
-      closeWindow('novabankapp');
-    };
-  
-    return { openHandler, closeHandler };
+  const { openWindow, closeWindow } = useUIContext();
+
+  const openHandler = () => {
+    openWindow('novabankapp');
   };
 
-const NovabankApp = ({ closeHandler, style }) => {
-  const { constUser, BankInfo, setBankInfo, cardBalance } = useGameContext(); // GameContext'ten constUser'ı çekiyoruz
-  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext(); // 2FA için
+  const closeHandler = () => {
+    closeWindow('novabankapp');
+  };
 
-  const [is2FAwaiting, setIs2FAwaiting] = useState(false); // Kod bekleniyor mu?
-  const [twoFACodeInput, setTwoFACodeInput] = useState(""); // Kod input
+  return { openHandler, closeHandler };
+};
+
+const NovabankApp = ({ closeHandler, style }) => {
+  const { constUser, BankInfo, setBankInfo, cardBalance, isWificonnected } = useGameContext();
+  const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+
+  const [is2FAwaiting, setIs2FAwaiting] = useState(false);
+  const [twoFACodeInput, setTwoFACodeInput] = useState("");
 
   const BankAppRef = useRef(null);
   MakeDraggable(BankAppRef, `.${styles.bankHeader}`);
 
- 
-
-  const [page, setPage] = useState('login'); // login veya dashboard
+  const [page, setPage] = useState('login');
   const [tcNo, setTcNo] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // Kod hatası gösterimi
+  const [errorMessage, setErrorMessage] = useState("");
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("tr-TR", {
@@ -45,7 +44,6 @@ const NovabankApp = ({ closeHandler, style }) => {
     }).format(price);
   };
 
-  // Error state'ler
   const [errors, setErrors] = useState({
     tcNo: '',
     password: '',
@@ -53,16 +51,20 @@ const NovabankApp = ({ closeHandler, style }) => {
   });
 
   const handleLogin = () => {
+    if (!isWificonnected) {
+      setErrorMessage("İnternet bağlantısı yok.");
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
     let newErrors = { tcNo: '', password: '', login: '' };
-  
+
     if (!tcNo.trim()) {
       newErrors.tcNo = 'TC kimlik numarası zorunludur.';
     }
     if (!password.trim()) {
       newErrors.password = 'Şifre zorunludur.';
     }
-  
-    // Her iki alan doluysa ve eşleşme doğruysa
+
     if (tcNo.trim() && password.trim()) {
       if (tcNo === constUser.tcNo && password === constUser.digitalPassword) {
         if (BankInfo.rememberMe) {
@@ -70,10 +72,9 @@ const NovabankApp = ({ closeHandler, style }) => {
         } else {
           setBankInfo(prev => ({ ...prev, savedTcNo: '' }));
         }
-
         generateCodeMessage("NovaBank", "novabank");
         setIs2FAwaiting(true);
-        setErrors({ tcNo: '', password: '', login: '' }); // önceki hataları temizle
+        setErrors({ tcNo: '', password: '', login: '' });
         return;
       } else {
         newErrors.login = 'Giriş bilgileriniz hatalı.';
@@ -81,31 +82,31 @@ const NovabankApp = ({ closeHandler, style }) => {
     }
     setErrors(newErrors);
 
-     // ❗ 2 saniye sonra hata mesajlarını temizle
     setTimeout(() => {
       setErrors({ tcNo: '', password: '', login: '' });
     }, 2000);
   };
 
-    useEffect(() => {
-      if (BankInfo.rememberMe && BankInfo.savedTcNo) {
-        setTcNo(BankInfo.savedTcNo);
-      }
-    }, []);
+  useEffect(() => {
+    if (BankInfo.rememberMe && BankInfo.savedTcNo) {
+      setTcNo(BankInfo.savedTcNo);
+    }
+  }, []);
 
-    useEffect(() => {
-      return () => clearCode("novabank");
-    }, []);
-
+  useEffect(() => {
+    return () => clearCode("novabank");
+  }, []);
 
   return (
     <div className={styles.bankWindow} style={style} ref={BankAppRef} data-window="novabankapp">
-        <div className={styles.bankHeader}>
-            <h2>NovaBank</h2>
-            <button className={styles.bankClose} onClick={closeHandler}>×</button>
-        </div>
-      {page === 'login' && (
-        <div className={styles.loginPage}>
+      <div className={styles.bankHeader}>
+        <h2>NovaBank</h2>
+        <button className={styles.bankClose} onClick={closeHandler}>×</button>
+      </div>
+      <ConnectionOverlay isConnected={isWificonnected} top={48}>
+        {/* İçerik alanı başlıyor */}
+        {page === 'login' && (
+          <div className={styles.loginPage}>
             <div className={styles.leftPanel}>
               {!is2FAwaiting ? (
                 <>
@@ -138,6 +139,7 @@ const NovabankApp = ({ closeHandler, style }) => {
                   </div>
 
                   {errors.login && <div className={styles.errorText}>{errors.login}</div>}
+                  {errorMessage && <div className={styles.errorText}>{errorMessage}</div>}
 
                   <div className={styles.options}>
                     <div className={styles.options}>
@@ -193,68 +195,66 @@ const NovabankApp = ({ closeHandler, style }) => {
                   >
                     Doğrula ve Giriş Yap
                   </button>
-                  
                 </>
               )}
             </div>
-
-
             <div className={styles.rightPanel}>
-                <h3>NovaBank ile Güvendesiniz!</h3>
-                <ul>
+              <h3>NovaBank ile Güvendesiniz!</h3>
+              <ul>
                 <li>7/24 Müşteri Hizmeti</li>
                 <li>Gelişmiş Şifreleme Teknolojisi</li>
                 <li>Hızlı Para Transferleri</li>
-                </ul>
+              </ul>
             </div>
-        </div>
-      )}
+          </div>
+        )}
 
-      {page === 'dashboard' && (
-        <div className={styles.dashboard}>
-          <header className={styles.dashboardHeader}>
-            <span className={styles.userInfo}>👋 Hoşgeldin, Onur Yıldız</span>
-          </header>
+        {page === 'dashboard' && (
+          <div className={styles.dashboard}>
+            <header className={styles.dashboardHeader}>
+              <span className={styles.userInfo}>👋 Hoşgeldin, Onur Yıldız</span>
+            </header>
 
-          <section className={styles.accountInfo}>
-            <div className={styles.card}>
-              <div className={styles.cardBackground}>
-                <h3 className={styles.cardBankName}>NovaBank</h3>
-                <div className={styles.cardNumber}>**** **** **** 3456</div>
-                <div className={styles.cardDetails}>
-                  <div>
-                    <label>Son Kullanım</label>
-                    <p>12/26</p>
-                  </div>
-                  <div>
-                    <label>Kart Sahibi</label>
-                    <p>Onur Yılmaz</p>
+            <section className={styles.accountInfo}>
+              <div className={styles.card}>
+                <div className={styles.cardBackground}>
+                  <h3 className={styles.cardBankName}>NovaBank</h3>
+                  <div className={styles.cardNumber}>**** **** **** 3456</div>
+                  <div className={styles.cardDetails}>
+                    <div>
+                      <label>Son Kullanım</label>
+                      <p>12/26</p>
+                    </div>
+                    <div>
+                      <label>Kart Sahibi</label>
+                      <p>Onur Yılmaz</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className={styles.cardInfo}>
-              <h3>IBAN</h3>
-              <p>TR12 3456 7890 1234 5678 9012 34</p>
-            </div>
-            <div className={styles.cardInfo}>
-              <h3>Bakiye</h3>
-              <p>{formatPrice(cardBalance)}</p>
-            </div>
-          </section>
+              <div className={styles.cardInfo}>
+                <h3>IBAN</h3>
+                <p>TR12 3456 7890 1234 5678 9012 34</p>
+              </div>
+              <div className={styles.cardInfo}>
+                <h3>Bakiye</h3>
+                <p>{formatPrice(cardBalance)}</p>
+              </div>
+            </section>
 
-          <section className={styles.otherServices}>
-            <h3>🚧 Diğer Bankacılık İşlemleri</h3>
-            <div className={styles.serviceButtons}>
-              <button disabled>💸 Para Transferi</button>
-              <button disabled>🧾 Fatura Ödeme</button>
-              <button disabled>🏦 Kredi Başvurusu</button>
-            </div>
-          </section>
-        </div>
-      )}
-
+            <section className={styles.otherServices}>
+              <h3>🚧 Diğer Bankacılık İşlemleri</h3>
+              <div className={styles.serviceButtons}>
+                <button disabled>💸 Para Transferi</button>
+                <button disabled>🧾 Fatura Ödeme</button>
+                <button disabled>🏦 Kredi Başvurusu</button>
+              </div>
+            </section>
+          </div>
+        )}
+        {/* İçerik alanı bitiyor */}
+      </ConnectionOverlay>
     </div>
   );
 };

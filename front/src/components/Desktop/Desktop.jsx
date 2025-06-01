@@ -75,9 +75,9 @@ const Desktop = () => {
       console.error(`openHandler is not defined for ${windowKey}`);
       return;
     }
-
     if (!openWindows.includes(windowKey)) {
-      if ((windowKey === 'browser' || windowKey === 'mailbox') && !isWificonnected) {
+      const requiresInternet = windowConfig[windowKey]?.requiresInternet;
+      if (requiresInternet && !isWificonnected) {
         setShowAlert(true);
       } else {
         openHandler();
@@ -85,6 +85,7 @@ const Desktop = () => {
       }
     }
   };
+
 
   return (
     <div className="desktop">

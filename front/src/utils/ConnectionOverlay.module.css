@@ -1,0 +1,22 @@
+.disabledOverlay {
+  height: 100%;
+  flex : 1 1 auto;
+  min-height: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  pointer-events: all;
+  user-select: none;
+  font-size: 1.2rem;
+}
+
+.disabledOverlay b {
+  color: #8b4902;
+  font-weight: bold;
+}
