@@ -46,7 +46,9 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const handleMailClick = (mail) => {
     if (!isWificonnected) return;
-    setSelectedMail(mail);
+
+    const foundMail = inboxMails.find(m => m.id === mail.id) || mail;
+    setSelectedMail(foundMail);
 
     // Okundu olarak işaretle ve bildirimi kaldır
     if (activeTab === "inbox") {

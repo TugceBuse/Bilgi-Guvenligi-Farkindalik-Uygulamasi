@@ -33,7 +33,7 @@ const TaskBar = ({windowConfig}) => {
 
   const { antivirusUpdated , antivirusUpdating } = useVirusContext();
 
-  const { setSelectedMail } = useMailContext();
+  const { setSelectedMail, inboxMails, setInboxMails } = useMailContext();
   const {
     openWindows, activeWindow, setActiveWindow,
     visibleWindows, setVisibleWindows,
@@ -154,20 +154,28 @@ const TaskBar = ({windowConfig}) => {
     }
   };
 
-  // Bildirim mail tipinde ise mailbox aç, ilgili maili seç
   const handleOpenMailNotification = (notification) => {
     if (!isWificonnected) {
       setShowWifiAlert(true);
       return;
     }
-    // notification.appData.mailId üzerinden ilgili maili seç
-    setSelectedMail(prev => ({ ...prev, id: notification.appData?.mailId }));
+    // id üzerinden inboxMails'den bul!
+    const mailObj = inboxMails.find(mail => mail.id === notification.appData?.mailId);
+    if (mailObj) {
+      setSelectedMail(mailObj);
+      setInboxMails(prev =>
+        prev.map(m =>
+          m.id === mailObj.id ? { ...m, readMail: true } : m
+        )
+      );
+    }
     if (!openWindows.includes('mailbox')) {
       openWindow('mailbox');
     }
     removeNotification(notification.id);
     setShowNotifications(false);
   };
+
 
   // Bildirim sayacı
   const mailNotifications = notifications.filter(n => n.appType === "mail" && n.isTaskbar && !n.read);

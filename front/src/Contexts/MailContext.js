@@ -43,7 +43,8 @@ export const MailContextProvider = ({ children }) => {
           label: "Oku",
           onClick: () => {
             openWindow('mailbox');
-            setSelectedMail(mail);
+            const inboxMail = inboxMails.find(m => m.id === mail.id);
+            setSelectedMail(inboxMail || mail); // fallback ile
             markMailAsReadAndRemoveNotification(mail.id);
           }
         },
@@ -52,7 +53,7 @@ export const MailContextProvider = ({ children }) => {
           onClick: () => removeNotification(mail.id)
         }
       ],
-      appData: { mailId: mail.id }
+      appData: { mailId: mail.id },
     });
   };
 
