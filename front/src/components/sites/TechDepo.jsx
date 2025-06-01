@@ -581,86 +581,82 @@ const TechDepo = ({scrollRef}) => {
     }
 
     const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000);
-      setOrders(prevOrders => [
-        ...prevOrders,
-        {
-          id: orderNumber,
-          items: cartItems,
-          shipping: selectedShipping,
-          total: grandTotal,
-          date: new Date().toLocaleString(),
-        }
-      ]);
 
-      setCardBalance(prev => prev - grandTotal);
+    const newOrder = {
+      id: orderNumber,
+      items: cartItems,
+      shipping: selectedShipping,
+      total: grandTotal,
+      date: new Date().toLocaleString(),
+    };
 
-      setCardNumber("");
-      setCardName("");
-      setExpiryDate("");
-      setCVV("");
-      setSelectedShipping("");
-      setAcceptedTerms(false);
-      setSaveCard(false);
-      setSelectedShippingPrice(0);
-      setCartItems([]);
-      setPage("welcome");
-      setIs3DChecked(false);
-      setIs3DWaiting(false);
-      setIsPaying(false);
+    setOrders(prevOrders => [...prevOrders, newOrder]);
 
-      setNoticeType("payment");
-      setShowCartNotice(true);
-      setTimeout(() => setShowCartNotice(false), 2000);
-      console.log(productInfo.productID, "ödeme tamamlandı");
+    setCardBalance(prev => prev - grandTotal);
 
-      const printerIncluded = cartItems.some(item => item.id === 15);
+    setCardNumber("");
+    setCardName("");
+    setExpiryDate("");
+    setCVV("");
+    setSelectedShipping("");
+    setAcceptedTerms(false);
+    setSaveCard(false);
+    setSelectedShippingPrice(0);
+    setCartItems([]);
+    setPage("welcome");
+    setIs3DChecked(false);
+    setIs3DWaiting(false);
+    setIsPaying(false);
 
-      if (printerIncluded) {
-        const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; // 1-3 dk
-        const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) + 120000; // 2-4 dk
+    setNoticeType("payment");
+    setShowCartNotice(true);
+    setTimeout(() => setShowCartNotice(false), 2000);
+    console.log(productInfo.productID, "ödeme tamamlandı");
 
-        // 🧾 Fatura maili
-        setTimeout(() => {
-          sendMail("invoice", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: "JetPrint 220 Yazıcı",
-            invoiceNo: "TD-2025-" + Date.now(), // dinamik numara
-            orderNo: Math.floor(1000000000 + Math.random() * 9000000000),
-            price: "4899",
-            company: "TechDepo",
-            tax: "979.80",
-            total: "5878.80",
-            from: "faturalar@techdepo.com",
-            title: "TechDepo - Satın Alma Faturanız",
-            precontent: "JetPrint 220 yazıcıya ait fatura belgeniz ektedir."
-          });
-        }, invoiceDelay);
+    // Ürünleri stringe çevir
+    const productString = newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", ");
+    const productNames = newOrder.items.map(item => item.name).join(", ");
 
-        // 📦 Kargo maili
-        setTimeout(() => {
-          let trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
-          let shippingCompany = selectedShipping === "CargoNova" ? "CargoNova"
-                            : selectedShipping === "FlyTakip" ? "FlyTakip"
-                            : "TrendyTaşıma";
-          let fromMail = selectedShipping === "CargoNova" ? "info@cargonova.com"
-                      : selectedShipping === "FlyTakip" ? "takip@flykargo.net"
+    // Her siparişte mail gönder:
+    const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; // 1-3 dk
+    const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) + 120000; // 2-4 dk
+
+    setTimeout(() => {
+      sendMail("invoice", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: productString,
+        invoiceNo: "TD-2025-" + Date.now(),
+        orderNo: newOrder.id,
+        price: newOrder.total,
+        company: "TechDepo",
+        tax: (newOrder.total * 0.20).toFixed(2),
+        total: newOrder.total,
+        from: "faturalar@techdepo.com",
+        title: "TechDepo - Satın Alma Faturanız",
+        precontent: `${productNames} ürün/ürünlerine ait fatura belgeniz ektedir.`
+      });
+    }, invoiceDelay);
+
+    setTimeout(() => {
+      let trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
+      let shippingCompany = newOrder.shipping;
+      let fromMail = shippingCompany === "CargoNova" ? "info@cargonova.com"
+                      : shippingCompany === "FlyTakip" ? "takip@flykargo.net"
                       : "gonderi@trendytasima.com";
-          let title = shippingCompany + " Kargo Takip";
-          let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
+      let title = shippingCompany + " Kargo Takip";
+      let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
 
-          sendMail("cargo", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: "JetPrint 220 Yazıcı",
-            trackingNo,
-            shippingCompany,
-            from: fromMail,
-            title,
-            precontent
-          });
-        }, cargoDelay);
-      }
-
-  };
+      sendMail("cargo", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: productNames,
+        trackingNo,
+        shippingCompany,
+        from: fromMail,
+        title,
+        precontent
+      });
+    }, cargoDelay);
+      };
 
   const handlePayment = () => {
     let newErrors = {};
