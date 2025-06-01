@@ -69,7 +69,6 @@ export const MailContextProvider = ({ children }) => {
           )
         );
         setSpamboxMails(prevMails => [...prevMails, { ...spamToAdd, used: true }]);
-        // İsterseniz spam için de notification ekleyebilirsiniz.
       }
     }
   };

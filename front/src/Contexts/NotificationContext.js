@@ -40,31 +40,44 @@ export const NotificationProvider = ({ children }) => {
       read: false,
       duration,
       appData,
-      createdAt: new Date()
+      createdAt: new Date(),
+      popupClosed: false, // 🔴 Eklendi!
     };
     setNotifications(prev => [...prev, notification]);
 
-    // Otomatik kaldırma (action yoksa)
+    // Otomatik kaldırma sadece popup için (taskbar'dan silinmez)
     if (isPopup && actions.length === 0) {
       setTimeout(() => {
-        setNotifications(prev => prev.filter(n => n.id !== id));
+        setNotifications(prev =>
+          prev.map(n => n.id === id ? { ...n, popupClosed: true } : n)
+        );
       }, duration);
     }
     return id;
   };
 
+  // Sadece popup'ı kapat (taskbar'dan silmez!)
+  const closePopupNotification = (id) => {
+    setNotifications(prev =>
+      prev.map(n => n.id === id ? { ...n, popupClosed: true } : n)
+    );
+  };
+
+  // Taskbar veya bildirim listesinden tamamen kaldır
+  const removeNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  // Bildirimi okundu olarak işaretle (taskbar'dan kaybolur)
   const markAsRead = (id) => {
     setNotifications(prev =>
       prev.map(n => n.id === id ? { ...n, read: true } : n)
     );
   };
 
-  const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
-  };
-
-  // Filtreler
-  const popupNotifications = notifications.filter(n => n.isPopup);
+  // Sadece popup'ta gösterilecekler (popupClosed:false)
+  const popupNotifications = notifications.filter(n => n.isPopup && !n.popupClosed);
+  // Sadece taskbar'da gösterilecekler (read:false)
   const taskbarNotifications = notifications.filter(n => n.isTaskbar && !n.read);
   const unreadTaskbarCount = taskbarNotifications.length;
 
@@ -74,6 +87,7 @@ export const NotificationProvider = ({ children }) => {
       addNotification,
       removeNotification,
       markAsRead,
+      closePopupNotification, // 🔴 Popup'ı kapatmak için yeni fonksiyon
       popupNotifications,
       taskbarNotifications,
       unreadTaskbarCount,

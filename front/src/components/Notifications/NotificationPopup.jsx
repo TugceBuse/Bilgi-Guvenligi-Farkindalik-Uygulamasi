@@ -1,28 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './NotificationPopup.css';
+import { useNotificationContext } from '../../Contexts/NotificationContext'; // 🔴 Eklenmeli
 
-const NotificationPopup = ({ notification, onClose }) => {
+const NotificationPopup = ({ notification }) => {
+  const { closePopupNotification } = useNotificationContext(); // 🔴 Buradan alınacak!
   const [fadeOut, setFadeOut] = useState(false);
   const timerRef = useRef();
 
   useEffect(() => {
-    // Otomatik fade-out ve kapanma
+    // Otomatik fade-out ve kapanma sadece popup için
     timerRef.current = setTimeout(() => {
       setFadeOut(true);
       setTimeout(() => {
-        onClose(notification.id);
+        closePopupNotification(notification.id); // 🔴 Sadece popup'ı kapat!
       }, 350);
     }, notification.duration || 4000);
 
     return () => clearTimeout(timerRef.current);
-  }, [notification, onClose]);
+  }, [notification, closePopupNotification]);
 
-  // "Oku" butonuna tıklanınca, callback fonksiyonunu çağır
+  // "Oku" butonuna tıklanınca, callback fonksiyonunu çağırıp popup'ı kapat
   const handleOkuClick = () => {
     if (notification.actions && typeof notification.actions[0]?.onClick === 'function') {
       notification.actions[0].onClick();
     }
-    onClose(notification.id);
+    closePopupNotification(notification.id); // 🔴 Sadece popup'ı kapat!
   };
 
   return (
@@ -36,7 +38,7 @@ const NotificationPopup = ({ notification, onClose }) => {
       </div>
       <button className="mail-popup-close" onClick={() => {
         setFadeOut(true);
-        setTimeout(() => onClose(notification.id), 350);
+        setTimeout(() => closePopupNotification(notification.id), 350);
       }}>×</button>
       {notification.actions && notification.actions.length > 0 &&
         <button className="mail-popup-btn" onClick={handleOkuClick}>
