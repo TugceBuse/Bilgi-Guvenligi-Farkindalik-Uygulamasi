@@ -79,7 +79,7 @@ import DownloadButton from '../../utils/DownloadButton';
           <b>Genel Toplam:</b>   <b>{total} TL</b><br/>
           ───────────────────────────────<br/><br/>
           {fakeButton}
-          Bu belge elektronik ortamda düzenlenmiştir.<br/><br/>
+          <br/>Bu belge elektronik ortamda düzenlenmiştir.<br/><br/>
           <b>{company} A.Ş.</b><br/>
         </pre>
       </div>
