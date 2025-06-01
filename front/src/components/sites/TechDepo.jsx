@@ -214,7 +214,7 @@ const cards = [
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders } = useGameContext();
-  const { addMailToMailbox } = useMailContext();
+  const { sendMail } = useMailContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -621,18 +621,42 @@ const TechDepo = ({scrollRef}) => {
 
         // 🧾 Fatura maili
         setTimeout(() => {
-          addMailToMailbox("inbox", 104);
+          sendMail("invoice", {
+            name: `${TechInfo.name} ${TechInfo.surname}`,
+            productName: "JetPrint 220 Yazıcı",
+            invoiceNo: "TD-2025-" + Date.now(), // dinamik numara
+            orderNo: Math.floor(1000000000 + Math.random() * 9000000000),
+            price: "4899",
+            company: "TechDepo",
+            tax: "979.80",
+            total: "5878.80",
+            from: "faturalar@techdepo.com",
+            title: "TechDepo - Satın Alma Faturanız",
+            precontent: "JetPrint 220 yazıcıya ait fatura belgeniz ektedir."
+          });
         }, invoiceDelay);
 
         // 📦 Kargo maili
         setTimeout(() => {
-          if (selectedShipping === "CargoNova") {
-            addMailToMailbox("inbox", 101);
-          } else if (selectedShipping === "FlyTakip") {
-            addMailToMailbox("inbox", 102);
-          } else if (selectedShipping === "TrendyTasima") {
-            addMailToMailbox("inbox", 103);
-          }
+          let trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
+          let shippingCompany = selectedShipping === "CargoNova" ? "CargoNova"
+                            : selectedShipping === "FlyTakip" ? "FlyTakip"
+                            : "TrendyTaşıma";
+          let fromMail = selectedShipping === "CargoNova" ? "info@cargonova.com"
+                      : selectedShipping === "FlyTakip" ? "takip@flykargo.net"
+                      : "gonderi@trendytasima.com";
+          let title = shippingCompany + " Kargo Takip";
+          let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
+
+          sendMail("cargo", {
+            name: `${TechInfo.name} ${TechInfo.surname}`,
+            productName: "JetPrint 220 Yazıcı",
+            trackingNo,
+            shippingCompany,
+            from: fromMail,
+            title,
+            precontent
+          });
         }, cargoDelay);
       }
 
