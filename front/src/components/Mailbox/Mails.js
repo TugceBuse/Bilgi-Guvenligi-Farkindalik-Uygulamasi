@@ -972,38 +972,83 @@ export const mails = [
   ];
 
     // Kargo maili
-  export function createCargoMail({ name, productName, trackingNo, shippingCompany }) {
-    return (
-      <div className="mail-content">
-        <pre>
-          <b>Sayın {name},</b><br/><br/>
-          Sipariş ettiğiniz <b>{productName}</b> {shippingCompany} kargo firmasıyla gönderildi.<br/><br/>
-          🚚 <b>Takip No:</b> {trackingNo}<br/>
-          📦 <b>Kargo Durumu:</b> Yola çıktı - Teslimat 1-2 iş günü içinde gerçekleşecek<br/><br/>
-          Paketinizi takip etmek için:<br />
-          <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}> {shippingCompany.toLowerCase()}.com/takip</span><br/><br/>
-          <b>{shippingCompany} Ekibi</b>
-        </pre>
-      </div>
-    );
-  }
+    export function createCargoMail({ 
+      name, 
+      productName, 
+      trackingNo, 
+      shippingCompany, 
+      from, 
+      title, 
+      precontent, 
+      isFake = false, 
+      fakeOptions = {} 
+    }) {
+      // Eğer sahte mail ise, bazı alanları değiştir
+      const fakeFrom = isFake ? fakeOptions.from || "kargo@cargo-n0va.com" : from;
+      const fakeTitle = isFake ? fakeOptions.title || "Kargo Takip Bilgilendirme" : title;
+      const fakeTrackingNo = isFake ? "F4K3" + trackingNo.slice(2) : trackingNo;
+      const fakePrecontent = isFake ? fakeOptions.precontent || "Şüpheli gönderi uyarısı!" : precontent;
+      const fakeLink = isFake
+        ? (fakeOptions.link || "http://cargonova-support.xyz/tracking")
+        : `${shippingCompany.toLowerCase()}.com/takip`;
+
+      return (
+        <div className="mail-content">
+          <pre>
+            <b>Sayın {name},</b><br/><br/>
+            Sipariş ettiğiniz <b>{productName}</b> {shippingCompany} kargo firmasıyla gönderildi.<br/><br/>
+            🚚 <b>Takip No:</b> {fakeTrackingNo}<br/>
+            📦 <b>Kargo Durumu:</b> Yola çıktı - Teslimat 1-2 iş günü içinde gerçekleşecek<br/><br/>
+            Paketinizi takip etmek için:<br/>
+            <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}>
+              {fakeLink}
+            </span><br/><br/>
+            <b>{shippingCompany} Ekibi</b>
+          </pre>
+        </div>
+      );
+    }
+
 
   // Fatura maili
-  export function createInvoiceMail({ name, productName, invoiceNo, orderNo, price, company, tax, total }) {
+  export function createInvoiceMail({
+    name,
+    productName,
+    invoiceNo,
+    orderNo,
+    price,
+    company,
+    tax,
+    total,
+    from,
+    title,
+    precontent,
+    isFake = false,
+    fakeOptions = {}
+  }) {
+    const fakeFrom = isFake ? fakeOptions.from || "e-fatura@teehdeppo-billing.com" : from;
+    const fakeTitle = isFake ? fakeOptions.title || "E-Arşiv Fatura Bilgilendirme" : title;
+    const fakeInvoiceNo = isFake ? "FAKE-" + invoiceNo : invoiceNo;
+    const fakePrecontent = isFake ? fakeOptions.precontent || "Şüpheli fatura bildirimi" : precontent;
+    const fakeButton = isFake
+      ? <button className="claim-button" title={fakeOptions.fakePdfLink || "http://teehdeppo-billing.com/download/fatura-2025.zip"}>🧾 Faturayı PDF Olarak İndir</button>
+      : null;
+
     return (
       <div className="mail-content">
         <pre>
           <b>Sayın {name},</b><br/><br/>
-          {company} üzerinden yaptığınız alışverişinize ait fatura bilgileri aşağıdadır.<br/><br/>
-          🧾 <b>Fatura Numarası:</b> {invoiceNo}<br/>
+          {company} üzerinden yaptığınız alışverişe ait fatura bilgileri aşağıdadır.<br/><br/>
+          🧾 <b>Fatura Numarası:</b> {fakeInvoiceNo}<br/>
           📦 <b>Sipariş No:</b> {orderNo}<br/>
           📅 <b>Tarih:</b> {new Date().toLocaleDateString()}<br/><br/>
           <b>Fatura Detayı:</b><br/>
           ───────────────────────────────<br/>
-          🔹 {productName} (1 adet)      {price} TL<br/>
-          🔸 KDV (%20)                   {tax} TL<br/>
-          <b>Genel Toplam:</b>           <b>{total} TL</b><br/>
+          🔹 {productName}      {price} TL<br/>
+          🔸 KDV (%20)           {tax} TL<br/>
+          <b>Genel Toplam:</b>   <b>{total} TL</b><br/>
           ───────────────────────────────<br/><br/>
+          {fakeButton}
           Bu belge elektronik ortamda düzenlenmiştir.<br/><br/>
           <b>{company} A.Ş.</b><br/>
         </pre>
@@ -1011,15 +1056,36 @@ export const mails = [
     );
   }
 
+
   // İndirim kodu maili
-  export function createDiscountMail({ name, productName, code, amount, company }) {
+  export function createDiscountMail({
+    name,
+    productName,
+    code,
+    amount,
+    company,
+    from,
+    title,
+    precontent,
+    isFake = false,
+    fakeOptions = {}
+  }) {
+    const fakeFrom = isFake ? fakeOptions.from || "firsat@novateknn0.info" : from;
+    const fakeTitle = isFake ? fakeOptions.title || "Büyük İndirim Şoku!" : title;
+    const fakeCode = isFake ? fakeOptions.code || ("FAKE-" + code) : code;
+    const fakePrecontent = isFake ? fakeOptions.precontent || "Gerçekçi görünen bir kampanya maili" : precontent;
+    const fakeButton = isFake
+      ? <button className="claim-button" title={fakeOptions.link || "http://novateccno.net/apply-code"}>💸 İndirimi Uygula</button>
+      : null;
+
     return (
       <div className="mail-content">
         <pre>
           <b>Merhaba {name},</b><br/><br/>
           {productName} için <b>{amount} indirim</b> fırsatını kaçırma!<br/><br/>
-          <b>İndirim Kodunuz:</b> <span style={{color:"orange", fontWeight:"bold"}}>{code}</span><br/><br/>
+          <b>İndirim Kodunuz:</b> <span style={{color:"orange", fontWeight:"bold"}}>{fakeCode}</span><br/><br/>
           Bu kodu ödeme ekranında girerek indirimi hemen kullanabilirsin.<br/><br/>
+          {fakeButton}
           <b>{company} Satış Ekibi</b>
         </pre>
       </div>
@@ -1028,7 +1094,7 @@ export const mails = [
 
 
 
-  
+  // Gönderilen Mailler (SendBox)
   export const sentMails = [
     {
       id: 91,

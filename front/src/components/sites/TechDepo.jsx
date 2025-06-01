@@ -590,7 +590,7 @@ const TechDepo = ({scrollRef}) => {
       date: new Date().toLocaleString(),
     };
 
-    setOrders(prevOrders => [...prevOrders, newOrder]);
+    setOrders(prevOrders => [newOrder, ...prevOrders]);
 
     setCardBalance(prev => prev - grandTotal);
 
@@ -621,6 +621,7 @@ const TechDepo = ({scrollRef}) => {
     const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; // 1-3 dk
     const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) + 120000; // 2-4 dk
 
+    // GERÇEK FATURA MAİLİ
     setTimeout(() => {
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
@@ -633,9 +634,34 @@ const TechDepo = ({scrollRef}) => {
         total: newOrder.total,
         from: "faturalar@techdepo.com",
         title: "TechDepo - Satın Alma Faturanız",
-        precontent: `${productNames} ürün/ürünlerine ait fatura belgeniz ektedir.`
+        precontent: `${productNames} ürün/ürünlerine ait fatura belgeniz ektedir.`,
+        isFake: false
       });
     }, invoiceDelay);
+
+    // SAHTE FATURA MAİLİ
+    setTimeout(() => {
+      sendMail("invoice", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: productString,
+        invoiceNo: "TD-2025-" + Date.now(),
+        orderNo: newOrder.id,
+        price: newOrder.total,
+        company: "TechDepo",
+        tax: (newOrder.total * 0.20).toFixed(2),
+        total: newOrder.total,
+        from: "e-fatura@teehdeppo-billing.com",
+        title: "E-Arşiv Fatura Belgeniz",
+        precontent: "Şüpheli fatura bildirimi",
+        isFake: true,
+        fakeOptions: {
+          from: "e-fatura@teehdeppo-billing.com",
+          title: "E-Arşiv Fatura Belgeniz",
+          fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
+          precontent: "Şüpheli fatura bildirimi"
+        }
+      });
+    }, invoiceDelay + 60000); // (örneğin sahte maili gerçek mailden 10 sn sonra gönder)
 
     setTimeout(() => {
       let trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
@@ -646,17 +672,39 @@ const TechDepo = ({scrollRef}) => {
       let title = shippingCompany + " Kargo Takip";
       let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
 
+      // SAHTE KARGO MAİLİ ÖNCE GELSİN
       sendMail("cargo", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: productNames,
         trackingNo,
         shippingCompany,
-        from: fromMail,
-        title,
-        precontent
+        from: "kargo@cargo-n0va.com",
+        title: "Kargo Takip Bilgilendirme",
+        precontent: "Şüpheli gönderi uyarısı!",
+        isFake: true,
+        fakeOptions: {
+          from: "kargo@cargo-n0va.com",
+          title: "Kargo Takip Bilgilendirme",
+          link: "http://cargo-n0va-support.xyz/tracking",
+          precontent: "Şüpheli gönderi uyarısı!"
+        }
       });
+
+      // GERÇEK KARGO MAİLİ 1 DAKİKA SONRA GELSİN
+      setTimeout(() => {
+        sendMail("cargo", {
+          name: `${TechInfo.name} ${TechInfo.surname}`,
+          productName: productNames,
+          trackingNo,
+          shippingCompany,
+          from: fromMail,
+          title,
+          precontent,
+          isFake: false
+        });
+      }, 60000); // 1 dakika (60000 ms) sonra
     }, cargoDelay);
-      };
+  };
 
   const handlePayment = () => {
     let newErrors = {};
