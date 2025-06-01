@@ -268,6 +268,11 @@ const TechDepo = ({scrollRef}) => {
   }, [page, subPage]);
 
 
+  useEffect(() => {
+    setSubPage("orders");
+}, [page]);
+
+
   // 3D kod kısmı page değişkeni değiştiğinde sıfırlanır
   useEffect(() => {
     if (page !== "payment" && is3DWaiting) {
@@ -426,6 +431,7 @@ const TechDepo = ({scrollRef}) => {
     setPage("welcome");
     getCartItemCount(0);
     setCartItems([]);
+    setSubPage("orders");
   };
 
   const handleSignInOut = () => {
