@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { mails as initialMails, sentMails as initialSentMails, spamMails as initialSpamMails } from '../components/Mailbox/Mails';
+import { mails as initialMails, sentMails as initialSentMails, spamMails as initialSpamMails, createCargoMail, createInvoiceMail, createDiscountMail  } from '../components/Mailbox/Mails';
 import { useNotificationContext } from './NotificationContext';
 import { useUIContext } from './UIContext';
 
@@ -82,6 +82,38 @@ export const MailContextProvider = ({ children }) => {
       }
     }
   };
+  
+  const sendMail = (type, params) => {
+    let mailObj = null;
+    if (type === "cargo") {
+      mailObj = {
+        id: Date.now(),
+        from: params.from,
+        title: params.title,
+        precontent: params.precontent,
+        readMail: false,
+        notified: false,
+        used: false,
+        content: createCargoMail(params)
+      };
+    } else if (type === "invoice") {
+      mailObj = {
+        id: Date.now(),
+        from: params.from,
+        title: params.title,
+        precontent: params.precontent,
+        readMail: false,
+        notified: false,
+        used: false,
+        content: createInvoiceMail(params)
+      };
+    }
+    // ...diğer tipler için de ekle
+    if (mailObj) {
+      setInitMail(prev => [...prev, mailObj]);
+      setInboxMails(prev => [...prev, mailObj]);
+    }
+  };
 
   return (
     <MailContext.Provider value={{
@@ -92,6 +124,7 @@ export const MailContextProvider = ({ children }) => {
       spamboxMails, setSpamboxMails,
       selectedMail, setSelectedMail,
       addMailToMailbox,
+      sendMail,
       markMailAsReadAndRemoveNotification, // export ettik
     }}>
       {children}

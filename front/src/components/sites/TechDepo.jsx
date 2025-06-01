@@ -214,7 +214,7 @@ const cards = [
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders } = useGameContext();
-  const { addMailToMailbox } = useMailContext();
+  const { sendMail } = useMailContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -581,61 +581,129 @@ const TechDepo = ({scrollRef}) => {
     }
 
     const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000);
-      setOrders(prevOrders => [
-        ...prevOrders,
-        {
-          id: orderNumber,
-          items: cartItems,
-          shipping: selectedShipping,
-          total: grandTotal,
-          date: new Date().toLocaleString(),
+
+    const newOrder = {
+      id: orderNumber,
+      items: cartItems,
+      shipping: selectedShipping,
+      total: grandTotal,
+      date: new Date().toLocaleString(),
+    };
+
+    setOrders(prevOrders => [newOrder, ...prevOrders]);
+
+    setCardBalance(prev => prev - grandTotal);
+
+    setCardNumber("");
+    setCardName("");
+    setExpiryDate("");
+    setCVV("");
+    setSelectedShipping("");
+    setAcceptedTerms(false);
+    setSaveCard(false);
+    setSelectedShippingPrice(0);
+    setCartItems([]);
+    setPage("welcome");
+    setIs3DChecked(false);
+    setIs3DWaiting(false);
+    setIsPaying(false);
+
+    setNoticeType("payment");
+    setShowCartNotice(true);
+    setTimeout(() => setShowCartNotice(false), 2000);
+    console.log(productInfo.productID, "ödeme tamamlandı");
+
+    // Ürünleri stringe çevir
+    const productString = newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", ");
+    const productNames = newOrder.items.map(item => item.name).join(", ");
+
+    // Her siparişte mail gönder:
+    const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; // 1-3 dk
+    const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) + 120000; // 2-4 dk
+
+    // GERÇEK FATURA MAİLİ
+    setTimeout(() => {
+      sendMail("invoice", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: productString,
+        invoiceNo: "TD-2025-" + Date.now(),
+        orderNo: newOrder.id,
+        price: newOrder.total,
+        company: "TechDepo",
+        tax: (newOrder.total * 0.20).toFixed(2),
+        total: newOrder.total,
+        from: "faturalar@techdepo.com",
+        title: "TechDepo - Satın Alma Faturanız",
+        precontent: `${productNames} ürün/ürünlerine ait fatura belgeniz ektedir.`,
+        isFake: false
+      });
+    }, invoiceDelay);
+
+    // SAHTE FATURA MAİLİ
+    setTimeout(() => {
+      sendMail("invoice", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: productString,
+        invoiceNo: "TD-2025-" + Date.now(),
+        orderNo: newOrder.id,
+        price: newOrder.total,
+        company: "TechDepo",
+        tax: (newOrder.total * 0.20).toFixed(2),
+        total: newOrder.total,
+        from: "e-fatura@teehdeppo-billing.com",
+        title: "E-Arşiv Fatura Belgeniz",
+        precontent: "Şüpheli fatura bildirimi",
+        isFake: true,
+        fakeOptions: {
+          from: "e-fatura@teehdeppo-billing.com",
+          title: "E-Arşiv Fatura Belgeniz",
+          fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
+          precontent: "Şüpheli fatura bildirimi"
         }
-      ]);
+      });
+    }, invoiceDelay + 60000); // (örneğin sahte maili gerçek mailden 10 sn sonra gönder)
 
-      setCardBalance(prev => prev - grandTotal);
+    setTimeout(() => {
+      let trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
+      let shippingCompany = newOrder.shipping;
+      let fromMail = shippingCompany === "CargoNova" ? "info@cargonova.com"
+                      : shippingCompany === "FlyTakip" ? "takip@flykargo.net"
+                      : "gonderi@trendytasima.com";
+      let title = shippingCompany + " Kargo Takip";
+      let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
 
-      setCardNumber("");
-      setCardName("");
-      setExpiryDate("");
-      setCVV("");
-      setSelectedShipping("");
-      setAcceptedTerms(false);
-      setSaveCard(false);
-      setSelectedShippingPrice(0);
-      setCartItems([]);
-      setPage("welcome");
-      setIs3DChecked(false);
-      setIs3DWaiting(false);
-      setIsPaying(false);
+      // SAHTE KARGO MAİLİ ÖNCE GELSİN
+      sendMail("cargo", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: productNames,
+        trackingNo,
+        shippingCompany,
+        from: "kargo@cargo-n0va.com",
+        title: "Kargo Takip Bilgilendirme",
+        precontent: "Şüpheli gönderi uyarısı!",
+        isFake: true,
+        fakeOptions: {
+          from: "kargo@cargo-n0va.com",
+          title: "Kargo Takip Bilgilendirme",
+          link: "http://cargo-n0va-support.xyz/tracking",
+          precontent: "Şüpheli gönderi uyarısı!"
+        }
+      });
 
-      setNoticeType("payment");
-      setShowCartNotice(true);
-      setTimeout(() => setShowCartNotice(false), 2000);
-      console.log(productInfo.productID, "ödeme tamamlandı");
-
-      const printerIncluded = cartItems.some(item => item.id === 15);
-
-      if (printerIncluded) {
-        const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; // 1-3 dk
-        const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) + 120000; // 2-4 dk
-
-        // 🧾 Fatura maili
-        setTimeout(() => {
-          addMailToMailbox("inbox", 104);
-        }, invoiceDelay);
-
-        // 📦 Kargo maili
-        setTimeout(() => {
-          if (selectedShipping === "CargoNova") {
-            addMailToMailbox("inbox", 101);
-          } else if (selectedShipping === "FlyTakip") {
-            addMailToMailbox("inbox", 102);
-          } else if (selectedShipping === "TrendyTasima") {
-            addMailToMailbox("inbox", 103);
-          }
-        }, cargoDelay);
-      }
-
+      // GERÇEK KARGO MAİLİ 1 DAKİKA SONRA GELSİN
+      setTimeout(() => {
+        sendMail("cargo", {
+          name: `${TechInfo.name} ${TechInfo.surname}`,
+          productName: productNames,
+          trackingNo,
+          shippingCompany,
+          from: fromMail,
+          title,
+          precontent,
+          isFake: false
+        });
+      }, 60000); // 1 dakika (60000 ms) sonra
+    }, cargoDelay);
   };
 
   const handlePayment = () => {
