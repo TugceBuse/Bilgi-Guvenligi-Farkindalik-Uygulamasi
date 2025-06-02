@@ -94,7 +94,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        content: createCargoMail(params)
+        content: params.content || createCargoMail(params)
       };
     } else if (type === "invoice") {
       mailObj = {

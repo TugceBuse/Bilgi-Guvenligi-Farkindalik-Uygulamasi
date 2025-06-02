@@ -1,46 +1,174 @@
 .trackingContainer {
-  max-width: 430px;
-  margin: 48px auto;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 18px rgba(0,0,0,0.10);
-  padding: 28px 22px;
-  font-family: 'Segoe UI', sans-serif;
-  color: #21272a;
+  max-width: 1000px;
+  margin: 40px auto;
+  background: linear-gradient(145deg, #232526 0%, #414345 100%);
+  border-radius: 22px;
+  box-shadow: 0 4px 32px #2226 0.15;
+  padding: 30px 28px 24px 28px;
+  color: #fff;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  letter-spacing: 0.01em;
 }
+
 .header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  border-bottom: 1px solid #eee;
+  gap: 14px;
+  border-bottom: 2px solid #3337;
   padding-bottom: 14px;
-  margin-bottom: 20px;
 }
+
 .logo {
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
-  background: #f7f7f7;
+  background: #191b1f;
+  border-radius: 12px;
+  border: 1.5px solid #444;
+  box-shadow: 0 2px 10px #222a 0.10;
+}
+
+.headerInfo h2 {
+  font-size: 1.26rem;
+  margin: 0 0 2px 0;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.trackingNo {
+  color: #ccc;
+  font-size: 0.98rem;
+  margin-bottom: 0;
+}
+
+.progressBarBox {
+  margin: 22px 0 8px 0;
+}
+
+.progressBarBg {
+  width: 100%;
+  height: 13px;
+  background: #34373a;
   border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px #2227;
 }
-.details {
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #47cf73 0%, #21a1d6 90%);
+  border-radius: 8px;
+  transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.progressLabel {
   display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-bottom: 22px;
-}
-.label {
-  display: inline-block;
-  width: 120px;
-  color: #677;
+  justify-content: space-between;
+  margin-top: 5px;
+  color: #92eeff;
+  font-size: 1.06rem;
   font-weight: 500;
 }
+
+.progressPercent {
+  color: #fff492;
+  font-size: 1rem;
+}
+
+.statusSteps {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 8px 0;
+}
+
+.stepItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 7px;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.stepItem.active {
+  opacity: 1;
+}
+.stepIcon {
+  font-size: 1.5rem;
+  width: 36px;
+  height: 36px;
+  background: #232832;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: 1.5px solid #444;
+}
+
+.stepDesc {
+  font-size: 0.98rem;
+  color: #a0d1f5;
+  font-weight: 400;
+}
+
+.details {
+  margin: 18px 0 12px 0;
+  padding: 14px 10px 8px 10px;
+  background: #232c33e8;
+  border-radius: 13px;
+  font-size: 1rem;
+  box-shadow: 0 2px 9px #2225 0.04;
+}
+
+.label {
+  font-weight: 600;
+  color: #ffef97;
+  margin-right: 8px;
+  display: inline-block;
+  min-width: 120px;
+}
+
 .infoBox {
-  background: #fffbe6;
-  color: #7f5200;
-  border: 1px solid #ffe58f;
-  padding: 12px 15px;
-  border-radius: 8px;
+  margin: 16px 0 8px 0;
+  background: #191a25f0;
+  border-left: 5px solid #fc6464;
+  padding: 10px 14px;
+  border-radius: 11px;
+  color: #fff1c1;
+  font-size: 1.01rem;
+}
+
+.infoText {
+  color: #ffa078;
+  font-size: 0.97rem;
+}
+
+.supportBox {
   margin-top: 18px;
-  font-size: 15px;
+  background: #22293be0;
+  padding: 14px 14px 10px 14px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  box-shadow: 0 1px 9px #0002;
+}
+
+.supportDetail {
+  margin-top: 4px;
+  font-size: 1rem;
+  color: #b4d5ff;
+}
+
+.supportButton {
+  background: linear-gradient(90deg, #47cf73 0%, #21a1d6 90%);
+  border: none;
+  border-radius: 8px;
+  color: #0a1b25;
+  font-weight: bold;
+  font-size: 1.04rem;
+  padding: 8px 18px;
+  box-shadow: 0 1px 8px #2bb88a66;
+  transition: background 0.2s, transform 0.2s;
 }
