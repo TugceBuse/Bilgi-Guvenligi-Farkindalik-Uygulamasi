@@ -371,7 +371,30 @@ const sites = {
   color: "#9c27b0", // Mor ton — sofistike ama dikkat çeker
   isSponsored: false,
   seoScore: 45
-}
+},
+"^http(s)?://([a-zA-Z0-9-]+)\\.(com|net)/takip(\\?trackingNo=.+)?$": {
+    title: "Kargo Takip",
+    type: "component",
+    component: "CargoTracking",
+    statement: "Gönderinizin kargo durumunu burada görebilirsiniz.",
+    clickable: true,
+    protocol: "http",
+    color: "#03a9f4",
+    isSponsored: false,
+    seoScore: 48,
+  },
+  "^http(s)?://([a-zA-Z0-9-]+)\\-support\\.xyz/tracking(\\?trackingNo=.+)?$": {
+  title: "Kargo Takip (Sahte)",
+  type: "component",
+  component: "CargoTracking",
+  statement: "DİKKAT! Bu site gerçek olmayabilir. Bilgilerinizi paylaşmayın.",
+  clickable: true,
+  protocol: "http",
+  color: "#ff4500",
+  isSponsored: false,
+  seoScore: 10,
+},
+
 };
 
 export default sites;

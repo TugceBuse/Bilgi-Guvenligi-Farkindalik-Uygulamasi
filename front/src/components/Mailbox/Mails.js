@@ -6,6 +6,7 @@ import DownloadButton from '../../utils/DownloadButton';
       name, 
       productName, 
       trackingNo, 
+      orderNo,              // <-- Eklenen parametre
       shippingCompany, 
       from, 
       title, 
@@ -13,31 +14,74 @@ import DownloadButton from '../../utils/DownloadButton';
       isFake = false, 
       fakeOptions = {} 
     }) {
-      // Eğer sahte mail ise, bazı alanları değiştir
+      orderNo = typeof orderNo === "string" ? orderNo : (orderNo !== undefined && orderNo !== null ? String(orderNo) : "");
       const fakeFrom = isFake ? fakeOptions.from || "kargo@cargo-n0va.com" : from;
       const fakeTitle = isFake ? fakeOptions.title || "Kargo Takip Bilgilendirme" : title;
       const fakeTrackingNo = isFake ? "F4K3" + trackingNo.slice(2) : trackingNo;
+      const fakeOrderNo = isFake
+        ? (fakeOptions.fakeOrderNo || "F4K3" + (orderNo ? orderNo.slice(2) : Math.floor(100000 + Math.random() * 900000)))
+        : orderNo;
       const fakePrecontent = isFake ? fakeOptions.precontent || "Şüpheli gönderi uyarısı!" : precontent;
-      const fakeLink = isFake
-        ? (fakeOptions.link || "http://cargonova-support.xyz/tracking")
-        : `${shippingCompany.toLowerCase()}.com/takip`;
+
+      let displayTrackingNo = isFake ? fakeTrackingNo : trackingNo;
+      let displayOrderNo = isFake ? fakeOrderNo : orderNo;
+      let displayLink;
+
+      const companyString =
+        typeof shippingCompany === "string"
+          ? shippingCompany
+          : (shippingCompany?.name || "Bilinmiyor");
+
+      if (isFake) {
+        if (fakeOptions.link) {
+          if (fakeOptions.link.includes("?")) {
+            if (/trackingNo=/.test(fakeOptions.link)) {
+              displayLink = fakeOptions.link.replace(/trackingNo=[^&]+/, `trackingNo=${fakeTrackingNo}`);
+            } else {
+              displayLink = fakeOptions.link + `&trackingNo=${fakeTrackingNo}`;
+            }
+          } else {
+            displayLink = fakeOptions.link + `?trackingNo=${fakeTrackingNo}`;
+          }
+        } else {
+          displayLink = `http://cargonova-support.xyz/tracking?trackingNo=${fakeTrackingNo}`;
+        }
+      } else {
+        displayLink = `http://${companyString.toLowerCase()}.com/takip?trackingNo=${trackingNo}`;
+      }
+
 
       return (
         <div className="mail-content">
           <pre>
             <b>Sayın {name},</b><br/><br/>
             Sipariş ettiğiniz <b>{productName}</b> {shippingCompany} kargo firmasıyla gönderildi.<br/><br/>
-            🚚 <b>Takip No:</b> {fakeTrackingNo}<br/>
+            🚚 <b>Takip No:</b> {displayTrackingNo}<br/>
+            🧾 <b>Sipariş No:</b> {displayOrderNo}<br/>
             📦 <b>Kargo Durumu:</b> Yola çıktı - Teslimat 1-2 iş günü içinde gerçekleşecek<br/><br/>
             Paketinizi takip etmek için:<br/>
-            <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}>
-              {fakeLink}
-            </span><br/><br/>
+              <a
+                href="#"
+                title={displayLink}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent("open-browser-url", {
+                    detail: {
+                      url: displayLink,
+                      shippingCompany,
+                      trackingNo: displayTrackingNo,
+                      orderNo: displayOrderNo,
+                    }
+                  }))
+                }}
+              >
+                {displayLink}
+              </a><br/><br/>
             <b>{shippingCompany} Ekibi</b>
           </pre>
         </div>
       );
     }
+
 
 
   // Fatura maili

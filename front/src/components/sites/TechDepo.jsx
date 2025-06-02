@@ -624,8 +624,8 @@ const TechDepo = ({scrollRef}) => {
     const productNames = newOrder.items.map(item => item.name).join(", ");
 
     // Her siparişte mail gönder:
-    const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; // 1-3 dk
-    const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) + 120000; // 2-4 dk
+    const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) ; // 1-3 dk
+    const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) ; // 2-4 dk
 
     // GERÇEK FATURA MAİLİ
     setTimeout(() => {
@@ -672,6 +672,7 @@ const TechDepo = ({scrollRef}) => {
     setTimeout(() => {
       let trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
       let shippingCompany = newOrder.shipping;
+      let orderNo = newOrder.id;
       let fromMail = shippingCompany === "CargoNova" ? "info@cargonova.com"
                       : shippingCompany === "FlyTakip" ? "takip@flykargo.net"
                       : "gonderi@trendytasima.com";
@@ -684,6 +685,7 @@ const TechDepo = ({scrollRef}) => {
         productName: productNames,
         trackingNo,
         shippingCompany,
+        orderNo,
         from: "kargo@cargo-n0va.com",
         title: "Kargo Takip Bilgilendirme",
         precontent: "Şüpheli gönderi uyarısı!",
@@ -703,6 +705,7 @@ const TechDepo = ({scrollRef}) => {
           productName: productNames,
           trackingNo,
           shippingCompany,
+          orderNo,
           from: fromMail,
           title,
           precontent,

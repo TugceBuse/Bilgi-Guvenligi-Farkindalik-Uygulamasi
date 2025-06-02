@@ -34,6 +34,25 @@ export const UIContextProvider = ({ children }) => {
     });
   }, [openWindows,visibleWindows]);
 
+  useEffect(() => {
+    // Tüm uygulama için sadece bir kere çalışacak event dinleyici
+    const handler = (e) => {
+      // Şu anda açık pencere adlarını biliyorsun
+      if (!openWindows.includes("browser")) {
+        // Browser kapalıysa, açarken url/props ile birlikte aç
+        openWindow("browser", e.detail || {});
+      } else {
+        // Browser açıksa, mevcut dinleyicisiyle ilerlesin
+        window.dispatchEvent(new CustomEvent("open-browser-url", { detail: e.detail }));
+      }
+    };
+
+    window.addEventListener("open-browser-url", handler);
+
+    return () => window.removeEventListener("open-browser-url", handler);
+  }, [openWindows]);
+
+
 
   const lockMouse = () => {
     const existing = document.getElementById('mouse-lock-overlay');

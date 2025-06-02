@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense} from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import "./Browser.css";
 import { MakeDraggable } from "../../utils/Draggable";
 import { useUIContext } from "../../Contexts/UIContext";
@@ -7,18 +7,38 @@ import { useGameContext } from "../../Contexts/GameContext";
 
 export const useBrowser = () => {
   const { openWindow, closeWindow } = useUIContext();
-  return { openHandler: () => openWindow("browser"), closeHandler: () => closeWindow("browser") };
+  return {
+    openHandler: (props = {}) => openWindow("browser", props),   // <-- props ile aç!
+    closeHandler: () => closeWindow("browser"),
+  };
 };
 
 const CachedComponents = {};
 
-const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }) => {
-  const [url, setUrl] = useState(initialUrl);
-  const [currentUrl, setCurrentUrl] = useState(initialUrl);
+const Browser = ({ closeHandler, style }) => {
+  // 1. windowProps'u oku
+  const { windowProps } = useUIContext();
+  const browserProps = windowProps?.browser || {};
+
+  // 2. Sadece pencere ilk açıldığında gelen url ile başlat (her mount'ta değil)
+  const [initialized, setInitialized] = useState(false);
+
+  // 3. Varsayılan url/props
+  const defaultUrl = browserProps.url || "https://www.google.com";
+  const [url, setUrl] = useState(defaultUrl);
+  const [currentUrl, setCurrentUrl] = useState(defaultUrl);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([initialUrl]);
+  const [history, setHistory] = useState([defaultUrl]);
   const [matchedSites, setMatchedSites] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 4. Diğer props (ör: trackingNo) yakala
+  const [extraProps, setExtraProps] = useState(
+    browserProps.shippingCompany || browserProps.trackingNo
+      ? { shippingCompany: browserProps.shippingCompany, trackingNo: browserProps.trackingNo }
+      : null
+  );
+
   const browserRef = useRef(null);
   const searchInputRef = useRef(null);
   const browserScrollRef = useRef(null);
@@ -26,26 +46,44 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
   MakeDraggable(browserRef, ".browser-header");
   const { isWificonnected } = useGameContext();
 
+  // ---- 5. EN KRİTİK KISIM: Pencere ilk açıldığında (ya da yeni props geldiğinde) güncelle
   useEffect(() => {
-    if (initialUrl !== "https://www.google.com") {
-      startLoading().then(() => {
-        setCurrentUrl(initialUrl);
-        setHistory([initialUrl]);
-        setUrl(initialUrl);
+    if (!initialized) {
+      if (browserProps.url) {
+        setUrl(browserProps.url);
+        setCurrentUrl(browserProps.url);
+        setHistory([browserProps.url]);
         setCurrentIndex(0);
-      });
+      }
+      if (browserProps.shippingCompany || browserProps.trackingNo) {
+        setExtraProps({
+          shippingCompany: browserProps.shippingCompany,
+          trackingNo: browserProps.trackingNo,
+        });
+      }
+      setInitialized(true); // Sadece bir kere çalışsın
     }
-  }, [initialUrl]);
+    // eslint-disable-next-line
+  }, [browserProps.url, browserProps.shippingCompany, browserProps.trackingNo, initialized]);
 
+  // ---- 6. (DEĞİŞMEDİ) Event ile link tıklanınca yönlendirme
   useEffect(() => {
     const handleOpenUrl = async (e) => {
-      const newUrl = e.detail;
-      await handleGoClick(newUrl); // mevcut go fonksiyonunu tetikle
+      if (typeof e.detail === "object" && e.detail !== null) {
+        const { url, shippingCompany, trackingNo } = e.detail;
+        setExtraProps({ shippingCompany, trackingNo });
+        await handleGoClick(url);
+      } else {
+        setExtraProps(null);
+        await handleGoClick(e.detail);
+      }
     };
 
     window.addEventListener("open-browser-url", handleOpenUrl);
     return () => window.removeEventListener("open-browser-url", handleOpenUrl);
   }, []);
+
+
 
   const startLoading = async () => {
     setLoading(true);
@@ -112,6 +150,7 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
       setHistory([...history.slice(0, currentIndex + 1), finalUrl]);
       setCurrentIndex(currentIndex + 1);
     }
+    setExtraProps(null); // her yeni sayfa için sıfırla
   };
 
   const goHome = async () => {
@@ -306,7 +345,11 @@ const Browser = ({ closeHandler, style , initialUrl = "https://www.google.com" }
         const SiteComponent = CachedComponents[matchedSite.component];
         return (
           <Suspense>
-            <SiteComponent scrollRef={browserScrollRef} url={dynamicUrl || currentUrl} />
+            <SiteComponent
+              scrollRef={browserScrollRef}
+              url={dynamicUrl || currentUrl}
+              {...(extraProps || {})}
+            />
           </Suspense>
         );
       default:
