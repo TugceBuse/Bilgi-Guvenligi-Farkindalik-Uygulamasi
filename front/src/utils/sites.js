@@ -386,7 +386,7 @@ const sites = {
   "^http(s)?://([a-zA-Z0-9-]+)\\-support\\.xyz/tracking(\\?trackingNo=.+)?$": {
   title: "Kargo Takip (Sahte)",
   type: "component",
-  component: "CargoTracking",
+  component: "CargoTrackingFake",
   statement: "DİKKAT! Bu site gerçek olmayabilir. Bilgilerinizi paylaşmayın.",
   clickable: true,
   protocol: "http",

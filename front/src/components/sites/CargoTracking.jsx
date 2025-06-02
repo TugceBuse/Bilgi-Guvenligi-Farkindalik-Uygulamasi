@@ -31,7 +31,7 @@ const statusSteps = [
       title: "Kargonuz Dağıtıma Çıktı!",
       precontent: "Kargonuz dağıtıma çıktı. Tahmini teslimat için kargo sayfasını kontrol edebilirsiniz.",
       content: ({ trackingNo, shippingCompany }) => (
-        <div style={{ fontFamily: 'Segoe UI, sans-serif', color: "#222", fontSize: "18px" }}>
+        <div style={{ fontFamily: 'Segoe UI, sans-serif', color: "#222", fontSize: "16px" }}>
           <h2 style={{ color: "#258cff", margin: "0 0 10px 0" }}>
             Kargonuz Dağıtıma Çıktı! 🚚
           </h2>
@@ -74,7 +74,7 @@ const statusSteps = [
       title: "Kargonuz Teslim Edildi!",
       precontent: "Kargonuz başarıyla teslim edilmiştir. İyi günlerde kullanın!",
       content: ({ trackingNo, shippingCompany }) => (
-        <div style={{ fontFamily: 'Segoe UI, sans-serif', color: "#222", fontSize: "18px" }}>
+        <div style={{ fontFamily: 'Segoe UI, sans-serif', color: "#222", fontSize: "16px" }}>
           <h2 style={{ color: "#22bb55", margin: "0 0 10px 0" }}>
             Kargonuz Teslim Edildi! 🎉
           </h2>
@@ -121,8 +121,6 @@ function getUrlParams(url) {
   }
 }
 
-const STEP_KEY = "cargoTrackingStep";
-
 const CargoTracking = (props) => {
   const url = props.url || window.location.href;
   // ... getUrlParams kısmı aynı
@@ -131,33 +129,37 @@ const CargoTracking = (props) => {
   if (props.shippingCompany) shippingCompany = props.shippingCompany;
   if (props.trackingNo) trackingNo = props.trackingNo;
 
-  const [currentStep, setCurrentStep] = useState(() => {
-    const saved = Number(localStorage.getItem(STEP_KEY));
-    return isNaN(saved) ? 0 : Math.min(saved, statusSteps.length - 1);
-  });
-  const timerRef = useRef();
+    
+  function getCurrentStep(trackingNo) {
+    const start = Number(localStorage.getItem(`cargoTrackStart-${trackingNo}`));
+      if (!start) return 0;
+      const now = Date.now();
+      let elapsed = now - start;
+      let total = 0;
+      for (let i = 0; i < statusSteps.length; i++) {
+        total += statusSteps[i].duration || 0;
+        if (elapsed < total) return i;
+      }
+      return statusSteps.length - 1; // Teslim edildi!
+  }
+
+  const [currentStep, setCurrentStep] = useState(() => getCurrentStep(trackingNo));
+
+  useEffect(() => {
+    // Her 3 saniyede bir adımı güncelle
+    const interval = setInterval(() => {
+      setCurrentStep(getCurrentStep(trackingNo));
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [trackingNo]);
+
+  useEffect(() => {
+    setCurrentStep(getCurrentStep(trackingNo));
+  }, [trackingNo]);
+
   const { sendMail } = useMailContext(); // senin kullandığın context veya prop
 
-  useEffect(() => {
-    if (currentStep >= statusSteps.length - 1) return;
-
-    // Her adımda o adıma ait duration’u bekle!
-    const duration = statusSteps[currentStep].duration || 5 * 60 * 1000;
-    timerRef.current = setTimeout(() => {
-      setCurrentStep((step) => {
-        const next = step + 1;
-        localStorage.setItem(STEP_KEY, next);
-        return next;
-      });
-    }, duration);
-
-    return () => clearTimeout(timerRef.current);
-  }, [currentStep]);
-
-  useEffect(() => {
-    setCurrentStep(0);
-    localStorage.setItem(STEP_KEY, 0);
-  }, [trackingNo]);
 
   useEffect(() => {
     const step = statusSteps[currentStep];
@@ -195,10 +197,10 @@ const CargoTracking = (props) => {
       {/* Diğer JSX aynı */}
       <div className={styles.header}>
         <img
-          src={`/cargo/${shippingCompany.toLowerCase()}.png`}
+          src={`Cargo/${shippingCompany.toLowerCase()}.png`}
           alt={shippingCompany}
           className={styles.logo}
-          onError={e => { e.target.src = "/cargo/default.png"; }}
+          onError={e => { e.target.src = "/Cargo/tracking.png"; }}
         />
         <div className={styles.headerInfo}>
           <h2>{shippingCompany} Kargo Takip</h2>
@@ -206,6 +208,25 @@ const CargoTracking = (props) => {
         </div>
       </div>
       <div className={styles.progressBarBox}>
+        <div
+          className={styles.truckLine}
+          style={{ position: "relative", height: "50px", marginBottom: "-28px" }}
+        >
+          <img
+            src="/Cargo/tracking.png"
+            alt="truck"
+            className={styles.truckIcon}
+            style={{
+              left: `calc(${progress}% - 28px)`,
+              transition: "left 0.7s cubic-bezier(0.23,1,0.32,1)",
+              position: "absolute",
+              top: "0",
+              width: "52px",
+              height: "38px",
+              zIndex: 2
+            }}
+          />
+        </div>
         <div className={styles.progressBarBg}>
           <div className={styles.progressBar} style={{ width: `${progress}%` }} />
         </div>

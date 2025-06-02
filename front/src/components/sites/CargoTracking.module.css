@@ -172,3 +172,20 @@
   box-shadow: 0 1px 8px #2bb88a66;
   transition: background 0.2s, transform 0.2s;
 }
+
+.truckLine {
+  position: relative;
+  height: 48px;
+  width: 100%;
+  margin-bottom: -24px; /* Bar ile truck üst üste gelmesin, truck üstte dursun */
+  pointer-events: none;
+}
+
+.truckIcon {
+  animation: truck-bounce 0.9s infinite alternate cubic-bezier(0.7,0,0.84,0);
+  pointer-events: none;
+}
+@keyframes truck-bounce {
+  0%   { transform: translateY(0px) rotate(-2deg);}
+  100% { transform: translateY(-6px) rotate(2deg);}
+}

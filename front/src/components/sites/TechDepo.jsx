@@ -678,29 +678,13 @@ const TechDepo = ({scrollRef}) => {
                       : "gonderi@trendytasima.com";
       let title = shippingCompany + " Kargo Takip";
       let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
+      const cargoStartKey = `cargoTrackStart-${trackingNo}`;
+        if (!localStorage.getItem(cargoStartKey)) {
+          localStorage.setItem(cargoStartKey, Date.now());
+      }
 
-      // SAHTE KARGO MAİLİ ÖNCE GELSİN
+      // Gerçek kargo maili
       sendMail("cargo", {
-        name: `${TechInfo.name} ${TechInfo.surname}`,
-        productName: productNames,
-        trackingNo,
-        shippingCompany,
-        orderNo,
-        from: "kargo@cargo-n0va.com",
-        title: "Kargo Takip Bilgilendirme",
-        precontent: "Şüpheli gönderi uyarısı!",
-        isFake: true,
-        fakeOptions: {
-          from: "kargo@cargo-n0va.com",
-          title: "Kargo Takip Bilgilendirme",
-          link: "http://cargo-n0va-support.xyz/tracking",
-          precontent: "Şüpheli gönderi uyarısı!"
-        }
-      });
-
-      // GERÇEK KARGO MAİLİ 1 DAKİKA SONRA GELSİN
-      setTimeout(() => {
-        sendMail("cargo", {
           name: `${TechInfo.name} ${TechInfo.surname}`,
           productName: productNames,
           trackingNo,
@@ -711,6 +695,26 @@ const TechDepo = ({scrollRef}) => {
           precontent,
           isFake: false
         });
+     
+      // SAHTE KARGO MAİLİ 1 DAKİKA SONRA GELSİN
+      setTimeout(() => {
+        sendMail("cargo", {
+          name: `${TechInfo.name} ${TechInfo.surname}`,
+          productName: productNames,
+          trackingNo,
+          shippingCompany,
+          orderNo,
+          from: "kargo@cargo-n0va.com",
+          title: "Kargo Takip Bilgilendirme",
+          precontent: "Şüpheli gönderi uyarısı!",
+          isFake: true,
+          fakeOptions: {
+            from: "kargo@cargo-n0va.com",
+            title: "Kargo Takip Bilgilendirme",
+            link: "http://cargo-n0va-support.xyz/tracking",
+            precontent: "Şüpheli gönderi uyarısı!"
+        }
+      });
       }, 60000); // 1 dakika (60000 ms) sonra
     }, cargoDelay);
   };

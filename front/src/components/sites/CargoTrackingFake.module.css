@@ -1,0 +1,159 @@
+.trackingContainer {
+  max-width: 420px;
+  margin: 40px auto;
+  background: linear-gradient(145deg, #24252b 0%, #36374d 100%);
+  border-radius: 22px;
+  box-shadow: 0 4px 32px #b00c 0.16;
+  padding: 32px 24px 22px 24px;
+  color: #fff;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  letter-spacing: 0.01em;
+  border: 2.5px solid #ff3333;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 2px solid #3337;
+  padding-bottom: 14px;
+}
+
+.logo {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  background: #191b1f;
+  border-radius: 12px;
+  border: 1.5px solid #666;
+  box-shadow: 0 2px 10px #222a 0.12;
+}
+
+.headerInfo h2 {
+  font-size: 1.28rem;
+  margin: 0 0 2px 0;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.trackingNo {
+  color: #fce19e;
+  font-size: 1.02rem;
+  margin-bottom: 0;
+}
+
+.progressBarBox {
+  margin: 22px 0 8px 0;
+}
+
+.progressBarBg {
+  width: 100%;
+  height: 13px;
+  background: #34373a;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px #b00a;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff3333 0%, #ff6b6b 90%);
+  border-radius: 8px;
+  transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  color: #ffbaba;
+  font-size: 1.07rem;
+  font-weight: 500;
+}
+
+.progressPercent {
+  color: #fff492;
+  font-size: 1rem;
+}
+
+.statusSteps {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 8px 0;
+}
+
+.stepItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 7px;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.stepItem.active {
+  opacity: 1;
+}
+.stepIcon {
+  font-size: 1.6rem;
+  width: 38px;
+  height: 38px;
+  background: #2e1010;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 6px;
+  border: 1.5px solid #ff3333;
+}
+
+.stepDesc {
+  font-size: 1rem;
+  color: #f5a6a6;
+  font-weight: 400;
+}
+
+.details {
+  margin: 18px 0 12px 0;
+  padding: 14px 10px 8px 10px;
+  background: #2d1818e8;
+  border-radius: 13px;
+  font-size: 1.06rem;
+  box-shadow: 0 2px 9px #b00c 0.10;
+}
+
+.label {
+  font-weight: 600;
+  color: #ffabab;
+  margin-right: 8px;
+  display: inline-block;
+  min-width: 120px;
+}
+
+.phishingWarning {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  background: #ff3333;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 12px 12px 0 0;
+  font-size: 1.12rem;
+  font-weight: bold;
+  border-bottom: 3px solid #b20a0a;
+  box-shadow: 0 3px 15px #b00a;
+}
+
+.phishingFooter {
+  margin-top: 22px;
+  background: #630606;
+  color: #fff1f1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 1.04rem;
+  border-left: 5px solid #ff3333;
+  box-shadow: 0 2px 9px #b00a 0.10;
+}
