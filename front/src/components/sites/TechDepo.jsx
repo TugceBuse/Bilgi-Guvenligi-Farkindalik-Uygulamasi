@@ -213,7 +213,7 @@ const cards = [
 
 
 const TechDepo = ({scrollRef}) => {
-  const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders } = useGameContext();
+  const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders, seconds, addCargoTracking, secondsRef } = useGameContext();
   const { sendMail } = useMailContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
@@ -623,6 +623,9 @@ const TechDepo = ({scrollRef}) => {
     const productString = newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", ");
     const productNames = newOrder.items.map(item => item.name).join(", ");
 
+    const trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
+    const shippingCompany = newOrder.shipping;
+
     // Her siparişte mail gönder:
     const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) ; // 1-3 dk
     const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) ; // 2-4 dk
@@ -670,35 +673,15 @@ const TechDepo = ({scrollRef}) => {
     }, invoiceDelay + 60000); // (örneğin sahte maili gerçek mailden 10 sn sonra gönder)
 
     setTimeout(() => {
-      let trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
-      let shippingCompany = newOrder.shipping;
       let orderNo = newOrder.id;
       let fromMail = shippingCompany === "CargoNova" ? "info@cargonova.com"
                       : shippingCompany === "FlyTakip" ? "takip@flykargo.net"
                       : "gonderi@trendytasima.com";
       let title = shippingCompany + " Kargo Takip";
       let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
-      const cargoStartKey = `cargoTrackStart-${trackingNo}`;
-        if (!localStorage.getItem(cargoStartKey)) {
-          localStorage.setItem(cargoStartKey, Date.now());
-      }
 
-      // Gerçek kargo maili
+      // Sahte kargo maili
       sendMail("cargo", {
-          name: `${TechInfo.name} ${TechInfo.surname}`,
-          productName: productNames,
-          trackingNo,
-          shippingCompany,
-          orderNo,
-          from: fromMail,
-          title,
-          precontent,
-          isFake: false
-        });
-     
-      // SAHTE KARGO MAİLİ 1 DAKİKA SONRA GELSİN
-      setTimeout(() => {
-        sendMail("cargo", {
           name: `${TechInfo.name} ${TechInfo.surname}`,
           productName: productNames,
           trackingNo,
@@ -714,7 +697,27 @@ const TechDepo = ({scrollRef}) => {
             link: "http://cargo-n0va-support.xyz/tracking",
             precontent: "Şüpheli gönderi uyarısı!"
         }
-      });
+      })
+      
+      // Gerçek kargo maili 1 dakika sonra gelecek
+      setTimeout(() => {
+      sendMail("cargo", {
+          name: `${TechInfo.name} ${TechInfo.surname}`,
+          productName: productNames,
+          trackingNo,
+          shippingCompany,
+          orderNo,
+          from: fromMail,
+          title,
+          precontent,
+          isFake: false
+        });
+      // Kargo takibi için GameContext'e ekle
+        addCargoTracking({
+          trackingNo,
+          shippingCompany,
+          startSeconds: secondsRef.current,
+        });
       }, 60000); // 1 dakika (60000 ms) sonra
     }, cargoDelay);
   };

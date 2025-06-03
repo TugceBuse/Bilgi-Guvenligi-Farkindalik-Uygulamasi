@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useMailContext } from './MailContext';
 
 const GameContext = createContext();
@@ -12,6 +12,12 @@ export const GameContextProvider = ({ children }) => {
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addMailToMailbox } = useMailContext();
   const [cardBalance, setCardBalance] = useState("12345"); // Başlangıç bakiyesi
+  const [cargoTrackingList, setCargoTrackingList] = useState([]);
+
+  const secondsRef = useRef(seconds);
+  useEffect(() => {
+    secondsRef.current = seconds;
+  }, [seconds]);
 
 
   const [gameStart, setGameStart] = useState(() => {
@@ -121,6 +127,30 @@ export const GameContextProvider = ({ children }) => {
     loginAttempts: 0,
   });
 
+  // Yeni kargo siparişi ekler (ilk ekleme daima pending, beklemede!)
+  const addCargoTracking = ({ trackingNo, shippingCompany, startSeconds }) => {
+    setCargoTrackingList(prev => [
+      ...prev,
+      {
+        trackingNo,
+        shippingCompany,
+        startSeconds,
+        currentStep: 0,
+        delivered: false,
+      }
+    ]);
+  };
+
+  // Takip edilen bir kargonun adımını güncelle
+  const updateCargoStep = (trackingNo, step, statusSteps) => {
+    setCargoTrackingList(prev => prev.map(item =>
+      item.trackingNo === trackingNo
+        ? { ...item, currentStep: step, delivered: step === statusSteps.length - 1 }
+        : item
+    ));
+  };
+
+
   const [TechInfoF, setTechInfoF] = useState({
     name: '',
     surname: '',
@@ -213,11 +243,13 @@ export const GameContextProvider = ({ children }) => {
       return () => clearTimeout(timeoutId);
     }
   }, [isWificonnected, wifiMailSent]);
+  
 
   return (
     <GameContext.Provider 
       value={{ 
         seconds,
+        secondsRef,
         gameStart,
         isWificonnected, setIsWificonnected,
         updating_antivirus, setUpdating_antivirus,
@@ -226,6 +258,9 @@ export const GameContextProvider = ({ children }) => {
         SkillForgeHubInfo, setSkillForgeHubInfo,
         PostifyInfo, setPostifyInfo,
         TechInfo, setTechInfo,
+        cargoTrackingList, setCargoTrackingList,
+        addCargoTracking,
+        updateCargoStep,
         TechInfoF, setTechInfoF,
         orders, setOrders,
         getRelativeDate,

@@ -1,113 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import styles from "./CargoTracking.module.css";
-import { useMailContext } from "../../Contexts/MailContext";
+import { useGameContext } from "../../Contexts/GameContext";
 
-const statusSteps = [
-  {
-    status: "Kargo kaydı oluşturuldu.",
-    desc: "Gönderiniz için kargo kaydı alındı.",
-    icon: "📝",
-    duration: 1 * 60 * 1000, // 2 dakika
-  },
-  {
-    status: "Kargo şubeye ulaştı.",
-    desc: "Kargonuz çıkış şubesine ulaştı.",
-    icon: "📦",
-    duration: 1 * 60 * 1000, // 8 dakika
-  },
-  {
-    status: "Transfer merkezinde.",
-    desc: "Kargonuz transfer merkezinde işlem görüyor.",
-    icon: "🏢",
-    duration: 1 * 60 * 1000, // 10 dakika
-  },
-  {
-    status: "Dağıtıma çıktı.",
-    desc: "Kargonuz dağıtım için yola çıktı.",
-    icon: "🚚",
-    duration: 1 * 60 * 1000, // 7 dakika
-     mail: {
-      type: "cargo",
-      title: "Kargonuz Dağıtıma Çıktı!",
-      precontent: "Kargonuz dağıtıma çıktı. Tahmini teslimat için kargo sayfasını kontrol edebilirsiniz.",
-      content: ({ trackingNo, shippingCompany }) => (
-        <div style={{ fontFamily: 'Segoe UI, sans-serif', color: "#222", fontSize: "16px" }}>
-          <h2 style={{ color: "#258cff", margin: "0 0 10px 0" }}>
-            Kargonuz Dağıtıma Çıktı! 🚚
-          </h2>
-          <p>
-            <span style={{ color: "#258cff", fontWeight: 600 }}>
-              {trackingNo}
-            </span> takip numaralı gönderiniz, bugün <b>{shippingCompany}</b> kargo tarafından dağıtıma çıkarılmıştır.
-          </p>
-          <div style={{
-            background: "#e8f5ff",
-            padding: "10px 14px",
-            borderRadius: 8,
-            margin: "10px 0 16px 0",
-            borderLeft: "4px solid #258cff"
-          }}>
-            <b>Tahmini teslimat:</b> Aynı gün içerisinde, saat 17:00’ye kadar yapılacaktır.
-          </div>
-          <ul style={{ margin: "8px 0 16px 20px", color: "#258cff" }}>
-            <li>Kargonuz dağıtım görevlisinde.</li>
-            <li>Teslimat sırasında SMS ile ayrıca bilgilendirileceksiniz.</li>
-            <li>Evde olmamanız durumunda şubeden teslim alabilirsiniz.</li>
-          </ul> 
-        </div>
-      )
-    }
-  },
-  {
-    status: "Teslimat bekleniyor.",
-    desc: "Kargonuz teslimat adresinizde bekleniyor.",
-    icon: "🏠",
-    duration: 1 * 60 * 1000, // 5 dakika
-  },
-  {
-    status: "Teslim edildi.",
-    desc: "Kargonuz alıcıya teslim edildi.",
-    icon: "✅",
-    duration: null, // Son adım, süre yok
-    mail: {
-      type: "cargo",
-      title: "Kargonuz Teslim Edildi!",
-      precontent: "Kargonuz başarıyla teslim edilmiştir. İyi günlerde kullanın!",
-      content: ({ trackingNo, shippingCompany }) => (
-        <div style={{ fontFamily: 'Segoe UI, sans-serif', color: "#222", fontSize: "16px" }}>
-          <h2 style={{ color: "#22bb55", margin: "0 0 10px 0" }}>
-            Kargonuz Teslim Edildi! 🎉
-          </h2>
-
-          <p>
-            <span style={{ color: "#22bb55", fontWeight: 600 }}>{trackingNo}</span> takip numaralı gönderiniz,
-            <b> {shippingCompany} </b>
-            kargo tarafından başarıyla teslim edilmiştir.
-          </p>
-          <div style={{
-            background: "#e8ffe8",
-            padding: "10px 14px",
-            borderRadius: 8,
-            margin: "10px 0 16px 0",
-            borderLeft: "4px solid #22bb55"
-          }}>
-            <b>Teslimat Tarihi:</b> {new Date().toLocaleDateString('tr-TR')}
-          </div>
-          <div style={{
-            margin: "8px 0 12px 0",
-            color: "#317e2e",
-            fontWeight: 700
-          }}>
-            Ürününüzü iyi günlerde kullanmanızı dileriz!<br />
-            <span style={{ color: "white", fontWeight: 600 }}>
-              Teslimatla ilgili destek almak için bizimle iletişime geçebilirsiniz.
-            </span>
-          </div>
-        </div>
-      )
-    }
-  },
-];
+// statusSteps'i ister context'ten, ister utils/cargoStatus.js'ten import et
+import { statusSteps } from "../../utils/cargoStatus";
 
 function getUrlParams(url) {
   try {
@@ -122,82 +18,48 @@ function getUrlParams(url) {
 }
 
 const CargoTracking = (props) => {
-  const url = props.url || window.location.href;
-  // ... getUrlParams kısmı aynı
+  const { cargoTrackingList, seconds } = useGameContext();
 
+  // URL veya props üzerinden takip verilerini bul
+  const url = props.url || window.location.href;
   let { shippingCompany, trackingNo } = getUrlParams(url);
   if (props.shippingCompany) shippingCompany = props.shippingCompany;
   if (props.trackingNo) trackingNo = props.trackingNo;
 
-    
-  function getCurrentStep(trackingNo) {
-    const start = Number(localStorage.getItem(`cargoTrackStart-${trackingNo}`));
-      if (!start) return 0;
-      const now = Date.now();
-      let elapsed = now - start;
-      let total = 0;
-      for (let i = 0; i < statusSteps.length; i++) {
-        total += statusSteps[i].duration || 0;
-        if (elapsed < total) return i;
-      }
-      return statusSteps.length - 1; // Teslim edildi!
+  const cargoData = cargoTrackingList.find(
+    k =>
+      k.trackingNo === trackingNo &&
+      k.shippingCompany.toLowerCase() === shippingCompany.toLowerCase() &&
+      k.startSeconds != null // sadece takip başlatılmış kargo!
+  );
+
+  if (!cargoData) {
+    return <div style={{ padding: 40, color: "#fff", textAlign: "center" }}>
+      Takip edilen kargo kaydı bulunamadı veya henüz başlamadı.
+    </div>;
   }
 
-  const [currentStep, setCurrentStep] = useState(() => getCurrentStep(trackingNo));
-
-  useEffect(() => {
-    // Her 3 saniyede bir adımı güncelle
-    const interval = setInterval(() => {
-      setCurrentStep(getCurrentStep(trackingNo));
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [trackingNo]);
-
-  useEffect(() => {
-    setCurrentStep(getCurrentStep(trackingNo));
-  }, [trackingNo]);
-
-  const { sendMail } = useMailContext(); // senin kullandığın context veya prop
-
-
-  useEffect(() => {
-    const step = statusSteps[currentStep];
-    if (step && step.mail) {
-      const mailSentKey = `cargoMailSent-${trackingNo}-${currentStep}`;
-      if (!localStorage.getItem(mailSentKey)) {
-        const mailContent = step.mail.content
-          ? step.mail.content({
-              trackingNo,
-              shippingCompany,
-              recipient: props.recipient || "Tugce Buse Ergün"
-            })
-          : undefined;
-
-        sendMail(step.mail.type, {
-          from: `${shippingCompany} <info@${shippingCompany.toLowerCase()}.com>`,
-          title: step.mail.title,
-          precontent: step.mail.precontent,
-          trackingNo,
-          shippingCompany,
-          recipient: props.recipient || "Tugce Buse Ergün",
-          content: mailContent
-        });
-        localStorage.setItem(mailSentKey, "1");
-      }
+  // Kargo adımını saniyeye göre hesapla
+  let elapsed = seconds - cargoData.startSeconds;
+  let total = 0, currentStep = 0;
+  for (let i = 0; i < statusSteps.length; i++) {
+    total += statusSteps[i].durationSeconds || 0;
+    if (elapsed < total) {
+      currentStep = i;
+      break;
+    } else {
+      currentStep = i;
     }
-  }, [currentStep, trackingNo, shippingCompany, props.recipient]);
+  }
 
-
-  // Progress, son adıma göre oranlansın
+  // Progress bar
   const progress = Math.round(((currentStep + 1) / statusSteps.length) * 100);
 
   return (
     <div className={styles.trackingContainer}>
-      {/* Diğer JSX aynı */}
       <div className={styles.header}>
         <img
-          src={`Cargo/${shippingCompany.toLowerCase()}.png`}
+          src={`/Cargo/${shippingCompany.toLowerCase()}.png`}
           alt={shippingCompany}
           className={styles.logo}
           onError={e => { e.target.src = "/Cargo/tracking.png"; }}
