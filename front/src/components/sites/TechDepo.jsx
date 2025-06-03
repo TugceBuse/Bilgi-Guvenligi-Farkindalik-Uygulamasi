@@ -213,7 +213,7 @@ const cards = [
 
 
 const TechDepo = ({scrollRef}) => {
-  const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders, seconds, addCargoTracking, secondsRef } = useGameContext();
+  const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders, cargoTrackingList, addCargoTracking, secondsRef } = useGameContext();
   const { sendMail } = useMailContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
@@ -553,10 +553,12 @@ const TechDepo = ({scrollRef}) => {
 
   const finalizePayment = () => {
     setCodeTimer(120);
+
+    // Yetersiz bakiye kontrolü
     if (cardBalance < grandTotal) {
       setErrors({ balance: "Kart bakiyesi yetersiz." });
       addMessage("NovaBank", "💳 Bakiyeniz yetersiz olduğundan ödemeniz gerçekleştirilemedi.");
-      
+
       setCardNumber("");
       setCardName("");
       setExpiryDate("");
@@ -568,15 +570,14 @@ const TechDepo = ({scrollRef}) => {
       setCartItems([]);
       setIs3DChecked(false);
       setIs3DWaiting(false);
-
       setIsPaying(false);
-      setTimeout(() => {
-        setErrors({});
-      }, 3000);
+
+      setTimeout(() => setErrors({}), 3000);
       return;
     }
+
     if (saveCard) {
-      setTechInfo((prev) => ({
+      setTechInfo(prev => ({
         ...prev,
         cardNumber,
         cardName,
@@ -587,19 +588,24 @@ const TechDepo = ({scrollRef}) => {
     }
 
     const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+    const trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
+    const shippingCompany = selectedShipping;
 
+    // Yeni sipariş status ile eklenir
     const newOrder = {
       id: orderNumber,
       items: cartItems,
-      shipping: selectedShipping,
+      shipping: shippingCompany,
       total: grandTotal,
       date: new Date().toLocaleString(),
+      status: 0, // 0: Sipariş Onaylandı, 1: Hazırlanıyor, 2: Kargoya Verildi, 3: Teslim Edildi
+      trackingNo
     };
 
     setOrders(prevOrders => [newOrder, ...prevOrders]);
-
     setCardBalance(prev => prev - grandTotal);
 
+    // Form resetle
     setCardNumber("");
     setCardName("");
     setExpiryDate("");
@@ -617,26 +623,18 @@ const TechDepo = ({scrollRef}) => {
     setNoticeType("payment");
     setShowCartNotice(true);
     setTimeout(() => setShowCartNotice(false), 2000);
-    console.log(productInfo.productID, "ödeme tamamlandı");
 
-    // Ürünleri stringe çevir
+    // Ürün adlarını stringe çevir
     const productString = newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", ");
     const productNames = newOrder.items.map(item => item.name).join(", ");
 
-    const trackingNo = "CN" + Math.floor(100000 + Math.random() * 900000) + "TR";
-    const shippingCompany = newOrder.shipping;
-
-    // Her siparişte mail gönder:
-    const invoiceDelay = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000; // 10 sn - 1 dk arası 
-    const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) ; // 2-4 dk
-
-    // GERÇEK FATURA MAİLİ
+    // Fatura mailleri
+    const invoiceDelay = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000;
     setTimeout(() => {
-      const mailId = Date.now(); // benzersiz id üret
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: productString,
-        invoiceNo: "TD-2025-" + mailId,
+        invoiceNo: "TD-2025-" + Date.now(),
         orderNo: newOrder.id,
         price: newOrder.total,
         company: "TechDepo",
@@ -645,18 +643,15 @@ const TechDepo = ({scrollRef}) => {
         from: "faturalar@techdepo.com",
         title: "TechDepo - Satın Alma Faturanız",
         precontent: `${productNames} ürün/ürünlerine ait fatura belgeniz ektedir.`,
-        isFake: false,
-        mailId // <<--- ekledik!
+        isFake: false
       });
     }, invoiceDelay);
 
-    // SAHTE FATURA MAİLİ
     setTimeout(() => {
-      const mailId = Date.now();
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: productString,
-        invoiceNo: "TD-2025-" + mailId,
+        invoiceNo: "TD-2025-" + Date.now(),
         orderNo: newOrder.id,
         price: newOrder.total,
         company: "TechDepo",
@@ -666,7 +661,6 @@ const TechDepo = ({scrollRef}) => {
         title: "E-Arşiv Fatura Belgeniz",
         precontent: "Şüpheli fatura bildirimi",
         isFake: true,
-        mailId,
         fakeOptions: {
           from: "e-fatura@teehdeppo-billing.com",
           title: "E-Arşiv Fatura Belgeniz",
@@ -676,17 +670,59 @@ const TechDepo = ({scrollRef}) => {
       });
     }, invoiceDelay + 60000);
 
+    // ---- Sipariş durum adımları (ve kargo mail tetikleyici) ----
 
+    // Sipariş durumunu orders dizisinde güncelleyen fonksiyon
+    const updateOrderStatus = (orderId, newStatus) => {
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order.id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    };
+
+    // 1dk sonra "Hazırlanıyor"
     setTimeout(() => {
-      let orderNo = newOrder.id;
+      updateOrderStatus(orderNumber, 1);
+    }, 60000);
+
+    // 2dk sonra "Kargoya Verildi" + kargo maili
+    setTimeout(() => {
+      updateOrderStatus(orderNumber, 2);
+
+      // Kargo maili burada tetiklenir!
+      let orderNo = orderNumber;
       let fromMail = shippingCompany === "CargoNova" ? "info@cargonova.com"
-                      : shippingCompany === "FlyTakip" ? "takip@flykargo.net"
-                      : "gonderi@trendytasima.com";
+        : shippingCompany === "FlyTakip" ? "takip@flykargo.net"
+        : "gonderi@trendytasima.com";
       let title = shippingCompany + " Kargo Takip";
       let precontent = `${shippingCompany} ile gönderiniz yola çıktı!`;
 
-      // Sahte kargo maili
+      // Gerçek kargo maili
       sendMail("cargo", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: productNames,
+        trackingNo,
+        shippingCompany,
+        orderNo,
+        from: fromMail,
+        title,
+        precontent,
+        isFake: false
+      });
+
+      // Kargo takibi başlatıcı (context fonksiyonun varsa)
+      if (typeof addCargoTracking === "function") {
+        addCargoTracking({
+          trackingNo,
+          shippingCompany,
+          startSeconds: secondsRef.current,
+        });
+      }
+
+      // Sahte kargo maili (1dk sonra)
+      setTimeout(() => {
+        sendMail("cargo", {
           name: `${TechInfo.name} ${TechInfo.surname}`,
           productName: productNames,
           trackingNo,
@@ -701,31 +737,12 @@ const TechDepo = ({scrollRef}) => {
             title: "Kargo Takip Bilgilendirme",
             link: "http://cargo-n0va-support.xyz/tracking",
             precontent: "Şüpheli gönderi uyarısı!"
-        }
-      })
-      
-      // Gerçek kargo maili 1 dakika sonra gelecek
-      setTimeout(() => {
-      sendMail("cargo", {
-          name: `${TechInfo.name} ${TechInfo.surname}`,
-          productName: productNames,
-          trackingNo,
-          shippingCompany,
-          orderNo,
-          from: fromMail,
-          title,
-          precontent,
-          isFake: false
+          }
         });
-      // Kargo takibi için GameContext'e ekle
-        addCargoTracking({
-          trackingNo,
-          shippingCompany,
-          startSeconds: secondsRef.current,
-        });
-      }, 60000); // 1 dakika (60000 ms) sonra
-    }, cargoDelay);
+      }, 60000);
+    }, 120000);
   };
+
 
   const handlePayment = () => {
     let newErrors = {};
@@ -927,11 +944,27 @@ const TechDepo = ({scrollRef}) => {
   }, []);
 
 
+  // Kargo teslimat durumunu kontrol et ve güncelle
+  useEffect(() => {
+    orders.forEach(order => {
+      const cargo = cargoTrackingList.find(
+        c => c.trackingNo === order.trackingNo
+      );
+      if (cargo && cargo.delivered && order.status < 3) {
+        setOrders(prev =>
+          prev.map(o =>
+            o.id === order.id ? { ...o, status: 3 } : o
+          )
+        );
+      }
+    });
+  }, [cargoTrackingList, orders, setOrders]);
+
+
   // Doldurulması zorunlu olan alanlar için gerekli state'ler
   const [selectedShipping, setSelectedShipping] = useState("");
 
   const [cardNumber, setCardNumber] = useState("");
-  const [isCardMatched, setIsCardMatched] = useState(false);
 
   const [cardName, setCardName] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
@@ -1441,6 +1474,12 @@ const TechDepo = ({scrollRef}) => {
                       <p>📦 Kargo Firması: {order.shipping}</p>
                       <p>💵 Toplam Tutar: {formatPrice(order.total)}</p>
                       <p>📅 Sipariş Tarihi: {order.date}</p>
+                      <div className={styles.orderStatusRow}>
+                        <label>Sipariş Durumu:</label>
+                        <span className={`${styles.orderStatus} ${styles['status' + order.status]}`}>
+                          {["Onaylandı", "Hazırlanıyor", "Kargoya Verildi", "Teslim Edildi"][order.status]}
+                        </span>
+                      </div>
                       <div className={styles.orderItems}>
                         {order.items.map((item, index) => (
                           <div key={index} className={styles.orderItemRow}>

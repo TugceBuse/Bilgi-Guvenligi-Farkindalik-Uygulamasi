@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useMailContext } from './MailContext';
+import { statusSteps } from '../utils/cargoStatus';
 
 const GameContext = createContext();
 
@@ -243,6 +244,28 @@ export const GameContextProvider = ({ children }) => {
       return () => clearTimeout(timeoutId);
     }
   }, [isWificonnected, wifiMailSent]);
+
+  useEffect(() => {
+    setCargoTrackingList(prevList =>
+      prevList.map(item => {
+        if (item.startSeconds == null) return item;
+        let elapsed = seconds - item.startSeconds;
+        let total = 0, currentStep = 0;
+        for (let i = 0; i < statusSteps.length; i++) {
+          total += statusSteps[i].durationSeconds || 0;
+          if (elapsed < total) {
+            currentStep = i;
+            break;
+          } else {
+            currentStep = i;
+          }
+        }
+        const delivered = (currentStep === statusSteps.length - 1);
+        return { ...item, currentStep, delivered };
+      })
+    );
+  }, [seconds, statusSteps]);
+
   
 
   return (

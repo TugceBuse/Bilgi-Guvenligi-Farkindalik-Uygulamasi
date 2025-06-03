@@ -13,8 +13,6 @@ const CargoMailNotifier = () => {
  useEffect(() => {
   setCargoTrackingList(prevList =>
     prevList.map(item => {
-        
-      // Eğer kargo kaydı başlatılmamışsa, hiçbir şey yapma
       if (item.startSeconds == null) return item;
 
       let elapsed = seconds - item.startSeconds;
@@ -29,7 +27,10 @@ const CargoMailNotifier = () => {
         }
       }
 
-      // Her adımda sadece bir defa mail gönderelim:
+      // delivered ve currentStep güncelle
+      const delivered = (currentStep === statusSteps.length - 1);
+
+      // Mail tetikleyici (her adımda sadece bir kez)
       const sentKey = `${item.trackingNo}_${currentStep}`;
       if (statusSteps[currentStep].mail && !sentMapRef.current[sentKey]) {
         const mailContent = statusSteps[currentStep].mail.content
@@ -50,10 +51,17 @@ const CargoMailNotifier = () => {
         });
         sentMapRef.current[sentKey] = true;
       }
-      return item;
+
+      // Güncellenmiş item'ı döndür!
+      return {
+        ...item,
+        currentStep,
+        delivered
+      };
     })
   );
-}, [cargoTrackingList, seconds]);
+}, [seconds, statusSteps]);
+
 
 
   return null; // Bu bileşen ekrana bir şey render etmez

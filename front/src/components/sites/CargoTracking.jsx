@@ -40,17 +40,8 @@ const CargoTracking = (props) => {
   }
 
   // Kargo adımını saniyeye göre hesapla
-  let elapsed = seconds - cargoData.startSeconds;
-  let total = 0, currentStep = 0;
-  for (let i = 0; i < statusSteps.length; i++) {
-    total += statusSteps[i].durationSeconds || 0;
-    if (elapsed < total) {
-      currentStep = i;
-      break;
-    } else {
-      currentStep = i;
-    }
-  }
+  const currentStep = cargoData.currentStep;
+  const delivered = cargoData.delivered;
 
   // Progress bar
   const progress = Math.round(((currentStep + 1) / statusSteps.length) * 100);

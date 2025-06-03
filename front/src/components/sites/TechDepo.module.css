@@ -995,6 +995,68 @@
     margin: 5px 0;
     color: #34495e;
   }
+
+  .orderStatusRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 3px;
+  }
+
+  /* Label için */
+  .orderStatusRow label {
+    color: #661da1;
+    font-weight: 700;
+    font-size: 1.08rem;
+    letter-spacing: 0.01em;
+    margin-right: 6px;
+    min-width: 118px;
+  }
+
+  /* Badge (Durum) için */
+  .orderStatus {
+    display: inline-block;
+    min-width: 100px;
+    padding: 5px 18px;
+    border-radius: 17px;
+    font-size: 1.01rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-align: center;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 6px #0001;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  /* Durumlara göre renkler */
+  .status0 { /* Onaylandı */
+    background: #e2edff;
+    color: #225dc8;
+    border-color: #a2d1fc;
+  }
+  .status1 { /* Hazırlanıyor */
+    background: #fff4dc;
+    color: #de8307;
+    border-color: #ffe39e;
+  }
+  .status2 { /* Kargoya Verildi */
+    background: #e7fcf7;
+    color: #18b897;
+    border-color: #90ffe0;
+    animation: pulse-delivery 1.2s infinite alternate;
+  }
+  .status3 { /* Teslim Edildi */
+    background: #e7ffe7;
+    color: #18962b;
+    border-color: #a1ffd5;
+  }
+
+  /* Hafif animasyon (Kargoya Verildi) */
+  @keyframes pulse-delivery {
+    0%   { box-shadow: 0 0 0 0 #5fe2b733; }
+    100% { box-shadow: 0 0 14px 3px #51e2ad55; }
+  }
   
   .orderItems {
     margin-top: 10px;
