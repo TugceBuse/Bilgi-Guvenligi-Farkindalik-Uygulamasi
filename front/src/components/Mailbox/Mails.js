@@ -98,15 +98,44 @@ import DownloadButton from '../../utils/DownloadButton';
     title,
     precontent,
     isFake = false,
-    fakeOptions = {}
-  }) {
+    fakeOptions = {},
+    mailId // ← Mail id'yi de props ile geçersen daha güvenli olur
+}) {
     const fakeFrom = isFake ? fakeOptions.from || "e-fatura@teehdeppo-billing.com" : from;
     const fakeTitle = isFake ? fakeOptions.title || "E-Arşiv Fatura Bilgilendirme" : title;
     const fakeInvoiceNo = isFake ? "FAKE-" + invoiceNo : invoiceNo;
     const fakePrecontent = isFake ? fakeOptions.precontent || "Şüpheli fatura bildirimi" : precontent;
-    const fakeButton = isFake
+
+    // Dinamik fatura txt içeriği
+    const txtContent = `
+FATURA BİLGİLERİ - ${company}
+───────────────────────────────
+Fatura Numarası: ${fakeInvoiceNo}
+Sipariş No: ${orderNo}
+Tarih: ${new Date().toLocaleDateString()}
+Müşteri: ${name}
+Ürünler: ${productName}
+Toplam: ${price} TL
+KDV: ${tax} TL
+GENEL TOPLAM: ${total} TL
+───────────────────────────────
+Bu belge elektronik ortamda düzenlenmiştir.
+${company} A.Ş.
+`;
+
+    // Dosya adı benzersiz olmalı
+    const fileName = `fatura_${orderNo}`;
+
+    // Sahte ve gerçek buton ayrımı
+    const faturaButton = isFake
       ? <button className="claim-button" title={fakeOptions.fakePdfLink || "http://teehdeppo-billing.com/download/fatura-2025.zip"}>🧾 Faturayı PDF Olarak İndir</button>
-      : null;
+      : <DownloadButton
+          label="🧾 Faturayı PDF olarak indir"
+          fileName={fileName}
+          fileContent={txtContent}
+          fileLabel={`TechDepo Faturası - ${invoiceNo}`}
+          mailId={mailId}
+        />;
 
     return (
       <div className="mail-content">
@@ -122,13 +151,14 @@ import DownloadButton from '../../utils/DownloadButton';
           🔸 KDV (%20)           {tax} TL<br/>
           <b>Genel Toplam:</b>   <b>{total} TL</b><br/>
           ───────────────────────────────<br/><br/>
-          {fakeButton}
+          {/* Fatura indirme veya açma butonu */}
+          {faturaButton}
           <br/>Bu belge elektronik ortamda düzenlenmiştir.<br/><br/>
           <b>{company} A.Ş.</b><br/>
         </pre>
       </div>
     );
-  }
+}
 
 
   // İndirim kodu maili

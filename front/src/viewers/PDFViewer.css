@@ -80,6 +80,38 @@
     letter-spacing: 0.02em;
 }
 
+.pdf-viewer-warning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+  width: 100%;
+  background: linear-gradient(135deg, #212534 80%, #282828 100%);
+  color: #ffe082;
+  font-size: 1.3em;
+  border: 2px solid #373c54;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(22,18,51,0.18);
+  text-align: center;
+  padding: 40px 24px;
+  margin: 0 auto;
+  gap: 18px;
+  animation: fadeinViewerWarning 0.4s;
+}
+
+.pdf-viewer-warning b {
+  font-size: 1.18em;
+  color: #ffd54f;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeinViewerWarning {
+  from { opacity: 0; transform: translateY(20px);}
+  to   { opacity: 1; transform: none;}
+}
+
+
 /* DOCULITE TEMA ÖRNEĞİ */
 .pdf-viewer-window.theme-doculite {
     background: #1e1e1e;

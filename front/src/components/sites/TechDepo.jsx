@@ -627,15 +627,16 @@ const TechDepo = ({scrollRef}) => {
     const shippingCompany = newOrder.shipping;
 
     // Her siparişte mail gönder:
-    const invoiceDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) ; // 1-3 dk
+    const invoiceDelay = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000; // 10 sn - 1 dk arası 
     const cargoDelay = Math.floor(Math.random() * (240000 - 120000 + 1)) ; // 2-4 dk
 
     // GERÇEK FATURA MAİLİ
     setTimeout(() => {
+      const mailId = Date.now(); // benzersiz id üret
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: productString,
-        invoiceNo: "TD-2025-" + Date.now(),
+        invoiceNo: "TD-2025-" + mailId,
         orderNo: newOrder.id,
         price: newOrder.total,
         company: "TechDepo",
@@ -644,16 +645,18 @@ const TechDepo = ({scrollRef}) => {
         from: "faturalar@techdepo.com",
         title: "TechDepo - Satın Alma Faturanız",
         precontent: `${productNames} ürün/ürünlerine ait fatura belgeniz ektedir.`,
-        isFake: false
+        isFake: false,
+        mailId // <<--- ekledik!
       });
     }, invoiceDelay);
 
     // SAHTE FATURA MAİLİ
     setTimeout(() => {
+      const mailId = Date.now();
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: productString,
-        invoiceNo: "TD-2025-" + Date.now(),
+        invoiceNo: "TD-2025-" + mailId,
         orderNo: newOrder.id,
         price: newOrder.total,
         company: "TechDepo",
@@ -663,6 +666,7 @@ const TechDepo = ({scrollRef}) => {
         title: "E-Arşiv Fatura Belgeniz",
         precontent: "Şüpheli fatura bildirimi",
         isFake: true,
+        mailId,
         fakeOptions: {
           from: "e-fatura@teehdeppo-billing.com",
           title: "E-Arşiv Fatura Belgeniz",
@@ -670,7 +674,8 @@ const TechDepo = ({scrollRef}) => {
           precontent: "Şüpheli fatura bildirimi"
         }
       });
-    }, invoiceDelay + 60000); // (örneğin sahte maili gerçek mailden 10 sn sonra gönder)
+    }, invoiceDelay + 60000);
+
 
     setTimeout(() => {
       let orderNo = newOrder.id;

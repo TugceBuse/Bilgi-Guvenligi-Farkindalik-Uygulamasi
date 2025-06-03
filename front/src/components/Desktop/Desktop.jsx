@@ -19,7 +19,6 @@ const Desktop = () => {
   const { openedFiles, closeFile, files } = useFileContext();
   const { viruses } = useVirusContext();
 
-  const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const { windowConfig } = useWindowConfig();
