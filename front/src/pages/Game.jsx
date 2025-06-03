@@ -11,6 +11,7 @@ import { WindowConfigProvider } from '../Contexts/WindowConfigContext.js';
 import { NotificationProvider } from '../Contexts/NotificationContext';
 import { PhoneProvider } from '../Contexts/PhoneContext.js';
 import { TodoProvider } from '../Contexts/TodoContext.js';
+import CargoMailNotifier from '../components/CargoMailNotifier.jsx'; // EKLEDİN!
 
 const Game = () => {
   useEffect(() => {
@@ -35,6 +36,7 @@ const Game = () => {
                     <PhoneProvider>
                       <GameContextProvider>
                         <TodoProvider>
+                          <CargoMailNotifier />
                           <div className="game">
                             <Desktop />
                           </div>
