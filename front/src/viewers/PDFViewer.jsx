@@ -2,9 +2,11 @@ import React, { useRef } from "react";
 import './PDFViewer.css';
 import { useFileContext } from '../Contexts/FileContext';
 import { MakeDraggable } from '../utils/Draggable';
+import { useWindowConfig } from '../Contexts/WindowConfigContext';
 
 const PdfViewer = ({ file, fileName, theme = "default" }) => {
   const { closeFile } = useFileContext();
+  const { windowConfig } = useWindowConfig();
   const pdfRef = useRef(null);
   const rootClass = `pdf-viewer-window theme-${theme}`;
 
@@ -13,6 +15,16 @@ const PdfViewer = ({ file, fileName, theme = "default" }) => {
   const handleClose = () => {
     closeFile(fileName);
   };
+
+  const pdfViewers = [
+    "pdfviewer",      // DocuLiteApp
+    "quickpdf",      // QuickPDFApp
+    "openlite",      // OpenLitePDFApp
+  ];
+
+  const isAnyPdfViewerAvailable = pdfViewers.some(
+    (key) => windowConfig[key]?.available
+  );
 
   const iconMap = {
     doculite: "/PDFViewer/pdf-file-format.png",
@@ -31,14 +43,28 @@ const PdfViewer = ({ file, fileName, theme = "default" }) => {
         </div>
         <button className="close-btn" onClick={handleClose}>×</button>
       </div>
-      <div className="pdf-viewer-content" style={{padding:0}}>
-        <iframe
-          src={file.content}
-          title={file.label}
-          width="100%"
-          height="100%"
-          style={{ minHeight: "480px", minWidth: "100%", border: "none" }}
-        />
+      <div className="pdf-viewer-content" style={{ padding: 0 }}>
+        {isAnyPdfViewerAvailable ? (
+          <iframe
+            src={file.content}
+            title={file.label}
+            width="100%"
+            height="100%"
+            style={{ minHeight: "480px", minWidth: "100%", border: "none" }}
+          />
+        ) : (
+          <div className="pdf-viewer-warning" style={{
+            color: "#ffb300",
+            textAlign: "center",
+            padding: "36px",
+            fontSize: "1.2em",
+            background: "#232323",
+            borderRadius: "12px"
+          }}>
+            <b>PDF görüntüleyici bulunamadı!</b><br />
+            Bir PDF görüntüleyici yüklemeden bu dosyayı görüntüleyemezsiniz.
+          </div>
+        )}
       </div>
     </div>
   );
