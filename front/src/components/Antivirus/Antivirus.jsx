@@ -261,7 +261,7 @@ const Antivirus = ({ closeHandler, style }) => {
           <div className="antivirus-scan">
             <h3>Bilgisayarınızı tarayın ve tehditleri bulun!</h3>
             <div className="antivirus-controls">
-              <button onClick={handleScanClick} disabled={isScanning}>
+              <button className="scan-button" onClick={handleScanClick} disabled={isScanning}>
                 <img src="/icons/scanner.png" alt="Scanner Icon" />
                 <span className="now">ŞİMDİ!</span>
                 <span className="play">Taramayı başlat</span>

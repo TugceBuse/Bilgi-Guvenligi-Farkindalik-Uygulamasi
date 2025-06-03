@@ -1,115 +1,230 @@
+/* Ana PDF Viewer Penceresi */
 .pdf-viewer-window {
-    position: absolute;
-    top: 12%;
-    left: 12%;
-    width: 720px;
-    height: 500px;
-    background-color: #23232b;
-    border: 1.5px solid #b71c1c;
-    box-shadow: 0 0 18px 2px rgba(183, 28, 28, 0.12), 0 2px 8px #0005;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    color: #fafafa;
-    border-radius: 9px;
-    overflow: hidden;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 670px;
+  height: 470px;
+  background: #202034;
+  border: 2px solid #24244b;
+  border-radius: 14px;
+  box-shadow: 0 6px 32px 0 rgba(24,24,36,0.22);
+  z-index: 1010;
+  display: flex;
+  flex-direction: column;
+  color: #f8f8fa;
+  overflow: hidden;
 }
 
 .pdf-viewer-header {
-    background-color: #900c3f;
-    padding: 12px 16px;
-    border-bottom: 1.5px solid #541212;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 54px;
-    user-select: none;
+  background: #232346;
+  border-bottom: 1.5px solid #32325c;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  user-select: none;
 }
 
 .pdf-viewer-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.15em;
-    font-weight: bold;
-    letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 1.13em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .pdf-viewer-title img {
-    width: 28px;
-    height: 28px;
-    filter: drop-shadow(0 0 1.5px #fff5);
+  width: 29px;
+  height: 29px;
+  filter: drop-shadow(0 0 1.2px #2222);
 }
 
 .close-btn {
-    width: 32px;
-    height: 32px;
-    background-color: transparent;
-    border: none;
-    color: #ffcccc;
-    font-size: 1.8em;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.18s, transform 0.18s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 6px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #ffe8e8;
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.14s;
+  margin-left: 8px;
 }
-.close-btn:hover {
-    background-color: #b71c1c;
-    color: #fff;
+.close-btn:hover,
+.close-btn:focus {
+  background: #34346d;
+  color: #fff;
 }
 
 .pdf-viewer-content {
-    flex: 1;
-    padding: 22px 30px;
-    background: linear-gradient(110deg, #29293a 80%, #2e2323 100%);
-    overflow-y: auto;
-    height: 90%;
-    width: 100%;
-    border-top: none;
-}
-
-.pdf-text {
-    white-space: pre-wrap;
-    font-family: 'Fira Mono', 'Consolas', 'Courier New', Courier, monospace;
-    font-size: 1.07rem;
-    line-height: 1.75;
-    color: #f6e9e9;
-    letter-spacing: 0.02em;
+  flex: 1;
+  background: linear-gradient(108deg, #23234a 75%, #263151 100%);
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .pdf-viewer-warning {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 340px;
-  width: 100%;
-  background: linear-gradient(135deg, #212534 80%, #282828 100%);
+  background: linear-gradient(135deg, #1a1a2d 80%, #292932 100%);
   color: #ffe082;
-  font-size: 1.3em;
-  border: 2px solid #373c54;
+  font-size: 1.22em;
+  border: 2px solid #343c54;
   border-radius: 18px;
   box-shadow: 0 8px 32px 0 rgba(22,18,51,0.18);
   text-align: center;
-  padding: 40px 24px;
-  margin: 0 auto;
+  padding: 36px 18px;
+  margin: 20px;
   gap: 18px;
-  animation: fadeinViewerWarning 0.4s;
 }
 
 .pdf-viewer-warning b {
-  font-size: 1.18em;
+  font-size: 1.15em;
   color: #ffd54f;
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 }
 
-@keyframes fadeinViewerWarning {
-  from { opacity: 0; transform: translateY(20px);}
-  to   { opacity: 1; transform: none;}
+/* ----- Viewer Seçim MODAL ----- */
+
+.pdf-viewer-select-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background: rgba(20,20,40,0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.pdf-viewer-select-content {
+  background: #232346;
+  border-radius: 15px;
+  box-shadow: 0 0 36px 6px #1d1d29b5;
+  min-width: 350px;
+  padding: 42px 32px 26px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-viewer-select-content h3 {
+  font-size: 1.18em;
+  color: #f7f7f7;
+  font-weight: 600;
+  margin-bottom: 27px;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.pdf-viewer-select-list {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.pdf-viewer-select-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 120px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2.5px solid #3d3d67;
+  border-radius: 12px;
+  background: #26264d;
+  transition: 
+    border-color 0.15s,
+    background 0.17s,
+    color 0.13s,
+    box-shadow 0.15s;
+  cursor: pointer;
+  gap: 13px;
+}
+
+.pdf-viewer-select-btn img {
+  display: block;
+  width: 38px;
+  height: 38px;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transition: none !important;
+}
+
+
+.pdf-viewer-select-btn span {
+  display: block;
+  font-size: 1em;
+  font-weight: 500;
+  color: #fffde4;
+  text-align: center;
+  white-space: nowrap;
+  margin-top: 0;
+}
+
+.pdf-viewer-select-btn:hover,
+.pdf-viewer-select-btn:focus {
+  border-color: #ffd600;
+  background: #343482;
+  color: #ffd600;
+  box-shadow: 0 0 0 7px #ffd70029;
+}
+
+.pdf-viewer-select-btn:active {
+  background: #232336;
+  color: #fffde4;
+  box-shadow: 0 0 0 2px #ffd93b41;
+}
+
+.pdf-viewer-select-btn,
+.pdf-viewer-select-btn:hover,
+.pdf-viewer-select-btn:focus,
+.pdf-viewer-select-btn:active {
+  border-width: 2.5px;
+  border-style: solid;
+  box-sizing: border-box;
+}
+
+/* Cancel/İptal Butonu */
+.pdf-viewer-select-content .close-btn {
+  background: transparent;
+  border: none;
+  color: #ffbdbd;
+  font-size: 1.07em;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 8px 28px;
+  margin-top: 10px;
+  transition: color 0.17s, background 0.14s;
+}
+.pdf-viewer-select-content .close-btn:hover,
+.pdf-viewer-select-content .close-btn:focus {
+  color: #fff;
+  background: #53223a;
+}
+
+
 
 
 /* DOCULITE TEMA ÖRNEĞİ */
