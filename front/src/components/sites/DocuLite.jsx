@@ -22,7 +22,6 @@ const DocuLiteSite = () => {
           clearInterval(intervalRef.current);
           setShowPopup(true);
           updateAvailableStatus("pdfviewer", { available: true });
-          console.log("PDF Viewer indirildi.");
           setTimeout(() => setShowPopup(false), 3000);
           setDownloading(false);
           return 100;
