@@ -84,36 +84,40 @@ export const MailContextProvider = ({ children }) => {
   };
   
   const sendMail = (type, params) => {
+    // Benzersiz mail id oluştur: Eğer params.mailId varsa onu kullan, yoksa Date.now() ile üret
+    const mailId = params.mailId || Date.now();
+
     let mailObj = null;
+
     if (type === "cargo") {
       mailObj = {
-        id: Date.now(),
+        id: mailId,
         from: params.from,
         title: params.title,
         precontent: params.precontent,
         readMail: false,
         notified: false,
         used: false,
-        content: params.content || createCargoMail(params)
+        content: params.content || createCargoMail({ ...params, mailId }), // id'yi fonksiyona da geçir
       };
     } else if (type === "invoice") {
       mailObj = {
-        id: Date.now(),
+        id: mailId,
         from: params.from,
         title: params.title,
         precontent: params.precontent,
         readMail: false,
         notified: false,
         used: false,
-        content: createInvoiceMail(params)
+        content: createInvoiceMail({ ...params, mailId }), // id'yi fonksiyona da geçir
       };
     }
-    // ...diğer türler
+    // ...diğer türler için de aynı şekilde ekle
 
     if (mailObj) {
       setInitMail(prev => [...prev, mailObj]);
       setInboxMails(prev => [...prev, mailObj]);
-      // **YENİ: Bildirim ekle**
+      // Bildirim oluştur
       addNotification({
         id: mailObj.id,
         type: "info",
@@ -142,6 +146,7 @@ export const MailContextProvider = ({ children }) => {
       });
     }
   };
+
 
 
   return (
