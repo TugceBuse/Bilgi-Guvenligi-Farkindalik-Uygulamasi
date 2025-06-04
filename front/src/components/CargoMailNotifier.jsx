@@ -53,14 +53,18 @@ const CargoMailNotifier = () => {
             content: mailContent
           });
         }
-        // Sonra sms gönderimi (varsa)
+        // Sonra sms gönderimi (varsa) — 1-2 dakika rastgele gecikmeli!
         if (statusSteps[currentStep].sms) {
           const smsText = statusSteps[currentStep].sms({
             trackingNo: item.trackingNo,
             shippingCompany: item.shippingCompany,
             recipient: item.recipient || "Tugce Buse Ergün"
           });
-          addMessage(item.shippingCompany || "TechDepo Kargo", smsText);
+          // Gecikmeli gönderim için 60-120 saniye arası
+          const delayMs = 60000
+          setTimeout(() => {
+            addMessage(item.shippingCompany || "TechDepo Kargo", smsText);
+          }, delayMs);
         }
         sentMapRef.current[sentKey] = true;
       }
