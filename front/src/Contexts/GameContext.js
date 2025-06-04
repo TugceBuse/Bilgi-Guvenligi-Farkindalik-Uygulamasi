@@ -14,6 +14,7 @@ export const GameContextProvider = ({ children }) => {
   const { addMailToMailbox } = useMailContext();
   const [cardBalance, setCardBalance] = useState("12345"); // Başlangıç bakiyesi
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
+  const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});
 
   const secondsRef = useRef(seconds);
   useEffect(() => {
@@ -295,6 +296,7 @@ export const GameContextProvider = ({ children }) => {
         cloudBoxBackup, setCloudBoxBackup,
         openDropPublicFiles, setOpenDropPublicFiles,
         cardBalance, setCardBalance,
+        cargoTrackingSiteVisited, setCargoTrackingSiteVisited,
       }}
     >
       {children}

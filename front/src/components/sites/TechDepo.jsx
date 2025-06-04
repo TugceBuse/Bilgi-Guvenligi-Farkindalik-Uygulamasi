@@ -3,6 +3,8 @@ import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext"; 
 import { useMailContext } from '../../Contexts/MailContext';
+import { useChatContext } from '../../Contexts/ChatContext';
+import { statusSteps } from "../../utils/cargoStatus";
 
 const cards = [
   {
@@ -231,6 +233,7 @@ const TechDepo = ({scrollRef}) => {
 
   // Context hook
   const { generateCodeMessage, lastCodes, clearCode, addMessage } = usePhoneContext();
+  const {addChatMessage, setUserOptions} = useChatContext();
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
@@ -742,7 +745,25 @@ const TechDepo = ({scrollRef}) => {
         });
       }, 60000);
     }, 120000);
-  };
+    
+    if (newOrder.items.some(item => item.id === 15)) {
+        // Yazıcı satın alımı sonrası...
+        addChatMessage(1, {
+          sender: 'them',
+          text: 'Satın aldığın yazıcının kargo durumunu bizimle paylaşır mısın?',
+          time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+        });
+
+        // Kargo state seçeneklerini ChatApp’e gönder (hepsi disabled, user kargo sitesine girene kadar!)
+        setUserOptions(1,
+          statusSteps.map((step, idx) => ({
+            id: idx,
+            label: `Kargo Durumu: ${step.status}`,
+            enabled: false
+          }))
+        );
+      }
+    };
 
 
   const handlePayment = () => {

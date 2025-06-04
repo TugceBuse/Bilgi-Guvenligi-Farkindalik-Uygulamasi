@@ -6,12 +6,13 @@ import { FileContextProvider } from '../Contexts/FileContext.js';
 import { UIContextProvider } from '../Contexts/UIContext.js';
 import { MailContextProvider } from '../Contexts/MailContext.js';
 import { VirusProvider } from '../Contexts/VirusContext.js';
-import { SecurityProvider } from '../Contexts/SecurityContext.js'; // EKLEDİN!
+import { SecurityProvider } from '../Contexts/SecurityContext.js'; 
 import { WindowConfigProvider } from '../Contexts/WindowConfigContext.js';
 import { NotificationProvider } from '../Contexts/NotificationContext';
 import { PhoneProvider } from '../Contexts/PhoneContext.js';
 import { TodoProvider } from '../Contexts/TodoContext.js';
-import CargoMailNotifier from '../components/CargoMailNotifier.jsx'; // EKLEDİN!
+import CargoMailNotifier from '../components/CargoMailNotifier.jsx';
+import { ChatContextProvider } from '../Contexts/ChatContext.js';
 
 const Game = () => {
   useEffect(() => {
@@ -38,7 +39,9 @@ const Game = () => {
                         <TodoProvider>
                           <CargoMailNotifier />
                           <div className="game">
-                            <Desktop />
+                            <ChatContextProvider>
+                              <Desktop />
+                            </ChatContextProvider>
                           </div>
                         </TodoProvider>
                       </GameContextProvider>

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./CargoTracking.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
+import { useChatContext } from '../../Contexts/ChatContext';
 
 // statusSteps'i ister context'ten, ister utils/cargoStatus.js'ten import et
 import { statusSteps } from "../../utils/cargoStatus";
@@ -18,8 +19,10 @@ function getUrlParams(url) {
 }
 
 const CargoTracking = (props) => {
-  const { cargoTrackingList, seconds } = useGameContext();
+  const { cargoTrackingList, cargoTrackingSiteVisited, setCargoTrackingSiteVisited } = useGameContext();
+  const { setUserOptions } = useChatContext();
 
+  
   // URL veya props üzerinden takip verilerini bul
   const url = props.url || window.location.href;
   let { shippingCompany, trackingNo } = getUrlParams(url);
@@ -32,16 +35,32 @@ const CargoTracking = (props) => {
       k.shippingCompany.toLowerCase() === shippingCompany.toLowerCase() &&
       k.startSeconds != null // sadece takip başlatılmış kargo!
   );
-
-  if (!cargoData) {
-    return <div style={{ padding: 40, color: "#fff", textAlign: "center" }}>
-      Takip edilen kargo kaydı bulunamadı veya henüz başlamadı.
-    </div>;
-  }
-
-  // Kargo adımını saniyeye göre hesapla
+  useEffect(() => {
+    if (!trackingNo) return;
+    setCargoTrackingSiteVisited(prev => ({
+      ...prev,
+      [trackingNo]: true
+    }));
+  }, [trackingNo]);
+  
   const currentStep = cargoData.currentStep;
-  const delivered = cargoData.delivered;
+    useEffect(() => {
+      setUserOptions(1, // IT Destek userId
+        statusSteps.map((step, idx) => ({
+          id: idx,
+          label: `Kargo Durumu: ${step.status}`,
+          enabled:
+            cargoTrackingSiteVisited[cargoData.trackingNo] === true && idx === currentStep
+            // sadece siteye girildiyse ve doğru adımda aktif!
+        }))
+      );
+    }, [currentStep, cargoTrackingSiteVisited, cargoData.trackingNo]);
+
+    if (!cargoData) {
+      return <div style={{ padding: 40, color: "#fff", textAlign: "center" }}>
+        Takip edilen kargo kaydı bulunamadı veya henüz başlamadı.
+      </div>;
+    }
 
   // Progress bar
   const progress = Math.round(((currentStep + 1) / statusSteps.length) * 100);
