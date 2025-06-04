@@ -2,11 +2,12 @@
 import { useEffect, useRef } from "react";
 import { useMailContext } from "../Contexts/MailContext";
 import { useGameContext } from "../Contexts/GameContext";
-// Eğer statusSteps contextte yoksa, dışarıdan import et:
 import { statusSteps } from "../utils/cargoStatus.js";
+import { usePhoneContext } from "../Contexts/PhoneContext";
 
 const CargoMailNotifier = () => {
-  const { cargoTrackingList, setCargoTrackingList, seconds } = useGameContext();
+  const { setCargoTrackingList, seconds } = useGameContext();
+  const { addMessage } = usePhoneContext();
   const { sendMail } = useMailContext();
   const sentMapRef = useRef({}); // runtime flag, persist gerekirse context ekle
 
@@ -32,23 +33,35 @@ const CargoMailNotifier = () => {
 
       // Mail tetikleyici (her adımda sadece bir kez)
       const sentKey = `${item.trackingNo}_${currentStep}`;
-      if (statusSteps[currentStep].mail && !sentMapRef.current[sentKey]) {
-        const mailContent = statusSteps[currentStep].mail.content
-          ? statusSteps[currentStep].mail.content({
-              trackingNo: item.trackingNo,
-              shippingCompany: item.shippingCompany,
-              recipient: item.recipient || "Tugce Buse Ergün"
-            })
-          : undefined;
-        sendMail(statusSteps[currentStep].mail.type, {
-          from: `${item.shippingCompany} <info@${item.shippingCompany.toLowerCase()}.com>`,
-          title: statusSteps[currentStep].mail.title,
-          precontent: statusSteps[currentStep].mail.precontent,
-          trackingNo: item.trackingNo,
-          shippingCompany: item.shippingCompany,
-          recipient: item.recipient || "Tugce Buse Ergün",
-          content: mailContent
-        });
+      if ((statusSteps[currentStep].mail || statusSteps[currentStep].sms) && !sentMapRef.current[sentKey]) {
+        // Önce mail gönderimi (varsa)
+        if (statusSteps[currentStep].mail) {
+          const mailContent = statusSteps[currentStep].mail.content
+            ? statusSteps[currentStep].mail.content({
+                trackingNo: item.trackingNo,
+                shippingCompany: item.shippingCompany,
+                recipient: item.recipient || "Tugce Buse Ergün"
+              })
+            : undefined;
+          sendMail(statusSteps[currentStep].mail.type, {
+            from: `${item.shippingCompany} <info@${item.shippingCompany.toLowerCase()}.com>`,
+            title: statusSteps[currentStep].mail.title,
+            precontent: statusSteps[currentStep].mail.precontent,
+            trackingNo: item.trackingNo,
+            shippingCompany: item.shippingCompany,
+            recipient: item.recipient || "Tugce Buse Ergün",
+            content: mailContent
+          });
+        }
+        // Sonra sms gönderimi (varsa)
+        if (statusSteps[currentStep].sms) {
+          const smsText = statusSteps[currentStep].sms({
+            trackingNo: item.trackingNo,
+            shippingCompany: item.shippingCompany,
+            recipient: item.recipient || "Tugce Buse Ergün"
+          });
+          addMessage(item.shippingCompany || "TechDepo Kargo", smsText);
+        }
         sentMapRef.current[sentKey] = true;
       }
 

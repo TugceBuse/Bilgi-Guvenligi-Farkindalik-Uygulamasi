@@ -4,7 +4,30 @@ export const statusSteps = [
     status: "Kargo kaydı oluşturuldu.",
     desc: "Gönderiniz için kargo kaydı alındı.",
     icon: "📝",
-    durationSeconds: 60
+    durationSeconds: 60,
+    sms: ({ trackingNo, shippingCompany }) => {
+      const companyString = shippingCompany.replace(/\s/g, '');
+      const displayLink = `http://${companyString.toLowerCase()}.com/takip?trackingNo=${trackingNo}`;
+      return  <div>
+                  {trackingNo} takip numaralı kargonuzun kaydı <b>{shippingCompany}</b> kargo tarafından oluşturuldu. Takip için:
+                <a
+                  style={{ color: "#258cff", textDecoration: "underline" }}
+                  href="#"
+                  title={displayLink}
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent("open-browser-url", {
+                      detail: {
+                        url: displayLink,
+                        shippingCompany,
+                        trackingNo
+                      }
+                    }))
+                  }}
+                >
+                  {displayLink}
+                </a>
+              </div>;
+    }
   },
   {
     status: "Kargo şubeye ulaştı.",
@@ -53,6 +76,29 @@ export const statusSteps = [
           </ul> 
         </div>
       )
+    },
+     sms: ({ trackingNo, shippingCompany }) => {
+      const companyString = shippingCompany.replace(/\s/g, '');
+      const displayLink = `http://${companyString.toLowerCase()}.com/takip?trackingNo=${trackingNo}`;
+      return <div>
+                  {trackingNo} takip numaralı gönderiniz bugün {shippingCompany} ile dağıtıma çıkarılmıştır. Tahmini teslimat ve güncel durum için:
+                <a
+                  style={{ color: "#258cff", textDecoration: "underline" }}
+                  href="#"
+                  title={displayLink}
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent("open-browser-url", {
+                      detail: {
+                        url: displayLink,
+                        shippingCompany,
+                        trackingNo
+                      }
+                    }))
+                  }}
+                >
+                  {displayLink}
+                </a>
+              </div>;
     }
   },
   {
@@ -102,6 +148,8 @@ export const statusSteps = [
           </div>
         </div>
       )
-    }
+    },
+    sms: ({ trackingNo, shippingCompany }) =>
+      `${trackingNo} takip numaralı gönderiniz, ${shippingCompany} ile başarıyla teslim edilmiştir. İyi günlerde kullanın!`
   }
 ];

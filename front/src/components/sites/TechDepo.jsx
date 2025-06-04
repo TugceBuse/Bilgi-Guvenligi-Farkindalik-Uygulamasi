@@ -647,7 +647,7 @@ const TechDepo = ({scrollRef}) => {
       });
     }, invoiceDelay);
 
-    const fakeOrderNo = "FAKE-" + Math.floor(100000 + Math.random() * 900000);
+    const fakeOrderNo = "GFO" + Math.floor(100000 + Math.random() * 900000);
     setTimeout(() => {
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
