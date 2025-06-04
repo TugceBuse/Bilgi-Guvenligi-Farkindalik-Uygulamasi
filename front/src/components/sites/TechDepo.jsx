@@ -647,25 +647,26 @@ const TechDepo = ({scrollRef}) => {
       });
     }, invoiceDelay);
 
+    const fakeOrderNo = "FAKE-" + Math.floor(100000 + Math.random() * 900000);
     setTimeout(() => {
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: productString,
         invoiceNo: "TD-2025-" + Date.now(),
-        orderNo: newOrder.id,
+        orderNo: fakeOrderNo,
         price: newOrder.total,
         company: "TechDepo",
         tax: (newOrder.total * 0.20).toFixed(2),
         total: newOrder.total,
         from: "e-fatura@teehdeppo-billing.com",
         title: "E-Arşiv Fatura Belgeniz",
-        precontent: "Şüpheli fatura bildirimi",
+        precontent: "Fatura bildirimi",
         isFake: true,
         fakeOptions: {
           from: "e-fatura@teehdeppo-billing.com",
           title: "E-Arşiv Fatura Belgeniz",
           fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
-          precontent: "Şüpheli fatura bildirimi"
+          precontent: "Fatura bildirimi"
         }
       });
     }, invoiceDelay + 60000);
@@ -730,13 +731,13 @@ const TechDepo = ({scrollRef}) => {
           orderNo,
           from: "kargo@cargo-n0va.com",
           title: "Kargo Takip Bilgilendirme",
-          precontent: "Şüpheli gönderi uyarısı!",
+          precontent: "Kargonuz İlgili Satıcıdan Teslim Alındı!",
           isFake: true,
           fakeOptions: {
             from: "kargo@cargo-n0va.com",
             title: "Kargo Takip Bilgilendirme",
             link: "http://cargo-n0va-support.xyz/tracking",
-            precontent: "Şüpheli gönderi uyarısı!"
+            precontent: "Kargonuz İlgili Satıcıdan Teslim Alındı!"
           }
         });
       }, 60000);
