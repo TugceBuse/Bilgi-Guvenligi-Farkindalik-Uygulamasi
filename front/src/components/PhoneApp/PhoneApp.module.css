@@ -163,11 +163,25 @@
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    min-width: 0;
+  }
+
+  .messageContent {
+    font-size: 13px;
+    color: #f5f5f5;
+    margin: 6px 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-line;
   }
 
   .readStatus {
     font-size: 0.85em;
-    min-width: 75px;           /* sabitlik sağlar */
+    min-width: 75px;
+    max-width: 90px;
+    flex-shrink: 0;
     text-align: right;
     color: #60c166;
     background-color: #232b23;
@@ -175,6 +189,8 @@
     border-radius: 8px;
     border: 1px solid #3a4f3a;
     visibility: visible;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .unread .readStatus {
@@ -185,12 +201,6 @@
     font-weight: 600;
     font-size: 14px;
     color: #b14d40;
-  }
-  
-  .messageContent {
-    font-size: 13px;
-    color: #f5f5f5;
-    margin: 6px 0;
   }
   
   .messageTime {

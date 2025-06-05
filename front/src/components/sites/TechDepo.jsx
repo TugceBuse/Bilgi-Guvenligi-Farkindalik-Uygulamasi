@@ -3,6 +3,8 @@ import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext"; 
 import { useMailContext } from '../../Contexts/MailContext';
+import { useChatContext } from '../../Contexts/ChatContext';
+import { statusSteps } from "../../utils/cargoStatus";
 
 const cards = [
   {
@@ -231,6 +233,7 @@ const TechDepo = ({scrollRef}) => {
 
   // Context hook
   const { generateCodeMessage, lastCodes, clearCode, addMessage } = usePhoneContext();
+  const {addChatMessage, setUserOptions} = useChatContext();
 
   const [page, setPage] = useState("welcome");
   const [subPage, setSubPage] = useState("orders");
@@ -647,25 +650,26 @@ const TechDepo = ({scrollRef}) => {
       });
     }, invoiceDelay);
 
+    const fakeOrderNo = "GFO" + Math.floor(100000 + Math.random() * 900000);
     setTimeout(() => {
       sendMail("invoice", {
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: productString,
         invoiceNo: "TD-2025-" + Date.now(),
-        orderNo: newOrder.id,
+        orderNo: fakeOrderNo,
         price: newOrder.total,
         company: "TechDepo",
         tax: (newOrder.total * 0.20).toFixed(2),
         total: newOrder.total,
         from: "e-fatura@teehdeppo-billing.com",
         title: "E-Arşiv Fatura Belgeniz",
-        precontent: "Şüpheli fatura bildirimi",
+        precontent: "Fatura bildirimi",
         isFake: true,
         fakeOptions: {
           from: "e-fatura@teehdeppo-billing.com",
           title: "E-Arşiv Fatura Belgeniz",
           fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
-          precontent: "Şüpheli fatura bildirimi"
+          precontent: "Fatura bildirimi"
         }
       });
     }, invoiceDelay + 60000);
@@ -730,18 +734,36 @@ const TechDepo = ({scrollRef}) => {
           orderNo,
           from: "kargo@cargo-n0va.com",
           title: "Kargo Takip Bilgilendirme",
-          precontent: "Şüpheli gönderi uyarısı!",
+          precontent: "Kargonuz İlgili Satıcıdan Teslim Alındı!",
           isFake: true,
           fakeOptions: {
             from: "kargo@cargo-n0va.com",
             title: "Kargo Takip Bilgilendirme",
             link: "http://cargo-n0va-support.xyz/tracking",
-            precontent: "Şüpheli gönderi uyarısı!"
+            precontent: "Kargonuz İlgili Satıcıdan Teslim Alındı!"
           }
         });
       }, 60000);
     }, 120000);
-  };
+    
+    if (newOrder.items.some(item => item.id === 15)) {
+        // Yazıcı satın alımı sonrası...
+        addChatMessage(1, {
+          sender: 'them',
+          text: 'Satın aldığın yazıcının kargo durumunu bizimle paylaşır mısın?',
+          time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+        });
+
+        // Kargo state seçeneklerini ChatApp’e gönder (hepsi disabled, user kargo sitesine girene kadar!)
+        setUserOptions(1,
+          statusSteps.map((step, idx) => ({
+            id: idx,
+            label: `Kargo Durumu: ${step.status}`,
+            enabled: false
+          }))
+        );
+      }
+    };
 
 
   const handlePayment = () => {
