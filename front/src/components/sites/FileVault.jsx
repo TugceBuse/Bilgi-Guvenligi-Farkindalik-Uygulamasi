@@ -2,31 +2,54 @@ import React, { useState } from "react";
 import { useFileContext } from "../../Contexts/FileContext";
 import styles from "./FileVault.module.css";
 
-// Uzun bir token
+// Token kontrolü
 const VALID_TOKEN = "a92cf10a-27d4-476b-98f3-8d2fa98c7d84";
 
+// Dosya listesi, ContextFile anahtarlarıyla birebir eşleşen `key` eklenmiştir
 const importantFiles = [
-  { name: "kimlik.pdf", type: "pdf", size: "364 KB", description: "T.C. kimlik kartı taraması" },
-  { name: "banka_ekstresi.pdf", type: "pdf", size: "144 KB", description: "Banka ekstresi (Nisan 2025)" },
-  { name: "aile_fotografi.jpg", type: "jpg", size: "2.4 MB", description: "Aileyle özel fotoğraf" },
-  { name: "cv.pdf", type: "pdf", size: "242 KB", description: "Güncel özgeçmiş (CV)" },
-  { name: "tibbi_rapor.pdf", type: "pdf", size: "312 KB", description: "Tıbbi tahlil sonuçları" }
+  {
+    key: "kisiselkullanicibilgileri",
+    name: "Kişisel Kullanıcı Bilgileri.pdf",
+    type: "pdf",
+    size: "740 KB",
+    description: "T.C. kimlik kartı taraması"
+  },
+  {
+    key: "issozlesmesi",
+    name: "İş Sözleşmesi.pdf",
+    type: "pdf",
+    size: "1.2 MB",
+    description: "İşe giriş sözleşmesi"
+  },
+  {
+    key: "gizlilikpolitikasi",
+    name: "Gizlilik Politikası.pdf",
+    type: "pdf",
+    size: "860 KB",
+    description: "Kişisel verilerin gizliliği politikası"
+  },
+  {
+    key: "personelelkitabi",
+    name: "Personel El Kitabı.pdf",
+    type: "pdf",
+    size: "2.1 MB",
+    description: "Şirket içi yönergeler ve kurallar"
+  }
 ];
 
-// Her dosya için state tutmak gerek
+// Başlangıç durumu
 const initialDownloadState = {};
 importantFiles.forEach(f => {
   initialDownloadState[f.name] = { status: "idle", progress: 0, timer: null };
 });
 
 const FileVault = () => {
-  const { addFile } = useFileContext();
+  const { updateFileStatus } = useFileContext();
   const [entered, setEntered] = useState(false);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [downloadState, setDownloadState] = useState(initialDownloadState);
 
-  // Token girişi
   const handleEntry = (e) => {
     e.preventDefault();
     if (input.trim() === VALID_TOKEN) {
@@ -37,35 +60,34 @@ const FileVault = () => {
     }
   };
 
-  // İndirmeyi başlat
   const handleDownload = (file) => {
     if (downloadState[file.name].status !== "idle") return;
-    let progress = 0;
 
-    // MB dosya için: step küçük (yavaş), KB için step büyük (hızlı)
     const isMB = file.size.toLowerCase().includes("mb");
-    const size = parseFloat(file.size);
+    const rawSize = parseFloat(file.size);
+    const sizeInKB = isMB ? rawSize * 1024 : rawSize;
 
-    // Yeni formül: MB dosya daha çok adımda, KB daha az adımda bitsin!
-    const step = Math.max(1, Math.floor(isMB
-      ? 100 / (size * 18)    // MB için örneğin 1 MB = 18 adım, 2 MB = 36 adım
-      : 100 / (size / 14)    // KB için örneğin 140 KB = 10 adım, 280 KB = 20 adım
-    ));
+    const estimatedStepCount = Math.max(10, Math.floor(sizeInKB / 12));
+    const step = 100 / estimatedStepCount;
 
     const timer = setInterval(() => {
       setDownloadState(prev => {
-        const newProgress = Math.min(prev[file.name].progress + step, 100);
-        if (newProgress >= 100) {
+        let rawProgress = prev[file.name].progress + step;
+        const newProgress = Number(Math.min(rawProgress, 100).toFixed(0));
+        const isDone = newProgress >= 100;
+
+        if (isDone) {
           clearInterval(prev[file.name].timer);
-          // addFile({ ...file }); // Yüklenen dosyayı ekleyebilirsin
+          updateFileStatus(file.key, { available: true });
         }
+
         return {
           ...prev,
           [file.name]: {
             ...prev[file.name],
             progress: newProgress,
-            status: newProgress >= 100 ? "done" : "downloading",
-            timer: newProgress >= 100 ? null : prev[file.name].timer,
+            status: isDone ? "done" : "downloading",
+            timer: isDone ? null : prev[file.name].timer
           }
         };
       });
@@ -77,7 +99,7 @@ const FileVault = () => {
     }));
   };
 
-  // İndirmeyi iptal et
+
   const handleCancel = (file) => {
     if (downloadState[file.name].status !== "downloading") return;
     clearInterval(downloadState[file.name].timer);
@@ -87,7 +109,6 @@ const FileVault = () => {
     }));
   };
 
-  // Token girişi ekranı
   if (!entered) {
     return (
       <div className={styles.entryContainer}>
@@ -149,7 +170,6 @@ const FileVault = () => {
                   </div>
                 </div>
                 <div className={styles.actionRow}>
-                  {/* İndirme sırasında animasyon + iptal */}
                   {state.status === "downloading" && (
                     <div className={styles.downloadArea}>
                       <div className={styles.progressWrapper}>
@@ -166,16 +186,11 @@ const FileVault = () => {
                       </button>
                     </div>
                   )}
-                  {/* Hazırsa */}
                   {state.status === "idle" && (
-                    <button
-                      className={styles.downloadButton}
-                      onClick={() => handleDownload(file)}
-                    >
+                    <button className={styles.downloadButton} onClick={() => handleDownload(file)}>
                       İndir
                     </button>
                   )}
-                  {/* Bitti ise */}
                   {state.status === "done" && (
                     <button className={styles.downloadedButton} disabled>
                       İndirildi

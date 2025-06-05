@@ -106,14 +106,14 @@ const defaultFileSchema = {
             detectable: false,
             exeType: "taskappsetupf"
         },
-        officeDoc: { 
+        officedoc: { 
             available: true,
             quarantined: false, 
             clickable: true,
             infected: false, 
             type: "docx", 
             size: "75KB", 
-            location: "documents", 
+            location: "personal", 
             label: "İş Dosyası", 
             icon: "/icons/docx.png", 
             content: "/files/word1.docx" 
@@ -154,7 +154,7 @@ const defaultFileSchema = {
             icon: "/icons/image.png", 
             content: "/images/meeting.jpg"
         },
-        kisiselKullaniciBilgileri: {
+        kisiselkullanicibilgileri: {
             available: true,
             quarantined: false,
             clickable: true,
@@ -167,7 +167,7 @@ const defaultFileSchema = {
             icon: "/icons/pdf.png",
             content: "/files/Kişisel_Kullanıcı_Bilgileri.txt"
         },
-        isSozlesmesi: {
+        issozlesmesi: {
             available: true,
             quarantined: false,
             clickable: true,
@@ -180,7 +180,7 @@ const defaultFileSchema = {
             icon: "/icons/pdf.png",
             content: "/files/İş_Sözleşmesi.txt"
         },
-        gizlilikPolitikasi: {
+        gizlilikpolitikasi: {
             available: true,
             quarantined: false,
             clickable: true,
@@ -193,7 +193,7 @@ const defaultFileSchema = {
             icon: "/icons/pdf.png",
             content: "/files/Gizlilik_Politikası.txt"
         },
-        personelElKitabi: {
+        personelelkitabi: {
             available: true,
             quarantined: false,
             clickable: true,
