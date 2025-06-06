@@ -13,6 +13,7 @@ import { PhoneProvider } from '../Contexts/PhoneContext.js';
 import { TodoProvider } from '../Contexts/TodoContext.js';
 import CargoMailNotifier from '../components/CargoMailNotifier.jsx';
 import { ChatContextProvider } from '../Contexts/ChatContext.js';
+import { TimeProvider } from '../Contexts/TimeContext.js';
 
 const Game = () => {
   useEffect(() => {
@@ -26,9 +27,10 @@ const Game = () => {
   }, []);
 
   return (
-    <UIContextProvider>
-      <NotificationProvider>
-        <Notification /> 
+    <TimeProvider>
+      <UIContextProvider>
+        <NotificationProvider>
+          <Notification /> 
           <SecurityProvider>
             <VirusProvider>
               <FileContextProvider>
@@ -37,12 +39,12 @@ const Game = () => {
                     <PhoneProvider>
                       <GameContextProvider>
                         <TodoProvider>
-                          <CargoMailNotifier />
-                          <div className="game">
-                            <ChatContextProvider>
+                          <ChatContextProvider>
+                            <CargoMailNotifier />
+                            <div className="game">
                               <Desktop />
-                            </ChatContextProvider>
-                          </div>
+                            </div>
+                          </ChatContextProvider>
                         </TodoProvider>
                       </GameContextProvider>
                     </PhoneProvider>
@@ -51,8 +53,9 @@ const Game = () => {
               </FileContextProvider>
             </VirusProvider>
           </SecurityProvider>
-      </NotificationProvider>
-    </UIContextProvider>
+        </NotificationProvider>
+      </UIContextProvider>
+    </TimeProvider>
   );
 };
 

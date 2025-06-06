@@ -9,6 +9,7 @@ import { useFileContext } from '../../Contexts/FileContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
 import SystemSettings from '../SystemSettings/SystemSettings';
 import { useNotificationContext } from '../../Contexts/NotificationContext';
+import { useTimeContext } from '../../Contexts/TimeContext';
 
 const TaskBar = ({ windowConfig }) => {
   const [time, setTime] = useState(new Date());
@@ -28,6 +29,9 @@ const TaskBar = ({ windowConfig }) => {
   const navigate = useNavigate();
 
   // Contextler
+
+  const { gameDate } = useTimeContext();
+
   const {
     isWificonnected, setIsWificonnected,
     updating_antivirus
@@ -338,8 +342,12 @@ const TaskBar = ({ windowConfig }) => {
 
         <div className="taskbar-status">
           <div className="taskbar-clock">
-            <div className="clock">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</div>
-            <div>{time.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</div>
+            <div className="clock">
+              {gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+            </div>
+            <div>
+              {gameDate.toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+            </div>
           </div>
 
           <div className="taskbar-notifications" onClick={toggleNotifications}>

@@ -5,6 +5,7 @@ import { usePhoneContext } from "../../Contexts/PhoneContext";
 import { useMailContext } from '../../Contexts/MailContext';
 import { useChatContext } from '../../Contexts/ChatContext';
 import { statusSteps } from "../../utils/cargoStatus";
+import { useTimeContext } from "../../Contexts/TimeContext";
 
 const cards = [
   {
@@ -216,6 +217,7 @@ const cards = [
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders, cargoTrackingList, addCargoTracking, secondsRef } = useGameContext();
+  const { gameDate } = useTimeContext();
   const { sendMail } = useMailContext();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
@@ -600,7 +602,7 @@ const TechDepo = ({scrollRef}) => {
       items: cartItems,
       shipping: shippingCompany,
       total: grandTotal,
-      date: new Date().toLocaleString(),
+      date: gameDate.toLocaleTimeString("tr-TR"),
       status: 0, // 0: Sipariş Onaylandı, 1: Hazırlanıyor, 2: Kargoya Verildi, 3: Teslim Edildi
       trackingNo
     };
