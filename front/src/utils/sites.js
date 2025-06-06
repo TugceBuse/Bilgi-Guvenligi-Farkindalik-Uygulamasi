@@ -394,6 +394,28 @@ const sites = {
   isSponsored: false,
   seoScore: 10,
 },
+"http://chatbox.com": {
+  title: "ChatBox — Güvenli Mesajlaşma",
+  type: "component",
+  component: "ChatAppDownloadOfficial",
+  statement: "Anında indirin, güvenli iletişim dünyasına katılın! ChatBox: Gerçek zamanlı, hızlı ve şifreli mesajlaşma.",
+  searchKeys: [
+    "chatbox indir",
+    "ücretsiz chat uygulaması",
+    "güvenli sohbet",
+    "anlık mesajlaşma",
+    "chatbox download",
+    "whatsapp alternatifi",
+    "güvenli sohbet programı",
+    "hızlı sohbet uygulaması"
+  ],
+  clickable: true,
+  protocol: "http",
+  color: "#ff7846",
+  isSponsored: false,
+  seoScore: 90
+}
+
 
 };
 

@@ -6,33 +6,18 @@ import { statusSteps } from "../utils/cargoStatus.js";
 import { usePhoneContext } from "../Contexts/PhoneContext";
 
 const CargoMailNotifier = () => {
-  const { setCargoTrackingList, seconds } = useGameContext();
+  const { cargoTrackingList, seconds } = useGameContext(); // <-- sadece oku!
   const { addMessage } = usePhoneContext();
   const { sendMail } = useMailContext();
-  const sentMapRef = useRef({}); // runtime flag, persist gerekirse context ekle
+  const sentMapRef = useRef({});
 
- useEffect(() => {
-  setCargoTrackingList(prevList =>
-    prevList.map(item => {
-      if (item.startSeconds == null) return item;
+  useEffect(() => {
+    cargoTrackingList.forEach(item => {
+      if (item.startSeconds == null) return;
 
-      let elapsed = seconds - item.startSeconds;
-      let total = 0, currentStep = 0;
-      for (let i = 0; i < statusSteps.length; i++) {
-        total += statusSteps[i].durationSeconds || 0;
-        if (elapsed < total) {
-          currentStep = i;
-          break;
-        } else {
-          currentStep = i;
-        }
-      }
-
-      // delivered ve currentStep güncelle
-      const delivered = (currentStep === statusSteps.length - 1);
-
-      // Mail tetikleyici (her adımda sadece bir kez)
+      const currentStep = item.currentStep; // Hesaplamak yerine hazır kullan!
       const sentKey = `${item.trackingNo}_${currentStep}`;
+
       if ((statusSteps[currentStep].mail || statusSteps[currentStep].sms) && !sentMapRef.current[sentKey]) {
         // Önce mail gönderimi (varsa)
         if (statusSteps[currentStep].mail) {
@@ -53,35 +38,24 @@ const CargoMailNotifier = () => {
             content: mailContent
           });
         }
-        // Sonra sms gönderimi (varsa) — 1-2 dakika rastgele gecikmeli!
+        // Sonra sms gönderimi (varsa) — gecikmeli!
         if (statusSteps[currentStep].sms) {
           const smsText = statusSteps[currentStep].sms({
             trackingNo: item.trackingNo,
             shippingCompany: item.shippingCompany,
             recipient: item.recipient || "Tugce Buse Ergün"
           });
-          // Gecikmeli gönderim için 60-120 saniye arası
-          const delayMs = 60000
+          const delayMs = 60000;
           setTimeout(() => {
             addMessage(item.shippingCompany || "TechDepo Kargo", smsText);
           }, delayMs);
         }
         sentMapRef.current[sentKey] = true;
       }
+    });
+  }, [cargoTrackingList, statusSteps, sendMail, addMessage]);
 
-      // Güncellenmiş item'ı döndür!
-      return {
-        ...item,
-        currentStep,
-        delivered
-      };
-    })
-  );
-}, [seconds, statusSteps]);
-
-
-
-  return null; // Bu bileşen ekrana bir şey render etmez
+  return null;
 };
 
 export default CargoMailNotifier;
