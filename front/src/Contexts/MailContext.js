@@ -148,7 +148,6 @@ export const MailContextProvider = ({ children }) => {
   };
 
 
-
   return (
     <MailContext.Provider value={{
       initMail, setInitMail,
@@ -159,7 +158,7 @@ export const MailContextProvider = ({ children }) => {
       selectedMail, setSelectedMail,
       addMailToMailbox,
       sendMail,
-      markMailAsReadAndRemoveNotification, // export ettik
+      markMailAsReadAndRemoveNotification, 
     }}>
       {children}
     </MailContext.Provider>

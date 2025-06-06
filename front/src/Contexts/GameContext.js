@@ -268,7 +268,6 @@ export const GameContextProvider = ({ children }) => {
   }, [seconds, statusSteps]);
 
   
-
   return (
     <GameContext.Provider 
       value={{ 

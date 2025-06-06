@@ -715,7 +715,7 @@ const TechDepo = ({scrollRef}) => {
         isFake: false
       });
 
-      // Kargo takibi başlatıcı (context fonksiyonun varsa)
+      // Kargo takibi başlatıcı
       if (typeof addCargoTracking === "function") {
         addCargoTracking({
           trackingNo,
