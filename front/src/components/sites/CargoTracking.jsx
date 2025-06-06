@@ -20,7 +20,7 @@ function getUrlParams(url) {
 
 const CargoTracking = (props) => {
   const { cargoTrackingList, cargoTrackingSiteVisited, setCargoTrackingSiteVisited } = useGameContext();
-  const { setUserOptions } = useChatContext();
+  const { setUserOptions, cargoStepShared } = useChatContext();
 
   
   // URL veya props üzerinden takip verilerini bul
@@ -44,17 +44,18 @@ const CargoTracking = (props) => {
   }, [trackingNo]);
   
   const currentStep = cargoData.currentStep;
-    useEffect(() => {
-      setUserOptions(1, // IT Destek userId
-        statusSteps.map((step, idx) => ({
-          id: idx,
-          label: `Kargo Durumu: ${step.status}`,
-          enabled:
-            cargoTrackingSiteVisited[cargoData.trackingNo] === true && idx === currentStep
-            // sadece siteye girildiyse ve doğru adımda aktif!
-        }))
-      );
-    }, [currentStep, cargoTrackingSiteVisited, cargoData.trackingNo]);
+  useEffect(() => {
+    // Eğer bu kargo için "paylaşıldı" flag’i varsa, butonları asla ekleme!
+    if (!cargoData || cargoStepShared[trackingNo]) return;
+    setUserOptions(1, // IT Destek userId
+      statusSteps.map((step, idx) => ({
+        id: idx,
+        label: `Kargo Durumu: ${step.status}`,
+        enabled:
+          cargoTrackingSiteVisited[cargoData.trackingNo] === true && idx === currentStep
+      }))
+    );
+  }, [currentStep, cargoTrackingSiteVisited, cargoData?.trackingNo, cargoStepShared[trackingNo]]);
 
     if (!cargoData) {
       return <div style={{ padding: 40, color: "#fff", textAlign: "center" }}>
