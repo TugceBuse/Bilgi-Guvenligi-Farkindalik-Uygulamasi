@@ -913,6 +913,15 @@ const TechDepo = ({scrollRef}) => {
     }
   };
 
+  const formatExpiryDate = (value) => {
+  // Sadece rakamları al
+  let cleaned = value.replace(/\D/g, '');
+  if (cleaned.length === 0) return '';
+  if (cleaned.length <= 2) return cleaned;
+  if (cleaned.length <= 4) return cleaned.slice(0, 2) + '/' + cleaned.slice(2);
+  return cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4);
+};
+
   const handleEdit = () => {
     setTechInfo({
       ...TechInfo,
@@ -1347,9 +1356,10 @@ const TechDepo = ({scrollRef}) => {
                 <input
                   className={styles.paymentSectionInput}
                   type="text"
-                  placeholder="Ay / Yıl"
+                  placeholder="AA/YY"
+                  maxLength={5}
                   value={expiryDate}
-                  onChange={(e) => setExpiryDate(e.target.value)}
+                  onChange={(e) => setExpiryDate(formatExpiryDate(e.target.value))}
                 />
                 <input
                   className={styles.paymentSectionInput}
