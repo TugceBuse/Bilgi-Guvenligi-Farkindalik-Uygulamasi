@@ -52,7 +52,7 @@ const initialWindowConfig = {
     useComponent: useChatApp,
     location: 'desktop',
     clickable: true,
-    available: true,
+    available: false,
     requiresInternet: true
   },
   folder: {
