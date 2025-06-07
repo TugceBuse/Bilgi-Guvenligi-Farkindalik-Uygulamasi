@@ -66,9 +66,18 @@ const PdfViewer = ({ file, fileName, theme = "default" }) => {
   // Viewer seçilmemişse ve hiç viewer yoksa uyarı
   if (availableViewers.length === 0) {
     return (
-      <div className="pdf-viewer-warning">
-        <b>PDF görüntüleyici bulunamadı!</b><br />
-        Bir PDF görüntüleyici yüklemeden bu dosyayı görüntüleyemezsiniz.
+      <div className="pdf-viewer-window pdf-viewer-warning-window" ref={pdfRef}>
+        <div className="pdf-viewer-header">
+          <div className="pdf-viewer-title">
+            <img src="/icons/pdf.png" alt="PDF Icon" />
+            <span>PDF Görüntüleyici Eksik</span>
+          </div>
+          <button className="close-btn" onClick={handleClose}>×</button>
+        </div>
+        <div className="pdf-viewer-warning">
+          <b>PDF görüntüleyici bulunamadı!</b>
+          <span>Bir PDF görüntüleyici yüklemeden bu dosyayı görüntüleyemezsiniz.</span>
+        </div>
       </div>
     );
   }

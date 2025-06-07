@@ -1,9 +1,8 @@
 /* Ana PDF Viewer Penceresi */
 .pdf-viewer-window {
   position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 20%;
+  left: 30%;
   width: 670px;
   height: 470px;
   background: #202034;
@@ -17,6 +16,21 @@
   overflow: hidden;
 }
 
+/* --- Eklendi: UYARI PENCERESİ --- */
+.pdf-viewer-warning-window {
+  min-width: 400px;
+  max-width: 480px;
+  width: 420px;
+  height: auto;
+  min-height: 220px;
+  top: 35%;
+  left: 40%;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header ve diğer kısımlar aynı */
 .pdf-viewer-header {
   background: #232346;
   border-bottom: 1.5px solid #32325c;
@@ -75,6 +89,7 @@
   flex-direction: column;
 }
 
+/* --- Gelişmiş UYARI kutusu --- */
 .pdf-viewer-warning {
   flex: 1;
   display: flex;
@@ -83,20 +98,16 @@
   justify-content: center;
   background: linear-gradient(135deg, #1a1a2d 80%, #292932 100%);
   color: #ffe082;
-  font-size: 1.22em;
-  border: 2px solid #343c54;
-  border-radius: 18px;
-  box-shadow: 0 8px 32px 0 rgba(22,18,51,0.18);
+  font-size: 1.17em;
+  border-radius: 10px;
   text-align: center;
-  padding: 36px 18px;
-  margin: 20px;
-  gap: 18px;
+  padding: 32px 18px 24px 18px;
+  gap: 16px;
 }
 
 .pdf-viewer-warning b {
-  font-size: 1.15em;
+  font-size: 1.13em;
   color: #ffd54f;
-  margin-bottom: 7px;
 }
 
 /* ----- Viewer Seçim MODAL ----- */
@@ -171,7 +182,6 @@
   transition: none !important;
 }
 
-
 .pdf-viewer-select-btn span {
   display: block;
   font-size: 1em;
@@ -224,9 +234,6 @@
   background: #53223a;
 }
 
-
-
-
 /* DOCULITE TEMA ÖRNEĞİ */
 .pdf-viewer-window.theme-doculite {
     background: #1e1e1e;
@@ -243,7 +250,6 @@
 .pdf-viewer-window.theme-doculite .pdf-viewer-content {
     background: #241b1a;
 }
-
 
 /* QUICKPDF THEME - PDF Viewer için */
 .pdf-viewer-window.theme-quickpdf {
@@ -266,7 +272,6 @@
 .pdf-viewer-window.theme-quickpdf .pdf-viewer-content {
     background: linear-gradient(110deg, #2b1b26 80%, #3d2634 100%);
 }
-
 
 /* OPENLITE THEME - PDF Viewer için */
 .pdf-viewer-window.theme-openlite {

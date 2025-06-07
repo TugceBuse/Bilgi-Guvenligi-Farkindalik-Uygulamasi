@@ -16,7 +16,7 @@ export const MailContextProvider = ({ children }) => {
   const { addNotification, removeNotification } = useNotificationContext();
   const { openWindow } = useUIContext();
 
-  // 📧 Mail okundu işaretle + bildirimden kaldır
+  // Mail okundu işaretle + bildirimden kaldır
   const markMailAsReadAndRemoveNotification = (mailId) => {
     setInboxMails(prev =>
       prev.map(m =>
@@ -26,14 +26,14 @@ export const MailContextProvider = ({ children }) => {
     removeNotification(mailId);
   };
 
-  // Bildirimli yeni mail ekle (Sadece inbox!)
-  const notifyNewMail = (mail) => {
+  // Merkezi mail bildirimi oluşturucu
+  const createMailNotification = (mailObj) => {
     addNotification({
-      id: mail.id, // id = mail.id olmalı!
+      id: mailObj.id,
       type: "info",
       appType: "mail",
-      title: mail.title,
-      message: mail.precontent,
+      title: mailObj.title,
+      message: mailObj.precontent,
       icon: "/icons/mail.png",
       isPopup: true,
       isTaskbar: true,
@@ -43,31 +43,32 @@ export const MailContextProvider = ({ children }) => {
           label: "Oku",
           onClick: () => {
             openWindow('mailbox');
-            const inboxMail = inboxMails.find(m => m.id === mail.id);
-            setSelectedMail(inboxMail || mail); // fallback ile
-            markMailAsReadAndRemoveNotification(mail.id);
+            setSelectedMail(mailObj);
+            markMailAsReadAndRemoveNotification(mailObj.id);
           }
         },
         {
           label: "Bildirimden Kaldır",
-          onClick: () => removeNotification(mail.id)
+          onClick: () => removeNotification(mailObj.id)
         }
       ],
-      appData: { mailId: mail.id },
+      appData: { mailId: mailObj.id },
     });
   };
 
+  // Inbox ve spam’a mail ekleme
   const addMailToMailbox = (type, id) => {
     if (type === 'inbox') {
       const mailToAdd = initMail.find(mail => mail.id === id);
       if (mailToAdd && !mailToAdd.used) {
+        const updatedMail = { ...mailToAdd, used: true };
         setInitMail(prevMails =>
           prevMails.map(mail =>
-            mail.id === id ? { ...mail, used: true } : mail
+            mail.id === id ? updatedMail : mail
           )
         );
-        setInboxMails(prevMails => [...prevMails, { ...mailToAdd, used: true }]);
-        notifyNewMail({ ...mailToAdd, used: true }); // Sadece inbox için!
+        setInboxMails(prevMails => [...prevMails, updatedMail]);
+        createMailNotification(updatedMail); // Burada tek yerden notification!
       }
     } else if (type === 'spam') {
       const spamToAdd = initspamMails.find(mail => mail.id === id);
@@ -83,8 +84,9 @@ export const MailContextProvider = ({ children }) => {
     }
   };
   
+  // Dinamik mail gönder
   const sendMail = (type, params) => {
-    // Benzersiz mail id oluştur: Eğer params.mailId varsa onu kullan, yoksa Date.now() ile üret
+    // Benzersiz mail id oluştur
     const mailId = params.mailId || Date.now();
 
     let mailObj = null;
@@ -98,7 +100,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        content: params.content || createCargoMail({ ...params, mailId }), // id'yi fonksiyona da geçir
+        content: params.content || createCargoMail({ ...params, mailId }),
       };
     } else if (type === "invoice") {
       mailObj = {
@@ -109,7 +111,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        content: createInvoiceMail({ ...params, mailId }), // id'yi fonksiyona da geçir
+        content: createInvoiceMail({ ...params, mailId }),
       };
     }
     // ...diğer türler için de aynı şekilde ekle
@@ -117,36 +119,9 @@ export const MailContextProvider = ({ children }) => {
     if (mailObj) {
       setInitMail(prev => [...prev, mailObj]);
       setInboxMails(prev => [...prev, mailObj]);
-      // Bildirim oluştur
-      addNotification({
-        id: mailObj.id,
-        type: "info",
-        appType: "mail",
-        title: mailObj.title,
-        message: mailObj.precontent,
-        icon: "/icons/mail.png",
-        isPopup: true,
-        isTaskbar: true,
-        duration: 7000,
-        actions: [
-          {
-            label: "Oku",
-            onClick: () => {
-              openWindow('mailbox');
-              setSelectedMail(mailObj);
-              markMailAsReadAndRemoveNotification(mailObj.id);
-            }
-          },
-          {
-            label: "Bildirimden Kaldır",
-            onClick: () => removeNotification(mailObj.id)
-          }
-        ],
-        appData: { mailId: mailObj.id },
-      });
+      createMailNotification(mailObj); // Burada da aynı notification
     }
   };
-
 
   return (
     <MailContext.Provider value={{
