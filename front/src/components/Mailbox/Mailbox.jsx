@@ -222,9 +222,10 @@ const Mailbox = ({ closeHandler, style }) => {
                     <h3>{selectedMail?.title}</h3>
                     <h3>&lt;{selectedMail?.from}&gt;</h3>
                     {selectedMail?.sendTime && (
-                      <h4 style={{paddingTop:4, fontWeight:400, color:"rgb(192,192,192)"}}>
+                      <div className="mail-date">
+                        <span className="date-icon">🕒</span>
                         {formatDate(selectedMail.sendTime)}
-                      </h4>
+                      </div>
                     )}
                   </div>
                   <div className="mailbox-mailcontentheader-rightBox">
