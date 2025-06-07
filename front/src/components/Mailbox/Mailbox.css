@@ -280,6 +280,24 @@
     margin-top: 2%;
     margin-bottom: 5%;
   }
+
+  .mail-date {
+    color: #c0c0c0;            /* Açık gri, dikkat dağıtmayan */
+    font-size: 0.98rem;        /* Bir tık küçük */
+    font-weight: 400;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 5px;                  /* Simgeyle arada boşluk için */
+  }
+
+  .mail-date .date-icon {
+    font-size: 1.12em;
+    margin-right: 3px;
+    opacity: 0.7;              /* Simge çok patlamasın */
+  }
   
   .postbox-icon{
     width: 200px;

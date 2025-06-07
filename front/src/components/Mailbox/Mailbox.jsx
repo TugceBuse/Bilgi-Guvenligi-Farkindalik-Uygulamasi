@@ -74,6 +74,15 @@ const Mailbox = ({ closeHandler, style }) => {
     setInboxMails(prev => prev.map(m => ({ ...m, readMail: false })));
   };
 
+  function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleString('tr-TR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
   return (
     <div className="mailbox-window" style={style} ref={mailboxRef} data-window="mailbox" >
       <div className="mailbox-header">
@@ -212,7 +221,12 @@ const Mailbox = ({ closeHandler, style }) => {
                   <div style={{display:"flex", flexDirection:"column", gap:10}}>
                     <h3>{selectedMail?.title}</h3>
                     <h3>&lt;{selectedMail?.from}&gt;</h3>
-                    <h3 style={{paddingTop:8}}>Bugün</h3>
+                    {selectedMail?.sendTime && (
+                      <div className="mail-date">
+                        <span className="date-icon">🕒</span>
+                        {formatDate(selectedMail.sendTime)}
+                      </div>
+                    )}
                   </div>
                   <div className="mailbox-mailcontentheader-rightBox">
                     <img src="./icons/undo.png" alt="Undo Icon"/>

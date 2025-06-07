@@ -8,6 +8,7 @@ export const SecurityProvider = ({ children }) => {
     const [antivirusUpdated, setAntivirusUpdated] = useState(false);
     const [antivirusUpdating, setAntivirusUpdating] = useState(false);
     const [scanLogs, setScanLogs] = useState([]);
+    const [isWificonnected, setIsWificonnected] = useState(false);
     // Tam koruma: realtime ve güncel birlikteyse aktif olsun
     const [fullProtection, setFullProtection] = useState(false);
     // Sistem güvenliği
@@ -34,6 +35,7 @@ export const SecurityProvider = ({ children }) => {
             domainNetworkEnabled, setDomainNetworkEnabled,
             privateNetworkEnabled, setPrivateNetworkEnabled,
             publicNetworkEnabled, setPublicNetworkEnabled,
+            isWificonnected, setIsWificonnected
         }}>
             {children}
         </SecurityContext.Provider>

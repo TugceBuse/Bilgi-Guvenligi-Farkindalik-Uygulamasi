@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useMailContext } from './MailContext';
 import { statusSteps } from '../utils/cargoStatus';
 import { useTimeContext } from './TimeContext'; // 🆕
+import { useSecurityContext } from './SecurityContext';
 
 const GameContext = createContext();
 
@@ -10,7 +11,7 @@ export const GameContextProvider = ({ children }) => {
   const { seconds, secondsRef, gameStart, getRelativeDate } = useTimeContext();
 
   // --- Mevcut State'ler ---
-  const [isWificonnected, setIsWificonnected] = useState(false);
+  const {isWificonnected, setIsWificonnected} = useSecurityContext()
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [wifiMailSent, setWifiMailSent] = useState(false);
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
@@ -198,7 +199,6 @@ export const GameContextProvider = ({ children }) => {
 
   // Wifi bağlanınca ilk mailleri gönder (kendi fonksiyonunu bozmadan)
   useEffect(() => {
-    if (isWificonnected && !wifiMailSent) {
       addMailToMailbox('inbox', 5);
       addMailToMailbox('inbox', 1);
       addMailToMailbox('inbox', 2);
@@ -206,11 +206,9 @@ export const GameContextProvider = ({ children }) => {
       addMailToMailbox('spam', 32);
       const timeoutId = setTimeout(() => {
         addMailToMailbox('inbox', 3);
-      }, 30000);
-      setWifiMailSent(true);
+      }, 180000);
       return () => clearTimeout(timeoutId);
-    }
-  }, [isWificonnected, wifiMailSent]);
+  }, []);
 
   return (
     <GameContext.Provider
