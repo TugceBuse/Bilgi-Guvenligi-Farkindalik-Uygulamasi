@@ -1,7 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { mails as initialMails, sentMails as initialSentMails, spamMails as initialSpamMails, createCargoMail, createInvoiceMail, createDiscountMail  } from '../components/Mailbox/Mails';
 import { useNotificationContext } from './NotificationContext';
 import { useUIContext } from './UIContext';
+import { useTimeContext } from './TimeContext';
+import { useSecurityContext } from './SecurityContext';
 
 const MailContext = createContext();
 
@@ -12,9 +14,17 @@ export const MailContextProvider = ({ children }) => {
   const [initspamMails, setInitSpamMails] = useState(initialSpamMails);
   const [spamboxMails, setSpamboxMails] = useState(initialSpamMails.filter(mail => mail.used));
   const [selectedMail, setSelectedMail] = useState(null);
+  const [pendingMails, setPendingMails] = useState([]); // Wifi yokken biriken mailler
 
+  const { isWificonnected } = useSecurityContext();
+  const { gameDate } = useTimeContext();
   const { addNotification, removeNotification } = useNotificationContext();
   const { openWindow } = useUIContext();
+
+
+  const addMailToMailbox = (type, id) => {
+    setPendingMails(prev => [...prev, { type, id }]);
+  };
 
   // Mail okundu işaretle + bildirimden kaldır
   const markMailAsReadAndRemoveNotification = (mailId) => {
@@ -57,40 +67,45 @@ export const MailContextProvider = ({ children }) => {
   };
 
   // Inbox ve spam’a mail ekleme
-  const addMailToMailbox = (type, id) => {
-    if (type === 'inbox') {
-      const mailToAdd = initMail.find(mail => mail.id === id);
-      if (mailToAdd && !mailToAdd.used) {
-        const updatedMail = { ...mailToAdd, used: true };
-        setInitMail(prevMails =>
-          prevMails.map(mail =>
-            mail.id === id ? updatedMail : mail
-          )
-        );
-        setInboxMails(prevMails => [...prevMails, updatedMail]);
-        createMailNotification(updatedMail); // Burada tek yerden notification!
-      }
-    } else if (type === 'spam') {
-      const spamToAdd = initspamMails.find(mail => mail.id === id);
-      if (spamToAdd && !spamToAdd.used) {
-        setInitSpamMails(prevMails =>
-          prevMails.map(mail =>
-            mail.id === id ? { ...mail, used: true } : mail
-          )
-        );
-        setSpamboxMails(prevMails => [...prevMails, { ...spamToAdd, used: true }]);
-        // Spam için notification yok!
-      }
+  useEffect(() => {
+    if (isWificonnected && pendingMails.length > 0) {
+      pendingMails.forEach(mail => {
+        // Her mail stack'ten mailbox'a işlenir
+        if (mail.type === 'inbox') {
+          const mailToAdd = initMail.find(m => m.id === mail.id);
+          if (mailToAdd && !mailToAdd.used) {
+            const updatedMail = { ...mailToAdd, used: true };
+            setInitMail(prevMails =>
+              prevMails.map(m =>
+                m.id === mail.id ? updatedMail : m
+              )
+            );
+            setInboxMails(prevMails => [...prevMails, updatedMail]);
+            createMailNotification(updatedMail);
+          }
+        } else if (mail.type === 'spam') {
+          const spamToAdd = initspamMails.find(m => m.id === mail.id);
+          if (spamToAdd && !spamToAdd.used) {
+            const updatedSpam = { ...spamToAdd, used: true };
+            setInitSpamMails(prevMails =>
+              prevMails.map(m =>
+                m.id === mail.id ? updatedSpam : m
+              )
+            );
+            setSpamboxMails(prevMails => [...prevMails, updatedSpam]);
+            // Spam için notification çıkarılmıyor.
+          }
+        }
+      });
+      setPendingMails([]); // Stack boşaltılır
     }
-  };
+  }, [isWificonnected, pendingMails, initMail, initspamMails]);
   
   // Dinamik mail gönder
+  // Dinamik mail gönderimi (stack mantığı ile kullanılmalı)
   const sendMail = (type, params) => {
-    // Benzersiz mail id oluştur
     const mailId = params.mailId || Date.now();
-
     let mailObj = null;
-
     if (type === "cargo") {
       mailObj = {
         id: mailId,
@@ -114,12 +129,11 @@ export const MailContextProvider = ({ children }) => {
         content: createInvoiceMail({ ...params, mailId }),
       };
     }
-    // ...diğer türler için de aynı şekilde ekle
+    // ...diğer türler aynı şekilde eklenebilir
 
     if (mailObj) {
       setInitMail(prev => [...prev, mailObj]);
-      setInboxMails(prev => [...prev, mailObj]);
-      createMailNotification(mailObj); // Burada da aynı notification
+      addMailToMailbox('inbox', mailObj.id);
     }
   };
 
