@@ -21,7 +21,6 @@ export const MailContextProvider = ({ children }) => {
   const { addNotification, removeNotification } = useNotificationContext();
   const { openWindow } = useUIContext();
 
-
   const addMailToMailbox = (type, id) => {
     setPendingMails(prev => [...prev, { type, id }]);
   };
@@ -74,7 +73,11 @@ export const MailContextProvider = ({ children }) => {
         if (mail.type === 'inbox') {
           const mailToAdd = initMail.find(m => m.id === mail.id);
           if (mailToAdd && !mailToAdd.used) {
-            const updatedMail = { ...mailToAdd, used: true };
+            const updatedMail = { 
+              ...mailToAdd, 
+              used: true, 
+              sendTime: mailToAdd.sendTime || gameDate // <-- Güncellendi
+            };
             setInitMail(prevMails =>
               prevMails.map(m =>
                 m.id === mail.id ? updatedMail : m
@@ -86,7 +89,11 @@ export const MailContextProvider = ({ children }) => {
         } else if (mail.type === 'spam') {
           const spamToAdd = initspamMails.find(m => m.id === mail.id);
           if (spamToAdd && !spamToAdd.used) {
-            const updatedSpam = { ...spamToAdd, used: true };
+            const updatedSpam = { 
+              ...spamToAdd, 
+              used: true, 
+              sendTime: spamToAdd.sendTime || gameDate // <-- Güncellendi
+            };
             setInitSpamMails(prevMails =>
               prevMails.map(m =>
                 m.id === mail.id ? updatedSpam : m
@@ -99,7 +106,7 @@ export const MailContextProvider = ({ children }) => {
       });
       setPendingMails([]); // Stack boşaltılır
     }
-  }, [isWificonnected, pendingMails, initMail, initspamMails]);
+  }, [isWificonnected, pendingMails, initMail, initspamMails, gameDate]);
   
   // Dinamik mail gönder
   // Dinamik mail gönderimi (stack mantığı ile kullanılmalı)
@@ -115,6 +122,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
+        sendTime: gameDate, // <-- Güncellendi
         content: params.content || createCargoMail({ ...params, mailId }),
       };
     } else if (type === "invoice") {
@@ -126,6 +134,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
+        sendTime: gameDate, // <-- Güncellendi
         content: createInvoiceMail({ ...params, mailId }),
       };
     }

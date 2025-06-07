@@ -206,8 +206,7 @@ export const GameContextProvider = ({ children }) => {
       addMailToMailbox('spam', 32);
       const timeoutId = setTimeout(() => {
         addMailToMailbox('inbox', 3);
-      }, 30000);
-      setWifiMailSent(true);
+      }, 180000);
       return () => clearTimeout(timeoutId);
   }, []);
 
