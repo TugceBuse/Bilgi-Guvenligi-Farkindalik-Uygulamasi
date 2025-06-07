@@ -753,7 +753,7 @@ const TechDepo = ({scrollRef}) => {
         addChatMessage(1, {
           sender: 'them',
           text: 'Satın aldığın yazıcının kargo durumunu bizimle paylaşır mısın?',
-          time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
         });
 
         // Kargo state seçeneklerini ChatApp’e gönder (hepsi disabled, user kargo sitesine girene kadar!)

@@ -5,6 +5,7 @@ import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
 import { statusSteps } from '../../utils/cargoStatus';
 import { useChatContext } from '../../Contexts/ChatContext';
+import { useTimeContext } from '../../Contexts/TimeContext';
 
 export const useChatApp = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -19,6 +20,7 @@ const ChatApp = ({ closeHandler, style }) => {
   MakeDraggable(chatAppRef, `.${styles.chatHeader}`);
 
   const { cargoTrackingList, orders, cargoTrackingSiteVisited } = useGameContext();
+  const { gameDate } = useTimeContext();
   const printerOrder = orders.find(order =>
     order.items.some(item => item.id === 15)
   );
@@ -79,7 +81,7 @@ const ChatApp = ({ closeHandler, style }) => {
     addChatMessage(selectedUser.id, {
       sender: "me",
       text: option.label,
-      time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+      time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
       optionId: option.id
     });
 
@@ -95,7 +97,7 @@ const ChatApp = ({ closeHandler, style }) => {
         addChatMessage(selectedUser.id, {
           sender: "them",
           text: "Bilgi için teşekkürler, süreci takipteyiz.",
-          time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
         });
 
         setTimeout(() => {
@@ -113,7 +115,7 @@ const ChatApp = ({ closeHandler, style }) => {
         addChatMessage(selectedUser.id, {
           sender: "them",
           text: "Teşekkür ederim, şu anda başka bir isteğim yok. İyi günler!",
-          time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
         });
         setUserOptions(selectedUser.id, []);
       }, 1000);
@@ -125,7 +127,7 @@ const ChatApp = ({ closeHandler, style }) => {
         addChatMessage(selectedUser.id, {
           sender: "them",
           text: "Size de iyi çalışmalar!",
-          time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
         });
       }, 1000);
       setUserOptions(selectedUser.id, []);
