@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './ConnectionOverlay.module.css'; // veya .css uzantın neyse
 
 const ConnectionOverlay = ({ isConnected, children, top = 0 }) => (
-  <div style={{ position: "relative", height: "100%" }}>
+  <div style={{ position: "relative", flex: "1 1 0%", height: "100%", minHeight: 0 }}>
     {!isConnected && (
       <div
         className={styles.disabledOverlay}
