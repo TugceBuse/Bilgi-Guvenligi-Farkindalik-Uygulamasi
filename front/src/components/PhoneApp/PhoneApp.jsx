@@ -81,7 +81,15 @@ const PhoneApp = ({ closeHandler, style }) => {
                   {readMessages.includes(msg.id) ? "✅ Okundu" : "\u00A0"}
                 </span>
               </div>
-              <div className={styles.messageTime}>{msg.time}</div>
+              <div className={styles.messageTime}>
+                <span className="timeIcon" role="img" aria-label="Saat">🕒</span>
+                {msg.sendTime
+                  ? new Date(msg.sendTime).toLocaleString("tr-TR", {
+                      day: "2-digit", month: "2-digit", year: "2-digit",
+                      hour: "2-digit", minute: "2-digit"
+                    })
+                  : msg.time}
+              </div>
             </div>
           ))}
         </div>
