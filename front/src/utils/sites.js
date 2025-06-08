@@ -414,7 +414,28 @@ const sites = {
   color: "#ff7846",
   isSponsored: false,
   seoScore: 90
-}
+},
+"http://chatbox-app-download.net": {
+  title: "ChatBox (Phishing Site)",
+  type: "component",
+  component: "ChatAppDownloadPhish",
+  statement: "DİKKAT: Bu site gerçek ChatBox değildir. Bilgilerinizi veya cihazınızı riske atabilirsiniz.",
+  searchKeys: [
+    "chatbox indir",
+    "chatbox download",
+    "ücretsiz chat indir",
+    "güvenli sohbet indir",
+    "chatbox setup",
+    "anlık mesaj indir",
+    "bedava chat uygulaması"
+  ],
+  clickable: true,
+  protocol: "https",
+  color: "#6c213c",
+  isSponsored: false,
+  seoScore: 7
+},
+
 
 
 };
