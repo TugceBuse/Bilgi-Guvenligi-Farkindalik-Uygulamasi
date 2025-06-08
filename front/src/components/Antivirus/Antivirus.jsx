@@ -44,9 +44,12 @@ const Antivirus = ({ closeHandler, style }) => {
   const [updateProgress, setUpdateProgress] = useState(0);
   const updateIntervalRef = useRef(null); // İptal etmek için referans
 
+
+
   const { viruses, removeVirus,} = useVirusContext();
   
   const { 
+    isWificonnected,
     scanLogs, setScanLogs,
     realTimeProtection, setRealTimeProtection,
     antivirusUpdated, setAntivirusUpdated,
@@ -176,6 +179,14 @@ const Antivirus = ({ closeHandler, style }) => {
   useEffect(() => {
     return () => clearInterval(updateIntervalRef.current);
   }, []);
+  // İnternet bağlantısı kesildiğinde güncelleme iptal et
+  useEffect(() => {
+    if (antivirusUpdating && !isWificonnected) {
+      clearInterval(updateIntervalRef.current);
+      setAntivirusUpdating(false);
+      setUpdateProgress(0);
+    }
+  }, [isWificonnected, antivirusUpdating]);
 
   const handleCancelUpdate = () => {
     clearInterval(updateIntervalRef.current);
@@ -326,26 +337,38 @@ const Antivirus = ({ closeHandler, style }) => {
         {activeTab === "updates" && (
           <div className="antivirus-updates">
             <h3>🧬 Virüs Veritabanı Güncellemeleri</h3>
-
+            {!isWificonnected && (
+              <div className="antivirus-update-warning">
+                <img src="/icons/no-wifi.png" alt="No Wifi" style={{width: 32, verticalAlign: "middle", marginRight: 8}} />
+                <span>İnternet bağlantısı yok. Güncelleme yapılamaz.</span>
+              </div>
+            )}
             {!hasCheckedUpdates && (
-              <button onClick={checkForUpdates} disabled={checkingUpdates}>
+              <button
+                onClick={checkForUpdates}
+                disabled={checkingUpdates || !isWificonnected}
+                title={!isWificonnected ? "Güncelleme için internet gerekli" : ""}
+              >
                 {checkingUpdates ? "Güncellemeler kontrol ediliyor..." : "Güncellemeleri Kontrol Et"}
               </button>
             )}
-
             {hasCheckedUpdates && antivirusUpdated && (
               <p className="updated-msg">✅ Sisteminiz zaten güncel.</p>
             )}
-
             {hasCheckedUpdates && !antivirusUpdated && (
               <>
                 {!antivirusUpdating && (
                   <>
                     <p>🚨 Yeni bir güvenlik yükseltmesi bulundu.</p>
-                    <button onClick={handleUpdateDefinitions}>Güncellemeyi Yükle</button>
+                    <button
+                      onClick={handleUpdateDefinitions}
+                      disabled={!isWificonnected}
+                      title={!isWificonnected ? "Güncelleme için internet gerekli" : ""}
+                    >
+                      Güncellemeyi Yükle
+                    </button>
                   </>
                 )}
-
                 {antivirusUpdating && (
                   <>
                     <p>🔄 Güncelleme yükleniyor: %{updateProgress}</p>
@@ -359,6 +382,7 @@ const Antivirus = ({ closeHandler, style }) => {
             )}
           </div>
         )}
+
 
         {activeTab === "settings" && (
         <div className="antivirus-settings">
