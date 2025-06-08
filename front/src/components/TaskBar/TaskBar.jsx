@@ -6,13 +6,12 @@ import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import { useMailContext } from '../../Contexts/MailContext';
 import { useFileContext } from '../../Contexts/FileContext';
-import { useVirusContext } from '../../Contexts/VirusContext';
 import SystemSettings from '../SystemSettings/SystemSettings';
 import { useNotificationContext } from '../../Contexts/NotificationContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
+import { useSecurityContext } from '../../Contexts/SecurityContext';
 
 const TaskBar = ({ windowConfig }) => {
-  const [time, setTime] = useState(new Date());
   const [showStartMenu, setShowStartMenu] = useState(false);
   const startMenuRef = useRef(null);
   const [shuttingDown, setShuttingDown] = useState(false);
@@ -27,20 +26,15 @@ const TaskBar = ({ windowConfig }) => {
 
   const pass = "1234";
   const navigate = useNavigate();
-
-  // Contextler
-
   const { gameDate } = useTimeContext();
 
   const {
-    isWificonnected, setIsWificonnected,
-    updating_antivirus
+    isWificonnected, setIsWificonnected
   } = useGameContext();
 
-  const { antivirusUpdated, antivirusUpdating } = useVirusContext();
+  const { antivirusUpdated, antivirusUpdating } = useSecurityContext();
 
   const { setSelectedMail, inboxMails, setInboxMails } = useMailContext();
-
   const {
     openWindows, activeWindow, setActiveWindow,
     visibleWindows, setVisibleWindows,
@@ -50,9 +44,9 @@ const TaskBar = ({ windowConfig }) => {
 
   const { openedFiles, files } = useFileContext();
 
-  // Bildirim context
+  // NotificationContext'ten karma sıralı, okunmamış taskbar bildirimleri
   const {
-    notifications,
+    taskbarNotifications,
     removeNotification
   } = useNotificationContext();
 
@@ -168,7 +162,6 @@ const TaskBar = ({ windowConfig }) => {
       setShowWifiAlert(true);
       return;
     }
-    // id üzerinden inboxMails'den bul!
     const mailObj = inboxMails.find(mail => mail.id === notification.appData?.mailId);
     if (mailObj) {
       setSelectedMail(mailObj);
@@ -185,30 +178,35 @@ const TaskBar = ({ windowConfig }) => {
     setShowNotifications(false);
   };
 
-  // SMS bildirimi tıklandığında PhoneApp açma
-  const handleOpenSmsNotification = (notification) => {
+  // SMS/Phone bildirimi tıklandığında PhoneApp açma
+  const handleOpenPhoneNotification = (notification) => {
     openWindow('phoneapp');
     removeNotification(notification.id);
     setShowNotifications(false);
   };
 
-  // Bildirim türlerine göre ayır
-  const mailNotifications = notifications.filter(n => n.appType === "mail" && n.isTaskbar && !n.read);
-  const systemNotifications = notifications.filter(n => n.appType === "system" && n.isTaskbar && !n.read);
-  const phoneNotifications = notifications.filter(n => n.appType === "phone" && n.isTaskbar && !n.read);
+  // Sistem bildirimi tıklandığında (örneği)
+  const handleOpenSystemNotification = (notification) => {
+    // Buraya sistem bildirimi aksiyonu ekleyebilirsin.
+    removeNotification(notification.id);
+    setShowNotifications(false);
+  };
 
-  const totalNotificationCount = mailNotifications.length + systemNotifications.length + phoneNotifications.length;
+  // Bildirim türüne göre tıklama aksiyonu belirle
+  const handleNotificationClick = (notif) => {
+    if (notif.appType === "mail") {
+      handleOpenMailNotification(notif);
+    } else if (notif.appType === "phone") {
+      handleOpenPhoneNotification(notif);
+    } else {
+      handleOpenSystemNotification(notif);
+    }
+  };
 
   // Aktif pencereyi güncelle
   useEffect(() => {
     setActiveWindow(visibleWindows[visibleWindows.length - 1]);
   }, [visibleWindows, setActiveWindow]);
-
-  // Saat güncelle
-  useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Start menüsü dışında bir yere tıklanırsa kapat
   useEffect(() => {
@@ -276,6 +274,14 @@ const TaskBar = ({ windowConfig }) => {
     )
     : "WiFi Bağlı Değil";
 
+  // Bildirim sayacı (karma tüm okunmamış taskbar bildirimleri)
+  const totalNotificationCount = taskbarNotifications.length;
+
+  // === ANTİVİRÜS İKONUNA TIKLANINCA AÇILMASI ===
+  const handleAntivirusIconClick = () => {
+    openWindow('antivirus'); // ShieldSecureAntivirus veya antivirüs pencerenin windowConfig içinde tanımı 'antivirus' ise
+  };
+
   return (
     <div className="taskbar">
       {/* Başlat Menüsü */}
@@ -316,7 +322,7 @@ const TaskBar = ({ windowConfig }) => {
 
       <div className="taskbar-right">
         {windowConfig.antivirus?.available && (
-          <div className="taskbar-antivirus">
+          <div className="taskbar-antivirus" onClick={handleAntivirusIconClick} style={{ cursor: 'pointer' }}>
             {antivirusIcon}
             {antivirusTooltip}
           </div>
@@ -352,7 +358,6 @@ const TaskBar = ({ windowConfig }) => {
 
           <div className="taskbar-notifications" onClick={toggleNotifications}>
             <img src="/icons/notification_blck.png" alt="Notification Icon" />
-            {/* Toplam okunmamış bildirim sayısı */}
             {totalNotificationCount > 0 &&
               <span className="notification-count">
                 {totalNotificationCount}
@@ -363,46 +368,12 @@ const TaskBar = ({ windowConfig }) => {
                 <h3>Bildirimler</h3>
                 {(totalNotificationCount > 0) ? (
                   <>
-                    {/* Mail Bildirimleri */}
-                    {mailNotifications.map((notif) => (
+                    {taskbarNotifications.map((notif) => (
                       <div key={notif.id} className="notification-item"
-                        onClick={() => handleOpenMailNotification(notif)}>
+                        onClick={() => handleNotificationClick(notif)}>
                         <strong>
                           <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
-                            <img style={{ width: 30, height: 30 }} src={notif.icon || "/icons/mail.png"} alt="Mail Icon" />
-                            {notif.title}
-                            <p
-                              className='mail-notification-close'
-                              onClick={e => { e.stopPropagation(); removeNotification(notif.id); }}
-                            >x</p>
-                          </div>
-                        </strong>
-                        <p>{notif.message}</p>
-                      </div>
-                    ))}
-                    {/* Sistem Bildirimleri */}
-                    {systemNotifications.map((notif) => (
-                      <div key={notif.id} className="notification-item">
-                        <strong>
-                          <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
-                            <img style={{ width: 30, height: 30 }} src={notif.icon || "/icons/info.png"} alt="Info Icon" />
-                            {notif.title}
-                            <p
-                              className='mail-notification-close'
-                              onClick={e => { e.stopPropagation(); removeNotification(notif.id); }}
-                            >x</p>
-                          </div>
-                        </strong>
-                        <p>{notif.message}</p>
-                      </div>
-                    ))}
-                    {/* SMS/Phone Bildirimleri */}
-                    {phoneNotifications.map((notif) => (
-                      <div key={notif.id} className="notification-item"
-                        onClick={() => handleOpenSmsNotification(notif)}>
-                        <strong>
-                          <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
-                            <img style={{ width: 30, height: 30 }} src={notif.icon || "/PhoneApp/sms.png"} alt="SMS Icon" />
+                            <img style={{ width: 30, height: 30 }} src={notif.icon} alt="Notification Icon" />
                             {notif.title}
                             <p
                               className='mail-notification-close'

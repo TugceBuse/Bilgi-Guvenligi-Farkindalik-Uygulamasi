@@ -1,94 +1,116 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useNotificationContext } from './NotificationContext';
 import { useUIContext } from './UIContext';
+import { useTimeContext } from './TimeContext';
+import { useSecurityContext } from './SecurityContext';
 
 const PhoneContext = createContext();
 
 export const PhoneProvider = ({ children }) => {
-  // NotificationContext ve UIContext'i çek
-  const { addNotification, markAsRead} = useNotificationContext();
+  const { addNotification, markAsRead } = useNotificationContext();
   const { openWindow } = useUIContext();
+  const { isWificonnected } = useSecurityContext();
+  const { gameDate, getRelativeDate } = useTimeContext();
 
-  // İlk mesajlar için notification çıkmaz!
-  const [messages, setMessages] = useState([
+  // Statik mesajlar
+  const initialMessages = [
     {
       id: 1,
       sender: 'Migros',
       content: '🛒 Club Kart’a özel haftasonu fırsatları sizi bekliyor! Detaylar için uygulamamıza göz atın.',
-      time: '18:33',
+      sendTime: getRelativeDate({ days: -1, hours: 3, minutes: 15 })
     },
     {
       id: 2,
       sender: 'OrionTech',
       content: '🔧 Planlı bakım çalışması nedeniyle sistemlerimiz 22:00 - 01:00 arasında geçici olarak devre dışı olacaktır.',
-      time: '18:25',
+      sendTime: getRelativeDate({ days: -1, hours: 9, minutes: 0 })
     },
     {
       id: 3,
       sender: 'e-Devlet',
       content: '📌 Yeni bir e-Belge sisteminize yüklenmiştir. Detaylar için sisteme giriş yapınız.',
-      time: '18:13',
+      sendTime: getRelativeDate({ days: -5, hours: 2, minutes: 10 })
     },
     {
       id: 4,
       sender: 'HepsiMarket',
       content: '🎉 Bugün geçerli! Tüm alışverişlerde %30 indirim. Kodu kullan: INDIRIM30',
-      time: '18:02',
+      sendTime: getRelativeDate({ days: -5, hours: 6, minutes: 43 })
     },
     {
       id: 5,
       sender: 'PTT Kargo',
       content: 'Kargonuz dağıtıma çıkmıştır. Teslimat bugün 19:00’a kadar yapılacaktır.',
-      time: '18:10',
+      sendTime: getRelativeDate({ days: -6, hours: 1, minutes: 18 })
     },
-  ]);
+  ];
 
-  // Başlangıçta ilk mesajların hepsi okundu!
-  const [readMessages, setReadMessages] = useState(messages.map(m => m.id));
+  // Mesaj state’i
+  const [messages, setMessages] = useState(initialMessages);
+  // Okunanlar
+  const [readMessages, setReadMessages] = useState(initialMessages.map(m => m.id));
+  // Kod sms için
   const [lastCodes, setLastCodes] = useState({});
   const [codeTimers, setCodeTimers] = useState({});
+  // Sıra: internet gelene kadar eklenmeyen mesajlar
+  const [pendingMessages, setPendingMessages] = useState([]);
 
-  // 🔔 Yeni mesaj ekleme ve notification gösterme
+  // Sadece queue'ya ekler!
   const addMessage = (sender, content, showNotification = true) => {
-    const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    const newMessage = {
-      id: Date.now(),
-      sender,
-      content,
-      time,
-      read: false
-    };
-
-    setMessages(prev => [newMessage, ...prev]);
-
-    // Bildirim göstermek için doğrudan context fonksiyonlarını kullan
-    if (showNotification) {
-      addNotification({
-        id: newMessage.id,
-        appType: 'phone',
-        type: 'info',
-        title: sender,
-        message: content,
-        icon: '/PhoneApp/comment.png',
-        isPopup: true,
-        isTaskbar: true,
-        duration: 7000,
-        actions: [
-          {
-            label: 'Oku',
-            onClick: () => {
-              openWindow('phoneapp');
-              markMessageAsRead(newMessage.id);
-              markAsRead(newMessage.id);
-            }
-          }
-        ],
-        appData: { smsId: newMessage.id, sender }
-      });
-    }
+    setPendingMessages(prev => [
+      ...prev,
+      {
+        id: Date.now() + Math.floor(Math.random() * 10000),
+        sender,
+        content,
+        sendTime: gameDate,
+        showNotification
+      }
+    ]);
   };
+
+  // Wifi geldiğinde pending’i boşaltır
+  useEffect(() => {
+    if (isWificonnected && pendingMessages.length > 0) {
+      pendingMessages.forEach(({ id, sender, content, sendTime, showNotification }) => {
+        const newMessage = {
+          id,
+          sender,
+          content,
+          sendTime,
+          read: false
+        };
+        setMessages(prev => [newMessage, ...prev]);
+
+        if (showNotification) {
+          addNotification({
+            id: newMessage.id,
+            appType: 'phone',
+            type: 'info',
+            title: sender,
+            message: content,
+            icon: '/PhoneApp/comment.png',
+            isPopup: true,
+            isTaskbar: true,
+            duration: 7000,
+            actions: [
+              {
+                label: 'Oku',
+                onClick: () => {
+                  openWindow('phoneapp');
+                  markMessageAsRead(newMessage.id);
+                  markAsRead(newMessage.id);
+                }
+              }
+            ],
+            appData: { smsId: newMessage.id, sender }
+          });
+        }
+      });
+      setPendingMessages([]); // queue'yu temizle
+    }
+  }, [isWificonnected, pendingMessages, addNotification, openWindow, markAsRead]);
 
   const markMessageAsRead = (id) => {
     if (!readMessages.includes(id)) {
@@ -101,9 +123,7 @@ export const PhoneProvider = ({ children }) => {
   };
 
   // KOD SMSİ üretme fonksiyonları
-  const generate6DigitCode = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  };
+  const generate6DigitCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
   const generateCodeMessage = (senderName, key) => {
     const code = generate6DigitCode();
@@ -112,10 +132,7 @@ export const PhoneProvider = ({ children }) => {
 
     setLastCodes(prev => ({ ...prev, [key]: code }));
 
-    // Mevcut timer varsa temizle
     if (codeTimers[key]) clearTimeout(codeTimers[key]);
-
-    // 2 dakika sonra kodu sil
     const timerId = setTimeout(() => {
       setLastCodes(prev => {
         const updated = { ...prev };
@@ -123,7 +140,6 @@ export const PhoneProvider = ({ children }) => {
         return updated;
       });
     }, 2 * 60 * 1000);
-
     setCodeTimers(prev => ({ ...prev, [key]: timerId }));
   };
 
@@ -146,6 +162,7 @@ export const PhoneProvider = ({ children }) => {
         readMessages,
         markMessageAsRead,
         getUnreadCount,
+        pendingMessages, // istersen kullanabilirsin
       }}
     >
       {children}

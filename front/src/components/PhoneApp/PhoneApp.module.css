@@ -132,13 +132,16 @@
   }
   
   .messageItem {
-  background-color: #2b2b2b;
-  border: 2px solid transparent; /* varsayılan border, şeffaf */
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-  padding: 10px 12px;
-  margin-bottom: 10px;
-  transition: all 0.2s ease;
+    max-width: 100%;
+    width: 100%;
+    background-color: #2b2b2b;
+    border: 2px solid transparent; /* varsayılan border, şeffaf */
+    border-radius: 8px;
+    word-break: break-word;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    padding: 8px 8px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
   }
 
   /* 🔴 Okunmamış (tıklanmamış) mesajlar */
@@ -168,13 +171,22 @@
 
   .messageContent {
     font-size: 13px;
+    line-height: 1.45;
     color: #f5f5f5;
-    margin: 6px 0;
+    margin: 4px 0;
     flex: 1 1 auto;
+    max-width: 100%;
     min-width: 0;
-    overflow-wrap: break-word;
-    word-break: break-word;
     white-space: pre-line;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .messageContent a {
+    word-break: break-all;
+    font-size: 12px;
+    display: inline-block;
+    max-width: 95%;
   }
 
   .readStatus {
@@ -202,11 +214,29 @@
     font-size: 14px;
     color: #b14d40;
   }
+
+  .messageTimeRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    gap: 8px;
+  }
   
   .messageTime {
-    font-size: 12px;
-    color: #aaa;
-    text-align: right;
+    color: #b0b0b0;
+    font-size: 0.96rem;
+    font-weight: 400;
+    margin-top: 2px;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .messageTime .timeIcon {
+    font-size: 1.05em;
+    opacity: 0.6;
   }
 
 .phoneStatusBar {
