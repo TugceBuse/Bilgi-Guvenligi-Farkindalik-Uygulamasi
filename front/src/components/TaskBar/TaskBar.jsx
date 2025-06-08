@@ -6,10 +6,10 @@ import Alert from "../Notifications/Alert";
 import "./Taskbar.css";
 import { useMailContext } from '../../Contexts/MailContext';
 import { useFileContext } from '../../Contexts/FileContext';
-import { useVirusContext } from '../../Contexts/VirusContext';
 import SystemSettings from '../SystemSettings/SystemSettings';
 import { useNotificationContext } from '../../Contexts/NotificationContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
+import { useSecurityContext } from '../../Contexts/SecurityContext';
 
 const TaskBar = ({ windowConfig }) => {
   const [showStartMenu, setShowStartMenu] = useState(false);
@@ -32,7 +32,7 @@ const TaskBar = ({ windowConfig }) => {
     isWificonnected, setIsWificonnected
   } = useGameContext();
 
-  const { antivirusUpdated, antivirusUpdating } = useVirusContext();
+  const { antivirusUpdated, antivirusUpdating } = useSecurityContext();
 
   const { setSelectedMail, inboxMails, setInboxMails } = useMailContext();
   const {
@@ -277,6 +277,11 @@ const TaskBar = ({ windowConfig }) => {
   // Bildirim sayacı (karma tüm okunmamış taskbar bildirimleri)
   const totalNotificationCount = taskbarNotifications.length;
 
+  // === ANTİVİRÜS İKONUNA TIKLANINCA AÇILMASI ===
+  const handleAntivirusIconClick = () => {
+    openWindow('antivirus'); // ShieldSecureAntivirus veya antivirüs pencerenin windowConfig içinde tanımı 'antivirus' ise
+  };
+
   return (
     <div className="taskbar">
       {/* Başlat Menüsü */}
@@ -317,7 +322,7 @@ const TaskBar = ({ windowConfig }) => {
 
       <div className="taskbar-right">
         {windowConfig.antivirus?.available && (
-          <div className="taskbar-antivirus">
+          <div className="taskbar-antivirus" onClick={handleAntivirusIconClick} style={{ cursor: 'pointer' }}>
             {antivirusIcon}
             {antivirusTooltip}
           </div>
