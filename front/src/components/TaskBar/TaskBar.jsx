@@ -11,7 +11,7 @@ import { useNotificationContext } from '../../Contexts/NotificationContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
 import { useSecurityContext } from '../../Contexts/SecurityContext';
 
-const TaskBar = ({ windowConfig }) => {
+const TaskBar = ({ windowConfig, hacked, onFormat }) => {
   const [showStartMenu, setShowStartMenu] = useState(false);
   const startMenuRef = useRef(null);
   const [shuttingDown, setShuttingDown] = useState(false);
@@ -292,24 +292,43 @@ const TaskBar = ({ windowConfig }) => {
         <div className="start-menu-window" ref={startMenuRef}>
           <h2>Başlat Menüsü</h2>
           <div className="start-menu-container">
-            <div className="start-menu-item">
-              <img src="/icons/synchronize.png" alt="Synchronize Icon" />
-              <p style={{ marginLeft: -12 }}>Yedekle</p>
-            </div>
-            <div className="start-menu-item"
-              onClick={() => setShowSystemSettings(true)}
-            >
-              <img src="/icons/system-settings.png" alt="Firewall Icon" />
-              <p>Sistem Ayarları</p>
-            </div>
+            {!hacked && (
+              <>
+                <div className="start-menu-item">
+                  <img src="/icons/synchronize.png" alt="Synchronize Icon" />
+                  <p style={{ marginLeft: -12 }}>Yedekle</p>
+                </div>
+                <div className="start-menu-item"
+                  onClick={() => setShowSystemSettings(true)}
+                >
+                  <img src="/icons/system-settings.png" alt="Firewall Icon" />
+                  <p>Sistem Ayarları</p>
+                </div>
+              </>
+            )}
+            {/* HACKED ise sadece formatla aktif */}
+            {hacked && (
+              <div
+                className="format-button"
+                onClick={() => {
+                  setShowStartMenu(false);
+                  setShowSystemSettings(false);
+                  if (typeof onFormat === "function") onFormat();
+                }}
+              >
+                <img src="/reset.png" alt="Format Icon" />
+              </div>
+            )}
           </div>
           {showSystemSettings && (
             <SystemSettings onClose={() => setShowSystemSettings(false)} />
           )}
-          <div className="shutdown-button" onClick={handleShutdownClick}>
-            <img src="/icons/switch.png" alt="Switch Icon" />
-            Bilgisayarı Kapat
-          </div>
+          {!hacked && (
+            <div className="shutdown-button" onClick={handleShutdownClick}>
+              <img src="/icons/switch.png" alt="Switch Icon" />
+              Bilgisayarı Kapat
+            </div>
+          )}
           {shuttingDown && (
             <div className="shutdown-screen">
               <p className="shutdown-text">Kapanıyor...</p>
@@ -318,17 +337,40 @@ const TaskBar = ({ windowConfig }) => {
         </div>
       )}
 
-      <div className="taskbar-icons">{renderIcons()}</div>
+      <div className="taskbar-icons">
+        {renderIcons().map((icon, i) => {
+          if (!React.isValidElement(icon)) return null;
+          // Mevcut className'i al, üzerine "hacked-disabled" ekle
+          const newClass = hacked
+            ? ((icon.props.className || "") + " hacked-disabled").trim()
+            : icon.props.className || "";
+          return React.cloneElement(icon, {
+            className: newClass,
+            style: hacked
+              ? { ...(icon.props.style || {}), pointerEvents: "none", opacity: 0.4 }
+              : icon.props.style || {},
+            key: i,
+          });
+        })}
+      </div>
 
       <div className="taskbar-right">
         {windowConfig.antivirus?.available && (
-          <div className="taskbar-antivirus" onClick={handleAntivirusIconClick} style={{ cursor: 'pointer' }}>
+          <div
+            className="taskbar-antivirus"
+            onClick={handleAntivirusIconClick}
+            style={hacked ? { pointerEvents: "none", opacity: 0.4 } : { cursor: 'pointer' }}
+          >
             {antivirusIcon}
             {antivirusTooltip}
           </div>
         )}
 
-        <div className="taskbar-wifi" onClick={toggleWifiList}>
+        <div
+          className="taskbar-wifi"
+          onClick={toggleWifiList}
+          style={hacked ? { pointerEvents: "none", opacity: 0.4 } : {}}
+        >
           {wifiIcon}
           <div className="tooltip">
             {wifiTooltip}
@@ -346,7 +388,10 @@ const TaskBar = ({ windowConfig }) => {
           )}
         </div>
 
-        <div className="taskbar-status">
+        <div
+          className="taskbar-status"
+          style={hacked ? { pointerEvents: "none", opacity: 0.4 } : {}}
+        >
           <div className="taskbar-clock">
             <div className="clock">
               {gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
@@ -371,17 +416,7 @@ const TaskBar = ({ windowConfig }) => {
                     {taskbarNotifications.map((notif) => (
                       <div key={notif.id} className="notification-item"
                         onClick={() => handleNotificationClick(notif)}>
-                        <strong>
-                          <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
-                            <img style={{ width: 30, height: 30 }} src={notif.icon} alt="Notification Icon" />
-                            {notif.title}
-                            <p
-                              className='mail-notification-close'
-                              onClick={e => { e.stopPropagation(); removeNotification(notif.id); }}
-                            >x</p>
-                          </div>
-                        </strong>
-                        <p>{notif.message}</p>
+                        {/* ... */}
                       </div>
                     ))}
                   </>
@@ -395,6 +430,7 @@ const TaskBar = ({ windowConfig }) => {
             )}
           </div>
         </div>
+
       </div>
 
       {showPasswordPrompt && (

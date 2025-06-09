@@ -13,11 +13,12 @@ import { useVirusContext } from '../../Contexts/VirusContext';
 import TaskApp from '../TaskApp/TaskApp';
 import PopupThrower from '../PopupThrower/PopupThrower';
 
-const Desktop = () => {
+
+const Desktop = ({ hacked, onFormat }) => {
   const { isWificonnected, isransomware } = useGameContext();
   const { openWindows, visibleWindows, handleIconClick, zindex, setZindex, windowProps } = useUIContext();
   const { openedFiles, closeFile, files } = useFileContext();
-  const { viruses } = useVirusContext();
+  const { addVirus, viruses, removeVirus } = useVirusContext();
 
   const [showAlert, setShowAlert] = useState(false);
 
@@ -25,6 +26,31 @@ const Desktop = () => {
 
   // Yeni pencere konumlarını tutacak state
   const [windowPositions, setWindowPositions] = useState({});
+
+  useEffect(() => {
+    if (!hacked) return;
+    const audio = new Audio("/fan.mp3");
+    audio.loop = true;
+    audio.volume = 0.6;
+    audio.play().catch(() => {});
+    document.body.classList.add("hacked-cursor");
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+      document.body.classList.remove("hacked-cursor");
+    };
+  }, [hacked]);
+
+  // Hacked mode'da popup ve overlay ekle
+  useEffect(() => {
+    if (!hacked) return;
+    // Adware virüsünü context’e ekle
+    addVirus({ type: "adware" });
+    return () => {
+      // Hacked moddan çıkınca adware’ı kaldırabilirsin
+      removeVirus(viruses.find(v => v.type === "adware")?.id);
+    };
+  }, [hacked]);
 
   // handlers nesnesini dinamik oluşturma
   const handlers = Object.keys(windowConfig).reduce((acc, key) => {
@@ -87,7 +113,7 @@ const Desktop = () => {
 
 
   return (
-    <div className="desktop">
+    <div  className={`desktop${hacked ? " hacked-wallpaper" : ""}`}>
       <div className="desktop-icons">
 
         {/* 🪟 Pencere ikonları */}
@@ -152,7 +178,42 @@ const Desktop = () => {
         })}
       </TodoProvider>
 
-      <TaskBar windowConfig={windowConfig} />
+      {hacked && (
+        <div>
+          <div
+            className="hackedOverlay"
+            onClick={e => {
+              // Start menu ve format butonu dışında engelle
+              if (
+                !e.target.closest('.start-menu-window') &&
+                !e.target.closest('.format-button')
+              ) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }}
+            onMouseDown={e => e.preventDefault()}
+            onMouseMove={e => e.preventDefault()}
+            tabIndex={-1}
+          >       
+          </div>
+          <div className="hacked-overlay-text">
+              <svg className="skull-icon" width="72" height="72" viewBox="0 0 72 72" fill="none">
+              <ellipse cx="36" cy="36" rx="34" ry="32" fill="#000" opacity="0.3"/>
+              <circle cx="36" cy="36" r="26" stroke="#12FF33" strokeWidth="4" fill="none"/>
+              <ellipse cx="26" cy="36" rx="4.5" ry="7" fill="#12FF33"/>
+              <ellipse cx="46" cy="36" rx="4.5" ry="7" fill="#12FF33"/>
+              <ellipse cx="36" cy="54" rx="8" ry="5" fill="#12FF33"/>
+              <path d="M24 58 Q36 70 48 58" stroke="#12FF33" strokeWidth="3" fill="none"/>
+              <ellipse cx="36" cy="48" rx="2" ry="1" fill="#111"/>
+            </svg>
+            <span className="hacked-main-text">HACKED</span>
+            <span className="hacked-sub-text">BY PHISHVILLE</span>
+          </div>
+        </div>
+      )}
+
+      <TaskBar windowConfig={windowConfig} hacked={hacked} onFormat={onFormat}/>
 
       <Alert
         show={showAlert}

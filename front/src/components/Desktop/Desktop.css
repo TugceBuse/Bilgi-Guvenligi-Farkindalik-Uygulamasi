@@ -23,6 +23,17 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+.desktop.hacked-wallpaper {
+  height: 100vh;
+  width: 100vw;
+  background-image: none;
+  background-color: #000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 0.6s;
+  animation: hackwallpaper-blink 1.5s steps(2) infinite;
+}
 
 /* Masaüstü simgeleri */
 .desktop-icons {
@@ -57,4 +68,69 @@ body {
 .icon img {
   width: 48px;
   height: 48px;
+}
+
+
+/* Hacklenmiş DESKTOP */
+.hackedOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50px; /* tırnaksız, px ile! */
+  z-index: 99999;
+  background: rgba(20,0,40,0.08); /* tırnaksız */
+  pointer-events: all;
+  cursor: progress;
+}
+.hacked-overlay-text {
+  position: fixed;
+  z-index: 9000;
+  left: 50%;
+  top: 12%;
+  transform: translate(-50%, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.skull-icon {
+  margin-bottom: -18px;
+  filter: drop-shadow(0 0 24px #0f0) brightness(2);
+  animation: skullglow 1.4s infinite alternate;
+}
+
+@keyframes skullglow {
+  from { filter: drop-shadow(0 0 12px #0f0) brightness(1.5);}
+  to   { filter: drop-shadow(0 0 32px #00ff97) brightness(2.1);}
+}
+
+.hacked-main-text {
+  font-size: 4rem;
+  font-family: 'Share Tech Mono', 'Consolas', 'monospace';
+  color: #00ff97;
+  text-shadow: 0 0 38px #00ff97, 0 0 18px #000, 0 0 1px #222;
+  letter-spacing: 4px;
+  margin-bottom: 0.2em;
+  filter: brightness(1.35);
+  animation: textglitch 0.9s infinite alternate;
+}
+
+.hacked-sub-text {
+  font-size: 1.9rem;
+  color: #e11;
+  font-family: 'Share Tech Mono', 'Consolas', 'monospace';
+  text-shadow: 0 0 9px #000, 0 0 6px #e11;
+  letter-spacing: 2px;
+  margin-top: -8px;
+  filter: brightness(1.2);
+  animation: textglitch 1.4s infinite alternate-reverse;
+}
+
+@keyframes textglitch {
+  0% { text-shadow: 0 0 8px #fff, 0 0 18px #00ff97;}
+  50% { text-shadow: 0 0 28px #00ff97, 0 0 8px #111;}
+  100% { text-shadow: 0 0 12px #ff2222, 0 0 9px #0f0;}
 }

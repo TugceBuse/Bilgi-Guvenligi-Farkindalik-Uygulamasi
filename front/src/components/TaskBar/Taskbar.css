@@ -8,12 +8,17 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 888;
+  z-index: 100002;
 }
 
 .taskbar-icons {
   display: inline-flex;
   align-items: center;
+}
+.taskbar-icons img.hacked-disabled {
+  pointer-events: none !important;
+  opacity: 0.4 !important;
+  filter: grayscale(0.6);
 }
 
 .taskbar-icons img {
@@ -229,9 +234,6 @@
   cursor: pointer;
 }
 
-.taskbar-notifications img:hover{
-  
-}
 
 .notifications-window {
   position: absolute;
@@ -355,6 +357,7 @@
 }
 
 .start-menu-window {
+  z-index: 100010 !important;
   position: fixed;
   bottom: 50px;
   left: 10px;
@@ -366,7 +369,16 @@
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   padding: 10px;
-  z-index: 1000;
+}
+.format-button {
+  z-index: 100011 !important;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin-top: 10px;
+  justify-content: center;
+  display: flex;
+  cursor: pointer;
 }
 
 .start-menu-window h2 {
