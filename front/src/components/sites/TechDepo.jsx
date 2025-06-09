@@ -555,7 +555,7 @@ const TechDepo = ({scrollRef}) => {
     }
   }, [errors]);
 
-   // Yeni: Sipariş ve mail ilerleme mantığı burada olacak!
+   // Sipariş ve mail ilerleme mantığı 
   useEffect(() => {
     setOrders(prevOrders =>
       prevOrders.map(order => {
