@@ -14,14 +14,7 @@ import { TodoProvider } from '../Contexts/TodoContext.js';
 import CargoMailNotifier from '../components/CargoMailNotifier.jsx';
 import { ChatContextProvider } from '../Contexts/ChatContext.js';
 import { TimeProvider } from '../Contexts/TimeContext.js';
-
-  const IntroScreen = ({ onFinish }) => (
-    <div className="intro-screen">
-      {/* Intro içeriğin */}
-      <h1>Simülasyona Hoşgeldin!</h1>
-      <button onClick={onFinish}>Başlat</button>
-    </div>
-  );
+import IntroScreen from '../components/IntroScreen/IntroScreen.jsx';
 
   const MailLoginScreen = ({ onSuccess }) => (
     <div className="mail-login">
@@ -41,7 +34,7 @@ import { TimeProvider } from '../Contexts/TimeContext.js';
       };
   }, []);
   const [phase, setPhase] = useState("intro");
-  
+
   return (
     <TimeProvider>
       <UIContextProvider>
