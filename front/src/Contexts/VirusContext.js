@@ -31,12 +31,14 @@ export const VirusProvider = ({ children }) => {
     const removeVirus = (virusID) => {
         setViruses(viruses.filter(v => v.id !== virusID));
     };
+    const removeAllViruses = () => setViruses([]);
 
     return (
         <VirusContext.Provider value={{
             viruses,
             addVirus,
-            removeVirus
+            removeVirus,
+            removeAllViruses
         }}>
             {children}
         </VirusContext.Provider>

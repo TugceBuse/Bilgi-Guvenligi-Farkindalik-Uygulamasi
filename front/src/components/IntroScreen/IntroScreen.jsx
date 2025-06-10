@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import styles from "./IntroScreen.module.css";
 
 const introMessages = [
-  "Görevlerine başlamadan önce, kayıt olduğun e-posta ve şifre ile mail uygulamasına giriş yapman gerekecek.",
-  "Mail kutunda gelen görevleri dikkatlice incele. Bazı belgeleri indirmek için doğrulama kodu (token) gerekecek. Bu kodu, ilgili görev sırasında TaskApp üzerinden alacaksın.",
+  "Görevlerine başlamadan önce, platformumuza kayıt olduğun e-posta ve şifre ile 'MailBox' uygulamasına giriş yapman gerekecek.",
+  "Oyun başladığında, PhishVille ekibinden gelen bir hoş geldin e-postası ile karşılaşacaksın. Sana verilen görevleri ve detaylarını ise 'TaskApp' uygulamasını indirip üzerinden kolayca takip edebilirsin.",
   "Unutma, aldığın kararlar puanına ve güvenlik seviyene etki eder. Şüpheli durumlarda dikkatli ol!",
   "Hazırsan simülasyonu başlatabilirsin."
 ];
@@ -14,8 +14,6 @@ const IntroScreen = ({ onFinish }) => {
   const [displayed, setDisplayed] = useState("");
   const [typing, setTyping] = useState(true);
   const audioRef = useRef(null);
-  const [progress, setProgress] = useState(0);
-  const progressRef = useRef();
 
   // Welcome ekranında herhangi bir tuşa basınca animasyona geç
   useEffect(() => {
@@ -90,7 +88,7 @@ const IntroScreen = ({ onFinish }) => {
     return (
       <div className={styles.introScreen}>
         <div className={styles.introMessage}>
-          <b>Simülasyona hoş geldin!</b><br /><br />
+          <b>SİMÜLASYONA HOŞ GELDİN!</b><br /><br />
           <span style={{fontSize: "1.1rem", opacity: 0.85}}>
             Devam etmek için herhangi bir tuşa bas.
           </span>
@@ -102,6 +100,7 @@ const IntroScreen = ({ onFinish }) => {
   // typewriter fazı:
   return (
     <div className={styles.introScreen}>
+        <h2>İPUÇLARI</h2>
       <div className={styles.introMessage}>
         {displayed}
         {typing && <span className={styles.blinkingCursor}>|</span>}

@@ -16,12 +16,6 @@ import { ChatContextProvider } from '../Contexts/ChatContext.js';
 import { TimeProvider } from '../Contexts/TimeContext.js';
 import IntroScreen from '../components/IntroScreen/IntroScreen.jsx';
 
-  const MailLoginScreen = ({ onSuccess }) => (
-    <div className="mail-login">
-      <h2>Mail Girişi</h2>
-      <button onClick={onSuccess}>Giriş Yap</button>
-    </div>
-  );
 
   const Game = () => {
     useEffect(() => {
@@ -53,9 +47,8 @@ import IntroScreen from '../components/IntroScreen/IntroScreen.jsx';
                              <div className="game">
                               {phase === "intro" && <IntroScreen onFinish={() => setPhase("hacked")} />}
                                {(phase === "hacked" || phase === "desktop") && (
-                                <Desktop hacked={phase === "hacked"} onFormat={phase === "hacked" ? () => setPhase("mail-login") : undefined} />
-                               )}
-                              {phase === "mail-login" && <MailLoginScreen onSuccess={() => setPhase("desktop")} />}
+                                <Desktop hacked={phase === "hacked"} onFormat={phase === "hacked" ? () => setPhase("desktop") : undefined} />
+                               )}                      
                               {phase === "desktop" && <Desktop />}
                             </div>
                           </ChatContextProvider>
