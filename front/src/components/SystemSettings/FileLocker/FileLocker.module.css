@@ -1,0 +1,180 @@
+.lockerBox {
+  background: linear-gradient(135deg, #22251b 60%, #23281b 100%);
+  border-radius: 20px;
+  color: #dfe7d2;
+  box-shadow: 0 4px 32px #141814c0;
+  width: 540px;
+  padding: 0 0 20px 0;
+  margin: 0 auto;
+  position: relative;
+  border: 2px solid #495144;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 30px 8px 20px;
+  border-bottom: 1px solid #49514477;
+  background: #23281b;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.header img {
+  width: 38px;
+  height: 38px;
+  filter: drop-shadow(0 2px 8px #b7c67f44);
+}
+.header h2 {
+  font-size: 1.26rem;
+  color: #cee397;
+  font-weight: 700;
+  flex: 1;
+}
+.closeButton {
+  background: #23281b;
+  color: #bedb39;
+  border: 1.5px solid #bedb39;
+  border-radius: 7px;
+  font-size: 21px;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.closeButton:hover {
+  background: #b7c67f;
+  color: #23281b;
+}
+.info {
+  padding: 16px 24px 2px 24px;
+  color: #cee397;
+  font-size: 1.03rem;
+  background: #2d3220;
+  border-bottom: 1px solid #49514433;
+}
+.fileListArea {
+  background: #1c2118;
+  border-radius: 14px;
+  margin: 18px 22px 10px 22px;
+  min-height: 92px;
+  box-shadow: 0 2px 18px #49514418;
+  padding: 12px;
+}
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.fileItem {
+  display: flex;
+  align-items: center;
+  background: #23281b;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  border: 1.4px solid #3a3f2d;
+  font-size: 1.07rem;
+  transition: background 0.18s, border 0.18s;
+  user-select: none;
+  outline: none;
+  position: relative;
+}
+.fileItem:hover,
+.fileItem:focus {
+  background: #34401f;
+  border: 1.4px solid #bedb39;
+}
+.fileItem.selected {
+  background: #495144 !important;
+  color: #bedb39 !important;
+  border: 2px solid #bedb39;
+}
+.fileItem.locked {
+  background: #181b15;
+  color: #8e9d65;
+  border: 1.4px dashed #7b875b;
+  opacity: 0.66;
+}
+.icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 13px;
+  filter: drop-shadow(0 2px 8px #bedb3955);
+}
+.fileLabel {
+  flex: 1;
+  font-weight: 500;
+  color: inherit;
+}
+.fileType {
+  color: #cee397;
+  margin-left: 8px;
+  font-size: 1.01rem;
+}
+.lockedTag {
+  background: #bedb39;
+  color: #23281b;
+  border-radius: 7px;
+  font-size: 0.93rem;
+  font-weight: 600;
+  margin-left: 15px;
+  padding: 2px 10px 2px 7px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 8px #b7c67f44;
+}
+.lockIcon {
+  font-size: 1.05em;
+  margin-right: 1px;
+}
+.noFiles {
+  padding: 24px;
+  color: #b7c67f;
+  text-align: center;
+  opacity: 0.85;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: flex-end;
+  padding: 0 26px 0 0;
+  margin-top: 9px;
+  min-height: 35px;
+}
+.lockBtn {
+  background: linear-gradient(90deg, #bedb39 0%, #7b875b 100%);
+  color: #23281b;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 1.08rem;
+  padding: 10px 32px;
+  box-shadow: 0 2px 13px #b7c67f28;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 8px #fff8;
+  transition: background 0.17s, box-shadow 0.2s;
+}
+.lockBtn:disabled {
+  background: #23281b !important;
+  color: #b7c67f !important;
+  cursor: not-allowed;
+}
+.successMsg {
+  color: #bedb39;
+  font-weight: bold;
+  margin-left: 10px;
+  font-size: 1.04rem;
+  text-shadow: 0 0 7px #bedb3933;
+}
+.footer {
+  margin-top: 11px;
+  padding: 11px 22px 0 22px;
+  color: #8e9d65;
+  font-size: 0.97rem;
+  opacity: 0.95;
+}

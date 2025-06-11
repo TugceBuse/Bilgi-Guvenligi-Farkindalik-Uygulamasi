@@ -39,7 +39,8 @@ const defaultFileSchema = {
             location: "downloads", 
             label: "benioku", 
             icon: "/icons/txt.png", 
-            content: "/files/benioku.txt"
+            content: "/files/benioku.txt",
+            locked: false,
         },
         rapor_2025: { 
             available: false, 
@@ -53,7 +54,8 @@ const defaultFileSchema = {
             location: "downloads", 
             label: "Rapor_2025", 
             icon: "/icons/docx.png", 
-            specialView : "enableContentDocx" 
+            specialView : "enableContentDocx" ,
+            locked: false,
         },
         antivirussetup: { 
             available: true,
@@ -116,7 +118,8 @@ const defaultFileSchema = {
             location: "personal", 
             label: "İş Dosyası", 
             icon: "/icons/docx.png", 
-            content: "/files/word1.docx" 
+            content: "/files/word1.docx" ,
+            locked: false,
         },
         photo1: { 
             available: true,
@@ -165,7 +168,8 @@ const defaultFileSchema = {
             location: "personal", // istersen farklı klasör adı da verebilirsin
             label: "Kişisel Kullanıcı Bilgileri.pdf",
             icon: "/icons/pdf.png",
-            content: "/files/Kişisel_Kullanıcı_Bilgileri.txt"
+            content: "/files/Kişisel_Kullanıcı_Bilgileri.txt",
+            locked: false,
         },
         issozlesmesi: {
             available: true,
@@ -178,7 +182,8 @@ const defaultFileSchema = {
             location: "personal",
             label: "İş Sözleşmesi.pdf",
             icon: "/icons/pdf.png",
-            content: "/files/İş_Sözleşmesi.txt"
+            content: "/files/İş_Sözleşmesi.txt",
+            locked: false,
         },
         gizlilikpolitikasi: {
             available: true,
@@ -191,7 +196,8 @@ const defaultFileSchema = {
             location: "personal",
             label: "Gizlilik Politikası.pdf",
             icon: "/icons/pdf.png",
-            content: "/files/Gizlilik_Politikası.txt"
+            content: "/files/Gizlilik_Politikası.txt",
+            locked: false,
         },
         personelelkitabi: {
             available: true,
@@ -204,7 +210,8 @@ const defaultFileSchema = {
             location: "personal",
             label: "Personel El Kitabı.pdf",
             icon: "/icons/pdf.png",
-            content: "/files/Personel_El_Kitabı.txt"
+            content: "/files/Personel_El_Kitabı.txt",
+            locked: false,
         }
     });
 
@@ -252,9 +259,13 @@ const defaultFileSchema = {
 
     // 📌 Dosya açma fonksiyonu
     const openFile = (fileName, theme) => {
-        if (files[fileName] && !openedFiles.includes(fileName)) {
-            setOpenedFiles([...openedFiles, fileName]); // Açılan dosyalar listesine ekle
-            openWindow(fileName, { theme }); // 📌 UIContext ile pencere yönetimine entegre et
+        if (
+            files[fileName] &&
+            !openedFiles.includes(fileName) &&
+            !files[fileName].locked // KİLİTLİYSE AÇMA!
+        ) {
+            setOpenedFiles([...openedFiles, fileName]);
+            openWindow(fileName, { theme });
         }
     };
 

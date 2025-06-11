@@ -25,6 +25,19 @@ const Folder = ({ closeHandler, style }) => {
 
     const { files, openFile } = useFileContext();
 
+    const [warning, setWarning] = useState("");
+
+    // Eğer map'te file ve fileName ikisini de kullanıyorsan:
+    const handleFileClick = (fileName) => {
+    const file = files[fileName];
+    if (file.locked) {
+        setWarning(`${file.label} dosyası şifreli! Açmak için önce kilidi kaldırmalısınız.`);
+        setTimeout(() => setWarning(""), 2200);
+        return;
+    }
+    openFile(fileName);
+    };
+
     // Folder içerisindeki view'ler
     const VIEW_TYPES = {
         DEFAULT: 'default',
@@ -158,10 +171,32 @@ const Folder = ({ closeHandler, style }) => {
                                 const file = files[fileName];
                                 if (file.available && file.location === "downloads") {
                                     return (
-                                        <div key={fileName} className='Icons' onClick={() => openFile(fileName)}>
-                                            <img src={file.icon} alt={`${file.label} Icon`} />
-                                            <span>{file.label}</span>
-                                        </div>
+                                        <div
+                                        key={fileName}
+                                        className={`Icons${file.locked ? " locked" : ""}`}
+                                        onClick={() => handleFileClick(fileName)}
+                                        style={{
+                                        cursor: file.locked ? "not-allowed" : "pointer",
+                                        opacity: file.locked ? 0.55 : 1,
+                                        position: "relative"
+                                        }}
+                                        title={file.locked ? "Bu dosya şifrelenmiş" : ""}
+                                    >
+                                        <img src={file.icon} alt={`${file.label} Icon`} />
+                                        <span>{file.label}</span>
+                                        {file.locked && (
+                                        <span
+                                            style={{
+                                            color: "#bedb39",
+                                            fontWeight: "bold",
+                                            marginLeft: 7,
+                                            fontSize: 17,
+                                            display: "inline-flex",
+                                            alignItems: "center"
+                                            }}
+                                        >🔒 <span style={{ fontSize: 13, marginLeft: 2 }}>Kilitli</span></span>
+                                        )}
+                                    </div>
                                     );
                                 }
                                 return null;
@@ -174,17 +209,55 @@ const Folder = ({ closeHandler, style }) => {
                                 const file = files[fileName];
                                 if (file.available && file.location === "personal") {
                                     return (
-                                        <div key={fileName} className='Icons' onClick={() => openFile(fileName)}>
-                                            <img src={file.icon} alt={`${file.label} Icon`} />
-                                            <span>{file.label}</span>
-                                        </div>
+                                        <div
+                                        key={fileName}
+                                        className={`Icons${file.locked ? " locked" : ""}`}
+                                        onClick={() => handleFileClick(fileName)}
+                                        style={{
+                                        cursor: file.locked ? "not-allowed" : "pointer",
+                                        opacity: file.locked ? 0.55 : 1,
+                                        position: "relative"
+                                        }}
+                                        title={file.locked ? "Bu dosya şifrelenmiş" : ""}
+                                    >
+                                        <img src={file.icon} alt={`${file.label} Icon`} />
+                                        <span>{file.label}</span>
+                                        {file.locked && (
+                                        <span
+                                            style={{
+                                            color: "#bedb39",
+                                            fontWeight: "bold",
+                                            marginLeft: 7,
+                                            fontSize: 17,
+                                            display: "inline-flex",
+                                            alignItems: "center"
+                                            }}
+                                        >🔒 <span style={{ fontSize: 13, marginLeft: 2 }}>Kilitli</span></span>
+                                        )}
+                                    </div>
                                     );
                                 }
                                 return null;
-                            })}
+                            })}                           
                         </div>
                     )}
-
+                    {warning && (
+                        <div
+                            style={{
+                            background: "#23281b",
+                            color: "#bedb39",
+                            border: "1.5px solid #bedb39",
+                            borderRadius: 9,
+                            padding: "14px 18px",
+                            marginTop: 200,
+                            textAlign: "center",
+                            fontWeight: 500,
+                            fontSize: 15
+                            }}
+                        >
+                            {warning}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './SystemSettings.module.css';
 import FirewallSettings from './FirewallSettings/FirewallSettings';
+import FileLocker from './FileLocker/FileLocker';
 
 const SystemSettings = ({ onClose }) => {
   const [page, setPage] = useState("");
@@ -19,6 +20,8 @@ const SystemSettings = ({ onClose }) => {
         return <div className={styles.placeholder}>USB Aygıt Ayarı</div>;
       case "vpn":
         return <div className={styles.placeholder}>VPN & Ağ Ayarı</div>;
+      case "filelocker":
+        return <FileLocker onClose={() => setPage("")} />;
       default:
         return (
           <div className={styles.infoBox}>
@@ -50,6 +53,7 @@ const SystemSettings = ({ onClose }) => {
               <li onClick={() => setPage("guest")}>👥 Misafir Oturumları</li>
               <li onClick={() => setPage("usb")}>💾 USB Aygıt Kontrolleri</li>
               <li onClick={() => setPage("vpn")}>🌐 VPN & Ağ Ayarları</li>
+              <li onClick={() => setPage("filelocker")}>🔒 Dosya Şifreleme</li>
             </ul>
           </div>
           <div className={styles.rightPanel}>
