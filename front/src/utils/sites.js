@@ -435,7 +435,24 @@ const sites = {
   isSponsored: false,
   seoScore: 7
 },
-
+"http://filelocker-secure-download.net": {
+  title: "FileLocker - Dosya Şifreleme Uygulaması",
+  type: "component",
+  component: "FileLocker",
+  statement: "FileLocker ile dosyalarınızı kolayca şifreleyin ve güvende tutun.",
+  searchKeys: [
+    "filelocker indir",
+    "filelocker download",
+    "dosya şifreleme indir",
+    "güvenli dosya koruma",
+    "bitlocker alternatif",
+    "yedek şifreleme aracı",
+    "filelocker setup"
+  ],
+  clickable: true,
+  protocol: "https",
+  color: "#23281b"
+}
 
 
 };

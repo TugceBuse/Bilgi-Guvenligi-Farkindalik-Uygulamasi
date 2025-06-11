@@ -8,7 +8,7 @@ const Notifications = () => {
 
   // Sistem ve mail/sms ayrımı
   const systemPopups = popupNotifications.filter(n => n.appType === "system" || !n.appType);
-  const mailPopups = popupNotifications.filter(n => n.appType === "mail" || n.appType === "phone");
+  const appPopups = popupNotifications.filter(n => n.appType === "mail" || n.appType === "phone" || n.appType === "chatapp");
 
   return (
     <>
@@ -63,7 +63,7 @@ const Notifications = () => {
       </div>
       {/* Mail/sms için küçük popup stack */}
       <div className="mail-popup-stack">
-        {mailPopups.map((notif) => (
+        {appPopups.map((notif) => (
           <NotificationPopup
             key={notif.id}
             notification={notif}

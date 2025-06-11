@@ -15,9 +15,6 @@
   import { ChatContextProvider } from '../Contexts/ChatContext.js';
   import { TimeProvider } from '../Contexts/TimeContext.js';
   import IntroScreen from '../components/IntroScreen/IntroScreen.jsx';
-  import NotificationPopup from '../components/Notifications/NotificationPopup.jsx';
-  import { useNotificationContext } from '../Contexts/NotificationContext.js';
-
 
     const Game = () => {
       useEffect(() => {
@@ -30,23 +27,11 @@
         };
     }, []);
     const [phase, setPhase] = useState("desktop");
-    
-    function NotificationStackWithContext() {
-    const { popupNotifications } = useNotificationContext();
-    return (
-      <div className="mail-popup-stack">
-        {popupNotifications.map(n => (
-          <NotificationPopup key={n.id} notification={n} />
-        ))}
-      </div>
-    );
-  }
 
     return (
       <TimeProvider>
         <UIContextProvider>
           <NotificationProvider>
-            <NotificationStackWithContext />
             <Notification /> 
             <SecurityProvider>
               <VirusProvider>
