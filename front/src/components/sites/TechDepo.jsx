@@ -760,9 +760,10 @@ const TechDepo = ({scrollRef}) => {
         // Yazıcı satın alımı sonrası...
         addChatMessage(1, {
           sender: 'them',
+          senderName: "IT Destek",
           text: 'Satın aldığın yazıcının kargo durumunu bizimle paylaşır mısın?',
           time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
-        });
+        }, true);
 
         // Kargo state seçeneklerini ChatApp’e gönder (hepsi disabled, user kargo sitesine girene kadar!)
         setUserOptions(1,

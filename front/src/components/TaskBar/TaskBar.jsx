@@ -198,6 +198,10 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
       handleOpenMailNotification(notif);
     } else if (notif.appType === "phone") {
       handleOpenPhoneNotification(notif);
+    } else if (notif.appType === "chatapp") {
+      openWindow('chatapp');
+      removeNotification(notif.id);
+      setShowNotifications(false);
     } else {
       handleOpenSystemNotification(notif);
     }

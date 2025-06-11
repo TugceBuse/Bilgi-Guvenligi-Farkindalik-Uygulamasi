@@ -98,7 +98,7 @@ const ChatApp = ({ closeHandler, style }) => {
           sender: "them",
           text: "Bilgi için teşekkürler, süreci takipteyiz.",
           time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
-        });
+        }, true);
 
         setTimeout(() => {
           setUserOptions(selectedUser.id, [
@@ -114,9 +114,10 @@ const ChatApp = ({ closeHandler, style }) => {
       setTimeout(() => {
         addChatMessage(selectedUser.id, {
           sender: "them",
+          senderName: "IT Destek",
           text: "Teşekkür ederim, şu anda başka bir isteğim yok. İyi günler!",
           time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
-        });
+        }, true);
         setUserOptions(selectedUser.id, []);
       }, 1000);
       return;
@@ -126,9 +127,10 @@ const ChatApp = ({ closeHandler, style }) => {
       setTimeout(() => {
         addChatMessage(selectedUser.id, {
           sender: "them",
+          senderName: "IT Destek",
           text: "Size de iyi çalışmalar!",
           time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
-        });
+        }, true);
       }, 1000);
       setUserOptions(selectedUser.id, []);
       return;

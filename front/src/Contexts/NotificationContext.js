@@ -9,6 +9,7 @@ export const NotificationProvider = ({ children }) => {
     if (appType === "mail") return "/icons/mail.png";
     if (appType === "phone") return "/PhoneApp/comment.png";
     if (appType === "system") return "/icons/info.png";
+    if (appType === "chatapp") return "/icons/speak.png";
     return "/icons/info.png";
   };
 

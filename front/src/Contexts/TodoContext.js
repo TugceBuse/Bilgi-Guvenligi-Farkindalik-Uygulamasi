@@ -35,11 +35,6 @@ export const TodoProvider = ({ children }) => {
     completed: false,
     notified: false 
   },
-  { id: 'create-password',
-    text: '🖥️ Ofiste eksik olan donanımlar için satın alma işlemi sizden istendi. IT destek ekibinin yönlendirdiği çevrim içi mağazadan gerekli ürünü seçip siparişi tamamlayın.',
-    completed: false,
-    notified: false 
-  },
   { id: 'download-safe-file',
     text: '📁 Departmandaki raporların çıktısını alabilmek için renkli baskı destekli bir yazıcı satın al. (Banka uygulamandan bakiyene bakmayı unutma, maillerinden ya da sosyal medya üzerinden fırsatları yakalamayı da ihmal etme! Ne kadar ucuz o kadar iyi...',
     completed: false,

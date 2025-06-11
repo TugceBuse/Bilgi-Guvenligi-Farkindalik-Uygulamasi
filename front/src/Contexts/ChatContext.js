@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
+import { useNotificationContext } from "./NotificationContext";
+import { useUIContext } from './UIContext';
 
 const ChatContext = createContext();
 
@@ -14,27 +16,53 @@ export const ChatContextProvider = ({ children }) => {
   // Dinamik buton seçenekleri { [userId]: [{id, label, enabled, data}] }
   const [options, setOptions] = useState({});
   const [cargoStepShared, setCargoStepShared] = useState({});
+  const { addNotification, removeNotification } = useNotificationContext();
+  const { openWindow } = useUIContext();
 
   const addUser = (user) => setUsers(prev => [...prev, user]);
 
   // Konuşma geçmişine mesaj ekler
-  const addChatMessage = (userId, msg) => {
+  const addChatMessage = (userId, msg, notify) => {
     setMessages(prev => ({
       ...prev,
       [userId]: [...(prev[userId] || []), msg]
     }));
-    // Sadece "them" ve id contextte yoksa ekle
+
     setUsers(prev =>
       prev.some(u => u.id === userId)
         ? prev
         : msg.sender === "them"
-          ? [...prev, {
-              id: userId,
-              name: msg.senderName || "Bilinmeyen",
-              avatar: '/icons/user (2).png'
-            }]
+          ? [...prev, { id: userId, name: msg.senderName || "Bilinmeyen", avatar: '/icons/user (2).png' }]
           : prev
     );
+    // Bildirim tetikle
+    if (notify && msg.sender === "them") {
+      
+    const notificationId = (Date.now() + Math.random());
+    console.log("CHAT POPUP TETİKLENDİ", msg, notificationId);
+    addNotification({
+      id: notificationId,
+      type: "info",
+      appType: "chatapp",
+      title: msg.senderName || "IT Destek",
+      message: msg.text,
+      icon: "/icons/user (2).png",
+      isPopup: true, // Bunu MUTLAKA true ver
+      isTaskbar: true,
+      duration: 7000,
+      actions: [
+        {
+          label: "Sohbete Git",
+          onClick: () => openWindow('chatapp')
+        },
+        {
+          label: "Bildirimden Kaldır",
+          onClick: () => removeNotification(notificationId)
+        }
+      ],
+      appData: { userId }
+    });
+  }
   };
   
   // Örnek mesaj ekleme, eğer kişi yoksa ekler
