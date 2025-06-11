@@ -416,7 +416,17 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
                     {taskbarNotifications.map((notif) => (
                       <div key={notif.id} className="notification-item"
                         onClick={() => handleNotificationClick(notif)}>
-                        {/* ... */}
+                         <strong>
+                          <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
+                            <img style={{ width: 30, height: 30 }} src={notif.icon} alt="Notification Icon" />
+                            {notif.title}
+                            <p
+                              className='mail-notification-close'
+                              onClick={e => { e.stopPropagation(); removeNotification(notif.id); }}
+                            >x</p>
+                          </div>
+                        </strong>
+                        <p>{notif.message}</p>
                       </div>
                     ))}
                   </>
