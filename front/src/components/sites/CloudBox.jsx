@@ -41,11 +41,12 @@ const InfoScreen = ({ onLogin, onRegister }) => (
   </div>
 );
 
-
 const CloudBox = () => {
   const { cloudUser, setCloudUser, cloudBoxBackup, setCloudBoxBackup } = useGameContext();
   const { files } = useFileContext();
-  const personalFiles = Object.values(files).filter(f => f.location === "personal");
+  const downloadsFiles = Object.values(files).filter(
+    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
+  );
 
   // Local UI state
   const [page, setPage] = useState("info"); // "info" / "login" / "register" / "main"
@@ -84,19 +85,19 @@ const CloudBox = () => {
   // Yedekleme işlemi (tek paket, progress animasyonlu)
   const handleUploadAll = () => {
     let newUploadState = {};
-    personalFiles.forEach(file => {
+    downloadsFiles.forEach(file => {
       newUploadState[file.label] = { progress: 0, status: "uploading" };
     });
     setUploadState(newUploadState);
 
     let progressAll = 0;
-    const step = Math.max(2, Math.floor(100 / (personalFiles.length * 7 + 6)));
+    const step = Math.max(2, Math.floor(100 / (downloadsFiles.length * 7 + 6)));
     const interval = setInterval(() => {
       progressAll += step;
       if (progressAll >= 100) {
         clearInterval(interval);
         setCloudBoxBackup({
-          files: personalFiles,
+          files: downloadsFiles,
           packageLink: generatePackageLink(),
           permissions: { isPublic: false, canDownload: true }
         });
@@ -104,7 +105,7 @@ const CloudBox = () => {
         setShowUpload(false);
       } else {
         setUploadState(prev =>
-          Object.fromEntries(personalFiles.map(f => [
+          Object.fromEntries(downloadsFiles.map(f => [
             f.label,
             { progress: Math.min(progressAll, 100), status: "uploading" }
           ]))
@@ -200,20 +201,20 @@ const CloudBox = () => {
           <div className={styles.uploadModal}>
             <h2>Personal Folder</h2>
             <div className={styles.folderContent}>
-              {personalFiles.length === 0 ? (
+              {downloadsFiles.length === 0 ? (
                 <span className={styles.noFile}>Yedeklenecek kişisel dosya yok.</span>
               ) : (
-                personalFiles.map((f, i) => (
+                downloadsFiles.map((f, i) => (
                   <div key={f.label} className={styles.folderFile}>
                     <span className={styles.fileIcon}>
-                      {f.type === "pdf" ? "📄" : f.type === "jpg" ? "🖼️" : "📁"}
+                      <img src={f.icon} alt="Files"/>
                     </span>
                     <span>{f.label} ({f.size})</span>
                   </div>
                 ))
               )}
             </div>
-            {personalFiles.length > 0 && (
+            {downloadsFiles.length > 0 && (
               <button className={styles.uploadAllBtn} onClick={handleUploadAll}>
                 Hepsini Yedekle
               </button>
@@ -221,18 +222,18 @@ const CloudBox = () => {
             <button className={styles.cancelBtn} onClick={() => setShowUpload(false)}>
               İptal
             </button>
-            {personalFiles.length > 0 && Object.keys(uploadState).length > 0 && (
+            {downloadsFiles.length > 0 && Object.keys(uploadState).length > 0 && (
               <div className={styles.progressWrap}>
                 <div className={styles.progressBar}>
                   <div
                     className={styles.progress}
                     style={{
-                      width: `${uploadState[personalFiles[0].label]?.progress ?? 0}%`
+                      width: `${uploadState[downloadsFiles[0].label]?.progress ?? 0}%`
                     }}
                   />
                 </div>
                 <span className={styles.progressText}>
-                  {uploadState[personalFiles[0].label]?.progress ?? 0}%
+                  {uploadState[downloadsFiles[0].label]?.progress ?? 0}%
                 </span>
               </div>
             )}
@@ -250,7 +251,7 @@ const CloudBox = () => {
               <div key={file.label} className={styles.uploadCard}>
                 <div className={styles.uploadFileInfo}>
                   <span className={styles.fileIcon}>
-                    {file.type === "pdf" ? "📄" : file.type === "jpg" ? "🖼️" : "📁"}
+                    <img src={file.icon} alt="Files"/>
                   </span>
                   <span>{file.label} ({file.size})</span>
                 </div>

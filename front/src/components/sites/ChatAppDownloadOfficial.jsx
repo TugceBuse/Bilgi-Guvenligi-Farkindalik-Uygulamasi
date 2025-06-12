@@ -55,7 +55,7 @@ const ChatAppDownloadOfficial = () => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
           setShowPopup(true);
-          updateAvailableStatus("chatapp", { available: true });
+          updateAvailableStatus("chatapp", { available: true});
           setTimeout(() => setShowPopup(false), 2500);
           setDownloading(false);
           return 100;

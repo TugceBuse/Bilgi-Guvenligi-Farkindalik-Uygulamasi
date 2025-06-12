@@ -294,8 +294,9 @@ body {
   gap: 5px;
   box-shadow: 0 1.5px 7px #69c7e818;
 }
-.fileIcon {
-  font-size: 1.55rem;
+.fileIcon img {
+  width: 32px;
+  height: 32px;
   margin-right: 3px;
 }
 .fileName {

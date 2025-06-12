@@ -434,8 +434,9 @@ body {
   font-size: 1.05rem;
   color: #f2f6ff;
 }
-.fileIcon {
-  font-size: 1.37rem;
+.fileIcon img {
+  width: 32px;
+  height: 32px;
   margin-right: 3px;
 }
 .uploaded {

@@ -1,3 +1,4 @@
+/* GENEL KAPSAYICI */
 .downloadContainer {
   max-width: 1100px;
   margin: 44px auto;
@@ -12,10 +13,9 @@
   position: relative;
 }
 
-/* Başlık ve logo satırı */
+/* BAŞLIK */
 .header {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 19px;
   font-size: 1.19rem;
@@ -31,17 +31,18 @@
   background: #351c28;
   border: 2.5px solid #952046;
   box-shadow: 0 2px 10px #6c213c28;
+  padding: 5px;
 }
-.subtitle {
+.slogan {
   color: #a14e71;
   font-size: 1.01rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   margin-top: 2px;
-  margin-left: 2px;
   display: block;
 }
 
+/* HERO BÖLÜMÜ (üstteki iki kolon) */
 .heroSection {
   display: flex;
   gap: 44px;
@@ -54,126 +55,69 @@
   border: 1.7px solid #952046;
 }
 
-/* Sol içerik */
-.heroLeft {
+/* SOL KOLON */
+.leftColumn {
   flex: 1 1 420px;
   min-width: 340px;
   padding-right: 18px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 22px;
 }
-.introText {
-  font-size: 1.13rem;
-  line-height: 1.57;
-  color: #eec6de;
-  margin-bottom: 22px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  background: #3d2235;
-  border-radius: 10px;
-  padding: 13px 18px;
-  border-left: 7px solid #952046;
-  box-shadow: 0 2px 9px #6c213c11;
-}
-.introText b {
-  color: #952046;
-  font-weight: 800;
-}
-
-/* Özellikler listesi */
-.featureList {
-  padding-left: 0;
-  margin: 0 0 16px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 1.07rem;
-  color: #f6e7ee;
-  font-weight: 500;
-  list-style: none;
-}
-.featureList li {
-  background: #331b28;
-  border-radius: 8px;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  box-shadow: 0 2px 8px #95204618;
-  border: 1.3px solid #4e2237;
-  transition: background 0.14s, border 0.14s;
-  cursor: default;
-  user-select: text;
-}
-.featureList li:hover {
-  background: #4a2440;
-  border-color: #952046;
-  color: #e6b7c7;
-}
-
-.platformGrid {
+.statsRow {
   display: flex;
   gap: 18px;
-  margin: 17px 0 12px 0;
-}
-.platformBtn {
-  flex: 1 1 160px;
-  min-width: 145px;
-  max-width: 240px;
-  background: #a14e71;
-  color: #fff6f6;
-  border: 2px solid #952046;
-  border-radius: 12px;
-  padding: 17px 0 13px 0;
-  font-size: 1.04rem;
+  font-size: 1.03rem;
   font-weight: 700;
+  color: #ffc9ee;
+  margin-bottom: 13px;
+}
+.downloadBox {
+  background: #331b28;
+  border-radius: 13px;
+  padding: 16px 18px 14px 18px;
+  border: 1.4px solid #952046;
+  box-shadow: 0 1.5px 8px #a14e7131;
+  margin-bottom: 12px;
+}
+.downloadTitle {
+  font-size: 1.09rem;
+  font-weight: 700;
+  margin-bottom: 9px;
+  color: #eec6de;
+}
+.downloadButton {
   display: flex;
   align-items: center;
-  gap: 13px;
-  justify-content: center;
-  box-shadow: 0 1.5px 6px #95204622;
+  gap: 11px;
+  background: linear-gradient(90deg, #a14e71 0%, #952046 100%);
+  color: #fff7fa;
+  font-size: 1.08rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 23px 11px 17px;
+  box-shadow: 0 1px 7px #95204622;
   cursor: pointer;
-  position: relative;
-  transition: background 0.15s, box-shadow 0.14s, color 0.13s, border 0.16s;
+  transition: background 0.13s, transform 0.13s;
+  margin-bottom: 12px;
 }
-.platformBtn:hover:enabled {
-  border-color: #6c213c;
-  background: #8d3159;
-  box-shadow: 0 3px 13px #c74a6a33, 0 1.5px 7px #0005;
-  color: #fff;
-}
-.platformBtn:active:enabled {
-  background: #6c213c;
-  border-color: #6c213c;
-}
-.platformBtn:disabled {
-  opacity: 0.54;
+.downloadButton:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
-.iconBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #3a1930;
-  border-radius: 8px;
-  padding: 7px;
-  margin-right: 3px;
-  border: 1.5px solid #952046;
+.downloadButton img {
+  width: 26px;
+  height: 26px;
 }
-.platformBtn img {
-  width: 27px;
-  height: 27px;
-  filter: grayscale(0.09) brightness(1.09);
-}
-.platformLabel {
-  font-size: 0.91rem;
-  color: #e3bed3;
-  font-weight: 400;
-  margin-top: 1px;
+.legalText {
+  font-size: 0.93rem;
+  color: #b58aa6;
+  margin-top: 8px;
+  margin-bottom: 2px;
 }
 
-/* Progress Bar */
 .progressBar {
   width: 100%;
   background: #361e2e;
@@ -192,7 +136,7 @@
 }
 .progressText {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 0;
   height: 100%;
   color: #fff1f7;
@@ -202,7 +146,6 @@
   align-items: center;
 }
 
-/* Popup */
 .popup {
   margin-top: 13px;
   background: #3b1e2e;
@@ -216,33 +159,108 @@
   box-shadow: 0 2px 10px #a14e7136;
 }
 
-.heroRight {
+.mustKnows {
+  background: #3d2235;
+  border-radius: 10px;
+  padding: 11px 18px;
+  margin-top: 14px;
+  border-left: 5px solid #952046;
+  box-shadow: 0 1.5px 7px #95204613;
+}
+.mustKnows h3 {
+  font-size: 1.03rem;
+  color: #ffc9ee;
+  margin-bottom: 8px;
+}
+.mustKnows ul {
+  margin: 0;
+  padding-left: 16px;
+  color: #ffe2f7;
+  font-size: 0.99rem;
+}
+.mustKnows li {
+  margin-bottom: 7px;
+}
+
+/* SAĞ KOLON */
+.rightColumn {
   min-width: 300px;
   flex: 0 0 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
-}
-.previewImg {
-  width: 100%;
-  max-width: 265px;
-  border-radius: 13px;
-  margin-bottom: 7px;
-  border: 2px solid #952046;
+  color: #eed7e2;
+  font-size: 1.09rem;
+  line-height: 1.54;
+  font-weight: 500;
+  background: #352031;
+  border-radius: 12px;
+  padding: 17px 18px 13px 18px;
+  border: 1.3px solid #6c213c;
   box-shadow: 0 1.5px 10px #a14e7131;
 }
-.ratingBox {
-  background: #3a2432;
-  color: #eebee0;
-  border-radius: 8px;
-  padding: 7px 15px;
-  font-weight: 700;
-  margin-top: 0;
-  font-size: 1.05rem;
-  border: 1.2px solid #a14e71;
+.appPreview {
+  width: 60%;
+  max-width: 255px;
+  margin: 13px 0 7px 0;
+  border-radius: 11px;
+  border: 2px solid #952046;
+  box-shadow: 0 1.5px 10px #a14e7131;
+  background: #fff2;
+}
+.clientsRow {
+  display: flex;
+  gap: 11px;
+  margin-top: 6px;
+}
+.clientsRow img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #a14e71;
+  background: #21121d;
 }
 
+/* HIGHLIGHTS (ALT KARTLAR) */
+.highlightsSection {
+  display: flex;
+  gap: 24px;
+  margin: 33px 0 19px 0;
+  justify-content: center;
+}
+.highlightCard {
+  background: #322131;
+  border-radius: 11px;
+  padding: 22px 20px 15px 20px;
+  min-width: 190px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  color: #f8e3f4;
+  box-shadow: 0 1.5px 6px #a14e7122;
+  border: 2px solid #a14e71;
+  transition: background 0.13s, box-shadow 0.13s;
+}
+.highlightCard img {
+  width: 36px;
+  height: 36px;
+}
+.highlightCard h4 {
+  color: #a14e71;
+  font-size: 1.09rem;
+  margin-bottom: 2px;
+}
+.highlightCard p {
+  font-size: 0.97rem;
+  text-align: center;
+  color: #f6cfe7;
+}
+
+/* GÜVENLİK BÖLÜMÜ */
 .securitySection {
   background: #311e2c;
   border-radius: 13px;
@@ -268,78 +286,7 @@
   line-height: 1.49;
 }
 
-/* Kullanıcı yorumları */
-.reviewsSection {
-  margin: 25px 0 18px 0;
-}
-.reviewGrid {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-.reviewCard {
-  background: #322131;
-  color: #f8e3f4;
-  border-radius: 11px;
-  padding: 13px 17px 13px 17px;
-  box-shadow: 0 1.5px 6px #a14e7122;
-  min-width: 180px;
-  max-width: 260px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-  font-size: 1rem;
-}
-.reviewCard img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #a14e71;
-}
-.reviewCard b {
-  color: #a14e71;
-  font-size: 1.03rem;
-}
-
-/* SSS */
-.faqSection {
-  margin: 29px 0 18px 0;
-}
-.faqSection h2 {
-  color: #a14e71;
-  font-size: 1.13rem;
-  margin-bottom: 7px;
-}
-.faqSection ul {
-  padding-left: 0;
-}
-.faqSection li {
-  margin-bottom: 7px;
-  list-style: none;
-}
-.faqSection details {
-  background: #271824;
-  border-radius: 8px;
-  padding: 8px 14px;
-  color: #f6cfe7;
-  font-size: 1.01rem;
-  cursor: pointer;
-  border: 1px solid #3d2032;
-}
-.faqSection summary {
-  font-weight: 700;
-  color: #a14e71;
-  outline: none;
-  margin-bottom: 2px;
-  cursor: pointer;
-}
-.faqSection details[open] {
-  background: #311a2b;
-}
-
-/* Footer */
+/* FOOTER */
 .footer {
   margin-top: 25px;
   text-align: center;
@@ -347,21 +294,13 @@
   font-size: 0.97rem;
   opacity: 0.86;
 }
-.footer a {
-  color: #a14e71;
-  text-decoration: underline dotted;
-  font-weight: 600;
-  margin-left: 6px;
-  transition: color 0.14s;
-}
-.footer a:hover {
-  color: #fff;
-  background: #a14e71;
-  border-radius: 3px;
-  padding: 1px 4px;
+.footerSpan{
+  color: #ffdff5;
+  font-weight: 700;
+  cursor: default;
 }
 
-/* Responsive */
+/* RESPONSIVE TASARIM */
 @media (max-width: 900px) {
   .downloadContainer {
     padding: 16px 2vw 11px 2vw;
@@ -371,18 +310,39 @@
     gap: 19px;
     padding: 10px 6px;
   }
-  .heroRight, .heroLeft {
+  .leftColumn, .rightColumn {
     min-width: unset;
     width: 100%;
     padding-right: 0;
+    margin-bottom: 11px;
   }
-  .platformGrid {
+  .highlightsSection {
     flex-direction: column;
-    gap: 11px;
-  }
-  .reviewGrid {
-    flex-direction: column;
-    gap: 11px;
+    gap: 13px;
     align-items: center;
+  }
+  .storesRow {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .downloadContainer {
+    padding: 6px 0 5px 0;
+  }
+  .heroSection {
+    padding: 4px 0;
+    border-radius: 10px;
+  }
+  .leftColumn, .rightColumn {
+    padding: 7px 5px;
+    border-radius: 8px;
+  }
+  .highlightCard {
+    min-width: 140px;
+    padding: 13px 7px 8px 7px;
+  }
+  .securitySection {
+    padding: 12px 7px 8px 10px;
   }
 }

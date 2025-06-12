@@ -1,0 +1,191 @@
+.notepadWindow {
+  position: absolute;
+  top: 13%;
+  left: 18%;
+  width: 40%;
+  height: 60%;
+  background: linear-gradient(145deg, #232526 0%, #35363a 100%);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px #1118 0.12;
+  color: #eee;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.notepadHeader {
+  background: #22282c;
+  border-bottom: 1.5px solid #444a;
+  border-radius: 20px 20px 0 0;
+  padding: 11px 20px 9px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 9px;
+}
+.notepadHeader h2 {
+  font-size: 1.22em;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+
+.notepadHeader button {
+  background: none;
+  border: none;
+  color: #eee;
+  font-size: 1.45em;
+  cursor: pointer;
+  margin-left: 7px;
+  border-radius: 3px;
+  transition: background 0.18s, transform 0.2s;
+}
+
+.closeBtn:hover {
+  background: #ff2b2b;
+  color: #fff;
+}
+
+.clearBtn{
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.15s;
+}
+.clearBtn p{
+  margin: 0;
+  padding: 10px;
+  font-size: 0.7em;
+  font-weight: bold;
+  background-color: #c04d3e;
+  border-radius: 20px;
+}
+.clearBtn p:hover {
+  background: #e9361e;
+  color: #fff;
+}
+
+.notepadContent {
+  flex: 1;
+  padding: 16px 16px 12px 16px;
+  overflow-y: auto;
+  background: #23272e;
+  border-radius: 0 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.noteList {
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.noteItem {
+  background: #242936;
+  border-radius: 9px;
+  padding: 9px 13px 8px 9px;
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.04em;
+  transition: background 0.14s;
+  box-shadow: 0 2px 8px #181e2e09;
+}
+
+.noteText {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  display: block;
+  max-width: 250px;
+  word-break: break-word;
+}
+.noteDate {
+  font-size: 0.87em;
+  color: #b1d0fc;
+  margin-left: 12px;
+  opacity: 0.76;
+  font-weight: 400;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #ef7575;
+  font-size: 1.1em;
+  margin-left: 13px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color 0.16s;
+}
+.removeBtn:hover {
+  color: #ff1c1c;
+}
+
+.empty {
+  color: #bbb;
+  font-style: italic;
+  padding: 15px 0 13px 7px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 38px;
+  border-radius: 7px;
+  border: 1.5px solid #29334a;
+  margin-bottom: 7px;
+  padding: 7px 10px;
+  font-size: 1em;
+  color: #f3f3f3;
+  background: #21222b;
+  resize: none;
+  outline: none;
+  transition: border 0.18s;
+}
+.textarea:focus {
+  border: 1.5px solid #3c6cf7;
+}
+
+.addBtn {
+  background: linear-gradient(90deg, #47cf73 0%, #21a1d6 100%);
+  border: none;
+  color: #161c24;
+  font-weight: bold;
+  font-size: 1.04em;
+  border-radius: 6px;
+  padding: 8px 22px;
+  box-shadow: 0 1px 6px #36b88622;
+  cursor: pointer;
+  margin-top: 2px;
+  align-self: flex-end;
+  transition: background 0.18s, color 0.15s, transform 0.16s;
+}
+.addBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.addBtn:hover:enabled {
+  background: linear-gradient(90deg, #21a1d6 10%, #47cf73 100%);
+  color: #17212d;
+  transform: translateY(-2px) scale(1.03);
+}
+.editInput {
+  width: 90%;
+  min-height: 28px;
+  border-radius: 6px;
+  border: 1.5px solid #3756f5;
+  background: #242a34;
+  color: #fff;
+  font-size: 1em;
+  padding: 4px 8px;
+  margin-right: 8px;
+  outline: none;
+  transition: border 0.15s;
+}
+.editInput:focus {
+  border: 1.5px solid #28aaff;
+}
+.noteMain { cursor: pointer; }

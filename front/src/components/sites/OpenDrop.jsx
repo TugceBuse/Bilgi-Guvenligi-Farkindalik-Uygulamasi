@@ -10,7 +10,9 @@ const generateLink = (label) =>
 
 const OpenDrop = () => {
   const { files } = useFileContext();
-  const personalFiles = Object.values(files).filter(f => f.location === "personal");
+  const downloadsFiles = Object.values(files).filter(
+    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
+  );
 
   const { openDropPublicFiles, setOpenDropPublicFiles } = useGameContext();
 
@@ -25,7 +27,7 @@ const OpenDrop = () => {
   const handleUploadAll = () => {
     setUploading(true);
     setProgress(0);
-    let step = Math.max(1, Math.floor(100 / (personalFiles.length * 4 + 6)));
+    let step = Math.max(1, Math.floor(100 / (downloadsFiles.length * 4 + 6)));
     let percent = 0;
     const interval = setInterval(() => {
       percent += step;
@@ -35,7 +37,7 @@ const OpenDrop = () => {
         setUploading(false);
         setShowModal(false);
         // Dosyaları public olarak context'e ekle
-        const uploaded = personalFiles.map(f => ({
+        const uploaded = downloadsFiles.map(f => ({
           ...f,
           url: generateLink(f.label),
         }));
@@ -89,13 +91,13 @@ const OpenDrop = () => {
               <span className={styles.folderTitle}>Kişisel Dosyalarım</span>
             </div>
             <div className={styles.folderGrid}>
-              {personalFiles.length === 0 ? (
+              {downloadsFiles.length === 0 ? (
                 <span className={styles.noFile}>Yedeklenecek kişisel dosya yok.</span>
               ) : (
-                personalFiles.map((f, i) => (
+                downloadsFiles.map((f, i) => (
                   <div key={f.label} className={styles.folderFile}>
                     <div className={styles.bigIcon}>
-                      {f.type === "pdf" ? "📄" : f.type === "jpg" ? "🖼️" : "📁"}
+                      <img src={f.icon} alt="Files"/>
                     </div>
                     <div className={styles.fileMeta}>
                       <span className={styles.fileName}>{f.label}</span>
@@ -105,7 +107,7 @@ const OpenDrop = () => {
                 ))
               )}
             </div>
-            {personalFiles.length > 0 && (
+            {downloadsFiles.length > 0 && (
               <button className={styles.uploadAllBtn} onClick={handleUploadAll} disabled={uploading}>
                 Tümünü Yükle
               </button>
@@ -133,7 +135,7 @@ const OpenDrop = () => {
             : openDropPublicFiles.slice(0, 8).map((file, idx) => (
               <div key={file.url + idx} className={styles.fileCard}>
                 <span className={styles.fileIcon}>
-                  {file.type === "pdf" ? "📄" : file.type === "jpg" ? "🖼️" : "📁"}
+                  <img src={file.icon} alt="Files"/>
                 </span>
                 <span className={styles.fileName}>{file.label}</span>
                 <span className={styles.fileSize}>{file.size}</span>

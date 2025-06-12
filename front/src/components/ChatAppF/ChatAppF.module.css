@@ -1,34 +1,50 @@
+/* ChatAppF.module.css — Phish/Fake Tema */
+
+/* Ana pencere */
 .chatWindow {
   position: absolute;
   width: 800px;
   height: 600px;
-  background-color: #121212;
-  border: 2px solid #333333;
-  border-radius: 8px;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+  background: #231921;
+  border: 2.5px solid #952046;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px #6c213c30, 0 2px 12px #0007;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   z-index: 100;
 }
 
+/* Başlık alanı */
 .chatHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1a1a2e;
-  color: white;
-  padding: 10px 16px;
+  background: #952046;
+  color: #ffe2f7;
+  font-weight: 800;
+  padding: 12px 18px;
+  border-bottom: 2.5px solid #6c213c;
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
 }
 
+/* Kapatma butonu */
 .chatClose {
   background: transparent;
-  color: white;
-  font-size: 20px;
+  color: #ffe2f7;
+  font-size: 22px;
   border: none;
   cursor: pointer;
+  transition: color 0.18s;
+}
+.chatClose:hover {
+  color: #ffd6ed;
+  background: #6c213c;
+  border-radius: 4px;
 }
 
+/* Sol kullanıcı listesi */
 .body {
   display: flex;
   height: 100%;
@@ -36,11 +52,11 @@
 
 .userList {
   width: 160px;
-  background-color: #121212;
-  border-right: 1px solid #333333;
+  background: #271624;
+  border-right: 2px solid #952046;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 13px 9px 13px 13px;
   overflow-y: auto;
 }
 
@@ -49,48 +65,57 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
-  padding: 5px;
+  padding: 7px 5px;
   cursor: pointer;
   border-radius: 6px;
-  color: #cccccc;
+  color: #ffcae9;
+  font-weight: 500;
+  transition: background 0.14s, color 0.13s;
 }
-
 .userItem:hover {
-  background-color: #1f1f1f;
+  background: #39182d;
+  color: #fff6fd;
 }
 
 .userItem img {
   width: 32px;
   height: 32px;
   border-radius: 50%;
+  border: 2px solid #a14e71;
+  background: #31112b;
 }
 
+/* Ana mesaj alanı */
 .chatContent {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: #251521;
 }
 
 .chatTitle {
   padding: 10px;
-  background-color: #1a1a2e;
-  border-top: #121212 solid 2px;
+  background: #39182d;
+  border-top: #231921 solid 2px;
   font-weight: bold;
-  border-bottom: 1px solid #333333;
-  color: white;
+  border-bottom: 1.7px solid #952046;
+  color: #ffe2f7;
+  font-size: 1.09rem;
+  letter-spacing: 0.01em;
 }
 
 .messageList {
   flex: 1;
-  padding: 10px;
+  padding: 12px 11px 9px 11px;
   overflow-y: auto;
-  background-color: #121212;
+  background: #251521;
 }
 
+/* Mesaj baloncukları */
 .myMessage, .theirMessage {
-  margin-bottom: 10px;
-  padding: 8px;
-  max-width: 70%;
+  margin-bottom: 11px;
+  padding: 10px;
+  max-width: 74%;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -100,27 +125,39 @@
   align-self: flex-end;
   text-align: right;
   margin-left: auto;
-  background-color: #3b82f6;
-  color: white;
+  background: linear-gradient(94deg, #a14e71 70%, #952046 100%);
+  color: #fff2f6;
+  box-shadow: 0 2px 8px #95204638;
+  border: 1.5px solid #a14e71;
 }
 
 .theirMessage {
   align-self: flex-start;
-  background-color: #2c2c2e;
+  background: #34192b;
   text-align: left;
-  color: white;
+  color: #ffd6ed;
+  box-shadow: 0 1px 6px #6c213c18;
+  border: 1.2px solid #6c213c;
 }
 
+/* Mesaj zamanı */
+.myMessage small, .theirMessage small {
+  margin-top: 3px;
+  color: #d795b8;
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+
+/* Alt input alanı */
 .inputArea {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  padding: 10px;
-  border-top: 1px solid #333333;
-  background-color: #121212;
-  gap: 8px; 
-  align-items: stretch;  
+  padding: 12px;
+  border-top: 2px solid #952046;
+  background: #291326;
+  gap: 9px;
+  align-items: stretch;
 }
-
 @media (max-width: 650px) {
   .inputArea {
     grid-template-columns: repeat(2, 1fr);
@@ -135,14 +172,16 @@
 .inputArea input {
   flex: 1;
   padding: 8px;
-  background-color: #2c2c2e;
-  color: white;
+  background: #401c37;
+  color: #ffe2f7;
   border: none;
   border-radius: 4px;
   outline: none;
   margin-right: 10px;
+  font-size: 1.02em;
 }
 
+/* Kargo step button (örnek turuncu, istersen renk değiştirebilirsin) */
 .cargoStepButton {
   background: linear-gradient(90deg, #fdba74 0%, #f59e42 100%);
   color: #222;
@@ -169,9 +208,11 @@
   box-shadow: 0 4px 14px #fbbf24bb;
   transform: translateY(-2px) scale(1.04);
 }
+
+/* Normal seçenek butonu (pembe-vurgu) */
 .normalOptionButton {
-  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
-  color: white;
+  background: linear-gradient(90deg, #a14e71 0%, #952046 100%);
+  color: #fff2f7;
   border: none;
   border-radius: 5px;
   font-weight: 500;
@@ -181,16 +222,16 @@
   margin-bottom: 2px;
   cursor: pointer;
   transition: box-shadow 0.2s, background 0.18s;
-  box-shadow: 0 1.5px 6px #93c5fd80;
+  box-shadow: 0 1.5px 6px #a14e7180;
 }
 .normalOptionButton:disabled {
-  background: #233255;
-  color: #91a7c8;
+  background: #291326;
+  color: #a987b6;
   cursor: not-allowed;
-  opacity: 0.65;
+  opacity: 0.68;
   box-shadow: none;
 }
 .normalOptionButton:not(:disabled):hover {
-  background: linear-gradient(90deg, #60a5fa 0%, #818cf8 100%);
-  box-shadow: 0 3px 12px #6366f1cc;
+  background: linear-gradient(90deg, #c87aa8 0%, #952046 100%);
+  box-shadow: 0 3px 12px #a14e71cc;
 }

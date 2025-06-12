@@ -106,7 +106,6 @@ const defaultFileSchema = {
             exeType: "taskappsetup",
             virusType: "clown",
             detectable: false,
-            exeType: "taskappsetupf"
         },
         officedoc: { 
             available: true,
@@ -165,7 +164,7 @@ const defaultFileSchema = {
             virusType: null,
             type: "pdf",
             size: "740KB",
-            location: "personal", // istersen farklı klasör adı da verebilirsin
+            location: "downloads",
             label: "Kişisel Kullanıcı Bilgileri.pdf",
             icon: "/icons/pdf.png",
             content: "/files/Kişisel_Kullanıcı_Bilgileri.txt",
@@ -179,7 +178,7 @@ const defaultFileSchema = {
             virusType: null,
             type: "pdf",
             size: "1.2MB",
-            location: "personal",
+            location: "downloads",
             label: "İş Sözleşmesi.pdf",
             icon: "/icons/pdf.png",
             content: "/files/İş_Sözleşmesi.txt",
@@ -193,7 +192,7 @@ const defaultFileSchema = {
             virusType: null,
             type: "pdf",
             size: "860KB",
-            location: "personal",
+            location: "downloads",
             label: "Gizlilik Politikası.pdf",
             icon: "/icons/pdf.png",
             content: "/files/Gizlilik_Politikası.txt",
@@ -207,7 +206,7 @@ const defaultFileSchema = {
             virusType: null,
             type: "pdf",
             size: "2.1MB",
-            location: "personal",
+            location: "downloads",
             label: "Personel El Kitabı.pdf",
             icon: "/icons/pdf.png",
             content: "/files/Personel_El_Kitabı.txt",

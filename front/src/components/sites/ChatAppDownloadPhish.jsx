@@ -5,17 +5,17 @@ import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 const highlights = [
   {
     title: "Akıllı Yanıtlar",
-    icon: "/icons/ai.png",
+    icon: "/icons/conversation.png",
     desc: "ChatBox, gelen mesajları analiz ederek hızlı cevap önerileri sunar. Zaman kazanın, iletişimi hızlandırın."
   },
   {
     title: "Topluluk Alanları",
-    icon: "/icons/group.png",
+    icon: "/icons/discussion.png",
     desc: "Her ekip ve konu için ayrı sohbet odaları. Gelişmiş rol ve yetkilendirme."
   },
   {
     title: "Kurumsal Entegrasyon",
-    icon: "/icons/integrate.png",
+    icon: "/icons/live-chat.png",
     desc: "Slack, Teams, Asana ve Google Drive entegrasyonları ile iş akışınızı merkezileştirin."
   }
 ];
@@ -29,7 +29,7 @@ const mustKnows = [
 ];
 
 const fakeClients = [
-  "/clients/brand1.png", "/clients/brand2.png", "/clients/brand3.png", "/clients/brand4.png"
+  "/avatars/avatar18.png", "/avatars/avatar3.png", "/avatars/avatar5.png", "/avatars/avatar8.png"
 ];
 
 const ChatAppDownloadPhish = () => {
@@ -47,7 +47,7 @@ const ChatAppDownloadPhish = () => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
           setShowPopup(true);
-          updateAvailableStatus("chatappf", { available: true });
+          updateAvailableStatus("chatappf", { available: true,});
           setTimeout(() => setShowPopup(false), 2200);
           setDownloading(false);
           return 100;
@@ -60,7 +60,7 @@ const ChatAppDownloadPhish = () => {
   return (
     <div className={styles.downloadContainer}>
       <header className={styles.header}>
-        <img src="/icons/speak.png" alt="ChatBox Pro" className={styles.logo} />
+        <img src="/icons/chatting.png" alt="ChatBox Pro" className={styles.logo} />
         <div>
           <h1>ChatBox Pro</h1>
           <span className={styles.slogan}>Mesajlaşmanın geleceği: Güvenli. Akıllı. Kolay.</span>
@@ -82,7 +82,7 @@ const ChatAppDownloadPhish = () => {
               disabled={downloading}
             >
               <img src="/icons/downloading.png" alt="indir" />
-              Windows İçin ChatBoxProSetup.exe
+              ChatBoxPro.exe
             </button>
             {downloading &&
               <div className={styles.progressBar}>
@@ -105,7 +105,8 @@ const ChatAppDownloadPhish = () => {
           </div>
         </div>
         <div className={styles.rightColumn}>
-          <img src="/chatbox/preview.png" alt="ChatBox Sohbet Ekranı" className={styles.appPreview} />
+          Her yerden Herkesle anında iletişim kurun. ChatBox Pro, ekiplerinizi bir araya getirir, iş akışınızı hızlandırır ve güvenli bir iletişim ortamı sunar. İster masaüstü, ister mobil, her zaman yanınızda.
+          <img src="/icons/group-discussion.png" alt="ChatBox Sohbet Ekranı" className={styles.appPreview} />
           <div className={styles.clientsRow}>
             {fakeClients.map((logo, i) => (
               <img key={i} src={logo} alt="Kurumsal Müşteri" />
@@ -136,13 +137,8 @@ const ChatAppDownloadPhish = () => {
       </section>
 
       <footer className={styles.footer}>
-        <div className={styles.storesRow}>
-          <img src="/stores/windows.svg" alt="Windows" />
-          <img src="/stores/apple.svg" alt="Mac" />
-          <img src="/stores/linux.svg" alt="Linux" />
-        </div>
         <p>
-          © 2025 ChatBox Ltd. | <a href="/privacy">Gizlilik & Kullanım Koşulları</a>
+          © 2025 ChatBox Ltd. | <span className={styles.footerSpan}>Gizlilik & Kullanım Koşulları</span>
         </p>
       </footer>
     </div>

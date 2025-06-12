@@ -11,6 +11,7 @@ import PhoneApp, { usePhoneApp } from '../components/PhoneApp/PhoneApp';
 import DocuLiteApp, { useDocuLiteApp } from '../components/DocuLiteApp/DocuLiteApp';
 import QuickPDFViewApp, { useQuickPDFViewApp } from '../components/QuickPDFViewApp/QuickPDFViewApp';
 import OpenLitePDFApp, { useOpenLitePDFApp } from '../components/OpenLitePDFApp/OpenLitePDFApp';
+import ChatAppF, { useChatAppF } from '../components/ChatAppF/ChatAppF';
 
 const WindowConfigContext = createContext();
 
@@ -52,7 +53,17 @@ const initialWindowConfig = {
     useComponent: useChatApp,
     location: 'desktop',
     clickable: true,
-    available: true,
+    available: false,
+    requiresInternet: true
+  },
+  chatappf: {
+    icon: '/icons/chatting.png',
+    label: 'Sohbet',
+    component: ChatAppF,
+    useComponent: useChatAppF,
+    location: 'desktop',
+    clickable: true,
+    available: false,
     requiresInternet: true
   },
   folder: {

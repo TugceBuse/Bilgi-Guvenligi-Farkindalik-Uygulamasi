@@ -10,7 +10,10 @@ const dummyCommunityFiles = [
 
 const SyncNest = () => {
   const { files } = useFileContext();
-  const personalFiles = Object.values(files).filter(f => f.location === "personal");
+  const downloadsFiles = Object.values(files).filter(
+    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
+  );
+
   const [user, setUser] = useState(null);
   const [showUpload, setShowUpload] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -51,16 +54,16 @@ const SyncNest = () => {
   const handleUploadAll = () => {
     setUploadProgress(0);
     let percent = 0;
-    const step = Math.max(1, Math.floor(100 / (personalFiles.length * 7 + 7)));
+    const step = Math.max(1, Math.floor(100 / (downloadsFiles.length * 7 + 7)));
     const interval = setInterval(() => {
       percent += step;
       setUploadProgress(percent);
       if (percent >= 100) {
         clearInterval(interval);
-        setUploaded(personalFiles.map(f => ({ ...f })));
+        setUploaded(downloadsFiles.map(f => ({ ...f })));
         // Kendi dosyanı community'ye ekle
         setCommunityFiles(prev => [
-          ...personalFiles.map(f => ({ ...f, owner: user?.email?.split("@")[0] || "Anonim" })),
+          ...downloadsFiles.map(f => ({ ...f, owner: user?.email?.split("@")[0] || "Anonim" })),
           ...prev
         ]);
         setShowUpload(false);
@@ -169,7 +172,10 @@ const SyncNest = () => {
             <h4>Yedeklediğiniz Dosyalar</h4>
             <ul>
               {uploaded.map((f, i) => (
-                <li key={i}>{f.label} <span className={styles.size}>{f.size}</span></li>
+                <div key={i} className={styles.uploadedFile}>
+                  <img src={f.icon} alt="Files"/>
+                  <li key={i}>{f.label} <span className={styles.size}>{f.size}</span></li>
+                </div>
               ))}
             </ul>
           </div>
@@ -182,20 +188,20 @@ const SyncNest = () => {
           <div className={styles.modalBox}>
             <h2>Kişisel Dosyalarım</h2>
             <div className={styles.folderGrid}>
-              {personalFiles.length === 0 ? (
+              {downloadsFiles.length === 0 ? (
                 <span className={styles.noFile}>Yedeklenecek kişisel dosya yok.</span>
               ) : (
-                personalFiles.map((f, i) => (
+                downloadsFiles.map((f, i) => (
                   <div key={f.label} className={styles.folderFile}>
                     <span className={styles.fileIcon}>
-                      {f.type === "pdf" ? "📄" : f.type === "jpg" ? "🖼️" : f.type === "zip" ? "🗜️" : "📁"}
+                      <img src={f.icon} alt="Files"/>
                     </span>
                     <span>{f.label} <span className={styles.size}>({f.size})</span></span>
                   </div>
                 ))
               )}
             </div>
-            {personalFiles.length > 0 &&
+            {downloadsFiles.length > 0 &&
               <button className={styles.uploadAllBtn} onClick={handleUploadAll}>Hepsini Yedekle</button>
             }
             {uploadProgress > 0 && (

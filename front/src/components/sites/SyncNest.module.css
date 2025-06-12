@@ -230,6 +230,18 @@
   padding: 0;
   list-style: none;
 }
+.uploadedFile{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+  gap: 5px;
+  align-items: end;
+}
+.uploadedList img{
+  width: 32px;
+  height: 32px;
+  margin-right: 3px;
+}
 .uploadedList li {
   margin-bottom: 7px;
   color: #9ddaff;
@@ -255,8 +267,10 @@
   align-items: center;
   gap: 10px;
 }
-.fileIcon {
-  font-size: 1.38rem;
+.fileIcon img {
+  width: 32px;
+  height: 32px;
+  margin-right: 3px;
 }
 .owner {
   color: #86b2ff;

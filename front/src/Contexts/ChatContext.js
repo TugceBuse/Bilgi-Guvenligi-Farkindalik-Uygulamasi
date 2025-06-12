@@ -87,7 +87,7 @@ export const ChatContextProvider = ({ children }) => {
       messages, addChatMessage,
       options, setUserOptions,
       cargoStepShared, setCargoStepShared,
-      users, addUser, setUsers
+      users, addUser, setUsers,
     }}>
       {children}
     </ChatContext.Provider>
