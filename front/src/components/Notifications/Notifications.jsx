@@ -8,7 +8,9 @@ const Notifications = () => {
 
   // Sistem ve mail/sms ayrımı
   const systemPopups = popupNotifications.filter(n => n.appType === "system" || !n.appType);
-  const appPopups = popupNotifications.filter(n => n.appType === "mail" || n.appType === "phone" || n.appType === "chatapp");
+  const appPopups = popupNotifications.filter(
+    n => ["mail", "phone", "chatapp", "taskapp"].includes(n.appType)
+  );
 
   return (
     <>

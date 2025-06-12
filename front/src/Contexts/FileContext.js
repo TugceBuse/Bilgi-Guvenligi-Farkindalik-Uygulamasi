@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useUIContext } from './UIContext';
 import NovaBankAppSetup from '../exefiles/NovaBankAppSetup/NovaBankAppSetup';
+import { useQuestManager } from './QuestManager';
 
 const FileContext = createContext();
 
 export const FileContextProvider = ({ children }) => {
     const { openWindow, closeWindow } = useUIContext();
+    const { setIsTaskAppInstalled, completeQuest } = useQuestManager();
 
     // Standart dosya şeması
 const defaultFileSchema = {
@@ -255,6 +257,16 @@ const defaultFileSchema = {
     useEffect(() => {
         console.log('openedFiles:', openedFiles);
     }, [openedFiles]);
+
+    useEffect(() => {
+        // TaskApp kurulum dosyası açıldığında, TaskApp uygulamasının kurulu olduğunu belirt
+        if (files.taskappsetup.available) {
+            setIsTaskAppInstalled(true);
+            completeQuest('download_taskapp');
+        } else {
+            setIsTaskAppInstalled(false);
+        }
+    }, [files.taskappsetup, setIsTaskAppInstalled]);
 
     // 📌 Dosya açma fonksiyonu
     const openFile = (fileName, theme) => {

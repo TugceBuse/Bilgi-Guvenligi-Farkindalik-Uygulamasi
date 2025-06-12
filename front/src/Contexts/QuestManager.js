@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-
-// Başlangıç quest listesini içeri al
+import { useNotificationContext } from "./NotificationContext";
 import { QUEST_LIST } from "../constants/questList";
 
 const QuestManagerContext = createContext();
@@ -10,16 +9,16 @@ export function useQuestManager() {
 }
 
 export function QuestManagerProvider({ children }) {
-  // Quest state (tüm görevlerin anlık durumu)
   const [quests, setQuests] = useState(QUEST_LIST);
+  const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false); // Task uygulaması kurulu mu?
+  const { addNotification } = useNotificationContext();
 
-  // Şu an aktif görevleri kolayca döndürmek için
+  // Aktif görevleri döndür
   const getActiveQuests = () => quests.filter(q => q.status === "active");
 
-  // Görevi tamamla ve zincirli görevleri aktive et
+  // Görev tamamlama ve zincir görevleri aktive etme + BİLDİRİM
   const completeQuest = (id) => {
     setQuests((prev) => {
-      // 1. Adım: Önce ilgili görevi completed yap
       let updated = prev.map(q => {
         if (q.id === id && q.status !== "completed" && q.status !== "failed") {
           console.log(`Görev tamamlandı: ${q.id} - ${q.title}`);
@@ -28,7 +27,8 @@ export function QuestManagerProvider({ children }) {
         return q;
       });
 
-      // 2. Adım: Zincir görevleri güncel listeye göre aç
+      // Yeni aktif olan görevleri tutmak için
+      let newlyActivated = [];
       updated = updated.map(q => {
         if (
           q.status === "locked" &&
@@ -39,10 +39,25 @@ export function QuestManagerProvider({ children }) {
           )
         ) {
           console.log(`Zincirleme görev aktif oldu: ${q.id} - ${q.title}`);
+          newlyActivated.push(q);
           return { ...q, status: "active" };
         }
         return q;
       });
+
+      // BİLDİRİM: Sadece taskapp kuruluysa ve yeni görev açıldıysa
+      if (isTaskAppInstalled && newlyActivated.length > 0) {
+        newlyActivated.forEach(q =>
+          addNotification({
+            appType: "taskapp",
+            title: "Yeni Görev Açıldı",
+            message: q.title,
+            isPopup: true,
+            isTaskbar: false,
+            duration: 3200
+          })
+        );
+      }
 
       // Debug için güncel görev listesini göster
       console.log("Güncel görev listesi:", updated);
@@ -51,26 +66,24 @@ export function QuestManagerProvider({ children }) {
     });
   };
 
-
-
-  // Görevi başarısız olarak işaretle
   const failQuest = (id) => {
     setQuests((prev) =>
       prev.map(q => q.id === id ? { ...q, status: "failed" } : q)
     );
   };
 
-  // Reset veya tekrar başlatmak için
   const resetQuests = () => setQuests(QUEST_LIST);
 
-  // Dışarıya sağlayacağımız değerler
+  // Value'ya isTaskAppInstalled ve setter da ekliyoruz!
   const value = {
     quests,
     getActiveQuests,
     completeQuest,
     failQuest,
     resetQuests,
-    setQuests
+    setQuests,
+    isTaskAppInstalled,
+    setIsTaskAppInstalled, // TaskApp kurulunca erişebilsin
   };
 
   return (

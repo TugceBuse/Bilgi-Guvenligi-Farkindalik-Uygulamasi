@@ -3,10 +3,12 @@ import './NovaBankAppSetup.css';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useFileContext } from '../../Contexts/FileContext';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 const NovaBankAppSetup = ({ fileName, onInstallComplete, onAntivirusCheck }) => {
   const { closeFile } = useFileContext();
   const { updateAvailableStatus, windowConfig } = useWindowConfig();
+  const { completeQuest } = useQuestManager();
   const SetupRef = useRef(null);
 
   const [step, setStep] = useState(1);
@@ -64,6 +66,7 @@ const NovaBankAppSetup = ({ fileName, onInstallComplete, onAntivirusCheck }) => 
           setInstalling(false);
           setStep(4);
           updateAvailableStatus('novabankapp', true);
+          completeQuest('download_novabank'); // Görev tamamlandı
           return 100;
         }
         return Math.min(prev + Math.floor(Math.random() * 4) + 1, 100);
