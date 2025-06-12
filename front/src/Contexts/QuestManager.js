@@ -19,23 +19,39 @@ export function QuestManagerProvider({ children }) {
   // Görevi tamamla ve zincirli görevleri aktive et
   const completeQuest = (id) => {
     setQuests((prev) => {
-      return prev.map(q => {
-        if (q.id === id) {
-          // Görevi tamamla
+      // 1. Adım: Önce ilgili görevi completed yap
+      let updated = prev.map(q => {
+        if (q.id === id && q.status !== "completed" && q.status !== "failed") {
+          console.log(`Görev tamamlandı: ${q.id} - ${q.title}`);
           return { ...q, status: "completed" };
-        }
-        // Zincirleme görevleri aç
-        if (q.requires.includes(id) && q.status === "locked") {
-          // Tüm requirements'ları tamamlandıysa aç
-          const allReqMet = q.requires.every(rid =>
-            prev.find(q2 => q2.id === rid && q2.status === "completed")
-          );
-          if (allReqMet) return { ...q, status: "active" };
         }
         return q;
       });
+
+      // 2. Adım: Zincir görevleri güncel listeye göre aç
+      updated = updated.map(q => {
+        if (
+          q.status === "locked" &&
+          q.requires &&
+          q.requires.length > 0 &&
+          q.requires.every(rid =>
+            updated.find(q2 => q2.id === rid && q2.status === "completed")
+          )
+        ) {
+          console.log(`Zincirleme görev aktif oldu: ${q.id} - ${q.title}`);
+          return { ...q, status: "active" };
+        }
+        return q;
+      });
+
+      // Debug için güncel görev listesini göster
+      console.log("Güncel görev listesi:", updated);
+
+      return updated;
     });
   };
+
+
 
   // Görevi başarısız olarak işaretle
   const failQuest = (id) => {

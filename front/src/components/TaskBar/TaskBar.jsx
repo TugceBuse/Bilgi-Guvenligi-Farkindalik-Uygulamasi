@@ -10,6 +10,7 @@ import SystemSettings from '../SystemSettings/SystemSettings';
 import { useNotificationContext } from '../../Contexts/NotificationContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
 import { useSecurityContext } from '../../Contexts/SecurityContext';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 const TaskBar = ({ windowConfig, hacked, onFormat }) => {
   const [showStartMenu, setShowStartMenu] = useState(false);
@@ -27,6 +28,8 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
   const pass = "1234";
   const navigate = useNavigate();
   const { gameDate } = useTimeContext();
+
+  const { completeQuest } = useQuestManager();
 
   const {
     isWificonnected, setIsWificonnected
@@ -96,6 +99,8 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
     } else {
       setIsWificonnected(true);
       setWifiname(wifiName);
+      completeQuest("connect_wifi");
+      completeQuest("login_mailbox");
     }
   };
 

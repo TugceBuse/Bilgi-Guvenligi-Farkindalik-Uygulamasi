@@ -25,10 +25,9 @@ export const TimeProvider = ({ children }) => {
 
   useEffect(() => {
     secondsRef.current = seconds;
-
-    console.log(`Current game seconds: ${seconds}`);
-    console.log(`Current game date: ${gameDate.toISOString()}`);
-    console.log(`Game started at: ${gameStart.toISOString()}`);
+    // console.log(`Current game seconds: ${seconds}`);
+    // console.log(`Current game date: ${gameDate.toISOString()}`);
+    // console.log(`Game started at: ${gameStart.toISOString()}`);
   }, [seconds]);
 
   // Anlık oyun zamanı Date objesi olarak (her saniye güncellenir)

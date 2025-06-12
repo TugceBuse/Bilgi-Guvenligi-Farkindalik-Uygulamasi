@@ -404,6 +404,36 @@
   opacity: 0.85;
 }
 
+/* Görev açıklama kutusu */
+.task-desc-box {
+  background: linear-gradient(90deg, #373757 70%, #212e4e 130%);
+  color: #ffe9f5;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 0 0 18px 0;
+  margin-left: 8px;
+  margin-right: 8px;
+  font-size: 15px;
+  border-left: 4px solid #a58be6;
+  box-shadow: 0 2px 10px 0 rgba(30,30,60,0.1);
+  animation: fadeSlideIn 0.35s;
+}
+
+.task-item {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+.task-item:focus {
+  outline: 2px solid #8be8e8;
+}
+
+.task-item:hover:not(.locked) {
+  background-color: #464676;
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
