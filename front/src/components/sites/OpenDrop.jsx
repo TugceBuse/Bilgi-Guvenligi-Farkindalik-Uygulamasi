@@ -10,11 +10,13 @@ const generateLink = (label) =>
 
 const OpenDrop = () => {
   const { files } = useFileContext();
-  const downloadsFiles = Object.values(files).filter(
-    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
-  );
-
   const { openDropPublicFiles, setOpenDropPublicFiles } = useGameContext();
+  const backedUpFileLabels = (openDropPublicFiles ?? []).map(file => file.label);
+
+  const downloadsFiles = Object.values(files).filter(
+    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type) &&
+    !backedUpFileLabels.includes(f.label)
+  );
 
   const [showModal, setShowModal] = useState(false);
   const [uploading, setUploading] = useState(false);
