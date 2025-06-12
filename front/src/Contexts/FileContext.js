@@ -159,7 +159,7 @@ const defaultFileSchema = {
             content: "/images/meeting.jpg"
         },
         kisiselkullanicibilgileri: {
-            available: true,
+            available: false,
             quarantined: false,
             clickable: true,
             infected: false,
@@ -173,7 +173,7 @@ const defaultFileSchema = {
             locked: false,
         },
         issozlesmesi: {
-            available: true,
+            available: false,
             quarantined: false,
             clickable: true,
             infected: false,
@@ -187,7 +187,7 @@ const defaultFileSchema = {
             locked: false,
         },
         gizlilikpolitikasi: {
-            available: true,
+            available: false,
             quarantined: false,
             clickable: true,
             infected: false,
@@ -201,7 +201,7 @@ const defaultFileSchema = {
             locked: false,
         },
         personelelkitabi: {
-            available: true,
+            available: false,
             quarantined: false,
             clickable: true,
             infected: false,
