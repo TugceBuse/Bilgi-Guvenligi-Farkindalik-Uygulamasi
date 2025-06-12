@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import "./Browser.css";
 import { MakeDraggable } from "../../utils/Draggable";
 import { useUIContext } from "../../Contexts/UIContext";
-import sites from "../../utils/sites";
+import sites from "../../constants/sites";
 import { useGameContext } from "../../Contexts/GameContext";
 
 export const useBrowser = () => {

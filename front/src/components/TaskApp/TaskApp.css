@@ -263,6 +263,7 @@
   top: 10px;
   width: 20px;
   height: 20px;
+  z-index: 2;
 }
 
 @keyframes fadeSlideIn {
@@ -299,7 +300,99 @@
 .task-item.completed {
   opacity: 0.5;
   text-decoration: line-through;
-  transition: opacity 0.3s ease;
+  background: linear-gradient(90deg, #3a3a5e 80%, #9ed99e 130%);
+  color: #b9ffba;
+  border-left: 4px solid #77de77;
+  font-weight: 500;
+}
+
+.task-item.completed .task-status-icon {
+  filter: grayscale(50%) brightness(1.2);
+  opacity: 0.7;
+}
+
+.task-item.active {
+  background: linear-gradient(90deg, #453b7e 70%, #1ad1e6 130%);
+  color: #fff;
+  box-shadow: 0 0 8px #24e6f2a1;
+  border-left: 4px solid #24e6f2;
+  font-weight: 700;
+}
+
+.task-item.active .task-status-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #24e6f2;
+  margin-right: 9px;
+  box-shadow: 0 0 6px #24e6f2b0;
+  vertical-align: middle;
+}
+
+.task-item.failed {
+  background: linear-gradient(90deg, #633232 70%, #f94d58 120%);
+  color: #ffd4d6;
+  border-left: 4px solid #f94d58;
+  font-weight: 600;
+}
+
+.task-item.failed .task-status-icon {
+  filter: grayscale(80%) brightness(1.6) drop-shadow(0 0 2px #f94d58);
+}
+
+.task-item.locked {
+  background: repeating-linear-gradient(
+    120deg, #23233c 0px, #23233c 25px, #2c2945 25px, #2c2945 50px
+  );
+  color: #9292ad;
+  opacity: 0.55;
+  cursor: not-allowed;
+  border-left: 4px dashed #616170;
+  font-style: italic;
+}
+
+.task-item.locked .task-status-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #555;
+  margin-right: 9px;
+  border: 2px solid #999;
+  vertical-align: middle;
+}
+
+/* Statü etiketi */
+.task-status-label {
+  float: right;
+  font-size: 13px;
+  font-weight: 700;
+  margin-left: 14px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.15);
+  letter-spacing: 0.02em;
+}
+
+.task-item.completed .task-status-label {
+  background: #2e7342;
+  color: #b9ffba;
+}
+
+.task-item.failed .task-status-label {
+  background: #f94d58;
+  color: #fff1f1;
+}
+
+.task-item.active .task-status-label {
+  background: #24e6f2;
+  color: #23233c;
+}
+
+.task-item.locked .task-status-label {
+  background: #444459;
+  color: #bbb;
 }
 
 .no-tasks {
@@ -307,6 +400,8 @@
   color: #aaa;
   font-style: italic;
   margin-top: 30px;
+  font-size: 18px;
+  opacity: 0.85;
 }
 
 ::-webkit-scrollbar {
