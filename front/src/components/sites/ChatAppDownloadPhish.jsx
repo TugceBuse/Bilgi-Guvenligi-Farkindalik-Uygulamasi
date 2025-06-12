@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import styles from './ChatAppDownloadPhish.module.css';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
-import { useChatContext } from '../../Contexts/ChatContext';
 
 const highlights = [
   {
@@ -35,14 +34,12 @@ const fakeClients = [
 
 const ChatAppDownloadPhish = () => {
   const { updateAvailableStatus } = useWindowConfig();
-  const { setTheme } = useChatContext();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const intervalRef = useRef(null);
 
   const startDownload = () => {
-    setTheme("phish");
     setDownloading(true);
     setProgress(0);
     intervalRef.current = setInterval(() => {

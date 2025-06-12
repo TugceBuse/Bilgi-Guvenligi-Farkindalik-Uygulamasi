@@ -16,6 +16,7 @@
   import { TimeProvider } from '../Contexts/TimeContext.js';
   import IntroScreen from '../components/IntroScreen/IntroScreen.jsx';
   import { QuestManagerProvider } from '../Contexts/QuestManager';
+  import { NotepadProvider } from '../Contexts/NotepadContext.js';
 
     const Game = () => {
       useEffect(() => {
@@ -44,6 +45,7 @@
                           <GameContextProvider>
                             <TodoProvider>
                               <ChatContextProvider>
+                                <NotepadProvider>
                                 <CargoMailNotifier />
                                 <div className="game">
                                   {/* {phase === "intro" && <IntroScreen onFinish={() => setPhase("hacked")} />}
@@ -52,6 +54,7 @@
                                   )}                       */}
                                   {phase === "desktop" && <Desktop />}
                                 </div>
+                                </NotepadProvider>
                               </ChatContextProvider>
                             </TodoProvider>
                           </GameContextProvider>
