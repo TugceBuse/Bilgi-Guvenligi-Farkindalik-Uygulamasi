@@ -1,0 +1,97 @@
+.docx-window {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 60%;
+    height: 80%;
+    margin: auto;
+    border: 1px solid #444;
+    background-color: #2c2c2c;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .docx-header {
+    background-color: #3a3a3a;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    border-bottom: 1px solid #1a1919;
+    color: #ffffff;
+  }
+  
+  .docx-header-buttons {
+    display: flex;
+    gap: 6px;
+  }
+  
+  .close-btn {
+    width: 30px;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    color: #e4e4e4;
+    font-size: 1.5em;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .close-btn:hover {
+    background-color: #c9302c;
+  }
+  
+  .docx-content {
+    flex: 1;
+    display: flex;
+    height: 100%;
+  }
+  
+  .docx-sidebar {
+    width: 220px;
+    background-color: #3f3f3f;
+    border-right: 1px solid #2a2a2a;
+    padding: 12px;
+    font-size: 14px;
+    color: #f0e68c; /* sarıya yakın uyarı rengi */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .enable-button {
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    font-size: 14px;
+    margin-top: 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .enable-button:hover {
+    background-color: #005fa3;
+  }
+  
+  .docx-main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    font-size: 15px;
+    color: #f5f5f5;
+    background-color: #1e1e1e;
+  }
+  

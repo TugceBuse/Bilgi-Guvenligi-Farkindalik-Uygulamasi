@@ -6,15 +6,15 @@ import { useUIContext } from '../../Contexts/UIContext';
 
 
 export const useScanner = () => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow } = useUIContext();
     
 
     const openHandler = () => {
-        toggleWindow('scanner');
+        openWindow('scanner');
     };
     
     const closeHandler = () => {
-        toggleWindow('scanner');
+        closeWindow('scanner');
     };
     
     return { openHandler, closeHandler };
@@ -48,8 +48,8 @@ const Scanner = ({ closeHandler, style }) => {
         };
       }, []);
     return (
-        <div className="scanner-window" style={style} ref={ScannerRef}>
-            <div class="cursor"></div>
+        <div className="scanner-window" style={style} ref={ScannerRef} data-window="scanner">
+            <div className="cursor"></div>
             <div className="scanner-header">
                 <h2>QR Scanner</h2>
                 <button className="scanner-close" onClick={closeHandler}>×</button>

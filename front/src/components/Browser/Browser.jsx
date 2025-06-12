@@ -1,425 +1,389 @@
-import React, { useState,useEffect, useRef } from 'react';
-import './Browser.css';
-import { MakeDraggable } from '../../utils/Draggable';
-import BrowserBar from './BrowserBar';
-import { useUIContext } from '../../Contexts/UIContext';
-import { useFileContext } from '../../Contexts/FileContext';
-import { useGameContext } from '../../Contexts/GameContext';
-  
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
+import "./Browser.css";
+import { MakeDraggable } from "../../utils/Draggable";
+import { useUIContext } from "../../Contexts/UIContext";
+import sites from "../../utils/sites";
+import { useGameContext } from "../../Contexts/GameContext";
+
 export const useBrowser = () => {
-  const { toggleWindow } = useUIContext();
-
-  const openHandler = () => {
-    toggleWindow('browser');
+  const { openWindow, closeWindow } = useUIContext();
+  return {
+    openHandler: (props = {}) => openWindow("browser", props),   // <-- props ile aç!
+    closeHandler: () => closeWindow("browser"),
   };
-
-  const closeHandler = () => {
-    toggleWindow('browser');
-  };
-
-  return { openHandler, closeHandler };
 };
 
+const CachedComponents = {};
 
 const Browser = ({ closeHandler, style }) => {
+  // 1. windowProps'u oku
+  const { windowProps } = useUIContext();
+  const browserProps = windowProps?.browser || {};
 
-  const { files,updateFileStatus } = useFileContext();
-  const { setIsantivirusinstalled } = useGameContext();
+  // 2. Sadece pencere ilk açıldığında gelen url ile başlat (her mount'ta değil)
+  const [initialized, setInitialized] = useState(false);
 
-  const [url, setUrl] = useState('https://www.google.com/');
-  const [content, setContent] = useState('main');
+  // 3. Varsayılan url/props
+  const defaultUrl = browserProps.url || "https://www.google.com";
+  const [url, setUrl] = useState(defaultUrl);
+  const [currentUrl, setCurrentUrl] = useState(defaultUrl);
   const [loading, setLoading] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false);
-  //Dosya indirme Senaryosu için kullanılacak
-  const [downloadMessage, setDownloadMessage] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [history, setHistory] = useState([`google.com`]);
+  const [history, setHistory] = useState([defaultUrl]);
+  const [matchedSites, setMatchedSites] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const prevIndexRef = useRef(currentIndex);
 
-  //192.168.1.1 sayfasi login
-  const [loginusername, setLoginusername] = useState('');
-  const [loginpassword, setLoginpassword] = useState('');
+  // 4. Diğer props (ör: trackingNo) yakala
+  const [extraProps, setExtraProps] = useState(
+    browserProps.shippingCompany || browserProps.trackingNo
+      ? { shippingCompany: browserProps.shippingCompany, trackingNo: browserProps.trackingNo }
+      : null
+  );
 
   const browserRef = useRef(null);
-  MakeDraggable(browserRef, '.browser-header');
+  const searchInputRef = useRef(null);
+  const browserScrollRef = useRef(null);
 
-  const handleUrlChange = (e) => {
-    setUrl(e.target.value);
+  MakeDraggable(browserRef, ".browser-header");
+  const { isWificonnected } = useGameContext();
+
+  // ---- 5. EN KRİTİK KISIM: Pencere ilk açıldığında (ya da yeni props geldiğinde) güncelle
+  useEffect(() => {
+    if (!initialized) {
+      if (browserProps.url) {
+        setUrl(browserProps.url);
+        setCurrentUrl(browserProps.url);
+        setHistory([browserProps.url]);
+        setCurrentIndex(0);
+      }
+      if (browserProps.shippingCompany || browserProps.trackingNo) {
+        setExtraProps({
+          shippingCompany: browserProps.shippingCompany,
+          trackingNo: browserProps.trackingNo,
+        });
+      }
+      setInitialized(true); // Sadece bir kere çalışsın
+    }
+    // eslint-disable-next-line
+  }, [browserProps.url, browserProps.shippingCompany, browserProps.trackingNo, initialized]);
+
+  // ---- 6. (DEĞİŞMEDİ) Event ile link tıklanınca yönlendirme
+  useEffect(() => {
+    const handleOpenUrl = async (e) => {
+      if (typeof e.detail === "object" && e.detail !== null) {
+        const { url, shippingCompany, trackingNo } = e.detail;
+        setExtraProps({ shippingCompany, trackingNo });
+        await handleGoClick(url);
+      } else {
+        setExtraProps(null);
+        await handleGoClick(e.detail);
+      }
+    };
+
+    window.addEventListener("open-browser-url", handleOpenUrl);
+    return () => window.removeEventListener("open-browser-url", handleOpenUrl);
+  }, []);
+
+
+
+  const startLoading = async () => {
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
   };
 
+  const normalizeText = (text) => {
+    return text
+      .toLowerCase()
+      .replace(/ğ/g, "g")
+      .replace(/ü/g, "u")
+      .replace(/ş/g, "s")
+      .replace(/ı/g, "i")
+      .replace(/ö/g, "o")
+      .replace(/ç/g, "c");
+  };
 
-  const handleGoClick = (newUrl = url, addToHistory = true) => {
-    setLoading(true);
-    setTimeout(() => {
-      // URL'yi normalize et
-      const normalizedUrl = newUrl.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?|\/$/g, '');
+  const handleUrlChange = (e) => setUrl(e.target.value);
+  const handleKeyDown = (e) => e.key === "Enter" && handleGoClick(e.target.value);
 
-      if (!normalizedUrl.trim()) {
-        setContent('');
-        setUrl('');
-      } else {
-        if (addToHistory) {
-          if (currentIndex === history.length - 1) {
-            // Kullanıcı history'nin sonundaysa yeni URL'yi ekle
-            const newHistory = [...history, normalizedUrl];
-            setHistory(newHistory);
-            setCurrentIndex(newHistory.length - 1);
-          } else {
-            // Kullanıcı history'nin sonunda değilse yeni URL'yi history sonu yap
-            const newHistory = [...history.slice(0, currentIndex + 1), normalizedUrl];
-            setHistory(newHistory);
-            setCurrentIndex(newHistory.length - 1);
+  const handleGoogleSearch = async (searchText, addToHistory = true) => {
+    if (!searchText || !searchText.trim()) return;
+    const searchQuery = normalizeText(searchText.trim());
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+    setUrl(searchUrl);
+    await startLoading();
+    setCurrentUrl(searchUrl);
+
+    if (addToHistory) {
+      setHistory([...history.slice(0, currentIndex + 1), searchUrl]);
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const handleGoClick = async (newUrl = url, addToHistory = true) => {
+    await startLoading(); 
+    const cleanedUrl = newUrl.trim().replace(/^(www\.)?|\/$/g, '');
+    const hasProtocol = /^https?:\/\//i.test(cleanedUrl);
+    const finalUrl = hasProtocol ? cleanedUrl : `https://${cleanedUrl}`;
+    const normalizedUrl = normalizeText(finalUrl);
+
+    // REGEX destekli eşleşme
+    let matchedSite = sites[finalUrl];
+    let dynamicUrl = null;
+
+    if (!matchedSite) {
+      for (const [pattern, siteConfig] of Object.entries(sites)) {
+        if (pattern.startsWith("^")) {
+          const regex = new RegExp(pattern);
+          if (regex.test(finalUrl)) {
+            matchedSite = siteConfig;
+            dynamicUrl = finalUrl;
+            break;
           }
-        }
-
-        if (normalizedUrl === 'antivirus.com') {
-          setContent('download');
-          setUrl('https://www.google.com.tr/search?q=dosya+indir&sca_esv=87c8593f13286a53&hl=tr&sxsrf=ADLYWIJxXgQSDsqTSAed6C7E4xXZRu');
-        } else if (normalizedUrl === '192.168.1.1') {
-          setContent('login');
-        } else if (normalizedUrl === 'google.com') {
-          setContent('main');
-          setUrl('https://www.google.com/');
-        } else if (normalizedUrl === 'cybersentinel.com') {
-          console.log('CyberSentinel');
-          setContent('download2');
-          setUrl('https://www.CyberSentinel.com');
-        } else if (normalizedUrl === 'shieldsecure.com') {
-          console.log('ShieldSecure');
-          setContent('download1');
-          setUrl('https://www.ShieldSecure.com'); 
-        } else {
-          setContent('404 Not Found. The requested URL was not found on this server.');
         }
       }
-      setLoading(false);
-    }, 2000); // 2 saniye gecikme
+    }
+
+    setCurrentUrl(matchedSite ? (dynamicUrl || finalUrl) : "404");
+    setUrl(finalUrl);
+
+    if (addToHistory) {
+      setHistory([...history.slice(0, currentIndex + 1), finalUrl]);
+      setCurrentIndex(currentIndex + 1);
+    }
+    setExtraProps(null); // her yeni sayfa için sıfırla
+  };
+
+  const goHome = async () => {
+    const googleUrl = "https://www.google.com";
+    setUrl(googleUrl);
+    await startLoading();
+    setCurrentUrl(googleUrl);
+    setHistory([...history.slice(0, currentIndex + 1), googleUrl]);
+    setCurrentIndex(currentIndex + 1);
   };
 
   useEffect(() => {
-    console.log(`'History:', ${history},${history.length} Content: ${content}`);
-  }, [history, content]);
+    if (currentUrl.startsWith("https://www.google.com/search?q=")) {
+      const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
+      const filteredSites = Object.entries(sites)
+        .filter(([key, site]) =>
+          site.searchKeys?.some((k) => normalizeText(k).includes(searchQuery))
+        )
+        .map(([key, site]) => ({
+          key,
+          site,
+          score: (site.isSponsored ? 1000 : 0) + (site.seoScore || 0)
+        }))
+        .sort((a, b) => b.score - a.score);
+      setMatchedSites(filteredSites);
+    }
+  }, [currentUrl]);
 
-  useEffect(() => {
-    console.log(`URL: ${url}`);
-  }, [url]);
-
-  useEffect(() => {
-    console.log(`CurrentIndex: ${currentIndex}`);
-  }, [currentIndex]);
-
-
-
-  const handleDownloadClick = () => {
-    setButtonLoading(true);
-    setDownloadMessage('İndiriliyor...');
-    setTimeout(() => {
-      setButtonLoading(false);
-      setDownloadMessage('İndirme tamamlandı!');
-      setShowPopup(true);
-      updateFileStatus('antivirusexe', { downloaded: true });
-      setTimeout(() => {
-        setShowPopup(false);
-        setDownloadMessage('');
-      }, 3000); // 3 saniye sonra pop-up'ı gizle
-    }, 10000); // 10 saniye gecikme
-  };
-
-  const handleBackClick = () => {
+  const handleBackClick = async () => {
     if (currentIndex > 0) {
+      await startLoading();
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
+      setUrl(history[newIndex]); 
+      setCurrentUrl(history[newIndex]); 
     }
   };
-  
-  const handleForwardClick = () => {
+
+  const handleForwardClick = async () => {
     if (currentIndex < history.length - 1) {
+      await startLoading();
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
+      setUrl(history[newIndex]); 
+      setCurrentUrl(history[newIndex]); 
     }
   };
 
-  useEffect(() => {
-    if (prevIndexRef.current !== currentIndex && currentIndex >= 0 && currentIndex < history.length) {
-      handleGoClick(history[currentIndex], false);
-    }
-    prevIndexRef.current = currentIndex;
-  }, [currentIndex]);
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleGoClick();
-    }
-  };
-
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    const username = e.target.elements.username.value;
-    const password = e.target.elements.password.value;
-    setLoginusername(username);
-    setLoginpassword(password);
-    console.log(`Username: ${username}, Password: ${password}`);
-  };
-
-  const googleSearch = (e) => {
-    const search = e.target.value.toLowerCase();
-    if (search === 'antivirus') {
-      setContent('download');
-    }
-  }
-
-  const searchkeydown = (e) => {
-    if (e.key === "Enter") {
-      googleSearch(e);
-    }
-  }
-
-
-  return (
-    <div className="browser-window" style={style} ref={browserRef}>
-        <div className="browser-header">
-          <h2>Browser</h2>
-          <button className="browser-close" onClick={closeHandler}>×</button> 
+  const renderContent = () => {
+    if (!isWificonnected) {
+      return (
+        <div className="no-internet">
+          <h2>İnternet Bağlantısı Bulunamadı</h2>
+          <p>Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.</p>
+          <img src="./icons/no-wifi.png" alt="No Internet" />
         </div>
-        <div className="browser-search">
-        <img 
-          style={{ color:'white', width: 20, height: 20, marginRight: 10, filter: 'invert(1)', cursor: 'pointer' }}
-          src="./icons/arrow.png" alt="Arrow Logo" 
-          onClick={handleBackClick}
-          />
+      );
+    }
 
-        <img 
-          style={{ color:'white', width: 20, height: 20, marginRight: 10, filter: 'invert(1)', cursor: 'pointer', opacity: 1 }}
-          src="./icons/right-arrow (1).png" alt="Right Arrow Logo" 
-          onClick={handleForwardClick}
-          />
+    if (loading) {
+      return <div className="browser-loading">
+                <div className="lds-default">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+            </div>
+    }
 
-          <img 
-          style={{ color:'white', width: 24, height: 24, marginRight: 10, filter: 'invert(1)', cursor: 'pointer' }}
-          src="./icons/home.png" alt="Home Logo" 
-          onClick={() => {
-            if(!loading && content !== 'main') {
-            handleGoClick('google.com')}}
-          }
-          />
-          <input
-            type="text"
-            value={url}
-            onChange={handleUrlChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Enter URL"
-            className="browser-url-input"
-          />
-          <button onClick={handleGoClick} className="browser-go-button">Go</button>
-              
-        </div>
+    if (currentUrl.startsWith("https://www.google.com/search?q=")) {
+      const searchedText = decodeURIComponent(currentUrl.split("search?q=")[1]);
+      return (
+        <div className="download-pages">
+          <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
+            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
+            <input 
+              type="text"
+              defaultValue={searchedText}
+              placeholder="Google'da Ara"
+              ref={searchInputRef}
+              onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
+            />
 
-      <div className="browser-content">
-        {loading ? (
-          <div className="browser-loading">
-            <div className="lds-default">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
+            <div className='searchPart_right'>
+              <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
+              <img src="./icons/google-voice.png" alt="Voice Logo"/>
             </div>
           </div>
+
+          <div className='searchPart_bottom'>
+            <h3 className='tümü'>Tümü</h3>
+            <h3>Görseller</h3>
+            <h3>Videolar</h3>
+            <h3>Yer siteleri</h3>
+            <h3>Haberler</h3>
+            <h3>Web</h3>
+          </div>
+          {matchedSites.length > 0 ? (
+            matchedSites.map(({ key, site }) => {
+              return (
+                <div key={key} className="link-part" onClick={() => site.clickable && handleGoClick(key)}
+                  style={{
+                    cursor: site.clickable ? "pointer" : "default",
+                    color: site.clickable ? "white" : "gray",
+                  }}>
+                  <div className="top-of-the-link">
+                  <div
+                    className={site.color ? "image-div" : `image-div site-${key.split("//")[1].split(".")[0]}`}
+                    style={site.color ? { backgroundColor: site.color } : {}}
+                  >
+                    {site.title.charAt(0)}
+                  </div>
+                    <div className="link-content">
+                      <p style={{ fontSize: 16, color: "#cacaca" }}>{key}</p>
+                      <h3>
+                        {site.title}
+                        {site.isSponsored && (
+                        <span className="sponsored-tag">Reklam</span>
+                        )}
+                      </h3>
+                      <p>{site.statement}</p>
+                    </div>
+                  </div>
+                  <h2 className={site.clickable ? "clickable-title" : "disabled-title"}>
+                    {site.title} | {site.statement}
+                  </h2>
+                </div>
+              );
+            })
           ) : (
-            (() => {
-              switch (content) {
-                case 'login':
-                  return (
-                    <div className="login-container">
-                      <h2>WiFi Login</h2>
-                      <form id="login-form" onSubmit={handleLoginSubmit}>
-                        <label htmlFor="username">Kullanıcı Adı:</label>
-                        <input type="text" id="username" name="username" required />
-                        <label htmlFor="password">Şifre:</label>
-                        <input type="password" id="password" name="password" required />
-                        <button type="submit">Login</button>
-                      </form>
-                    </div>
-                 );
-                case 'main':
-                  return (
-                    <div className='firstPartOfBrowser'>
-                      <h1>Google</h1>
-                      <div className='searchPart'>
-                        <img src="./icons/search.png" alt="Search Logo"/>
-                        <input /*onChange={}*/ onKeyDown={searchkeydown} type="text" placeholder="Google'da Ara" />
-                        <div className='searchPart_right'>
-                          <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
-                          <img src="./icons/google-voice.png" alt="Voice Logo"/>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                case 'download':
-                  return (
-                    <div className='download-pages'>
+            <p>Aradığınız - <strong>{searchedText}</strong> - ile ilgili hiçbir arama sonucu mevcut değil.</p>
+          )}
+        </div>
+      );
+    }
 
-                      <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
-                          <img src="./icons/search.png" alt="Search Logo"/>
-                          <input onChange={handleUrlChange} onKeyDown={handleKeyDown} type="text" placeholder="Google'da Ara" />
-                        <div className='searchPart_right'>
-                          <img src="./icons/keyboard.png" alt="Keyboard Logo"/>
-                          <img src="./icons/google-voice.png" alt="Voice Logo"/>
-                        </div>
-                      </div>
+    if (currentUrl === "https://www.google.com") {
+      return (
+        <div className="firstPartOfBrowser">
+          <h1>Google</h1>
+          <div className="searchPart"> 
+            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
+            <input 
+              type="text" 
+              placeholder="Google'da Ara"
+              ref={searchInputRef}
+              onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
+            />
+            <div className="searchPart_right">
+              <img src="./icons/keyboard.png" alt="Keyboard Logo" />
+              <img src="./icons/google-voice.png" alt="Voice Logo" />
+            </div>
+          </div>
+        </div>
+      );
+    }
 
-                        <div className= 'searchPart_bottom'>
-                          <h3 className='tümü'>Tümü</h3>
-                          <h3>Görseller</h3>
-                          <h3>Videolar</h3>
-                          <h3>Yer siteleri</h3>
-                          <h3>Haberler</h3>
-                          <h3>Web</h3>
-                        </div>
+    // REGEX destekli component render bölümü
+    let site = sites[currentUrl];
+    let dynamicUrl = null;
+    let matchedSite = site;
 
-                        {/* Dosya indirme linkleri */}
-
-                        {/* 1.link */}
-                        <div className='link-part'>  
-                          <div className='top-of-the-link'>
-                            <div className='image-div'>SH</div>
-                                <div style={{display: "flex", flexDirection:"column"}}>
-                                    ShieldSecure
-                                    <p>https://www.ShieldSecure.com</p>
-                                </div>
-                          </div>
-
-                          <h2 onClick={() => {
-                          handleGoClick("www.ShieldSecure.com")
-                          }} 
-                          style={{cursor:"pointer"}}
-                          title='https://www.ShieldSecure.com'
-                          >  
-                          ShieldSecure | Antivirüs ve VPN İndir!
-                          </h2>  
-                          <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
-                        </div>
-                    
-                        {/* 2.link */}
-                        <div className='link-part'>  
-                          <div className='top-of-the-link'>
-                            <div className='image-div2'>CS</div>
-                                <div style={{display: "flex", flexDirection:"column"}}>
-                                    CyberSentinel
-                                    <p>https://www.CyberSentinel.com</p>
-                                </div>
-                          </div>
-
-                          <h2 onClick={() => {
-                           handleGoClick("www.CyberSentinel.com")
-                          }} 
-                          style={{cursor:"pointer"}}
-                          title='https://www.CyberSentinel.com'
-                          >  
-                          CyberSentinel | Antivirüs ve VPN İndir!
-                          </h2>  
-                          <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
-                        </div>
-
-                        {/* 3.link */}                
-                        <div className='link-part'>  
-                          <div className='top-of-the-link'>
-                            <div className='image-div' style={{ color:"#d9d4d4", backgroundImage: "linear-gradient(-20deg, #2d342a 2%, #374a39 50%, #282d22 75%, #ffffcc 100%)" }}>VV</div>
-                                <div style={{display: "flex", flexDirection:"column"}}>
-                                    VirusVanisher
-                                    <p>https://www.download-example.com</p>
-                                </div>
-                          </div>
-
-                          <h2 onClick={() => {
-                          setContent("download1")
-                          setUrl("https://www.download-example.com")}} 
-                          style={{cursor:"pointer"}}
-                          title='https://www.download-example.com'
-                          >  
-                          ShieldSecure | Antivirüs ve VPN İndir!
-                          </h2>  
-                          <p>Cihazlarınızı antivirüs ile güvenle koruyun. VPN'le güvenle gezin!</p>
-                        </div>
-                    </div>
-                  );
-
-                case 'download1':
-                  return (
-                    <div className="download-div-inside">
-                        <BrowserBar/>
-                        <img src="./download-background.jpg" alt="Download Background" />
-                        <h2>ShieldSecure Antivirüs İndirme Bölümü</h2>
-                        <p>ShieldSecure antivirüs yazılımını indirmek için aşağıdaki bağlantıları kullanabilirsiniz.</p>
-                      <div className="download-links">
-                        <h3>Mevcut İndirmeler:</h3>
-                        <ul>
-                          <li>
-                          <button onClick={handleDownloadClick} disabled={buttonLoading} className="download-button">
-                            {buttonLoading ? <div className="progress-bar"></div> : 'ShieldSecure Setup'}
-                          </button>
-                          </li>
-                          <li>
-                            <button onClick={handleDownloadClick}>
-                                ShieldSecure Güncelleme
-                            </button>
-                          </li>
-                          <li>
-                            <button /*onClick={handleDownloadClick}*/ >
-                                ShieldSecure Kullanım Kılavuzu
-                            </button>
-                          </li>
-                        </ul>
-                        {downloadMessage && <p style={{justifySelf:"center"}}>{downloadMessage}</p>}
-                      </div>
-                      { showPopup && <div className="popup">İndirildi!</div>}
-                    </div>
-                  );
-                  case 'download2':
-                    return (
-                      <div className="download-div-inside">                    
-                          <h2>ShieldSecure Antivirüs İndirme Bölümü</h2>
-                          <p>ShieldSecure antivirüs yazılımını indirmek için aşağıdaki bağlantıları kullanabilirsiniz.</p>
-                        <div className="download-links">
-                          <h3>Mevcut İndirmeler:</h3>
-                          <ul>
-                            <li>
-                              <button onClick={handleDownloadClick}>
-                                  ShieldSecure Setup
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={handleDownloadClick}>
-                                  ShieldSecure Güncelleme
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={handleDownloadClick}>
-                                  ShieldSecure Kullanım Kılavuzu
-                              </button>
-                            </li>
-                          </ul>
-                          {downloadMessage && <p style={{justifySelf:"center"}}>{downloadMessage}</p>}
-                        </div>
-                        {showPopup && <div className="popup">İndirildi!</div>}
-                      </div>
-                    );
-                default:
-                  return <div>{content}</div>;
-              }
-            })()
-          )
+    if (!site) {
+      for (const [pattern, siteConfig] of Object.entries(sites)) {
+        if (pattern.startsWith("^")) {
+          const regex = new RegExp(pattern);
+          if (regex.test(currentUrl)) {
+            matchedSite = siteConfig;
+            dynamicUrl = currentUrl;
+            break;
+          }
         }
-  
+      }
+    }
+
+    if (!matchedSite) return <div className="not-found">404 - Sayfa Bulunamadı</div>;
+
+    switch (matchedSite.type) {
+      case "component":
+        if (!CachedComponents[matchedSite.component]) {
+          CachedComponents[matchedSite.component] = lazy(() => import(`../sites/${matchedSite.component}.jsx`));
+        }
+        const SiteComponent = CachedComponents[matchedSite.component];
+        return (
+          <Suspense>
+            <SiteComponent
+              scrollRef={browserScrollRef}
+              url={dynamicUrl || currentUrl}
+              {...(extraProps || {})}
+            />
+          </Suspense>
+        );
+      default:
+        return <div className="not-found">404 - Sayfa Bulunamadı</div>;
+    }
+  };
+
+  return (
+    <div className="browser-window" style={style} ref={browserRef} data-window="browser">
+      <div className="browser-header">
+        <h2>Browser</h2>
+        <button className="browser-close" onClick={closeHandler}>×</button>
       </div>
+      <div className="browser-search">
+        <img 
+          className="nav-arrow"
+          src="./icons/arrow.png" alt="Arrow Logo" 
+          onClick={handleBackClick}
+        />
+        <img 
+          className={`nav-arrow ${currentIndex < history.length - 1 ? "" : "disabled"}`}
+          src="./icons/right-arrow (1).png" 
+          alt="Right Arrow Logo" 
+          onClick={currentIndex < history.length - 1 ? handleForwardClick : null}
+        />
+        <img 
+          className="home-icon"
+          src="./icons/home.png" alt="Home" 
+          onClick={goHome}
+        />
+        <input className="browser-url-input" type="text" value={url} onChange={handleUrlChange} onKeyDown={handleKeyDown} placeholder="Enter URL" />
+        <button className="browser-go-button" onClick={() => handleGoClick(url)}>Go</button>
+      </div>
+      <div className="browser-content" ref={browserScrollRef}>{renderContent()}</div>
     </div>
   );
 };

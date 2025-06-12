@@ -1,0 +1,141 @@
+.section {
+ background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 165, 0, 0.05));
+ backdrop-filter: blur(20px);
+ border: 1px solid rgba(255, 255, 255, 0.05);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.panel {
+  background: rgb(255, 255, 255);
+  display: flex;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 1100px;
+  max-width: 95%;
+}
+
+.leftSide {
+  flex: 2;
+  padding: 20px;
+  background: #fff2e0;
+}
+
+.rightSide {
+  flex: 1;
+  padding: 40px;
+  background: #f9dcb3;
+  border-left: 1px solid #ffe0b2;
+}
+
+.logo {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff6f00;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.featureBox {
+  background: #fff9f2;
+  border: 1px solid #ffcc80;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.featureBox h2 {
+  margin-bottom: 10px;
+  color: #d35400;
+}
+
+.featureBox ul {
+  list-style: none;
+  padding: 0;
+}
+
+.featureBox li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.downloadSection h2 {
+  font-size: 18px;
+  color: #d35400;
+  margin-bottom: 10px;
+}
+
+.downloadBtn {
+  background-color: #ff6f00;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.downloadBtn:hover {
+  background-color: #e65100;
+}
+
+.progressBar {
+  margin-top: 10px;
+  background: #ffe0b2;
+  border-radius: 5px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #ff6f00;
+  transition: width 0.3s ease;
+}
+
+.popup {
+  margin-top: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.rightSide h2 {
+  font-size: 20px;
+  color: #d35400;
+  margin-bottom: 15px;
+}
+
+.rightSide ul {
+  padding-left: 18px;
+  font-size: 14px;
+  color: #333;
+}
+
+.footer {
+  margin-top: 40px;
+  font-size: 13px;
+  color: #888;
+}

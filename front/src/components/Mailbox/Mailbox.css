@@ -57,9 +57,10 @@
     height: 24px;
   }
   .mailbox-inwindow {
+    flex: 1 1 auto;
     top: 6%;
     width: 100%;
-    height: 94%;
+    height: 100%;
     background-color: rgb(146, 146, 146);
     border: 5px solid #6b6b6b;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.153);
@@ -130,7 +131,7 @@
   }
 
   .mailbox-maillist {
-    height:100%;
+    height: 100%;
   }
   .mailbox-maillist li {
     padding: 15px;
@@ -146,9 +147,13 @@
     background-color: #5f5f5f;
   }
   
-  .mailbox-maillist li:active {
-    background-color: #777;
+  .mailbox-maillist li.active {
+    background-color: #777 !important;
+    font-weight: bold;
+    border: 2px solid #f3ad81;
+    transition: background-color 0.2s ease-in-out;
   }
+
   .mailbox-maillist p{
     font-size: 16px;
   }
@@ -184,6 +189,28 @@
     border-bottom: 5px solid #1d1d1d;
     align-items: center;
     justify-content: top;
+    scrollbar-width: thin;
+    scrollbar-color: #bbbbbb #1f1f1f;
+  }
+
+  .mailbox-mailcontent::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .mailbox-mailcontent::-webkit-scrollbar-track {
+    background: #1f1f1f; /* Scroll arka planı */
+    border-left: 1px solid #333; /* kenar çizgisi */
+  }
+  
+  .mailbox-mailcontent::-webkit-scrollbar-thumb {
+    background-color: #bbbbbb; /* scroll çubuğu */
+    border-radius: 10px;
+    border: 2px solid #444;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+  }
+  
+  .mailbox-mailcontent::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
   }
  
   .mailbox-mailcontenttext {
@@ -216,18 +243,62 @@
     margin-top: 1%;
   }
 
+  .mailbox-mailcontentheader-rightBox {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .mailbox-mailcontentheader-rightBox span{
+    color: #000000;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Tagesschrift&display=swap');
+  .mail-content-first pre {
+    white-space: pre-wrap;
+    font-size: 22px; 
+    font-weight: 400;
+    line-height: 1.1;
+    color: #f1f1f1;
+    margin-top: 2%;
+    margin-bottom: 5%;
+    border: #5a5a5a 2px solid;
+    box-shadow: #4e4e4e 2px 2px 5px;
+    padding: 20px;
+    font-family: "Caveat", cursive;
+  }
   
   .mail-content pre {
-    white-space: pre-wrap; /* Beyaz boşlukları ve satır sonlarını koru */
-    font-size: 18px; /* Yazı boyutunu ayarla */
-    line-height: 1.1; /* Satır yüksekliğini ayarla */
-    color: #f1f1f1; /* Metin rengini ayarla */
+    white-space: pre-wrap;
+    font-size: 18px; 
+    line-height: 1.1;
+    color: #f1f1f1;
     margin-top: 2%;
     margin-bottom: 5%;
   }
 
-  
+  .mail-date {
+    color: #c0c0c0;            /* Açık gri, dikkat dağıtmayan */
+    font-size: 0.98rem;        /* Bir tık küçük */
+    font-weight: 400;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 5px;                  /* Simgeyle arada boşluk için */
+  }
 
+  .mail-date .date-icon {
+    font-size: 1.12em;
+    margin-right: 3px;
+    opacity: 0.7;              /* Simge çok patlamasın */
+  }
+  
   .postbox-icon{
     width: 200px;
     height: 200px;

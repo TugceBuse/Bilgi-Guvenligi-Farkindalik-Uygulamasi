@@ -1,0 +1,147 @@
+/* CloudBoxPackageDisplay.module.css içeriğine ekle veya güncelle */
+.displayContainer {
+  background: rgba(38, 23, 58, 0.98);
+  border-radius: 31px;
+  border: 2.2px solid #c199fd;
+  box-shadow: 0 12px 52px #8748d677;
+  width: 600px;
+  max-width: 98vw;
+  min-width: 320px;
+  margin: 44px auto 0 auto;
+  padding: 0 0 34px 0;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  color: #eceaff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* HATA MESAJLARI, gizli, yok vs. kartı için ortalama alanı */
+.centeredCard {
+  margin: 120px auto 0 auto;
+  min-width: 320px;
+  max-width: 460px;
+  width: 100%;
+  border-radius: 30px;
+  box-shadow: 0 0 80px 0 #c49dfb99;
+  border: 2px solid #b483f6;
+  background: rgba(45,10,60,0.90);
+  text-align: left;
+  padding: 32px 32px 22px 32px;
+  font-size: 1.32rem;
+  color: #f7edff;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+}
+
+.centeredCard small {
+  font-weight: 400;
+  display: block;
+  color: #d5bafc;
+  font-size: 1rem;
+  margin-top: 7px;
+}
+
+
+.displayHeader {
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  padding: 28px 38px 14px 38px;
+  border-bottom: 1.2px solid #b497e1;
+  position: relative;
+}
+
+.displayLogo {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: #e4e0ff;
+  border: 1.8px solid #c6acf7;
+  object-fit: cover;
+  box-shadow: 0 2px 9px #af8cff33;
+}
+
+.displayTitle {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #8ccfff;
+  letter-spacing: 1.2px;
+}
+.displaySlogan {
+  font-size: 0.99rem;
+  color: #e5cfff;
+  margin-left: 2px;
+  margin-top: 10px;
+}
+
+.displaySection {
+  margin: 23px 36px 0 36px;
+}
+
+.displaySection h3 {
+  color: #d8f7ff;
+  margin-bottom: 13px;
+  font-size: 1.10rem;
+  font-weight: 600;
+}
+
+.displayList {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+.displayCard {
+  background: #a075df33;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px #9654dc13;
+  padding: 13px 21px 13px 18px;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+.fileIcon {
+  font-size: 1.35rem;
+  margin-right: 2px;
+}
+.downloadBtn {
+  margin-left: auto;
+  background: linear-gradient(90deg, #2dd5ee 65%, #a191ff 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.02rem;
+  padding: 6px 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 7px #68eeff21;
+  transition: background 0.15s;
+}
+.downloadBtn:hover {
+  background: linear-gradient(90deg, #5a4fff 60%, #2dd5ee 100%);
+}
+.downloadDisabled {
+  margin-left: auto;
+  color: #e4e4e4b4;
+  background: #422d5b88;
+  border-radius: 7px;
+  font-size: 0.97rem;
+  padding: 4px 13px;
+  font-weight: 500;
+}
+.noFile {
+  color: #c3b1ff;
+  font-size: 1.07rem;
+  margin-top: 7px;
+}
+
+@media (max-width: 650px) {
+  .displayContainer { width: 99vw; min-width: 0; padding-left: 2vw; padding-right: 2vw; }
+  .displayHeader { padding: 15px 2vw 8px 5vw; }
+  .displaySection { margin-left: 3vw; margin-right: 3vw; }
+}

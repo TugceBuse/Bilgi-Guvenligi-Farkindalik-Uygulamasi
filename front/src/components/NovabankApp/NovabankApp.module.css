@@ -1,0 +1,424 @@
+.bankWindow {
+    position: absolute;
+    width: 800px;
+    height: 650px;
+    background-color: #fff5e6; /* Açık bej arka plan */
+    border: 2px solid #e67300; /* Turuncu sıcak ton */
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 999;
+  }
+  
+  /* HEADER */
+  .bankHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff6600; /* NovaBank ana turuncusu */
+    color: white;
+    padding: 10px 16px;
+  }
+  
+  .bankClose {
+    background: transparent;
+    color: white;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* LOGIN PAGE */
+  .logo {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    margin-right: 10px;
+  }
+  
+  .loginPage {
+    display: flex;
+    height: 100%;
+  }
+  
+  .leftPanel {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff;
+  }
+  
+  .leftPanel h2 {
+    margin-bottom: 20px;
+    color: #cc5200; /* Sıcak koyu turuncu */
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .inputGroup {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .inputGroup label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #804000; /* Turuncu-kahve arası */
+  }
+  
+  .inputGroup input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #cc9966;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  .inputGroup input:focus {
+    border-color: #ff6600; /* Ana renk */
+  }
+  .inputError {
+    border: 1px solid red !important;
+  }
+  
+  .errorText {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  .options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  .switch input:checked + .slider {
+    background-color: #ff6600; /* NovaBank rengi */
+  }
+  
+  .switch input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  .switchLabel {
+    font-size: 13px;
+    color: #804000;
+  }
+  
+  .forgotPassword {
+    background: none;
+    border: none;
+    color: #ff6600;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: underline;
+  }
+  
+  .forgotPassword:hover {
+    color: #cc5200;
+  }
+  
+  .loginButton {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .loginButton:hover {
+    background-color: #cc5200;
+  }
+  
+  /* RIGHT PANEL (bilgilendirme) */
+  .rightPanel {
+    flex: 1;
+    padding: 30px;
+    background-color: #ffe6cc; /* Hafif turuncu arka plan */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .rightPanel h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #cc5200;
+  }
+  
+  .rightPanel ul {
+    list-style: disc inside;
+    padding: 0;
+  }
+  
+  .rightPanel li {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #804000;
+  }
+  
+  /* DASHBOARD */
+  .dashboard {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #fff6e6, #fff);
+  min-height: 100vh;
+}
+
+.dashboardHeader {
+  background-color: #d35400;
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accountInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.card {
+  background: linear-gradient(145deg, #ff7e5f, #feb47b);
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  width: 320px;
+  height: 200px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardBackground {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.cardBankName {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cardNumber {
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 3px;
+  margin: 10px 0;
+}
+
+.cardDetails {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.cardDetails label {
+  font-size: 11px;
+  color: #ffe6cc;
+}
+
+.cardDetails p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.cardInfo {
+  background-color: #fff;
+  color: #444;
+  border-radius: 12px;
+  padding: 20px;
+  width: 280px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cardInfo h3 {
+  color: #d35400;
+  margin-bottom: 8px;
+}
+
+.otherServices {
+  margin-top: 30px;
+  padding: 25px;
+  border-radius: 12px;
+  background-color: #fff;
+  border: 1px solid #ffddbb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.otherServices h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #c0392b;
+}
+
+.serviceButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.otherServices button {
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 8px;
+  background-color: #f39c12;
+  border: none;
+  color: white;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.7;
+}
+.otherServices button:hover {
+  background-color: #e67e22;
+}
+  
+ /* 2FA Kodu Kısmı İçin CSS */
+ .codeVerificationTitle {
+  color: #cc5200;
+  font-size: 22px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.codeVerificationText {
+  font-size: 15px;
+  color: #804000;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.codeVerificationInput {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #cc9966;
+  border-radius: 6px;
+  width: 220px;
+  margin: 0 auto 16px auto;
+  outline: none;
+  display: block;
+  text-align: center;
+  background-color: #fff8f0;
+}
+
+.codeVerificationInput:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 6px rgba(255, 102, 0, 0.4);
+}
+
+.codeVerificationButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.codeVerificationButton:hover {
+  background-color: #cc5200;
+  transform: scale(1.03);
+}
+
+.codeVerificationError {
+  color: red;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: center;
+  animation: fadeIn 0.2s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.disabledOverlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  pointer-events: all;
+  user-select: none;
+  font-size: 1.2rem;
+}

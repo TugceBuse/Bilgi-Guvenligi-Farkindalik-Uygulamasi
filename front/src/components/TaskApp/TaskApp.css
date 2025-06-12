@@ -1,0 +1,323 @@
+@keyframes slideInSmooth {
+  0% {
+    opacity: 0;
+    transform: translateX(50%) translateY(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+
+@keyframes slideOutSmooth {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(50%, -50%) scale(0.95);
+    filter: blur(4px);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 0;
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    right: 0;
+  }
+  to {
+    right: -100%;
+  }
+}
+
+
+.task-app-container {
+  width: 30%;
+  height: 70%;
+   background: rgba(47, 47, 80, 0.7);
+  backdrop-filter: blur(6px) brightness(1.05);
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 25px 0 0 25px;
+  flex-direction: row; /* 🆕 yatay olarak ikiye ayır */
+  position: fixed;
+  top: 12.5%;
+  right: 0;
+  z-index: 9999;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  animation: slideInFromRight 0.6s ease-out forwards;
+}
+
+
+.task-app-container.closing {
+  animation: slideOutToRight 0.4s ease-in-out forwards;
+}
+
+.rotated-header {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: #f0f0f0;
+  padding: 40px 8px 20px;
+  border-right: 1px solid #555;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+
+.task-app-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 8px;
+}
+
+.task-app-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #f0f0f0;
+}
+
+.task-app-panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #555;
+  color : #f0f0f0;
+  padding: 20px;
+}
+
+.task-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* bulunduğu alanın tamamını kaplar */
+  margin-top: 20px; /* yukarıdan biraz boşluk */
+}
+
+.task-icon-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #e88be8, #7a2f7a);
+  box-shadow: 0 0 8px rgba(196, 73, 196, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.task-icon-wrapper:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+.task-icon-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+/* 🔥 Etiket (badge) */
+.task-icon-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4081;
+  color: white;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 12px;
+  font-weight: bold;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  animation: bounceBadge 1.2s ease-in-out infinite;
+}
+
+/* 🔁 Hafif zıplayan animasyon */
+@keyframes bounceBadge {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.1);
+  }
+}
+
+
+/* Etiket için küçük pop-up animasyonu */
+@keyframes popIn {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.task-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #2a1c1a;
+  color: #ffd8c2;
+  padding: 12px 18px;
+  border: 1px solid #ff7043;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  animation: InOut 3s ease-in-out;
+}
+
+.task-popup img {
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.slide-close-button {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #ccc;
+  transition: transform 0.3s ease, color 0.2s ease;
+}
+
+.slide-close-button::before {
+  content: '◀' ;
+  display: inline-block;
+  /* transition: transform 0.3s ease; */
+}
+
+/* .slide-close-button:hover::before {
+  transform: rotate(180deg);
+  color: #fff;
+} */
+
+.task-app-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.task-status-icon {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+  
+
+
+.task-item {
+  padding: 12px 12px 12px 40px;
+  position: relative;
+  margin-bottom: 12px;
+  background-color: #3a3a5e;
+  border-radius: 12px;
+  transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.2s;
+  font-size: 15px;
+  animation: fadeSlideIn 0.4s ease;
+}
+
+.task-item:hover {
+  background-color: #464676;
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+.task-item.completed {
+  opacity: 0.5;
+  text-decoration: line-through;
+  transition: opacity 0.3s ease;
+}
+
+.no-tasks {
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+  margin-top: 30px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}

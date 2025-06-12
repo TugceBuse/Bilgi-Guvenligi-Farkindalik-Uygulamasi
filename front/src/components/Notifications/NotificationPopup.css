@@ -1,0 +1,143 @@
+.mail-popup-stack {
+  position: fixed;
+  right: 40px;
+  bottom: 58px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+
+.mail-popup {
+  width: 340px;
+  min-height: 76px;
+  margin-bottom: 14px;
+  background: #232d3a;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.17);
+  opacity: 1;
+  transition: 
+    opacity 0.28s cubic-bezier(0.77,0,0.18,1),
+    transform 0.32s cubic-bezier(0.77,0,0.18,1),
+    height 0.28s,
+    margin 0.28s;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.mail-popup.entering {
+  opacity: 0;
+  transform: translateY(50px) scale(0.96);
+}
+
+.mail-popup.entering,
+.mail-popup.fade-out {
+  transition: 
+    opacity 0.32s cubic-bezier(0.77,0,0.18,1),
+    transform 0.32s cubic-bezier(0.77,0,0.18,1),
+    height 0.28s,
+    margin 0.28s;
+}
+
+.mail-popup.fade-out {
+  opacity: 0;
+  transform: translateY(60px) scale(0.96);
+  height: 0 !important;
+  margin-bottom: 0 !important;
+  pointer-events: none;
+}
+
+.mail-popup-main {
+  display: flex;
+  align-items: center;
+  padding: 18px 18px 18px 12px;
+  position: relative;
+}
+
+@keyframes mailPopupIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(60px) scale(0.93);
+    filter: blur(5px);
+  }
+  to   { 
+    opacity: 0.96; 
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+.mail-popup-icon img {
+  width: 36px;
+  height: 36px;
+  margin-right: 14px;
+  border-radius: 7px;
+  background: #19222b;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mail-popup-content {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.mail-popup-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #aad6ff;
+  margin-bottom: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mail-popup-msg {
+  font-size: 15px;
+  color: #e6e6e6;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-height: 44px;
+}
+
+
+.mail-popup-btn {
+  background: #247be7;
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  padding: 6px 19px;
+  border-radius: 9px;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: background 0.18s;
+  flex-shrink: 0;
+}
+.mail-popup-btn:hover {
+  background: #1b5ba3;
+}
+
+.mail-popup-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  margin-left: 8px;
+  cursor: pointer;
+  opacity: 0.68;
+  transition: opacity 0.18s;
+  flex-shrink: 0;
+}
+.mail-popup-close:hover {
+  opacity: 1;
+}
+
+
+
+

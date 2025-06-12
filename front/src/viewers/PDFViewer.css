@@ -1,0 +1,296 @@
+/* Ana PDF Viewer Penceresi */
+.pdf-viewer-window {
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  width: 670px;
+  height: 470px;
+  background: #202034;
+  border: 2px solid #24244b;
+  border-radius: 14px;
+  box-shadow: 0 6px 32px 0 rgba(24,24,36,0.22);
+  z-index: 1010;
+  display: flex;
+  flex-direction: column;
+  color: #f8f8fa;
+  overflow: hidden;
+}
+
+/* --- Eklendi: UYARI PENCERESİ --- */
+.pdf-viewer-warning-window {
+  min-width: 400px;
+  max-width: 480px;
+  width: 420px;
+  height: auto;
+  min-height: 220px;
+  top: 35%;
+  left: 40%;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header ve diğer kısımlar aynı */
+.pdf-viewer-header {
+  background: #232346;
+  border-bottom: 1.5px solid #32325c;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  user-select: none;
+}
+
+.pdf-viewer-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 1.13em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.pdf-viewer-title img {
+  width: 29px;
+  height: 29px;
+  filter: drop-shadow(0 0 1.2px #2222);
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #ffe8e8;
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.14s;
+  margin-left: 8px;
+}
+.close-btn:hover,
+.close-btn:focus {
+  background: #34346d;
+  color: #fff;
+}
+
+.pdf-viewer-content {
+  flex: 1;
+  background: linear-gradient(108deg, #23234a 75%, #263151 100%);
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Gelişmiş UYARI kutusu --- */
+.pdf-viewer-warning {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2d 80%, #292932 100%);
+  color: #ffe082;
+  font-size: 1.17em;
+  border-radius: 10px;
+  text-align: center;
+  padding: 32px 18px 24px 18px;
+  gap: 16px;
+}
+
+.pdf-viewer-warning b {
+  font-size: 1.13em;
+  color: #ffd54f;
+}
+
+/* ----- Viewer Seçim MODAL ----- */
+
+.pdf-viewer-select-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background: rgba(20,20,40,0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-viewer-select-content {
+  background: #232346;
+  border-radius: 15px;
+  box-shadow: 0 0 36px 6px #1d1d29b5;
+  min-width: 350px;
+  padding: 42px 32px 26px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-viewer-select-content h3 {
+  font-size: 1.18em;
+  color: #f7f7f7;
+  font-weight: 600;
+  margin-bottom: 27px;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.pdf-viewer-select-list {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.pdf-viewer-select-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 120px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2.5px solid #3d3d67;
+  border-radius: 12px;
+  background: #26264d;
+  transition: 
+    border-color 0.15s,
+    background 0.17s,
+    color 0.13s,
+    box-shadow 0.15s;
+  cursor: pointer;
+  gap: 13px;
+}
+
+.pdf-viewer-select-btn img {
+  display: block;
+  width: 38px;
+  height: 38px;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transition: none !important;
+}
+
+.pdf-viewer-select-btn span {
+  display: block;
+  font-size: 1em;
+  font-weight: 500;
+  color: #fffde4;
+  text-align: center;
+  white-space: nowrap;
+  margin-top: 0;
+}
+
+.pdf-viewer-select-btn:hover,
+.pdf-viewer-select-btn:focus {
+  border-color: #ffd600;
+  background: #343482;
+  color: #ffd600;
+  box-shadow: 0 0 0 7px #ffd70029;
+}
+
+.pdf-viewer-select-btn:active {
+  background: #232336;
+  color: #fffde4;
+  box-shadow: 0 0 0 2px #ffd93b41;
+}
+
+.pdf-viewer-select-btn,
+.pdf-viewer-select-btn:hover,
+.pdf-viewer-select-btn:focus,
+.pdf-viewer-select-btn:active {
+  border-width: 2.5px;
+  border-style: solid;
+  box-sizing: border-box;
+}
+
+/* Cancel/İptal Butonu */
+.pdf-viewer-select-content .close-btn {
+  background: transparent;
+  border: none;
+  color: #ffbdbd;
+  font-size: 1.07em;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 8px 28px;
+  margin-top: 10px;
+  transition: color 0.17s, background 0.14s;
+}
+.pdf-viewer-select-content .close-btn:hover,
+.pdf-viewer-select-content .close-btn:focus {
+  color: #fff;
+  background: #53223a;
+}
+
+/* DOCULITE TEMA ÖRNEĞİ */
+.pdf-viewer-window.theme-doculite {
+    background: #1e1e1e;
+    border: 1.5px solid #ff7043;
+}
+.pdf-viewer-window.theme-doculite .pdf-viewer-header {
+    background-color: #2a1c1a;
+    border-bottom: 1px solid #ff7043;
+}
+.pdf-viewer-window.theme-doculite .pdf-viewer-title,
+.pdf-viewer-window.theme-doculite .close-btn {
+    color: #ffd8c2;
+}
+.pdf-viewer-window.theme-doculite .pdf-viewer-content {
+    background: #241b1a;
+}
+
+/* QUICKPDF THEME - PDF Viewer için */
+.pdf-viewer-window.theme-quickpdf {
+    background: #1d1b1f;
+    border: 1.5px solid #ec407a;
+    color: #f3f3f3;
+}
+.pdf-viewer-window.theme-quickpdf .pdf-viewer-header {
+    background-color: #2a1c27;
+    border-bottom: 1.5px solid #ec407a;
+}
+.pdf-viewer-window.theme-quickpdf .pdf-viewer-title,
+.pdf-viewer-window.theme-quickpdf .close-btn {
+    color: #ffc1e3;
+}
+.pdf-viewer-window.theme-quickpdf .close-btn:hover {
+    background-color: #ec407a;
+    color: #fff;
+}
+.pdf-viewer-window.theme-quickpdf .pdf-viewer-content {
+    background: linear-gradient(110deg, #2b1b26 80%, #3d2634 100%);
+}
+
+/* OPENLITE THEME - PDF Viewer için */
+.pdf-viewer-window.theme-openlite {
+    background: #1f1f25;
+    border: 1.5px solid #616161;
+    color: #f1f1f1;
+}
+.pdf-viewer-window.theme-openlite .pdf-viewer-header {
+    background-color: #2a2a33;
+    border-bottom: 1.5px solid #424242;
+}
+.pdf-viewer-window.theme-openlite .pdf-viewer-title,
+.pdf-viewer-window.theme-openlite .close-btn {
+    color: #ffffff;
+}
+.pdf-viewer-window.theme-openlite .close-btn:hover {
+    background-color: #4db6ac;
+    color: #fff;
+}
+.pdf-viewer-window.theme-openlite .pdf-viewer-content {
+    background: linear-gradient(110deg, #26262e 80%, #292932 100%);
+}

@@ -5,14 +5,14 @@ import { useUIContext } from "../../Contexts/UIContext";
 import { useTodoContext } from '../../Contexts/TodoContext';
 
   export const useTodoList = () => {
-    const { toggleWindow } = useUIContext();
+    const { openWindow, closeWindow } = useUIContext();
 
     const openHandler = () => {
-        toggleWindow('todolist');
+        openWindow('todolist');
     };
     
     const closeHandler = () => {
-        toggleWindow('todolist');
+        closeWindow('todolist');
     };
     
     return { openHandler, closeHandler };
@@ -34,7 +34,7 @@ const Todolist = ({closeHandler, style}) => {
         };
 
   return (
-    <div className="todolist-window" style={style} ref={todolistRef}>
+    <div className="todolist-window" style={style} ref={todolistRef} data-window="todolist">
         
         <div className="todolist-header">
             <h2>To-Do List</h2>

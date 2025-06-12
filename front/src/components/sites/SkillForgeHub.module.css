@@ -1,0 +1,569 @@
+/* Genel Stil */
+:global(body) {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Ana Konteyner */
+  .skillContainer {
+    background: rgb(255, 225, 141);
+    width: 100%;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    justify-self: center;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  /* Fade-In Animasyonu */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #ff6f00, #ff8f00);
+    color: white;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  .infoSection{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Skill Bölümü */
+  .popularSkills {
+    background: #ffecb3;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  .popularSkills h2 {
+    color: #e65100;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .popularSkills ul {
+    list-style: none;
+    padding: 0;
+    font-size: 16px;
+    color: #bf360c;
+  }
+  
+  .popularSkills li {
+    padding: 8px;
+    border-bottom: 1px solid #ffb74d;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .popularSkills li:hover {
+    background: #ffcc80;
+    transform: scale(1.02);
+  }
+  /* Öğrenme Araçları ve Topluluk Alanı */
+.learningTools, .communitySection {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Başlık Renkleri */
+  .learningTools h2 {
+    color: #ff6f00;
+  }
+  
+  .communitySection h2 {
+    color: #0277bd;
+  }
+  .learningTools p{
+    color: #002f6c;
+    font-size: 16px;
+    padding: 10px;
+  }
+  .communitySection p{
+    color: #002f6c;
+    font-size: 16px;
+    padding: 10px;
+  }
+  /* Liste Tasarımı */
+  .learningList, .communityList {
+    list-style: none;
+    padding: 0;
+    font-size: 15px;
+    color: #ff8f00;
+  }
+  .learningList li, .communityList li {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    transition: 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+  }
+  
+  .learningList li:hover, .communityList li:hover {
+    background: #f9f9f9;
+    transform: scale(1.02);
+  }
+  
+  /* Buton Tasarımları */
+  .exploreButton, .joinButton {
+    background: #006eff;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+    display: block;
+    margin-top: 15px;
+  }
+  
+  .exploreButton:hover, .joinButton:hover {
+    background: #e65100;
+    transform: scale(1.05);
+  }
+
+  /* Kullanıcı Paneli */
+  .userPanel {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 15px;
+    right: 15px;
+    background: rgb(255, 244, 229);
+    color: #ff6f00;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-items: center;
+    gap: 5px;
+    border: 2px solid #ff6f00;
+  }
+  .settingsButton {
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    margin-top: 5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  /* Kullanıcı Adı */
+  .userName {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff6f00;
+  }
+  
+  /* Çıkış Butonu */
+  .logoutButton {
+    background: #e65100;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .logoutButton:hover {
+    background: #bf360c;
+    transform: scale(1.05);
+  }
+  
+  /* Footer */
+  .footer {
+    font-size: 12px;
+    color: #555;
+    margin-top: 15px;
+    text-align: center;
+    padding: 10px;
+    background: #4b3513;
+    border-radius: 8px;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Giriş / Kayıt Paneli */
+  .authBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 1000;
+    display: none;
+  }
+  
+  /* Açıldığında Görünür Hale Getirme */
+  .authBox.active {
+  display: block;
+  animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .overlay {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 30, 30, 0.6);
+    z-index: 999;
+    border-radius: 15px; 
+  }
+  /* Başlık */
+  .authBox h2 {
+    font-size: 22px;
+    color: #ff6f00;
+    margin-bottom: 15px;
+  }
+  
+  /* Input Alanları */
+  .authBox input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .authBox input:focus {
+    border-color: #ff6f00;
+    box-shadow: 0 0 5px rgba(255, 111, 0, 0.5);
+    outline: none;
+  }
+  
+  /* Butonlar */
+  .authBox button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #ff6f00, #ff8f00);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .authBox button:hover {
+    background: linear-gradient(135deg, #e65100, #ff6f00);
+    transform: scale(1.03);
+  }
+  
+  .authBox button:disabled {
+  background: #797979;
+  color: #202020;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+  }
+
+  /* Kapatma Butonu */
+  .authBox button:last-child {
+    background: #e65100;
+  }
+  
+  .authBox button:last-child:hover {
+    background: #bf360c;
+  }
+  .authBox p{
+    color: #ff6f00;
+    font-size: 14px;
+    margin-top: 10px; 
+  }
+  .authBoxText{
+    cursor: pointer;
+  }
+
+  /* Açılış Animasyonu */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -55%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }  
+  
+  /* Giriş Yap Butonu */
+  .loginButton {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: #ff8f00;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .loginButton:hover {
+    background: #e65100;
+    transform: scale(1.05);
+  }
+
+  /* Ayarlar Menüsü */
+.settingsMenu {
+  position: absolute;
+  top: 30%;
+  left: 89%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #ff6f00;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.settingsMenu.active {
+  display: block;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.settingsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.settingsHeader h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0;
+}
+
+.closeIcon {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d32f2f;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: 0.2s ease-in-out;
+}
+
+.closeIcon:hover {
+  background-color: #fddede;
+  transform: scale(1.1);
+}
+.settingsMenu p {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.settingsMenu input[type="text"],
+.settingsMenu input[type="password"] {
+  width: calc(100% - 22px);
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.settingsMenu button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.settingsMenu button:hover {
+  background-color: #0056b3;
+}
+
+/* 2FA Butonu */
+.twoFAButton {
+  display: block;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.twoFAButton:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+/* Profil Fotoğrafı Değiştir Butonu */
+.profilePictureButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profilePictureButton:hover {
+  background-color: #218838;
+}
+
+/* Şifre Güncelleme Başarısı */
+.successMessage {
+  color: #248111;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  background: #86d383;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #075c2a;
+  text-align: center;
+}
+
+.errorMessage {
+  color: rgb(223, 66, 66);
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* 2FA Kodu Giriş Alanı - Turuncu Tema */
+.twoFAInputArea {
+  background-color: #2c1c00;
+  border: 1px solid #ffb74d;
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin: 20px auto;
+  width: 100%;
+  box-shadow: 0 0 12px rgba(255, 167, 38, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+.timerText {
+  font-size: 15px;
+  color: #ffcc80;
+  background-color: #3e2723;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: none;
+}
+.twoFAInputArea p {
+  color: #ffe0b2;
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+}
+
+.twoFAInputArea input {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ffcc80;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 300px;
+  background-color: #3e2723;
+  color: #ffe0b2;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.twoFAInputArea input:focus {
+  border-color: #ffa726;
+  box-shadow: 0 0 5px #ffa726;
+}
+
+.twoFAInputArea button:hover {
+  background-color: #fb8c00;
+  transform: scale(1.02);
+}
+
+.twoFAInputArea button:active {
+  transform: scale(0.98);
+}
+
+.twoFAError {
+  color: #ff5722;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+  background: #fff3e0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ff5722;
+}

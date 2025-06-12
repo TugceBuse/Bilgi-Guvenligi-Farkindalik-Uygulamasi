@@ -1,31 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import './Desktop.css';
-import { useWindowConfigState } from '../../config/windowConfig';
+import { useWindowConfig }  from '../../Contexts/WindowConfigContext'
 import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
+import { useFileContext } from '../../Contexts/FileContext';
 import TaskBar from '../TaskBar/TaskBar';
 import Alert from '../Notifications/Alert';
 import RansomScreen from '../Notifications/Ransom';
+import FileOpener from '../../viewers/FileOpener';
 import { TodoProvider } from '../../Contexts/TodoContext';
+import { useVirusContext } from '../../Contexts/VirusContext';
+import TaskApp from '../TaskApp/TaskApp';
+import PopupThrower from '../PopupThrower/PopupThrower';
 
-const Desktop = () => {
+
+const Desktop = ({ hacked, onFormat }) => {
   const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, handleIconClick, zindex, setZindex } = useUIContext();
+  const { openWindows, visibleWindows, handleIconClick, zindex, setZindex, windowProps } = useUIContext();
+  const { openedFiles, closeFile, files } = useFileContext();
+  const { addVirus, viruses, removeVirus } = useVirusContext();
 
-  const [showRansom, setShowRansom] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const { windowConfig, updateDownloadedStatus } = useWindowConfigState();
+  const { windowConfig } = useWindowConfig();
 
-  const handlers = {
-    todolist: windowConfig.todolist.useComponent(),
-    mailbox: windowConfig.mailbox.useComponent(),
-    browser: windowConfig.browser.useComponent(),
-    itsupport: windowConfig.itsupport.useComponent(),
-    folder: windowConfig.folder.useComponent(),
-    scanner: windowConfig.scanner.useComponent(),
-    antivirus: windowConfig.antivirus.useComponent(),
-  };
+  // Yeni pencere konumlarını tutacak state
+  const [windowPositions, setWindowPositions] = useState({});
+
+  useEffect(() => {
+    if (!hacked) return;
+    const audio = new Audio("/fan.mp3");
+    audio.loop = true;
+    audio.volume = 0.6;
+    audio.play().catch(() => {});
+    document.body.classList.add("hacked-cursor");
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+      document.body.classList.remove("hacked-cursor");
+    };
+  }, [hacked]);
+
+  // Hacked mode'da popup ve overlay ekle
+  useEffect(() => {
+    if (!hacked) return;
+    // Adware virüsünü context’e ekle
+    addVirus({ type: "adware" });
+    return () => {
+      // Hacked moddan çıkınca adware’ı kaldırabilirsin
+      removeVirus(viruses.find(v => v.type === "adware")?.id);
+    };
+  }, [hacked]);
+
+  // handlers nesnesini dinamik oluşturma
+  const handlers = Object.keys(windowConfig).reduce((acc, key) => {
+    acc[key] = windowConfig[key].useComponent();
+    return acc;
+  }, {});
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
@@ -34,33 +65,34 @@ const Desktop = () => {
     };
   }, []);
 
+  // ✅ Açık olan pencere sırasına göre pozisyon belirleme
   useEffect(() => {
-    if (isransomware) {
-      const randomDelay = Math.floor(Math.random() * 20000) + 10000;
-      const timer = setTimeout(() => setShowRansom(true), randomDelay);
-      return () => clearTimeout(timer);
-    }
-  }, [isransomware]);
+    setWindowPositions((prevPositions) => {
+      let updatedPositions = { ...prevPositions };
+
+      visibleWindows.forEach((windowKey, index) => {
+        if (!updatedPositions[windowKey]) {
+          updatedPositions[windowKey] = {
+            left: `${window.innerWidth / 10 + index * 30}px`,
+            top: `${window.innerHeight / 10 + index * 30}px`,
+            zIndex: 100 + index,
+          };
+          console.log('windowpositions:', updatedPositions[windowKey], 'zindex:', 100 + index);
+          
+        }
+      });
+
+      return updatedPositions;
+    });
+    setZindex((prevZindex) => prevZindex + 1);
+  }, [visibleWindows]);
 
   useEffect(() => {
-    if (showRansom) {
-      const audio = new Audio('/audio/ransomware.m4a');
-      audio.play();
-      return () => audio.pause();
-    }
-  }, [showRansom]);
-
-  useEffect(() => {
-    if (openWindows.length === 0) {
+    if (openWindows.length === 0 && openedFiles.length === 0) {
+      setWindowPositions({});
       setZindex(100);
     }
-  }, [openWindows]);
-
-  const calculateWindowPosition = (index) => ({
-    left: `${window.innerWidth / 10 + index * 30}px`,
-    top: `${window.innerHeight / 10 + index * 30}px`,
-    zIndex: 100 + index,
-  });
+  }, [openWindows, openedFiles]);
 
   const handleDesktopClick = (windowKey) => {
     const { openHandler } = handlers[windowKey];
@@ -68,54 +100,129 @@ const Desktop = () => {
       console.error(`openHandler is not defined for ${windowKey}`);
       return;
     }
-
     if (!openWindows.includes(windowKey)) {
-      if ((windowKey === 'browser' || windowKey === 'mailbox') && !isWificonnected) {
+      const requiresInternet = windowConfig[windowKey]?.requiresInternet;
+      if (requiresInternet && !isWificonnected) {
         setShowAlert(true);
       } else {
         openHandler();
         handleIconClick(windowKey);
-        setZindex((prevZIndex) => prevZIndex + 1);
       }
     }
   };
 
+
   return (
-    <div className="desktop">
+    <div  className={`desktop${hacked ? " hacked-wallpaper" : ""}`}>
       <div className="desktop-icons">
+
+        {/* 🪟 Pencere ikonları */}
         {Object.keys(windowConfig)
-          .filter((key) => windowConfig[key].downloaded) // Sadece downloaded olanları göster
+          .filter((key) => windowConfig[key].available && windowConfig[key].location === 'desktop')
           .map((key) => (
-            <div key={key} className="icon" onClick={() => handleDesktopClick(key)}>
+            <div
+              key={key}
+              className="icon"
+              {...(windowConfig[key].clickable && { onClick: () => handleDesktopClick(key) })}
+            >
               <img src={windowConfig[key].icon} alt={`${windowConfig[key].label} Icon`} />
               <span>{windowConfig[key].label}</span>
             </div>
           ))}
+
+        {/* 📂 Dosya ikonları */}
+        {Object.entries(files)
+          .filter(([_, file]) => file.available && file.location === 'desktop')
+          .map(([fileName, file]) => (
+            <div
+              key={fileName}
+              className="icon"
+              {...(file.clickable && { onClick: () => handleDesktopClick(fileName) })}
+            >
+              <img src={file.icon} alt={`${file.label} Icon`} />
+              <span>{file.label}</span>
+            </div>
+          ))}
       </div>
 
+
       <TodoProvider>
-        {openWindows.map((windowKey, index) => {
+        {/* 📂 **Açılan Uygulamalar (windowConfig içindekiler) ** */}
+        {openWindows.map((windowKey) => {
+          if (!windowConfig[windowKey]) return null;
           const { component: WindowComponent } = windowConfig[windowKey];
           const { closeHandler } = handlers[windowKey];
+          const props = windowProps[windowKey] || {}; // 👈 ekstra props al
+
           return (
             <WindowComponent
               key={windowKey}
               closeHandler={closeHandler}
-              style={calculateWindowPosition(index)}
-              updateDownloadedStatus={updateDownloadedStatus} // Setup için prop gönderiliyor
+              style={windowPositions[windowKey] || {}}
+              {...props} // 👈 props'u geçir
             />
+          );
+        })}
+
+
+        {/* 📂 **Açılan Dosyalar İçin Pencere Yönetimi** */}
+        {openedFiles.map((fileName) => {
+          const file = files[fileName];
+          return (
+            <div key={fileName} className="window file-window" 
+            style={windowPositions[fileName] || {}}
+            >
+              <FileOpener file={file} fileName={fileName} {...(windowProps[fileName] || {})}/>
+            </div>
           );
         })}
       </TodoProvider>
 
-      <TaskBar windowConfig={windowConfig} /> {/* Taskbar'ı alt bileşen olarak ekledik */}
+      {hacked && (
+        <div>
+          <div
+            className="hackedOverlay"
+            onClick={e => {
+              // Start menu ve format butonu dışında engelle
+              if (
+                !e.target.closest('.start-menu-window') &&
+                !e.target.closest('.format-button')
+              ) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }}
+            onMouseDown={e => e.preventDefault()}
+            onMouseMove={e => e.preventDefault()}
+            tabIndex={-1}
+          >       
+          </div>
+          <div className="hacked-overlay-text">
+              <svg className="skull-icon" width="72" height="72" viewBox="0 0 72 72" fill="none">
+              <ellipse cx="36" cy="36" rx="34" ry="32" fill="#000" opacity="0.3"/>
+              <circle cx="36" cy="36" r="26" stroke="#12FF33" strokeWidth="4" fill="none"/>
+              <ellipse cx="26" cy="36" rx="4.5" ry="7" fill="#12FF33"/>
+              <ellipse cx="46" cy="36" rx="4.5" ry="7" fill="#12FF33"/>
+              <ellipse cx="36" cy="54" rx="8" ry="5" fill="#12FF33"/>
+              <path d="M24 58 Q36 70 48 58" stroke="#12FF33" strokeWidth="3" fill="none"/>
+              <ellipse cx="36" cy="48" rx="2" ry="1" fill="#111"/>
+            </svg>
+            <span className="hacked-main-text">HACKED</span>
+            <span className="hacked-sub-text">BY PHISHVILLE</span>
+          </div>
+        </div>
+      )}
+
+      <TaskBar windowConfig={windowConfig} hacked={hacked} onFormat={onFormat}/>
 
       <Alert
         show={showAlert}
         handleClose={() => setShowAlert(false)}
         message="Internet bağlantısı bulunamadı"
       />
-      {showRansom && <RansomScreen />}
+      {viruses.some(v => v.type === 'adware') && <PopupThrower/>}
+      {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
+      <TaskApp />
     </div>
   );
 };

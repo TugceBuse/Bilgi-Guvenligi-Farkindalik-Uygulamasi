@@ -1,0 +1,121 @@
+.wrapper {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8), #000000);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 50px 50px;
+  width: 480px;
+  max-width: 95%;
+  box-shadow: 0 0 30px rgba(255, 87, 87, 0.25);
+  text-align: center;
+  color: white;
+}
+
+.header {
+  font-size: 24px;
+  color: #ff6f61;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subtext {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 25px;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.features li {
+  padding: 6px 0;
+  color: #f1f1f1;
+}
+
+.downloadArea {
+  margin-bottom: 20px;
+}
+
+.downloadBtn {
+  background-color: #ff3c38;
+  color: white;
+  border: none;
+  margin : 10px auto;
+  padding: 14px 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.downloadBtn:hover {
+  background-color: #d32f2f;
+}
+
+.progressBar {
+  background-color: rgba(255, 255, 255, 0.1);
+  height: 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.progressInner {
+  background-color: #ff6f61;
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+.successPopup {
+  margin-top: 15px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.warning {
+  font-size: 8.5px;
+  color: #ffc107;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 12.5px;
+  color: #bbb;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.domainNote {
+  color: #ffc107;
+  font-weight: bold;
+  margin-top: 6px;
+}
+

@@ -1,0 +1,10 @@
+PERSONEL EL KİTABI
+
+NovaTech çalışanlarının uyması gereken temel ilkeler:
+
+- Her zaman profesyonel ve etik davranış sergilenmelidir.
+- Şirket bilgileri gizli tutulmalıdır.
+- İşyerinde fiziksel ve dijital güvenlik kurallarına riayet edilmelidir.
+- Bilgi güvenliği ihlalleri derhal BT departmanına bildirilmelidir.
+
+Tüm personel, bu kuralları okumuş ve kabul etmiş sayılır.

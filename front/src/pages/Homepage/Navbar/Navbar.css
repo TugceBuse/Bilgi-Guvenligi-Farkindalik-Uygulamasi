@@ -1,201 +1,185 @@
+/* 🔄 Arka plan yarı saydam + blur efekti + modern kutulama */
 .navbar {
-    display: flex;
-    position: fixed; /* Sabitle */
-    top: 0px; /* Sayfanın en üstünde */
-    align-items: center;
-    width: 99.5%;
-    height: 9%;
-    color: white;
-    background-color: rgb(32, 53, 71);
-    z-index: 1000;
-    border-radius: 10px; /* Köşeleri yuvarla */
-    margin: 3.5px;
-    opacity: 0.9;
-  }
+  position: fixed;
+  top: 5px;
+  width: 100%;
+  height: 70px;
+  background: rgba(2, 6, 23, 0.95); /* ESKİ: rgb(32, 53, 71) */
+  backdrop-filter: blur(10px);      /* 🔄 YENİ: Blur efekti eklendi */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* 🔄 Modern gölge */
+}
 
- .navbar.scrolled{
-    background-color:  rgb(194, 210, 226);
-    transition: 0.1s;
-    opacity: 1;
-  }
+.h1 {
+  font-size: 30px;
+  font-family: 'Segoe UI', sans-serif; 
+  color: #e2e8f0;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-left: 12px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
+}
+.logo-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px; /* 🔄 Sağ boşluk eklendi */
+}
 
-  .navbar.scrolled a{
-    color: #222222;
-    text-shadow: 1px 1px 1px #666666;
-    
-  }
-
-  .navbar.scrolled .h1{
-    text-shadow: 1px 1px 1px #666666;
-    letter-spacing: 2px; 
-    color: #303030;
-  }
-
-  .navbar.scrolled .logo{
-    background-color: #093246;
-    padding: 0px;
-    color: #fffdfd;
-  }
-   .navbar.scrolled .a:hover{
-    transform: scale(1.02);
-    background-image: linear-gradient(to right, rgb(173, 189, 196),rgb(185, 192, 209));
-    border-radius: 5px;
-   }
-
-   .navbar.scrolled .logo{
-    background-image: url('/public/logo2.png');
-  }
-  .navbar.scrolled .logo-container{
-    background-color: rgb(46, 63, 102);
-  }
-  .logo{
-    width: 83px;
-    height: 83px;
-    border-radius: 50%;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-    filter: grayscale(50%); 
-    background-color: #d3f1ff;
-    background-image: url('/public/logo.png');
-    background-size: cover; /* Resmin boyutunu ayarlayın */
-    background-position: center; /* Resmi ortalayın */
-    justify-self: center;
-    cursor: progress;
-  }
-
-  .navbar.scrolled .login span{
-    border-color: black;
-    border-radius: 5px;
-  }
-
-  .navbar.scrolled .login {
-    color: black;
-  }
-
-  .navbar.scrolled .login:hover span::before{
-    background: rgb(196, 196, 196);
-  }
-
-  .logo-container {
-    background-color: rgb(227, 228, 230);
-    border-radius: 50%;
-    margin-left: 200px;
-    width: 83px;
-    height: 83px;
-    margin-right: 15px;
-    align-content: center;
-  }
-
-  .logo:hover{
-    transform: scale(1.09);
-    filter: brightness(100%);
-  }
-
-  .h1{
-    text-shadow: 4px 4px 6px #000;
-    letter-spacing: 2px; 
-  }
-  .rightPart{
-    margin-left: auto;   
-    display: flex;
-    align-items: center;
-    width: 35%;
-    gap: 10px;
-  }
-
-  .a{
-    width: 22%;
-    text-align: center;
-    font-size: 23px;
-    text-shadow: 6px 6px 8px #000000;
-    border-radius: 3%;
-    color: #fffdfd;
-    text-decoration: none;
-   }
-
-  .a:hover{
-    transform: scale(1.02);
-    background-image: linear-gradient(to right, rgb(123, 156, 187),rgb(148, 185, 219));
-    border-radius: 5px;
-  }
-
-  .login{
-  border: none;
-  display: block;
-  position: relative;
-  padding: 0.7em 2.4em;
-  background: transparent;
-  font-size: 18px;
+/* 🔄 Logo yeniden boyutlandırıldı ve etkileşim eklendi */
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-image: url('/public/phishville.png'); /* 🔄 Arka plan resmi */
+  background-size: cover;
+  background-position: center;
   cursor: pointer;
-  user-select: none;
-  overflow: hidden;
-  color: rgb(183, 191, 216);
-  z-index: 1;
-  font-family: inherit;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1); /* 🔄 Hover efekti */
+}
+
+/* 🔄 Menü kısmı yeniden hizalandı ve spacing artırıldı */
+.rightPart {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* 🔄 spacing artırıldı */
+}
+
+/* 🔄 Bağlantılar için flat tasarım ve hover efekti */
+.a {
+  font-size: 15px;
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* 🔄 Giriş butonu modern mavi ton ve hover animasyonu */
+.login {
+  font-size: 15px;
+  padding: 10px 18px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.login:hover {
+  background-color: #1d4ed8;
+  transform: scale(1.05);
+}
+
+/* 🔄 Avatar, kullanıcı adı, menü hizalaması optimize edildi */
+.loginPart {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #f1f5f9;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.1); /* 🔄 Hafif gölge */
+}
+
+.username {
+  font-size: 15px;
+  color: white;
+}
+
+/* 🔄 Kullanıcı kutusu yeniden tasarlandı */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  object-fit: cover;
+  border: 2px solid #60a5fa;
+}
+
+.username {
+  font-size: 15px;
+  color: #e2e8f0;
   font-weight: 500;
-  }
-  .login span {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    z-index: -1;
-    border-radius: 5px;
-    border: 4px solid rgb(125, 143, 197);
-  }
-  
-  .login span::before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 8%;
-    height: 500%;
-    background: var(--lightgray);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-60deg);
-    transition: all 0.3s;
-  }
-  
-  .login:hover span::before {
-    transform: translate(-50%, -50%) rotate(-90deg);
-    width: 100%;
-    background: royalblue;
-  }
-  
-  .login:hover {
-    color: white;
-  }
-  
-  .login:active span::before {
-    background: #2751cd;
-  }
+  text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
 
-  /* .login:hover{
-    box-shadow: inset 0 0 0 4px #ef476f, 
-    inset 0 0 0 8px #ffd166, 
-    inset 0 0 0 12px #06d6a0,
-    inset 0 0 0 16px #118ab2;
-    background: #073b4c;
-    color: #fff;
-  } */
-  .rightPart p{
-    text-align: center;
-    font-size: 20px;
-    text-shadow: 2px 2px 4px #000000;
-    border-radius: 3%;
-    color: #fffdfd;
-  }
 
-  .loginPart{
-    display: flex;
-    align-items: center;
-    width: 20%;
-    gap: 10px;
+/* 🔄 Dropdown menü minimalist ve modern hale getirildi */
+.dropdown-menu {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 160px;
+  background: #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-in-out;
+  z-index: 1000;
+}
 
-    border-radius: 5px;
-  }
+.dropdown-menu a,
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #f1f5f9;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-decoration: none; 
+}
 
-  
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* 🔄 Hafif fade animasyonu */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

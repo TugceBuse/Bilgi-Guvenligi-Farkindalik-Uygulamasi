@@ -1,72 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './Notifications.css';
-import { useGameContext } from '../../Contexts/GameContext';
+import { useNotificationContext } from '../../Contexts/NotificationContext';
+import NotificationPopup from './NotificationPopup'; // Yeni import
 
-const Notification = () => {
-  const [showNotification, setShowNotification] = useState(false);
+const Notifications = () => {
+  const { popupNotifications, removeNotification } = useNotificationContext();
 
-  const {
-    isantivirusuptodate, setAntivirusisuptodate,
-    isantivirusinstalled,setUpdating_antivirus,
-    seconds
-  } = useGameContext();
-
-  const [remindTime, setRemindTime] = useState(-1);
-
-  const handleUpdateNow = () => {
-    console.log('Şimdi Güncelle butonuna tıklandı');
-    setUpdating_antivirus(true); // Yükleme işlemi başlatıldı
-    setShowNotification(false);
-    // Yükleme işlemini taklit etmek için setTimeout kullanıyoruz
-    setTimeout(() => {
-      setUpdating_antivirus(false);
-      setAntivirusisuptodate(true); 
-    }, 10000); // 10 saniye bekleme süresi
-  };
-
-  //daha sonra hatırlatmaya bastıgında 
-  const handleRemindLater = () => {
-    console.log('Daha Sonra Hatırlat butonuna tıklandı');
-    setAntivirusisuptodate(false); //güncelleme yapılmadı
-    //bu durumda kullanici bir saldiriya maruz kalir
-    setRemindTime(seconds + 60);//1 dakika sonra tekrar hatirlat
-    setShowNotification(false);
-  };
-
-  useEffect(() => {
-    // ilk bildirim gösterileceği süre ve daha sonra hatırlat durumunda süre
-    if ( (isantivirusinstalled && (seconds === remindTime) ) && !isantivirusuptodate) {
-      setShowNotification(true);
-    }
-  }, [seconds]);
-
-  useEffect(() => {
-    setRemindTime(seconds + 5); // 5 saniye sonra ilk bildirim gösterilecek
-  }, [isantivirusinstalled]);
+  // Sistem ve mail/sms ayrımı
+  const systemPopups = popupNotifications.filter(n => n.appType === "system" || !n.appType);
+  const appPopups = popupNotifications.filter(n => n.appType === "mail" || n.appType === "phone" || n.appType === "chatapp");
 
   return (
     <>
-      {showNotification && (
-      <div className="notification">
-        <div className="notification-header">
-          <img src="/icons/caution.png" alt="Caution Icon" className="notification-icon" />
-          <h2>Notification</h2>
-          {/* <button className="notification-close" onClick={() => setShowNotification(false)}>×</button> */}
-        </div>
-        
-        <div className="notification-content">
-          <h3>Antivirus güncellemesi gerekli!</h3>
-          <p>Antivirüs programı güncel değil.</p>
-          <p>Lütfen güvenliğiniz için programı güncelleyin.</p>
-          <div className="notification-buttons">
-          <button onClick={handleUpdateNow}>Şimdi Güncelle</button>
-          <button onClick={handleRemindLater}>Daha Sonra Hatırlat</button>  
-          </div>      
-        </div>
+      {/* Sistem için klasik kart kutusu */}
+      <div className="notification-container">
+        {systemPopups.map(({ id, title, message, icon, type, actions }) => (
+          <div key={id} className={`notification ${type}`}>
+            <div className="notification-header">
+              <img src={icon} alt="Icon" className="notification-icon" />
+              <h2>{title}</h2>
+              {(!actions || actions.length === 0) && (
+                <button
+                  className="notification-action-btn"
+                  style={{
+                    position: 'absolute',
+                    top: 8,
+                    right: 12,
+                    padding: '0 10px',
+                    fontSize: 18,
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    boxShadow: 'none',
+                  }}
+                  onClick={() => removeNotification(id)}
+                  aria-label="Kapat"
+                >×</button>
+              )}
+            </div>
+            <div className="notification-content">
+              <p>{message}</p>
+              {actions && actions.length > 0 && (
+                <div className="notification-actions">
+                  {actions.map((action, idx) => (
+                    <button
+                      key={idx}
+                      className="notification-action-btn"
+                      onClick={() => {
+                        if (typeof action.onClick === 'function') action.onClick();
+                        removeNotification(id);
+                      }}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
-      )}
+      {/* Mail/sms için küçük popup stack */}
+      <div className="mail-popup-stack">
+        {appPopups.map((notif) => (
+          <NotificationPopup
+            key={notif.id}
+            notification={notif}
+            onClose={removeNotification}
+          />
+        ))}
+      </div>
     </>
   );
 };
 
-export default Notification;
+export default Notifications;

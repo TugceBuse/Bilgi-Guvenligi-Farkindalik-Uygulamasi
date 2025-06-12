@@ -1,0 +1,18 @@
+{
+  "name": "bilgi-guvenligi-farkindalik-uygulamasi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "scripts": {
+    "start": "concurrently \"cd front && npm start\" \"cd back && npm run start\"",
+    "start:frontend": "cd front && npm start",
+    "start:backend": "cd back && npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

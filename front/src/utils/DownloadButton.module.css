@@ -1,0 +1,136 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  
+  .attachmentBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fdf4e2;
+    border: 1px solid #f1c40f;
+    border-radius: 5px;
+    padding: 6px 10px;
+    min-width: 200px;
+    max-width: 280px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #7a5103;
+    transition: background-color 0.2s ease;
+    gap: 8px;
+  }
+  
+  .attachmentBox:hover {
+    background-color: #faecd2;
+  }
+  
+  .downloadIcon {
+    font-size: 15px;
+    margin-right: 6px;
+  }
+  
+  .downloadAction {
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .downloadAction:hover {
+    background-color: #e67e22;
+  }
+  
+  .progressWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fdf4e2;
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid #f1c40f;
+    max-width: 280px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .progressBar {
+    flex: 1;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    position: relative;
+  }
+  
+  .progressFill {
+    height: 100%;
+    background-color: #f39c12;
+    transition: width 0.1s linear;
+    z-index: 1;
+  }
+  
+  .progressLabel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    color: #333;
+    white-space: nowrap;
+    z-index: 2;
+    pointer-events: none;
+  }
+  
+  .cancel {
+    background-color: transparent;
+    color: #7a5103;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .successBubble {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #2ecc71;
+    color: white;
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    animation: fadeOut 0.3s ease-in-out forwards;
+    z-index: 2;
+  }
+  
+  .cancelBubble {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e74c3c;
+    color: white;
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    animation: fadeOut 0.3s ease-in-out forwards;
+    z-index: 2;
+  }
+  
+  @keyframes fadeOut {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+  }
+  
+  .wrapperWithBubble {
+    position: relative;
+  }
+  

@@ -1,0 +1,184 @@
+.appWindow {
+  position: absolute;
+  width: 720px;
+  height: 500px;
+  background: #1e1e1e;
+  color: #f1f1f1;
+  border-radius: 12px;
+  border: 1px solid #ff7043;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 200;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #2a1c1a;
+  color: #ffab91;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid #ff7043;
+}
+.headerLeft{
+  display: flex;
+  gap: 10px;
+}
+
+.headerLeft img{
+  width: 32px;
+  height: 32px;
+}
+.headerLeft h2{
+    margin: 0;
+    font-size: 18px;
+    color: #ffd8c2;
+    align-self: flex-end;
+}
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #ffccbc;
+  cursor: pointer;
+}
+
+.body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.searchInput {
+  background-color: #2e2e2e;
+  border: 1px solid #555;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #f1f1f1;
+  margin-bottom: 16px;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #aaa;
+}
+
+.empty {
+  color: #aaa;
+  text-align: center;
+  padding-top: 40px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #2a1c1a;
+  border: 1px solid #ff5722;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.item:hover {
+  background-color: #3b2624;
+}
+
+.item img {
+  width: 32px;
+  height: 32px;
+}
+
+.filename {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffd8c2;
+}
+
+.meta {
+  font-size: 13px;
+  color: #ffbca5;
+}
+
+.viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.viewerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffccbc;   
+  margin-top: 12px;
+}
+
+.backButton {
+  background: #ff5722;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.backButton:hover {
+  background: #a83613;
+}
+
+.fakePreview {
+  background-color: #2c1e1c;
+  border: 1px solid #ff7043;
+  border-radius: 10px;
+  color: #ffd8c2;
+  font-size: 15px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;         /* Dikey taşmaları kaydırılabilir yapar */
+  overflow-x: hidden;       /* Yatayda taşma varsa gizler */
+  white-space: pre-wrap;    /* Satırları kır, taşma olmasın */
+  word-break: break-word;   /* Uzun kelimeleri kır */
+  box-sizing: border-box;
+}
+
+.fakeToolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #241b1a;
+  border-bottom: 1px solid #3a2a29;
+  padding: 8px 8px;
+}
+
+.toolButton {
+  background-color: #3a2a29;
+  border: 1px solid #ff7043;
+  border-radius: 6px;
+  color: #ffd8c2;
+  font-size: 13px;
+  padding: 4px 10px;
+  cursor: default; /* tıklanamaz gibi göstermek için */
+  user-select: none;
+  transition: background 0.2s;
+  opacity: 0.8;
+}
+
+.toolButton:hover {
+  background-color: #4b2f2e;
+}

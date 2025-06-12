@@ -1,0 +1,625 @@
+/* Genel Stil */
+:global(body) {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Ana Konteyner */
+.careerContainer {
+  background: rgb(161, 172, 175);
+  width: 50%;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+  justify-self: center;
+}
+/* Kullanıcı Paneli (Sağ Üst Köşe) */
+.userPanel {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, #426180, #00c6ff);
+  color: #0073e6;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border: 2px solid #0073e6;
+}
+
+/* Kullanıcı Adı */
+.userName {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+  padding-bottom: 5px;
+}
+
+/* Çıkış Butonu */
+.logoutButton {
+  background: #ff3b3b;
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.logoutButton:hover {
+  background: #d63030;
+  transform: scale(1.05);
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #0073e6, #00c6ff);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Giriş/Kayıt Alanı */
+.authBox {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease-in-out;
+}
+
+.authBox:hover {
+  transform: scale(1.02);
+}
+
+.authBox input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.2s ease-in-out;
+}
+
+.authBox input:focus {
+  border-color: #0073e6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+}
+
+.authBox button {
+  width: 100%;
+  padding: 12px;
+  background-color: #005bb5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  transition: 0.3s ease-in-out;
+}
+
+.authBox button:hover {
+  background-color:#005bb5;
+  transform: scale(1.02);
+}
+
+.authBox button:disabled {
+  background: #797979;
+  color: #202020;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+  }
+
+.authBox button:disabled:hover{
+  transform: none !important;
+  cursor: not-allowed !important;
+}
+
+.authBox p {
+  cursor: pointer;
+  color: #0073e6;
+  font-size: 14px;
+  padding: 10px;
+}
+.authBox h2{
+  color: #003d80;
+}
+
+.authBox p:hover {
+  text-decoration: underline;
+}
+
+/* İş İlanları Bölümü */
+.jobListings {
+  background: #e3f2fd;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.jobListings h2{
+  color: #003d80;
+}
+
+.jobListings ul {
+  list-style: none;
+  padding: 0;
+  color: #003d80;
+}
+
+.jobListings li {
+  padding: 8px;
+  border-bottom: 1px solid #b3e5fc;
+  font-size: 15px;
+  transition: 0.3s ease-in-out;
+}
+
+.jobListings li:hover {
+  background: #bbdefb;
+  transform: scale(1.02);
+}
+
+/* CV Hazırlama Bölümü */
+.cvTips {
+  background: #f8f1d8;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 15px;
+  color: #125544;
+}
+.cvTips li{
+  padding: 8px;
+  border-bottom: 1px solid #b3e5fc;
+  font-size: 15px;
+  transition: 0.3s ease-in-out;
+  margin-left: 15px;
+}
+
+/* Röportaj Rehberi */
+.interviewTips {
+  background: #f2fde5;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 15px;
+  color: #18490c;
+}
+.interviewTips li{
+  padding: 8px;
+  border-bottom: 1px solid #b3e5fc;
+  font-size: 15px;
+  transition: 0.3s ease-in-out;
+  margin-left: 15px;
+}
+
+/* Maaş ve İş Detayı */
+.salary {
+  color: #0073e6;
+  font-weight: bold;
+}
+
+/* Footer */
+.footer {
+  font-size: 12px;
+  color: #2b2b2b;
+  margin-top: 10px;
+}
+
+.errorMessage {
+  color: rgb(223, 66, 66);
+  font-size: 0.9rem;
+  margin-top: 10px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
+/* 🔧 Ayarlar Butonu */
+.settingsButton {
+  background: #ffb74d;
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-weight: bold;
+}
+
+.settingsButton:hover {
+  background: #ff9800;
+  transform: scale(1.05);
+}
+
+/* ⚙ Ayarlar Menüsü */
+.settingsMenu {
+  position: absolute;
+  top: 150px;
+  right: 15px;
+  width: 18.25%;
+  background: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.settingsMenu h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+/* 📧 E-posta ve Şifre Bilgisi */
+.settingsMenu p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* 🔐 2FA Butonu */
+.twoFAButton {
+  display: block;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.twoFAButton:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+/* Ayarlar Menüsü */
+.settingsMenu input[type="text"] {
+  width: calc(100% - 22px);
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.settingsMenu button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.settingsMenu button:hover {
+  background-color: #0056b3;
+}
+
+/* Profil Fotoğrafı Değiştir Butonu */
+.profilePictureButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profilePictureButton:hover {
+  background-color: #218838;
+}
+
+/* Hata Mesajları (Genel) */
+.successMessage {
+  color: #225c17; /* Kırmızı tonunda hata mesajı */
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+  background: #badbaf; /* Hafif kırmızı arka plan */
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #075c2a;
+}
+
+/* Çift Faktörlü Doğrulama Hata Mesajı */
+.twoFAError {
+  color: #ff5722; /* Turuncu tonu (önemli ama kritik değil) */
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+  background: #fff3e0;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ff5722;
+}
+
+/* Parola Başarı Mesajı */
+.successPassword {
+  color: #248111;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  background: #86d383;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #d32f2f;
+}
+
+.successMessage,
+.twoFAError,
+.successPassword {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Reklam Pop-up (Gelişmiş İçerik) */
+.adPopup {
+  position: fixed;
+  top: 35%;
+  left: 43%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background: linear-gradient(135deg, #ff9800, #ffeb3b);
+  color: #333;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0; 
+  visibility: hidden; 
+  cursor: pointer;
+}
+/* Reklam Açılma Animasyonu */
+.adPopup.show {
+  visibility: visible;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+/* Reklam Başlığı */
+.adPopup h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+/* Reklam İçeriği */
+.adPopup p {
+  margin: 0;
+  padding-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Reklam Listesi */
+.adPopup ul {
+  text-align: left;
+  padding: 0;
+  margin-bottom: 10px;
+  list-style: none;
+}
+
+.adPopup ul li {
+  font-size: 14px;
+  margin: 5px 0;
+  padding-left: 10px;
+  position: relative;
+}
+
+.adPopup ul li::before {
+  content: "✔";
+  color: green;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Kapat Butonu */
+.adPopup button {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.2s;
+  width: 100%;
+}
+
+.adPopup button:hover {
+  background: #b71c1c;
+  transform: scale(1.05);
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+/* Fade-In Animasyonu */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Sahte Tarayıcı Penceresi */
+.fakeBrowser {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 400px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Sahte Tarayıcı Başlık Çubuğu */
+.fakeBrowserHeader {
+  background: #333;
+  color: white;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+/* Sahte Kapat Butonu */
+.fakeCloseButton {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 3px 8px;
+  background: red;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.fakeCloseButton:hover {
+  background: darkred;
+}
+
+/* Sahte URL Bar */
+.fakeUrlBar {
+  flex: 1;
+  background: #666;
+  color: white;
+  padding: 3px 10px;
+  margin-left: 5px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+/* Sahte Tarayıcı İçerik */
+.fakeBrowserContent {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+}
+
+.fakeBrowserContent h1 {
+  color: red;
+  font-size: 22px;
+}
+
+.fakeBrowserContent p {
+  color: #444;
+}
+.twoFAInputArea {
+  background-color: #1e1e1e;
+  border: 1px solid #5dade2;
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin: 20px auto;
+  width: 100%;
+  box-shadow: 0 0 12px rgba(93, 173, 226, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.twoFAInputArea p {
+  color: #d0eaff;
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+}
+
+.twoFAInputArea input {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #5dade2;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 300px;
+  background-color: #2c3e50;
+  color: #d0eaff;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.twoFAInputArea input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 5px #3498db;
+}
+
+.twoFAInputArea button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.twoFAInputArea button:hover {
+  background-color: #2980b9;
+  transform: scale(1.02);
+}
+
+.twoFAInputArea button:active {
+  transform: scale(0.98);
+}
