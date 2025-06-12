@@ -21,8 +21,9 @@ export const MailContextProvider = ({ children }) => {
   const { addNotification, removeNotification } = useNotificationContext();
   const { openWindow } = useUIContext();
 
-  const addMailToMailbox = (type, id) => {
-    setPendingMails(prev => [...prev, { type, id }]);
+  const addMailToMailbox = (type, id, sendTime = gameDate) => {
+    console.log(`Adding mail to ${type}:`, id, sendTime);
+    setPendingMails(prev => [...prev, { type, id, sendTime }]);
   };
 
   // Mail okundu işaretle + bildirimden kaldır
@@ -76,8 +77,9 @@ export const MailContextProvider = ({ children }) => {
             const updatedMail = { 
               ...mailToAdd, 
               used: true, 
-              sendTime: mailToAdd.sendTime || gameDate // <-- Güncellendi
+              sendTime: mail.sendTime || mailToAdd.sendTime || gameDate
             };
+            console.log("USEEFFECT: Adding mail to inbox:", updatedMail);
             setInitMail(prevMails =>
               prevMails.map(m =>
                 m.id === mail.id ? updatedMail : m
@@ -92,7 +94,7 @@ export const MailContextProvider = ({ children }) => {
             const updatedSpam = { 
               ...spamToAdd, 
               used: true, 
-              sendTime: spamToAdd.sendTime || gameDate // <-- Güncellendi
+              sendTime: mail.sendTime || spamToAdd.sendTime || gameDate
             };
             setInitSpamMails(prevMails =>
               prevMails.map(m =>
@@ -110,7 +112,7 @@ export const MailContextProvider = ({ children }) => {
   
   // Dinamik mail gönder
   // Dinamik mail gönderimi (stack mantığı ile kullanılmalı)
-  const sendMail = (type, params) => {
+  const sendMail = (type, sendTime = null , params) => {
     const mailId = params.mailId || Date.now();
     let mailObj = null;
     if (type === "cargo") {
@@ -122,7 +124,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        sendTime: gameDate, // <-- Güncellendi
+        sendTime: sendTime || params.sendTime || gameDate,
         content: params.content || createCargoMail({ ...params, mailId }),
       };
     } else if (type === "invoice") {
@@ -134,7 +136,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        sendTime: gameDate, // <-- Güncellendi
+        sendTime: sendTime || params.sendTime || gameDate,
         content: createInvoiceMail({ ...params, mailId }),
       };
     }
