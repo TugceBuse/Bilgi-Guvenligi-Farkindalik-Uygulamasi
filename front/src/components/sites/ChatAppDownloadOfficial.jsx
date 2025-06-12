@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import styles from './ChatAppDownloadOfficial.module.css';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
+import { useChatContext } from '../../Contexts/ChatContext';
 
 const userReviews = [
   {
@@ -42,12 +43,14 @@ const faqs = [
 
 const ChatAppDownloadOfficial = () => {
   const { updateAvailableStatus } = useWindowConfig();
+  const { setTheme, setIcon } = useChatContext();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const intervalRef = useRef(null);
 
   const startDownload = () => {
+    setTheme("official");
     setDownloading(true);
     setProgress(0);
     intervalRef.current = setInterval(() => {
@@ -55,7 +58,7 @@ const ChatAppDownloadOfficial = () => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
           setShowPopup(true);
-          updateAvailableStatus("chatapp", { available: true });
+          updateAvailableStatus("chatapp", { available: true});
           setTimeout(() => setShowPopup(false), 2500);
           setDownloading(false);
           return 100;

@@ -21,6 +21,8 @@ export const ChatContextProvider = ({ children }) => {
 
   const addUser = (user) => setUsers(prev => [...prev, user]);
 
+  const [theme, setTheme] = useState("official");
+
   // Konuşma geçmişine mesaj ekler
   const addChatMessage = (userId, msg, notify) => {
     setMessages(prev => ({
@@ -87,7 +89,8 @@ export const ChatContextProvider = ({ children }) => {
       messages, addChatMessage,
       options, setUserOptions,
       cargoStepShared, setCargoStepShared,
-      users, addUser, setUsers
+      users, addUser, setUsers,
+      theme, setTheme,
     }}>
       {children}
     </ChatContext.Provider>
