@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './TaskApp.css';
 import { useGameContext } from '../../Contexts/GameContext';
-// import { useTodoContext } from '../../Contexts/TodoContext'; // Artık gerek yok
 import { useQuestManager } from '../../Contexts/QuestManager';
 
 const TaskApp = () => {
   const { isTaskAppInstalled } = useGameContext();
-  const { quests } = useQuestManager(); // Questleri contextten çekiyoruz
+  const { getActiveQuests } = useQuestManager();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [openedDescId, setOpenedDescId] = useState(null);
 
   useEffect(() => {
     if (!isTaskAppInstalled) return;
@@ -41,7 +41,13 @@ const TaskApp = () => {
 
   if (!isTaskAppInstalled || !visible) return null;
 
-  // Görevleri status'e göre grupla ve göster
+  const handleTaskClick = (id) => {
+    setOpenedDescId(prev => (prev === id ? null : id));
+  };
+
+  // Sadece aktif quest'leri al
+  const activeQuests = getActiveQuests();
+
   return (
     <div className={`task-app-container ${closing ? 'closing' : ''}`}>
       <div className="rotated-header">
@@ -58,46 +64,30 @@ const TaskApp = () => {
         </div>
 
         <div className="task-app-content">
-          {quests && quests.length > 0 ? (
+          {activeQuests && activeQuests.length > 0 ? (
             <ul className="task-list">
-              {quests.map((quest) => (
-                <li
-                  key={quest.id}
-                  className={
-                    `task-item 
-                    ${quest.status === 'completed' ? 'completed' : ''}
-                    ${quest.status === 'failed' ? 'failed' : ''}
-                    ${quest.status === 'active' ? 'active' : ''}
-                    ${quest.status === 'locked' ? 'locked' : ''}
-                    `
-                  }
-                  title={quest.description}
-                >
-                  {quest.status === 'completed' && (
-                    <img src="/icons/mission-complete.png" alt="Tamamlandı" className="task-status-icon" />
-                  )}
-                  {quest.status === 'failed' && (
-                    <img src="/icons/mission-failed.png" alt="Başarısız" className="task-status-icon" />
-                  )}
-                  {quest.status === 'active' && (
+              {activeQuests.map((quest) => (
+                <React.Fragment key={quest.id}>
+                  <li
+                    className={`task-item active`}
+                    title={quest.description}
+                    onClick={() => handleTaskClick(quest.id)}
+                    tabIndex={0}
+                  >
                     <span className="task-status-dot"></span>
+                    <span>{quest.title}</span>
+                    <span className="task-status-label">Aktif</span>
+                  </li>
+                  {openedDescId === quest.id && (
+                    <div className="task-desc-box">
+                      <span>{quest.description}</span>
+                    </div>
                   )}
-                  {quest.status === 'locked' && (
-                    <span className="task-status-dot locked"></span>
-                  )}
-                  <span>{quest.title}</span>
-                  {/* Ekstra: durum etiketi */}
-                  <span className="task-status-label">
-                    {quest.status === 'completed' && 'Tamamlandı'}
-                    {quest.status === 'failed' && 'Başarısız'}
-                    {quest.status === 'active' && 'Aktif'}
-                    {quest.status === 'locked' && 'Kilitli'}
-                  </span>
-                </li>
+                </React.Fragment>
               ))}
             </ul>
           ) : (
-            <p className="no-tasks">Henüz bir görevin yok!</p>
+            <p className="no-tasks">Aktif görevin yok!</p>
           )}
         </div>
       </div>

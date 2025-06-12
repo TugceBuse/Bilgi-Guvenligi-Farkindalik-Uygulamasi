@@ -12,34 +12,35 @@
 
 const QUEST_LIST = [
   {
-    id: "wifi-connect",
+    id: "connect_wifi",
     title: "WiFi Bağlantısı",
-    description: "Maillerini görebilmek ve gerekli uygulamaları indirebilmek için bir WiFi ağına bağlan",
+    description: "Maillerini görebilmek ve gerekli uygulamaları indirebilmek için bir WiFi ağına bağlan.",
     status: "active",
-    unlocks: ["mailbox-login"],
+    unlocks: ["login_mailbox"],
     requires: [],
     point: 10,
     penalty: -10,
     logEventType: "wifi"
   },
   {
-    id: "mailbox-login",
-    title: "Mailbox Bağlantısı",
+    id: "login_mailbox",
+    title: "Maillerinizi görebilmek için Mailbox'a phishville hesap bilgilerinizle giriş yapın.",
     description: "Mail kutusuna güvenli giriş yap.",
     status: "locked",
-    unlocks: ["taskapp-download"],
-    requires: ["wifi-connect"],
+    unlocks: ["download_taskapp"],
+    requires: ["connect_wifi"],
     point: 10,
     penalty: -10,
     logEventType: "mailbox"
   },
   {
-    id: "taskapp-download",
+    id: "download_taskapp",
     title: "TaskApp İndir & Kur",
-    description: "Gelen mailleri kontrol ederek doğru TaskApp dosyasını indir ve kur.",
+    description: "Maillerini kontrol et ve sana gönderdiğimiz setup dosyasını indirip TaskApp'i kur.",
     status: "locked",
-    unlocks: ["cloud-download", "chatapp-install"],
-    requires: ["mailbox-login"],
+    // unlocks: ["cloud-download", "chatapp-install"],
+    unlocks: null,
+    requires: ["login_mailbox"],
     point: 20,
     penalty: -20,
     logEventType: "taskapp"

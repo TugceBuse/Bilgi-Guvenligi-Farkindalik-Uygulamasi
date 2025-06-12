@@ -8,7 +8,7 @@ const GameContext = createContext();
 
 export const GameContextProvider = ({ children }) => {
   // Zaman artık TimeContext'ten alınacak!
-  const { seconds, secondsRef, gameStart, getRelativeDate } = useTimeContext();
+  const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
 
   // --- Mevcut State'ler ---
   const {isWificonnected, setIsWificonnected} = useSecurityContext()
@@ -208,8 +208,8 @@ export const GameContextProvider = ({ children }) => {
       addMailToMailbox('spam', 31);
       addMailToMailbox('spam', 32);
       const timeoutId = setTimeout(() => {
-        addMailToMailbox('inbox', 3);
-      }, 180000);
+        addMailToMailbox('inbox', 3, getDateFromseconds(secondsRef.current + 1));
+      }, 60000);
       return () => clearTimeout(timeoutId);
   }, []);
 
