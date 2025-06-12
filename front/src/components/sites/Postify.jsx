@@ -1,5 +1,5 @@
 // Postify.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Postify.module.css';
 import { useGameContext } from "../../Contexts/GameContext";
 import PostifyAuth from './PostifyAuth';
@@ -169,6 +169,19 @@ const getRelativeTime = (timestamp) => {
 
 
 const Postify = () => {
+  const { PostifyInfo, setPostifyInfo } = useGameContext();
+
+  const [showSettings, setShowSettings] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const toggleUserMenu = () => setShowUserMenu(!showUserMenu);
+
+  const [showPrivacyOptions, setShowPrivacyOptions] = useState(false);
+
+  // Mesajlar için gerekli state'ler
+  const [showMessages, setShowMessages] = useState(false);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [messageText, setMessageText] = useState("");
+  
   const [posts, setPosts] = useState(initialPosts);
   const [likes, setLikes] = useState(() => {
     const initial = {};
@@ -183,21 +196,27 @@ const Postify = () => {
 
   const [newPostContent, setNewPostContent] = useState('');
   const [timestamps, setTimestamps] = useState({});
-  
-  const { openWindow } = useUIContext();
-  const { setWindowConfig } = useWindowConfig();
-
 
   const toggleLike = (postId) => {
     setLikes((prev) => {
       const currentCount = prev[postId]?.count || 0;
-      const isLiked = prev[postId]?.liked || false;
+      const isLiked = PostifyInfo.likedPosts?.includes(postId) || false;
       return {
         ...prev,
         [postId]: {
           count: isLiked ? currentCount - 1 : currentCount + 1,
           liked: !isLiked,
         },
+      };
+    });
+
+    setPostifyInfo((prev) => {
+      const alreadyLiked = prev.likedPosts?.includes(postId);
+      return {
+        ...prev,
+        likedPosts: alreadyLiked
+          ? prev.likedPosts.filter((id) => id !== postId) 
+          : [...(prev.likedPosts || []), postId]           
       };
     });
   };
@@ -207,31 +226,25 @@ const Postify = () => {
     const timestamp = Date.now();
     const newPost = {
       id: timestamp,
-      name: 'Sen',
+      name: PostifyInfo.name || 'Sen',
       time: timestamp,
       avatar: '/avatars/avatar9.png',
       content: newPostContent,
       likes: 0,
       commands: 0,
+      privacySettings: PostifyInfo.privacySettings // Burada ayarını alıyoruz
     };
     setPosts([newPost, ...posts]);
     setLikes((prev) => ({ ...prev, [newPost.id]: { count: 0, liked: false } }));
     setTimestamps((prev) => ({ ...prev, [newPost.id]: timestamp }));
     setNewPostContent('');
+
+    // PostifyInfo.userPosts yoksa boş dizi olarak başlat!
+    setPostifyInfo({
+      ...PostifyInfo,
+      userPosts: [newPost, ...(PostifyInfo.userPosts || [])]
+    });
   };
-
-  const { PostifyInfo, setPostifyInfo } = useGameContext();
-
-  const [showSettings, setShowSettings] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const toggleUserMenu = () => setShowUserMenu(!showUserMenu);
-
-  const [showPrivacyOptions, setShowPrivacyOptions] = useState(false);
-
-  // Mesajlar için gerekli state'ler
-  const [showMessages, setShowMessages] = useState(false);
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [messageText, setMessageText] = useState("");
 
   const dummyChats = [
     { id: 1, name: "Ahmet Kaya", avatar: "/avatars/avatar1.png", messages: ["Selam!", "Toplantı ne zaman?"] },
@@ -457,7 +470,18 @@ const handlePasswordUpdate = () => {
                   <button className={styles.button} onClick={handlePostShare}>Paylaş</button>
                 </div>
 
-                {posts.map((post) => (
+                {posts.map((post) => {
+                // Her post için burda hesapla:
+                const isLiked = PostifyInfo.likedPosts?.includes(post.id);
+
+                let displayLikeCount = post.likes;
+                if (isLiked) {
+                  displayLikeCount = (post.likes + 1);
+                } else {
+                  displayLikeCount = post.likes;
+                }
+
+                return (
                   <div key={post.id} className={styles.card}>
                     <div className={styles.header}>
                       <img src={post.avatar} className={styles.avatar} alt="user" />
@@ -471,9 +495,8 @@ const handlePasswordUpdate = () => {
                     </div>
                     <img src={post.image} className={styles.image} alt="reklam" />
                     <div className={styles.content}>{post.content}</div>
-
                     <div className={styles.metaInfo}>
-                      <span>👍 {likes[post.id]?.count || 0}</span>
+                      <span>👍 {displayLikeCount}</span>
                       <span>💬 {post.commands}</span>
                       <span>📤 Paylaş</span>
                     </div>
@@ -481,14 +504,15 @@ const handlePasswordUpdate = () => {
                     <div className={styles.actions}>
                       <button
                         onClick={() => toggleLike(post.id)}
-                        className={likes[post.id]?.liked ? styles.likedButton : ''}
+                        className={isLiked ? styles.likedButton : ''}
                       >
-                        {likes[post.id]?.liked ? '💙 Beğenildi' : '👍 Beğen'}
+                        {isLiked ? '💙 Beğenildi' : '👍 Beğen'}
                       </button>
                       <button>💬 Yorum Yap</button>
                     </div>
                   </div>
-                ))}
+                );
+              })}
               </div>
 
               <div className={styles.rightExtras}>

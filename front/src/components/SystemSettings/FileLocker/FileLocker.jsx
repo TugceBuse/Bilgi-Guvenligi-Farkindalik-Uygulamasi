@@ -3,7 +3,7 @@ import styles from "./FileLocker.module.css";
 import { useFileContext } from "../../../Contexts/FileContext";
 
 const LOCK_ICON = (
-  <span className={styles.lockIcon} title="Şifreli">🔒</span>
+  <img src="/FileLocker/locked.png" alt="Locked File" />
 );
 
 const FileLocker = ({ onClose }) => {
@@ -36,7 +36,7 @@ const FileLocker = ({ onClose }) => {
   return (
     <div className={styles.lockerBox}>
       <div className={styles.header}>
-        <img src="/icons/locker.png" alt="FileLocker" />
+        <img src="/FileLocker/secureFile.png" alt="FileLocker" />
         <h2>FileLocker — Dosya Şifreleme</h2>
       </div>
       <div className={styles.info}>

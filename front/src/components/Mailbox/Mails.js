@@ -6,7 +6,7 @@ import DownloadButton from '../../utils/DownloadButton';
       name, 
       productName, 
       trackingNo, 
-      orderNo,              // <-- Eklenen parametre
+      orderNo,       
       shippingCompany, 
       from, 
       title, 
@@ -15,13 +15,10 @@ import DownloadButton from '../../utils/DownloadButton';
       fakeOptions = {} 
     }) {
       orderNo = typeof orderNo === "string" ? orderNo : (orderNo !== undefined && orderNo !== null ? String(orderNo) : "");
-      const fakeFrom = isFake ? fakeOptions.from || "kargo@cargo-n0va.com" : from;
-      const fakeTitle = isFake ? fakeOptions.title || "Kargo Takip Bilgilendirme" : title;
       const fakeTrackingNo = isFake ? "F4K3" + trackingNo.slice(2) : trackingNo;
       const fakeOrderNo = isFake
         ? (fakeOptions.fakeOrderNo || "F4K3" + (orderNo ? orderNo.slice(2) : Math.floor(100000 + Math.random() * 900000)))
         : orderNo;
-      const fakePrecontent = isFake ? fakeOptions.precontent || "Şüpheli gönderi uyarısı!" : precontent;
 
       let displayTrackingNo = isFake ? fakeTrackingNo : trackingNo;
       let displayOrderNo = isFake ? fakeOrderNo : orderNo;
@@ -101,27 +98,24 @@ import DownloadButton from '../../utils/DownloadButton';
     fakeOptions = {},
     mailId // ← Mail id'yi de props ile geçersen daha güvenli olur
 }) {
-    const fakeFrom = isFake ? fakeOptions.from || "e-fatura@teehdeppo-billing.com" : from;
-    const fakeTitle = isFake ? fakeOptions.title || "E-Arşiv Fatura Bilgilendirme" : title;
     const fakeInvoiceNo = isFake ? "FAKE-" + invoiceNo : invoiceNo;
-    const fakePrecontent = isFake ? fakeOptions.precontent || "Şüpheli fatura bildirimi" : precontent;
 
     // Dinamik fatura txt içeriği
     const txtContent = `
-FATURA BİLGİLERİ - ${company}
-───────────────────────────────
-Fatura Numarası: ${fakeInvoiceNo}
-Sipariş No: ${orderNo}
-Tarih: ${new Date().toLocaleDateString()}
-Müşteri: ${name}
-Ürünler: ${productName}
-Toplam: ${price} TL
-KDV: ${tax} TL
-GENEL TOPLAM: ${total} TL
-───────────────────────────────
-Bu belge elektronik ortamda düzenlenmiştir.
-${company} A.Ş.
-`;
+      FATURA BİLGİLERİ - ${company}
+      ───────────────────────────────
+      Fatura Numarası: ${fakeInvoiceNo}
+      Sipariş No: ${orderNo}
+      Tarih: ${new Date().toLocaleDateString()}
+      Müşteri: ${name}
+      Ürünler: ${productName}
+      Toplam: ${price} TL
+      KDV: ${tax} TL
+      GENEL TOPLAM: ${total} TL
+      ───────────────────────────────
+      Bu belge elektronik ortamda düzenlenmiştir.
+      ${company} A.Ş.
+      `;
 
     // Dosya adı benzersiz olmalı
     const fileName = `fatura_${orderNo}`;
@@ -174,10 +168,7 @@ ${company} A.Ş.
     isFake = false,
     fakeOptions = {}
   }) {
-    const fakeFrom = isFake ? fakeOptions.from || "firsat@novateknn0.info" : from;
-    const fakeTitle = isFake ? fakeOptions.title || "Büyük İndirim Şoku!" : title;
     const fakeCode = isFake ? fakeOptions.code || ("FAKE-" + code) : code;
-    const fakePrecontent = isFake ? fakeOptions.precontent || "Gerçekçi görünen bir kampanya maili" : precontent;
     const fakeButton = isFake
       ? <button className="claim-button" title={fakeOptions.link || "http://novateccno.net/apply-code"}>💸 İndirimi Uygula</button>
       : null;
@@ -296,7 +287,7 @@ export const mails = [
 
               <b>Teşekkürler,<br/><br/>
               Trusted Platform Ekibi</b><br/>
-            </pre>
+          </pre>
       </div>
     )
    },

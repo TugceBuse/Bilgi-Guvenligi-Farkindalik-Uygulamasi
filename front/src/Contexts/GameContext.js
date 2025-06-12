@@ -70,6 +70,8 @@ export const GameContextProvider = ({ children }) => {
     isLoggedIn: false,
     isPasswordStrong: false,
     privacySettings: "Herkese Açık",
+    userPosts: [], 
+    likedPosts: [],
     lockoutUntil: null,
     loginAttempts: 0
   });
