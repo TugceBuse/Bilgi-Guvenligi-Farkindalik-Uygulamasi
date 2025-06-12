@@ -163,9 +163,15 @@ export const GameContextProvider = ({ children }) => {
 
   // CloudBox
   const [cloudUser, setCloudUser] = useState({
-    email: "",
-    password: "",
-    isLoggedIn: false
+    name: '',     
+    surname: '',  
+    email: constUser.email,   
+    password: '',  
+    isRegistered: false,
+    isLoggedIn: false,   
+    isPasswordStrong: false,
+    lockoutUntil: null, 
+    loginAttempts: 0    
   });
   const [cloudBoxBackup, setCloudBoxBackup] = useState({
     files: [],

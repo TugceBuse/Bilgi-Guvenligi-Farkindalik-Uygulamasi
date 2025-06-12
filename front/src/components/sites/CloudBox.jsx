@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useGameContext } from "../../Contexts/GameContext";
 import { useFileContext } from "../../Contexts/FileContext";
 import styles from "./CloudBox.module.css";
@@ -53,33 +53,126 @@ const CloudBox = () => {
 
   // Local UI state
   const [page, setPage] = useState("info"); // "info" / "login" / "register" / "main"
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState(cloudUser.email || "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [lockMessage, setLockMessage] = useState("");
+  const [codeTimer, setCodeTimer] = useState(120);
   const [showUpload, setShowUpload] = useState(false);
   const [uploadState, setUploadState] = useState({});
+  const errorRef = useRef(null);
+
+  
+  useEffect(() => {
+    if (!cloudUser.isLoggedIn) {
+      setName("");
+      setSurname("");
+      setPassword("");
+      setError("");
+    }
+  }, [cloudUser.isLoggedIn]);
+
+  // lockout süresi bittiğinde sıfırla
+  useEffect(() => {
+    if (cloudUser.lockoutUntil && Date.now() >= cloudUser.lockoutUntil) {
+      setCloudUser((prev) => ({
+        ...prev,
+        lockoutUntil: null,
+        loginAttempts: 0,
+      }));
+    }
+  }, [cloudUser.lockoutUntil, setCloudUser]);
+
+  const getLockoutRemainingMinutes = () => {
+    if (!cloudUser.lockoutUntil) return 0;
+    const diff = cloudUser.lockoutUntil - Date.now();
+    return diff > 0 ? Math.ceil(diff / 60000) : 0;
+  };
 
   // login/register işlemleri
+  // Kayıt Ol
   const handleRegister = (e) => {
     e.preventDefault();
-    if (email.length < 6 || !email.includes("@")) return setError("Geçerli bir e-posta girin.");
-    if (password.length < 4) return setError("Şifre en az 4 karakter olmalı.");
-    setCloudUser({ email, password, isLoggedIn: true });
-    setPage("main");
-    setError("");
-  };
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (cloudUser?.email !== email || cloudUser?.password !== password) {
-      setError("E-posta veya şifre hatalı!");
+    if (cloudUser.isRegistered && cloudUser.email === email) {
+      setError("Bu e-posta adresi ile zaten bir hesap var!");
       return;
     }
-    setCloudUser({ ...cloudUser, isLoggedIn: true });
+    if (!name || !surname || !email || !password) {
+      setError("Lütfen tüm alanları doldurun!");
+      return;
+    }
+    if (email.length < 6 || !email.includes("@")) {
+      setError("Geçerli bir e-posta girin.");
+      return;
+    }
+    setCloudUser({
+      name,
+      surname,
+      email,
+      password,
+      isRegistered: true,
+      isLoggedIn: true,
+      isPasswordStrong: true,
+      lockoutUntil: null,
+      loginAttempts: 0
+    });
     setPage("main");
     setError("");
   };
-  const logout = () => {
-    setCloudUser({ ...cloudUser, isLoggedIn: false });
+
+
+  // Giriş Yap
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!cloudUser.isRegistered || cloudUser.email !== email) {
+      setError("Bu e-posta ile kayıtlı bir hesap yok.");
+      return;
+    }
+    if (!password || password !== cloudUser.password) {
+      // 3 deneme sonrası lockout
+      if (cloudUser.loginAttempts >= 2) {
+        const unlockAt = Date.now() + 10 * 60 * 1000; // 10 dk
+        setCloudUser((prev) => ({
+          ...prev,
+          lockoutUntil: unlockAt,
+          loginAttempts: 0,
+        }));
+        setLockMessage("🚫 Çok fazla giriş denemesi yapıldı.");
+        setTimeout(() => {
+          setLockMessage("");
+          setError("");
+          setPage("info");
+        }, 3000);
+      } else {
+        setCloudUser((prev) => ({
+          ...prev,
+          loginAttempts: prev.loginAttempts + 1,
+        }));
+        setError("Hatalı şifre!");
+        setTimeout(() => setError(""), 2000);
+      }
+      return;
+    }
+    setCloudUser((prev) => ({
+      ...prev,
+      isLoggedIn: true,
+      loginAttempts: 0
+    }));
+    setPage("main");
+    setError("");
+  };
+
+  // Çıkış
+  const handleLogout = () => {
+    setCloudUser((prev) => ({
+      ...prev,
+      isLoggedIn: false,
+    }));
+    setName("");
+    setSurname("");
+    setPassword("");
     setPage("info");
     setUploadState({});
     setShowUpload(false);
@@ -128,16 +221,42 @@ const CloudBox = () => {
     }));
   };
 
-  // Ana sayfa ve auth ekran yönetimi
-  if (!cloudUser?.isLoggedIn) {
+  useEffect(() => {
+    // Her giriş/kayıt ekranı değişiminde inputları temizle
+    setName("");
+    setSurname("");
+    setEmail("");
+    setPassword("");
+    setError("");
+    setLockMessage("");
+  }, [page]);
+
+ // Sayfa arası geçiş
+  if (!cloudUser.isLoggedIn) {
     if (page === "info") {
       return (
-        <InfoScreen
-          onLogin={() => setPage("login")}
-          onRegister={() => setPage("register")}
-        />
+        <div className={styles.infoWrapper}>
+          {/* InfoScreen */}
+          <div className={styles.infoHeader}>
+            <img src="/Cloud/cloud-hosting.png" alt="CloudBox" className={styles.siteLogo} />
+            <div>
+              <h1 className={styles.siteTitle}>CloudBox</h1>
+              <div className={styles.siteSubtitle}>Kişisel Bulut Yedekleme Merkezi</div>
+            </div>
+          </div>
+          <div className={styles.infoBody}>
+            <div className={styles.infoBox}>
+              <b>CloudBox</b> ile dosyalarınızı <b>güvenli ve şifreli</b> şekilde yedekleyin...
+            </div>
+          </div>
+          <div className={styles.infoFooter}>
+            <button onClick={() => setPage("login")} className={styles.loginButton}>Giriş Yap</button>
+            <button onClick={() => setPage("register")} className={styles.registerButton}>Kayıt Ol</button>
+          </div>
+        </div>
       );
     }
+
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -148,13 +267,32 @@ const CloudBox = () => {
         <div className={styles.authBox}>
           <div className={styles.authTitle}>{page === "login" ? "Giriş Yap" : "Kayıt Ol"}</div>
           <form onSubmit={page === "login" ? handleLogin : handleRegister}>
+            {page === "register" && (
+              <>
+                <input
+                  type="text"
+                  placeholder="Ad"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  autoComplete="given-name"
+                />
+                <input
+                  type="text"
+                  placeholder="Soyad"
+                  value={surname}
+                  onChange={e => setSurname(e.target.value)}
+                  autoComplete="family-name"
+                />
+              </>
+            )}
             <input
               type="email"
               required
               placeholder="E-posta"
-              value={email}
+              value={cloudUser.email}
               onChange={e => setEmail(e.target.value)}
               autoComplete="username"
+              disabled={cloudUser.lockoutUntil && Date.now() < cloudUser.lockoutUntil}
             />
             <input
               type="password"
@@ -163,9 +301,21 @@ const CloudBox = () => {
               value={password}
               onChange={e => setPassword(e.target.value)}
               autoComplete={page === "login" ? "current-password" : "new-password"}
+              disabled={cloudUser.lockoutUntil && Date.now() < cloudUser.lockoutUntil}
             />
-            {error && <div className={styles.error}>{error}</div>}
-            <button type="submit">{page === "login" ? "Giriş Yap" : "Kayıt Ol"}</button>
+            {error && <div ref={errorRef} className={styles.error}>{error}</div>}
+            {cloudUser.lockoutUntil && Date.now() < cloudUser.lockoutUntil && page === "login" && (
+              <label className={styles.twoFAError}>
+                🚫 Çok fazla giriş denemesi yapıldı. <b>{getLockoutRemainingMinutes()}</b> dakika sonra tekrar deneyin.
+              </label>
+            )}
+            <button
+              type="submit"
+              disabled={cloudUser.lockoutUntil && Date.now() < cloudUser.lockoutUntil}
+            >
+              {page === "login" ? "Giriş Yap" : "Kayıt Ol"}
+            </button>
+            {lockMessage && <span className={styles.twoFAError}>{lockMessage}</span>}
           </form>
           <div className={styles.switchMode}>
             {page === "login"
@@ -187,7 +337,7 @@ const CloudBox = () => {
         <span className={styles.slogan}>Kişisel Bulut Yedekleme Merkezi</span>
         <div className={styles.userArea}>
           <span className={styles.userMail}>{cloudUser.email}</span>
-          <button className={styles.logoutBtn} onClick={logout}>Çıkış</button>
+          <button className={styles.logoutBtn} onClick={handleLogout}>Çıkış</button>
         </div>
       </div>
 
