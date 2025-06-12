@@ -323,7 +323,13 @@ const handlePasswordUpdate = () => {
                   {PostifyInfo.isLoggedIn && showUserMenu && (
                     <div className={styles.userPanel}>
                       <p className={styles.userName}>👤 {PostifyInfo.name}</p>
-                      <button className={styles.settingsButton} onClick={() => setShowSettings(!showSettings)}>⚙ Ayarlar</button>
+                      <button className={styles.settingsButton} 
+                      onClick={() => {
+                        setShowSettings(true);
+                        setShowUserMenu(false);
+                      }}>
+                        ⚙ Ayarlar
+                      </button>
                       <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
                     </div>
                   )}
@@ -343,6 +349,17 @@ const handlePasswordUpdate = () => {
             <p>📷 Profil Fotoğrafı: <button className={styles.profilePictureButton}>Değiştir</button></p>
             <p>📱 Telefon Numarası:</p>
             <input type="text" value={PostifyInfo.phone} disabled />
+
+            <p>🔒 Hesap Gizliliği (Hesabın kimlere açık?):</p>
+            <select
+              value={PostifyInfo.accountPrivacy}
+              onChange={e => setPostifyInfo({ ...PostifyInfo, accountPrivacy: e.target.value })}
+              className={styles.privacyDropdown}
+            >
+              <option value="Herkese Açık">🌐 Herkese Açık</option>
+              <option value="Sadece Bağlantılarım">👥 Sadece Bağlantılarım</option>
+              <option value="Gizli">🔒 Gizli</option>
+            </select>
 
             <div>
               <p>🔐 Parola Güncelle:</p>

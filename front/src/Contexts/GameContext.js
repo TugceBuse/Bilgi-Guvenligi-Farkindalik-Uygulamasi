@@ -69,6 +69,7 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
+    accountPrivacy: "Herkese Açık", 
     privacySettings: "Herkese Açık",
     userPosts: [], 
     likedPosts: [],
