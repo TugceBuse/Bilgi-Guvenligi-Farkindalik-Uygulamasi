@@ -33,9 +33,9 @@
     return (
       <TimeProvider>
         <UIContextProvider>
-          <QuestManagerProvider>
-            <NotificationProvider>
-              <Notification /> 
+          <NotificationProvider>
+            <Notification />
+              <QuestManagerProvider>
               <SecurityProvider>
                 <VirusProvider>
                   <FileContextProvider>
@@ -64,8 +64,8 @@
                   </FileContextProvider>
                 </VirusProvider>
               </SecurityProvider>
-            </NotificationProvider>
-          </QuestManagerProvider>
+            </QuestManagerProvider>
+          </NotificationProvider>
         </UIContextProvider>
       </TimeProvider>
     );

@@ -10,6 +10,7 @@ export const NotificationProvider = ({ children }) => {
     if (appType === "phone") return "/PhoneApp/comment.png";
     if (appType === "system") return "/icons/info.png";
     if (appType === "chatapp") return "/icons/speak.png";
+    if (appType === "taskapp") return "/icons/task-list.png";
     return "/icons/info.png";
   };
 
