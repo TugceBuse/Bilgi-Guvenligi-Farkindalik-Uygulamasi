@@ -271,7 +271,7 @@ body {
 }
 .fileList {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 17px 18px;
 }
 @media (max-width: 1100px) { .fileList { grid-template-columns: 1fr 1fr; } }

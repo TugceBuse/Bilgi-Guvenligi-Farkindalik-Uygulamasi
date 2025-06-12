@@ -44,8 +44,11 @@ const InfoScreen = ({ onLogin, onRegister }) => (
 const CloudBox = () => {
   const { cloudUser, setCloudUser, cloudBoxBackup, setCloudBoxBackup } = useGameContext();
   const { files } = useFileContext();
+
+  const backedUpFileLabels = cloudBoxBackup.files.map(file => file.label);
   const downloadsFiles = Object.values(files).filter(
-    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
+    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type) &&
+    !backedUpFileLabels.includes(f.label)
   );
 
   // Local UI state
@@ -179,7 +182,7 @@ const CloudBox = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <img src="/icons/cloudbox-logo.svg" alt="CloudBox" className={styles.logo} />
+        <img src="/Cloud/cloud-hosting.png" alt="CloudBox" className={styles.logo} />
         <span className={styles.title}>CloudBox</span>
         <span className={styles.slogan}>Kişisel Bulut Yedekleme Merkezi</span>
         <div className={styles.userArea}>
