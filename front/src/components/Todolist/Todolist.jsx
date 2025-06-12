@@ -69,7 +69,7 @@ const Todolist = ({closeHandler, style}) => {
   };
 
   return (
-    <div className={styles.notepadWindow} style={style} ref={notepadRef} data-window="notepad">
+    <div className={styles.notepadWindow} style={style} ref={notepadRef} data-window="todolist">
       <div className={styles.notepadHeader}>
         <h2>📝 Not Defteri</h2>
         <div>

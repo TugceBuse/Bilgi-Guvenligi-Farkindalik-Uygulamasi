@@ -124,7 +124,7 @@ export const UIContextProvider = ({ children }) => {
   const updateZindex = () => {
     setZindex((prev) => {
       visibleWindows.forEach((win, index) => {
-        const el = document.querySelector(`.${win}-window`);
+        const el = document.querySelector(`[data-window="${win}"]`);
         if (el) el.style.zIndex = 100 + index;
       });
       return prev;

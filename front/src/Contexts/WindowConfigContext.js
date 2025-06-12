@@ -152,13 +152,17 @@ export const WindowConfigProvider = ({ children }) => {
   const [windowConfig, setWindowConfig] = useState(initialWindowConfig);
 
   const updateAvailableStatus = (windowName, available) => {
-    setWindowConfig((prevConfig) => ({
-      ...prevConfig,
+    setWindowConfig((prevConfig) => {
+    if (!prevConfig[windowName]) return prevConfig; // Yoksa dokunma
+    const { [windowName]: existingApp, ...rest } = prevConfig;
+    return {
+      ...rest,
       [windowName]: {
-        ...prevConfig[windowName],
-        available,
-      },
-    }));
+        ...existingApp,
+        available: true
+      }
+    };
+  });
   };
 
  const addWindowApp = (appName, appConfig) => {          // ÖRNEK KULLANIM:
