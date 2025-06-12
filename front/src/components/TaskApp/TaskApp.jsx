@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './TaskApp.css';
 import { useGameContext } from '../../Contexts/GameContext';
-import { useTodoContext } from '../../Contexts/TodoContext';
+// import { useTodoContext } from '../../Contexts/TodoContext'; // Artık gerek yok
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 const TaskApp = () => {
   const { isTaskAppInstalled } = useGameContext();
-  const { todos } = useTodoContext();
+  const { quests } = useQuestManager(); // Questleri contextten çekiyoruz
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
 
@@ -16,7 +17,7 @@ const TaskApp = () => {
       if (e.key === 'Tab') {
         e.preventDefault();
         setVisible(true);
-        setClosing(false); // tekrar Tab'a basınca hemen açılır
+        setClosing(false);
       }
     };
 
@@ -40,11 +41,11 @@ const TaskApp = () => {
 
   if (!isTaskAppInstalled || !visible) return null;
 
+  // Görevleri status'e göre grupla ve göster
   return (
     <div className={`task-app-container ${closing ? 'closing' : ''}`}>
       <div className="rotated-header">
-        {/* Onclick kaldırıldı sadece taba basılı tutmakla açılıyor */}
-        <button className="slide-close-button" ></button>
+        <button className="slide-close-button"></button>
         TaskApp
       </div>
 
@@ -57,14 +58,41 @@ const TaskApp = () => {
         </div>
 
         <div className="task-app-content">
-          {todos.length > 0 ? (
+          {quests && quests.length > 0 ? (
             <ul className="task-list">
-              {todos.map((task) => (
-                <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
-                  {task.completed && (
+              {quests.map((quest) => (
+                <li
+                  key={quest.id}
+                  className={
+                    `task-item 
+                    ${quest.status === 'completed' ? 'completed' : ''}
+                    ${quest.status === 'failed' ? 'failed' : ''}
+                    ${quest.status === 'active' ? 'active' : ''}
+                    ${quest.status === 'locked' ? 'locked' : ''}
+                    `
+                  }
+                  title={quest.description}
+                >
+                  {quest.status === 'completed' && (
                     <img src="/icons/mission-complete.png" alt="Tamamlandı" className="task-status-icon" />
                   )}
-                  {task.text}
+                  {quest.status === 'failed' && (
+                    <img src="/icons/mission-failed.png" alt="Başarısız" className="task-status-icon" />
+                  )}
+                  {quest.status === 'active' && (
+                    <span className="task-status-dot"></span>
+                  )}
+                  {quest.status === 'locked' && (
+                    <span className="task-status-dot locked"></span>
+                  )}
+                  <span>{quest.title}</span>
+                  {/* Ekstra: durum etiketi */}
+                  <span className="task-status-label">
+                    {quest.status === 'completed' && 'Tamamlandı'}
+                    {quest.status === 'failed' && 'Başarısız'}
+                    {quest.status === 'active' && 'Aktif'}
+                    {quest.status === 'locked' && 'Kilitli'}
+                  </span>
                 </li>
               ))}
             </ul>
