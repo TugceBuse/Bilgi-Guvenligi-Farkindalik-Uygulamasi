@@ -245,13 +245,37 @@ const defaultFileSchema = {
 
     // 📌 Dosya durumunu güncelleme fonksiyonu
     const updateFileStatus = (fileName, updates) => {
-        setFiles((prevFiles) => ({
+        setFiles((prevFiles) => {
+            // Eğer sadece { available: true } ise ve başka bir alan güncellenmiyorsa
+            const updateKeys = Object.keys(updates);
+            const isOnlyAvailableTrue = (
+            updateKeys.length === 1 &&
+            updateKeys[0] === "available" &&
+            updates.available === true &&
+            prevFiles[fileName] && prevFiles[fileName].available !== true
+            );
+
+            if (isOnlyAvailableTrue) {
+            // Dosyayı kaldır ve sona ekle
+            const { [fileName]: existingFile, ...rest } = prevFiles;
+            return {
+                ...rest,
+                [fileName]: {
+                ...existingFile,
+                available: true
+                }
+            };
+            }
+
+            // Diğer tüm güncellemeler normal şekilde çalışır
+            return {
             ...prevFiles,
             [fileName]: {
                 ...prevFiles[fileName],
                 ...updates,
             },
-        }));
+            };
+        });
     };
 
     useEffect(() => {
