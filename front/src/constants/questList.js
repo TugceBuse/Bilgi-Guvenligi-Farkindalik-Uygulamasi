@@ -58,6 +58,30 @@ const QUEST_LIST = [
     logEventType: "cloud"
   },
   {
+    id: "pdf_viewer_install",
+    title: "PDF Görüntüleyici İndir",
+    description: `Simülasyon boyunca lazım olacak sanal çalışan bilgilerini görüntüleyebilmek için bir PDF görüntüleyici indir.` ,
+    status: "locked",
+    // unlocks: [""],
+    unlocks: null,
+    requires: ["download_cloud"],
+    point: 20,
+    penalty: -20,
+    logEventType: "pdf"
+  },
+    {
+    id: "file_backup",
+    title: "Dosyalarını Yedekle",
+    description: `Olası bir veri kaybına karşı, önemli dosyalarını Browser üzerinden erişebileceğin bir bulut sitesine yedekle.` ,
+    status: "locked",
+    // unlocks: [""],
+    unlocks: null,
+    requires: ["pdf_viewer_install"],
+    point: 20,
+    penalty: -20,
+    logEventType: "backup"
+  },
+  {
     id: "download_novabank",
     title: "Banka Uygulaması Kur",
     description: "Bakiyeni kontrol etmek ve internet alışverişlerini bakiyene göre yapabilmek için bir banka uygulaması kur. (Tarayıcı üzerinden ilgili kelimeleri aratarak bulabilirsin).",
@@ -97,14 +121,50 @@ const QUEST_LIST = [
   {
     id: "save_invoice",
     title: "Satın alınan yazıcının faturasını kaydet",
-    description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet ve satış departmanıyla paylaş.`,
+    description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet ve Chat uygulaması üzerinden satış departmanıyla paylaş.`,
     status: "locked",
     // unlocks: [""],
     unlocks: null,
     requires: ["buy_printer"],
     point: 20,
     penalty: -20,
-    logEventType: "e-commerce"
+    logEventType: "save-invoice"
+  },
+  {
+    id: "share_cargo_status",
+    title: "Satın alınan yazıcının kargo durumunu paylaş",
+    description:  `Satın alınan renkli baskı destekli yazıcı kargoya verildiğinde, kargo durumunu sana iletilen mail veya sms yoluyla öğren ve Chat uygulaması üzerinden IT departmanıyla paylaş.`,
+    status: "locked",
+    // unlocks: [""],
+    unlocks: null,
+    requires: ["buy_printer"],
+    point: 20,
+    penalty: -20,
+    logEventType: "status"
+  },
+  {
+    id: "register_career_site",
+    title: "Kariyer Sitesine Kayıt Ol",
+    description:  `Browser üzerinden bir kariyer sitesine kayıt ol. Bu, şirket içi fırsatları takip edebilmen için önemlidir.`,
+    status: "locked",
+    // unlocks: [""],
+    unlocks: null,
+    requires: ["download_chatapp"],
+    point: 20,
+    penalty: -20,
+    logEventType: "career"
+  },
+  {
+    id: "sharing_post",
+    title: "Sosyal Medya Üzerinden Paylaşım Yap",
+    description:  `Şirketin sosyal ağı olan Postify üzerinde yarın yapılacak olan şirket etkinliği için bir paylaşım yap.`,
+    status: "locked",
+    // unlocks: [""],
+    unlocks: null,
+    requires: ["register_career_site"],
+    point: 20,
+    penalty: -20,
+    logEventType: "share"
   },
   // ... ve diğer zincir görevler
 ];

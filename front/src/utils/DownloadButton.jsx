@@ -74,7 +74,7 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
           virusType: null,
           type: "pdf",
           size: `${(fileContent?.length || 1024) / 1024}KB`,
-          location: "personal",
+          location: "downloads",
           label: fileLabel || fileName,
           icon: "/icons/pdf.png",
           content: fileContent
