@@ -9,6 +9,7 @@ const GameContext = createContext();
 export const GameContextProvider = ({ children }) => {
   // Zaman artık TimeContext'ten alınacak!
   const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
+  const { sendMail } = useMailContext();
 
   // --- Mevcut State'ler ---
   const {isWificonnected, setIsWificonnected} = useSecurityContext()
@@ -205,6 +206,65 @@ export const GameContextProvider = ({ children }) => {
       })
     );
   }, [seconds]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOrders(prevOrders =>
+        prevOrders.map(order => {
+          if (!order.orderPlacedSeconds) return order;
+          const elapsed = (secondsRef.current || 0) - order.orderPlacedSeconds;
+          let newStatus = order.status || 0;
+          if (elapsed >= 60 && order.status < 2) newStatus = 2;
+          else if (elapsed >= 15 && order.status < 1) newStatus = 1;
+          if (order.status !== newStatus) {
+            return { ...order, status: newStatus };
+          }
+          return order;
+        })
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [secondsRef]);
+
+  useEffect(() => {
+    orders.forEach(order => {
+      if (
+        order.status === 2 &&
+        !order.cargoMailSent
+      ) {
+        sendMail("cargo", {
+          name: `${TechInfo.name} ${TechInfo.surname}`,
+          productName: order.items.map(item => item.name).join(", "),
+          trackingNo: order.trackingNo,
+          shippingCompany: order.shipping,
+          orderNo: order.id,
+          from: "info@" + (order.shipping || "cargo") + ".com",
+          title: (order.shipping || "") + " Kargo Takip",
+          precontent: `${order.shipping} ile gönderiniz yola çıktı!`,
+          isFake: false
+        });
+
+        setOrders(prevOrders =>
+          prevOrders.map(o =>
+            o.id === order.id ? { ...o, cargoMailSent: true } : o
+          )
+        );
+
+        if (typeof addCargoTracking === "function" && !order.cargoTrackingStarted) {
+          addCargoTracking({
+            trackingNo: order.trackingNo,
+            shippingCompany: order.shipping,
+            startSeconds: order.orderPlacedSeconds + 60
+          });
+          setOrders(prevOrders =>
+            prevOrders.map(o =>
+              o.id === order.id ? { ...o, cargoTrackingStarted: true } : o
+            )
+          );
+        }
+      }
+    });
+  }, [orders, sendMail, TechInfo, addCargoTracking, setOrders]);
 
   // Wifi bağlanınca ilk mailleri gönder (kendi fonksiyonunu bozmadan)
   useEffect(() => {
