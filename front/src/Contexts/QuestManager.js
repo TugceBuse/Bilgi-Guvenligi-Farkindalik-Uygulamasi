@@ -13,10 +13,7 @@ export function QuestManagerProvider({ children }) {
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addNotification } = useNotificationContext();
 
-  useEffect(() => {
-    console.log("QUESTS : ", quests);
-  }, [quests]);
-  
+
   const getActiveQuests = () => quests.filter(q => q.status === "active");
 
   const completeQuest = (id) => {
