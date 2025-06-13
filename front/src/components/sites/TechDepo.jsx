@@ -555,126 +555,71 @@ const TechDepo = ({scrollRef}) => {
     }
   }, [errors]);
 
-   // Sipariş ve mail ilerleme mantığı 
+  // Order Status Güncelleyici
   useEffect(() => {
-    setOrders(prevOrders =>
-      prevOrders.map(order => {
-        if (!order.orderPlacedSeconds) return order;
-        const elapsed = secondsRef.current - order.orderPlacedSeconds;
-        let newStatus = order.status || 0;
-        if (elapsed >= 60 && order.status < 2) newStatus = 2;
-        else if (elapsed >= 15 && order.status < 1) newStatus = 1;
-        // Flag'lı mail tetikleyici:
-        let updated = { ...order };
-
-        // --- Status ilerlemesi için ayrı kontrol ---
-        if (order.status !== newStatus) {
-          updated.status = newStatus;
-        }
-
-        // Fatura maili
-        if (elapsed >= 20 && !order.invoiceMailSent) {
-          sendMail("invoice", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
-            invoiceNo: "TD-2025-" + Date.now(),
-            orderNo: order.id,
-            price: order.total,
-            company: "TechDepo",
-            tax: (order.total * 0.20).toFixed(2),
-            total: order.total,
-            from: "faturalar@techdepo.com",
-            title: "TechDepo - Satın Alma Faturanız",
-            precontent: "Fatura ektedir.",
-            isFake: false,
-          });
-          updated.invoiceMailSent = true;
-        }
-        // Sahte fatura maili
-        if (elapsed >= 45 && !order.fakeInvoiceMailSent) {
-          sendMail("invoice", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
-            invoiceNo: "TD-2025-" + Date.now(),
-            orderNo: order.id + "-FAKE",
-            price: order.total,
-            company: "TechDepo",
-            tax: (order.total * 0.20).toFixed(2),
-            total: order.total,
-            from: "e-fatura@teehdeppo-billing.com",
-            title: "E-Arşiv Fatura Belgeniz",
-            precontent: "Şüpheli fatura bildirimi",
-            isFake: true,
-            fakeOptions: {
-              from: "e-fatura@teehdeppo-billing.com",
-              title: "E-Arşiv Fatura Belgeniz",
-              fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
-              precontent: "Şüpheli fatura bildirimi"
-            }
-          });
-          updated.fakeInvoiceMailSent = true;
-        }
-        // Kargo maili
-        if (elapsed >= 60 && !order.cargoMailSent) {
-          sendMail("cargo", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => item.name).join(", "),
-            trackingNo: order.trackingNo,
-            shippingCompany: order.shipping,
-            orderNo: order.id,
-            from: "info@" + (order.shipping || "cargo") + ".com",
-            title: (order.shipping || "") + " Kargo Takip",
-            precontent: `${order.shipping} ile gönderiniz yola çıktı!`,
-            isFake: false
-          });
-          updated.cargoMailSent = true;
-
-          // Kargo takibi başlatıcı
-          if (typeof addCargoTracking === "function" && !order.cargoTrackingStarted) {
-            addCargoTracking({
-              trackingNo: order.trackingNo,
-              shippingCompany: order.shipping,
-              startSeconds: order.orderPlacedSeconds + 60
-            });
-            updated.cargoTrackingStarted = true;
+    const interval = setInterval(() => {
+      setOrders(prevOrders =>
+        prevOrders.map(order => {
+          if (!order.orderPlacedSeconds) return order;
+          const elapsed = (secondsRef.current || 0) - order.orderPlacedSeconds;
+          let newStatus = order.status || 0;
+          if (elapsed >= 60 && order.status < 2) newStatus = 2;
+          else if (elapsed >= 15 && order.status < 1) newStatus = 1;
+          if (order.status !== newStatus) {
+            return { ...order, status: newStatus };
           }
-        }
-        // Sahte kargo maili
-        if (elapsed >= 80 && !order.fakeCargoMailSent) {
-          sendMail("cargo", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => item.name).join(", "),
-            trackingNo: order.trackingNo,
-            shippingCompany: order.shipping,
-            orderNo: order.id + "-FAKE",
-            from: "kargo@cargo-n0va.com",
-            title: "Kargo Takip Bilgilendirme",
-            precontent: "Şüpheli gönderi uyarısı!",
-            isFake: true,
-            fakeOptions: {
-              from: "kargo@cargo-n0va.com",
-              title: "Kargo Takip Bilgilendirme",
-              link: "http://cargo-n0va-support.xyz/tracking",
-              precontent: "Şüpheli gönderi uyarısı!"
-            }
-          });
-          updated.fakeCargoMailSent = true;
-        }
-        // Status güncellendiyse dön, yoksa aynı order'ı döndür
-        if (
-          updated.status !== order.status ||
-          updated.invoiceMailSent !== order.invoiceMailSent ||
-          updated.fakeInvoiceMailSent !== order.fakeInvoiceMailSent ||
-          updated.cargoMailSent !== order.cargoMailSent ||
-          updated.fakeCargoMailSent !== order.fakeCargoMailSent ||
-          updated.cargoTrackingStarted !== order.cargoTrackingStarted
-        ) {
-          return updated;
-        }
-        return order;
-      })
-    );
-  }, [secondsRef.current, sendMail, TechInfo, addCargoTracking, setOrders]);
+          return order;
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [setOrders, secondsRef]);
+
+
+  // Kargo maili gönderimi ve takibi Order Status Güncelleyici ile entegre
+  useEffect(() => {
+  orders.forEach(order => {
+    // Kargo maili henüz gönderilmemişse VE statü 2'ye geçtiyse gönder
+    if (
+      order.status === 2 &&
+      !order.cargoMailSent
+    ) {
+      sendMail("cargo", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: order.items.map(item => item.name).join(", "),
+        trackingNo: order.trackingNo,
+        shippingCompany: order.shipping,
+        orderNo: order.id,
+        from: "info@" + (order.shipping || "cargo") + ".com",
+        title: (order.shipping || "") + " Kargo Takip",
+        precontent: `${order.shipping} ile gönderiniz yola çıktı!`,
+        isFake: false
+      });
+
+      // Siparişin cargoMailSent flag'ını güncelle
+      setOrders(prevOrders =>
+        prevOrders.map(o =>
+          o.id === order.id ? { ...o, cargoMailSent: true } : o
+        )
+      );
+
+      // Kargo takibi başlatıcı (daha önce vardı, yeniden entegre ediyorum)
+      if (typeof addCargoTracking === "function" && !order.cargoTrackingStarted) {
+        addCargoTracking({
+          trackingNo: order.trackingNo,
+          shippingCompany: order.shipping,
+          startSeconds: order.orderPlacedSeconds + 60 // siparişten 1 dk sonra başlat
+        });
+        setOrders(prevOrders =>
+          prevOrders.map(o =>
+            o.id === order.id ? { ...o, cargoTrackingStarted: true } : o
+          )
+        );
+      }
+    }
+  });
+}, [orders, sendMail, TechInfo, addCargoTracking, setOrders]);
 
 
   const finalizePayment = () => {
@@ -733,6 +678,62 @@ const TechDepo = ({scrollRef}) => {
       fakeCargoMailSent: false,
       orderPlacedSeconds
     };
+        
+      // Sipariş anında gecikmeli mail gönderimi
+      sendMail("invoice", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
+        invoiceNo: "TD-2025-" + Date.now(),
+        orderNo: newOrder.id,
+        price: newOrder.total,
+        company: "TechDepo",
+        tax: (newOrder.total * 0.20).toFixed(2),
+        total: newOrder.total,
+        from: "faturalar@techdepo.com",
+        title: "TechDepo - Satın Alma Faturanız",
+        precontent: "Fatura ektedir.",
+        isFake: false,
+      }, { delaySeconds: 20 });
+
+
+     sendMail("invoice", {
+      name: `${TechInfo.name} ${TechInfo.surname}`,
+      productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
+      invoiceNo: "TD-2025-" + Date.now(),
+      orderNo: newOrder.id + "-FAKE",
+      price: newOrder.total,
+      company: "TechDepo",
+      tax: (newOrder.total * 0.20).toFixed(2),
+      total: newOrder.total,
+      from: "e-fatura@teehdeppo-billing.com",
+      title: "E-Arşiv Fatura Belgeniz",
+      precontent: "Şüpheli fatura bildirimi",
+      isFake: true,
+      fakeOptions: {
+        from: "e-fatura@teehdeppo-billing.com",
+        title: "E-Arşiv Fatura Belgeniz",
+        fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
+        precontent: "Şüpheli fatura bildirimi"
+      }
+    }, { delaySeconds: 45 });
+
+    sendMail("cargo", {
+      name: `${TechInfo.name} ${TechInfo.surname}`,
+      productName: newOrder.items.map(item => item.name).join(", "),
+      trackingNo: newOrder.trackingNo,
+      shippingCompany: newOrder.shipping,
+      orderNo: newOrder.id + "-FAKE",
+      from: "kargo@cargo-n0va.com",
+      title: "Kargo Takip Bilgilendirme",
+      precontent: "Şüpheli gönderi uyarısı!",
+      isFake: true,
+      fakeOptions: {
+        from: "kargo@cargo-n0va.com",
+        title: "Kargo Takip Bilgilendirme",
+        link: "http://cargo-n0va-support.xyz/tracking",
+        precontent: "Şüpheli gönderi uyarısı!"
+      }
+    }, { delaySeconds: 80 });
 
     setOrders(prevOrders => [newOrder, ...prevOrders]);
     setCardBalance(prev => prev - grandTotal);
@@ -836,11 +837,6 @@ const TechDepo = ({scrollRef}) => {
     // Hatalar yoksa işlemi başlat
     setErrors({});
     setIsPaying(true);
-
-    if (is3DWaiting) {
-      finalizePayment(); // anında çalıştır
-      return;
-    }
 
     setTimeout(() => {
       finalizePayment();
