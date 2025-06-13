@@ -35,7 +35,7 @@ export const MakeDraggable = (elementRef, handleSelector, headerHeight = 48) => 
         // Yukarıdan: tamamen dışarı çıkmasın, headerHeight kadar içeride kalsın
         const minY = 0;
         // Alttan: pencerenin yarısı dışarı çıkabilir
-        const maxY = windowHeight - elemHeight / 2;
+        const maxY = windowHeight - elemHeight / 3;
 
         if (newX < minX) newX = minX;
         if (newX > maxX) newX = maxX;
