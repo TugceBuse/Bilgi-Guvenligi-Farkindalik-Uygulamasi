@@ -50,8 +50,7 @@ const QUEST_LIST = [
     description: `Daha önce https://filevault.com sitesini kullanarak yedeklediğin dosyaları 'a92cf10a-27d4-476b-98f3-8d2fa98c7d84' token ile indirip incele.
      Bu dosyalar kişisel bilgiler içermektedir. Güvenli bir şekilde saklamayı unutma!` ,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
+    unlocks: ["pdf_viewer_install"],
     requires: ["download_taskapp"],
     point: 20,
     penalty: -20,
@@ -62,14 +61,13 @@ const QUEST_LIST = [
     title: "PDF Görüntüleyici İndir",
     description: `Simülasyon boyunca lazım olacak sanal çalışan bilgilerini görüntüleyebilmek için bir PDF görüntüleyici indir.` ,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
+    unlocks: ["file_backup"],
     requires: ["download_cloud"],
     point: 20,
     penalty: -20,
     logEventType: "pdf"
   },
-    {
+  {
     id: "file_backup",
     title: "Dosyalarını Yedekle",
     description: `Olası bir veri kaybına karşı, önemli dosyalarını Browser üzerinden erişebileceğin bir bulut sitesine yedekle.` ,
