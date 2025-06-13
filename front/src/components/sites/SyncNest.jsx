@@ -11,7 +11,7 @@ const dummyCommunityFiles = [
 
 const SyncNest = () => {
   const { files } = useFileContext();
-  const { failQuest } = useQuestManagerp();
+  const { failQuest } = useQuestManager();
   const downloadsFiles = Object.values(files).filter(
     f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
   );
