@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./FileUploadButton.module.css";
 import { useFileContext } from "../../Contexts/FileContext";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const FileUploadButton = ({
   visible,

@@ -6,6 +6,7 @@ import { useMailContext } from '../../Contexts/MailContext';
 import { useChatContext } from '../../Contexts/ChatContext';
 import { statusSteps } from "../../utils/cargoStatus";
 import { useTimeContext } from "../../Contexts/TimeContext";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const cards = [
   {
@@ -219,6 +220,7 @@ const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders, cargoTrackingList, addCargoTracking, secondsRef } = useGameContext();
   const { gameDate } = useTimeContext();
   const { sendMail } = useMailContext();
+  const { completeQuest } = useQuestManager();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -758,6 +760,7 @@ const TechDepo = ({scrollRef}) => {
     setTimeout(() => setShowCartNotice(false), 2000);
 
     if (newOrder.items.some(item => item.id === 15)) {
+        completeQuest("buy_printer");
         // Yazıcı satın alımı sonrası...
         addChatMessage(1, {
           sender: 'them',

@@ -5,6 +5,7 @@ import { useGameContext } from '../Contexts/GameContext';
 import { useMailContext } from '../Contexts/MailContext';
 import { useChatContext } from '../Contexts/ChatContext';
 import { useTimeContext } from '../Contexts/TimeContext';
+import { useQuestManager } from '../Contexts/QuestManager';
 
 const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => {
   const { addFile, updateFileStatus, files, openFile } = useFileContext();
@@ -12,6 +13,7 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
   const { selectedMail } = useMailContext();
   const { addChatMessage, setUserOptions, addUploadTask } = useChatContext();
   const { gameDate } = useTimeContext();
+  const { completeQuest } = useQuestManager();
 
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -93,6 +95,7 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
           filterLabelContains: "fatura",
           buttonText: "Fatura Yükle"
         });
+        completeQuest("save_invoice");
         addChatMessage(3, {
           sender: "them",
           text: "Merhaba, fatura belgenizi dosya olarak bize iletir misiniz? İnceleme için yükleme alanını kullanabilirsiniz.",

@@ -121,11 +121,23 @@ const QUEST_LIST = [
   {
     id: "save_invoice",
     title: "Satın alınan yazıcının faturasını kaydet",
-    description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet ve Chat uygulaması üzerinden satış departmanıyla paylaş.`,
+    description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet.`,
     status: "locked",
     // unlocks: [""],
     unlocks: null,
     requires: ["buy_printer"],
+    point: 20,
+    penalty: -20,
+    logEventType: "save-invoice"
+  },
+  {
+    id: "share_invoice",
+    title: "Satın alınan yazıcının faturasını satış departmanıyla paylaş",
+    description:  `Satın alınan renkli baskı destekli yazıcının faturasını Chat uygulaması üzerinden Satış departmanıyla paylaş.`,
+    status: "locked",
+    // unlocks: [""],
+    unlocks: null,
+    requires: ["save_invoice", "download_chatapp","download_novabank", "buy_printer"],
     point: 20,
     penalty: -20,
     logEventType: "save-invoice"
@@ -137,7 +149,7 @@ const QUEST_LIST = [
     status: "locked",
     // unlocks: [""],
     unlocks: null,
-    requires: ["buy_printer"],
+    requires: ["share_invoice", "download_chatapp"],
     point: 20,
     penalty: -20,
     logEventType: "status"

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import styles from "./ProCareerHub.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext";
-import { use } from "react";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const ProCareerHub = () => {
 
   const { ProCareerHubInfo, setProCareerHubInfo} = useGameContext();
+  const { completeQuest } = useQuestManager();
 
   const [isLogin, setIsLogin] = useState(true);
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
@@ -128,6 +129,7 @@ const ProCareerHub = () => {
         isRegistered: true,
         isLoggedIn: true,
       });
+        completeQuest("register_career_site");
       setErrorMessage("");
     } else {
       if (!ProCareerHubInfo.isRegistered || ProCareerHubInfo.email !== email) {

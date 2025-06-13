@@ -7,6 +7,7 @@ import { statusSteps } from '../../utils/cargoStatus';
 import { useChatContext } from '../../Contexts/ChatContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
 import FileUploadButton from './FileUploadButton';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 export const useChatApp = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -21,6 +22,7 @@ const ChatApp = ({ closeHandler, style }) => {
   MakeDraggable(chatAppRef, `.${styles.chatHeader}`);
 
   const { cargoTrackingList, orders, cargoTrackingSiteVisited } = useGameContext();
+    const { completeQuest } = useQuestManager();
   const { gameDate } = useTimeContext();
   const printerOrder = orders.find(order =>
     order.items.some(item => item.id === 15)
@@ -99,6 +101,7 @@ const ChatApp = ({ closeHandler, style }) => {
         ...prev,
         [trackingNo]: true 
       }));
+      completeQuest("share_cargo_status");
       setTimeout(() => {
         addChatMessage(selectedUser.id, {
           sender: "them",
@@ -211,6 +214,7 @@ const ChatApp = ({ closeHandler, style }) => {
           uploadedInvoice: true,
           fileName: file.label
         });
+        completeQuest("share_invoice");
         setTimeout(() => {
           addChatMessage(selectedUser.id, {
             sender: "them",

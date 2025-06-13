@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import styles from "./SkillForgeHub.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const SkillForgeHub = () => {
   const { SkillForgeHubInfo, setSkillForgeHubInfo } = useGameContext();
+  const { completeQuest } = useQuestManager();
+
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
 
   const [codeTimer, setCodeTimer] = useState(120);
@@ -77,6 +80,7 @@ const SkillForgeHub = () => {
         isLoggedIn: true,
         isPasswordStrong: passwordStrong,
       });
+        completeQuest("register_career_site"); 
       setIsLoginOpen(false);
     } else {
       if (

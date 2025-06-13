@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import styles from './ChatAppDownloadOfficial.module.css';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const userReviews = [
   {
@@ -42,9 +43,10 @@ const faqs = [
 
 const ChatAppDownloadOfficial = () => {
   const { updateAvailableStatus } = useWindowConfig();
-  const [downloading, setDownloading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [showPopup, setShowPopup] = useState(false);
+  const { completeQuest } = useQuestManager();
+  const [ downloading, setDownloading ] = useState(false);
+  const [ progress, setProgress ] = useState(0);
+  const [ showPopup, setShowPopup ] = useState(false);
   const intervalRef = useRef(null);
 
   const startDownload = () => {
@@ -56,6 +58,7 @@ const ChatAppDownloadOfficial = () => {
           clearInterval(intervalRef.current);
           setShowPopup(true);
           updateAvailableStatus("chatapp", { available: true});
+          completeQuest("download_chatapp");
           setTimeout(() => setShowPopup(false), 2500);
           setDownloading(false);
           return 100;
