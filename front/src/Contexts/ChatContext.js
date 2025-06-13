@@ -19,6 +19,30 @@ export const ChatContextProvider = ({ children }) => {
   const { addNotification, removeNotification } = useNotificationContext();
   const { openWindow } = useUIContext();
 
+  const [uploadTasks, setUploadTasks] = useState([]);
+
+  // Görev ekleme (tekrarlı eklemez)
+  const addUploadTask = (task) => {
+    setUploadTasks(prev =>
+      prev.some(t =>
+        t.userId === task.userId &&
+        t.allowedTypes?.join(',') === task.allowedTypes?.join(',') &&
+        t.filterLabelContains === task.filterLabelContains
+      )
+        ? prev
+        : [...prev, { ...task, completed: false }]
+    );
+  };
+
+  // Görev tamamlandığında
+  const markUploadTaskCompleted = (userId, filter) => {
+    setUploadTasks(prev => prev.map(t =>
+      t.userId === userId && (!filter || t.filterLabelContains === filter)
+        ? { ...t, completed: true }
+        : t
+    ));
+  };
+
   const addUser = (user) => setUsers(prev => [...prev, user]);
 
   // Konuşma geçmişine mesaj ekler
@@ -88,6 +112,7 @@ export const ChatContextProvider = ({ children }) => {
       options, setUserOptions,
       cargoStepShared, setCargoStepShared,
       users, addUser, setUsers,
+      uploadTasks, addUploadTask, markUploadTaskCompleted,
     }}>
       {children}
     </ChatContext.Provider>

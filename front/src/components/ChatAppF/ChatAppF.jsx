@@ -6,6 +6,7 @@ import { useGameContext } from '../../Contexts/GameContext';
 import { statusSteps } from '../../utils/cargoStatus';
 import { useChatContext } from '../../Contexts/ChatContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
+import FileUploadButton from '../ChatApp/FileUploadButton';
 
 export const useChatAppF = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -16,7 +17,7 @@ export const useChatAppF = () => {
 };
 
 const ChatAppF = ({ closeHandler, style }) => {
-  const chatAppRef = useRef(null);
+    const chatAppRef = useRef(null);
   MakeDraggable(chatAppRef, `.${styles.chatHeader}`);
 
   const { cargoTrackingList, orders, cargoTrackingSiteVisited } = useGameContext();
@@ -35,6 +36,11 @@ const ChatAppF = ({ closeHandler, style }) => {
     users.length > 0 ? users[0] : null
   );
 
+  const { uploadTasks, markUploadTaskCompleted } = useChatContext();
+
+  const activeUploadTask = uploadTasks.find(
+    t => t.userId === selectedUser?.id && !t.completed
+  );
   // Yeni user eklenirse, varsayılan seçimi güncelle
   useEffect(() => {
     if (selectedUser) return;
@@ -192,6 +198,31 @@ const ChatAppF = ({ closeHandler, style }) => {
           </div>
         </div>
       </div>
+      <FileUploadButton
+      visible={!!activeUploadTask}
+      allowedTypes={activeUploadTask?.allowedTypes}
+      filterLabelContains={activeUploadTask?.filterLabelContains}
+      buttonText={activeUploadTask?.buttonText || "Dosya Yükle"}
+      onFileSend={file => {
+        addChatMessage(selectedUser.id, {
+          sender: "me",
+          text: `${file.label} (PDF) gönderildi.`,
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+          uploadedInvoice: true,
+          fileName: file.label
+        });
+        setTimeout(() => {
+          addChatMessage(selectedUser.id, {
+            sender: "them",
+            senderName: selectedUser.name || "Satış Departmanı",
+            text: "Teşekkürler, fatura belgesi başarıyla alındı! ✅",
+            time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+          });
+          setUserOptions(selectedUser.id, []);
+          markUploadTaskCompleted(selectedUser.id, activeUploadTask?.filterLabelContains);
+        }, 1000);
+      }}
+    />
     </div>
   );
 };

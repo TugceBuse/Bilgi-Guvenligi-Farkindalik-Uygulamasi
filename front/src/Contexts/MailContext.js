@@ -112,7 +112,7 @@ export const MailContextProvider = ({ children }) => {
   
   // Dinamik mail gönder
   // Dinamik mail gönderimi (stack mantığı ile kullanılmalı)
-  const sendMail = (type, sendTime = null , params) => {
+  const sendMail = (type, params, sendTime = null) => {
     const mailId = params.mailId || Date.now();
     let mailObj = null;
     if (type === "cargo") {

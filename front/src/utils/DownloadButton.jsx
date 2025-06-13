@@ -3,11 +3,15 @@ import styles from './DownloadButton.module.css';
 import { useFileContext } from '../Contexts/FileContext';
 import { useGameContext } from '../Contexts/GameContext';
 import { useMailContext } from '../Contexts/MailContext';
+import { useChatContext } from '../Contexts/ChatContext';
+import { useTimeContext } from '../Contexts/TimeContext';
 
 const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => {
   const { addFile, updateFileStatus, files, openFile } = useFileContext();
   const { isWificonnected } = useGameContext();
   const { selectedMail } = useMailContext();
+  const { addChatMessage, setUserOptions, addUploadTask } = useChatContext();
+  const { gameDate } = useTimeContext();
 
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -80,6 +84,25 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
       } else {
         updateFileStatus(fileName, { available: true });
       }
+
+      // Eğer Fatura PDF’si indirildiyse
+      if ((fileName?.toLowerCase()?.includes('fatura') || fileLabel?.toLowerCase()?.includes('fatura'))) {
+        addUploadTask({
+          userId: 3,
+          allowedTypes: ["pdf"],
+          filterLabelContains: "fatura",
+          buttonText: "Fatura Yükle"
+        });
+        addChatMessage(3, {
+          sender: "them",
+          text: "Merhaba, fatura belgenizi dosya olarak bize iletir misiniz? İnceleme için yükleme alanını kullanabilirsiniz.",
+          senderName: "Satış Departmanı",
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+          requestInvoice: true,
+        }, true);
+        setUserOptions(3, []);
+      }
+
       setDownloading(false);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2500);

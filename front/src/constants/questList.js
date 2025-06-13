@@ -94,6 +94,18 @@ const QUEST_LIST = [
     penalty: -20,
     logEventType: "e-commerce"
   },
+  {
+    id: "save_invoice",
+    title: "Satın alınan yazıcının faturasını kaydet",
+    description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet ve satış departmanıyla paylaş.`,
+    status: "locked",
+    // unlocks: [""],
+    unlocks: null,
+    requires: ["buy_printer"],
+    point: 20,
+    penalty: -20,
+    logEventType: "e-commerce"
+  },
   // ... ve diğer zincir görevler
 ];
 

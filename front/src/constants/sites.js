@@ -416,10 +416,10 @@ const sites = {
   seoScore: 90
 },
 "http://chatbox-app-download.net": {
-  title: "ChatBox (Phishing Site)",
+  title: "ChatBox",
   type: "component",
   component: "ChatAppDownloadPhish",
-  statement: "DİKKAT: Bu site gerçek ChatBox değildir. Bilgilerinizi veya cihazınızı riske atabilirsiniz.",
+  statement: "ChatBox — Güvenli Mesajlaşma",
   searchKeys: [
     "chatbox indir",
     "chatbox download",
