@@ -46,7 +46,7 @@ importantFiles.forEach(f => {
 
 const FileVault = () => {
   const { files, updateFileStatus } = useFileContext(); // files eklendi
-  const { completeQuest } = useQuestManager();
+  const { completeQuest, quests } = useQuestManager();
   const [entered, setEntered] = useState(false);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
@@ -54,11 +54,14 @@ const FileVault = () => {
 
   // --- TÜM DOSYALAR İNDİRİLDİ Mİ, KONTROL ET ---
   useEffect(() => {
-    const allDownloaded = importantFiles.every(f => files?.[f.key]?.available);
-    if (allDownloaded) {
-      completeQuest("download_cloud");
-    }
-  }, [files, completeQuest]);
+  const allDownloaded = importantFiles.every(f => files?.[f.key]?.available);
+
+  // Görev zaten completed ise tekrar çalışmasın!
+  const downloadCloudQuest = quests.find(q => q.id === "download_cloud");
+  if (allDownloaded && downloadCloudQuest?.status !== "completed") {
+    completeQuest("download_cloud");
+  }
+}, [files, completeQuest, importantFiles, quests]);
   // --- SONU ---
 
   const handleEntry = (e) => {

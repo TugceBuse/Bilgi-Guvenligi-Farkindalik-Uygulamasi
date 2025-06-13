@@ -57,7 +57,7 @@ export function QuestManagerProvider({ children }) {
         );
       }
 
-      console.log("Güncel görev listesi:", updated);
+      console.log("Completed -> Güncel görev listesi:", updated);
 
       return updated;
     });
@@ -103,7 +103,7 @@ export function QuestManagerProvider({ children }) {
         );
       }
 
-      console.log("Güncel görev listesi:", updated);
+      console.log("failed -> Güncel görev listesi:", updated);
 
       return updated;
     });
