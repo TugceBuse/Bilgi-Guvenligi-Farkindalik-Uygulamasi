@@ -10,12 +10,13 @@ const generateLink = (label) =>
 
 const OpenDrop = () => {
   const { files } = useFileContext();
+  const [allBackedUpFiles, setAllBackedUpFiles] = useState([]);
+  const allBackedUpLabels = (allBackedUpFiles ?? []).map(file => file.label);
   const { openDropPublicFiles, setOpenDropPublicFiles } = useGameContext();
-  const backedUpFileLabels = (openDropPublicFiles ?? []).map(file => file.label);
 
   const downloadsFiles = Object.values(files).filter(
-    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type) &&
-    !backedUpFileLabels.includes(f.label)
+    f => f.location === "downloads" && ["doc", "pdf", "txt", "jpg"].includes(f.type) &&
+    !allBackedUpLabels.includes(f.label)
   );
 
   const [showModal, setShowModal] = useState(false);
@@ -43,9 +44,27 @@ const OpenDrop = () => {
           ...f,
           url: generateLink(f.label),
         }));
+
+        // Bütün yedeklenenleri tut
+        setAllBackedUpFiles(prev => {
+          const prevLabels = prev.map(f => f.label);
+          // Sadece yeni olanları ekle
+          const newUnique = uploaded.filter(f => !prevLabels.includes(f.label));
+          return [...prev, ...newUnique];
+        });
+
         setOpenDropPublicFiles(prev => {
-          const newList = [...uploaded, ...prev];
-          return newList.slice(0, 3); // Sadece son 3 dosyayı tutar
+          const total = [...uploaded, ...prev];
+          // Farklı label’lar, tekrar yok
+          const unique = [];
+          const labels = new Set();
+          for (let f of total) {
+            if (!labels.has(f.label)) {
+              unique.push(f);
+              labels.add(f.label);
+            }
+          }
+          return unique.slice(0, 3); // son 3 (en yeni yüklenenler başta)
         });
         setProgress(0);
       }
@@ -90,11 +109,11 @@ const OpenDrop = () => {
           <div className={styles.folderModal}>
             <div className={styles.folderHeader}>
               <span className={styles.folderIcon}>📁</span>
-              <span className={styles.folderTitle}>Kişisel Dosyalarım</span>
+              <span className={styles.folderTitle}>Dosyalarım</span>
             </div>
             <div className={styles.folderGrid}>
               {downloadsFiles.length === 0 ? (
-                <span className={styles.noFile}>Yedeklenecek kişisel dosya yok.</span>
+                <span className={styles.noFile}>Yedeklenecek dosya yok.</span>
               ) : (
                 downloadsFiles.map((f, i) => (
                   <div key={f.label} className={styles.folderFile}>

@@ -167,7 +167,7 @@ const defaultFileSchema = {
             type: "pdf",
             size: "740KB",
             location: "downloads",
-            label: "Kişisel Kullanıcı Bilgileri.pdf",
+            label: "Kullanıcı Bilgileri.pdf",
             icon: "/icons/pdf.png",
             content: "/files/Kişisel_Kullanıcı_Bilgileri.txt",
             locked: false,
