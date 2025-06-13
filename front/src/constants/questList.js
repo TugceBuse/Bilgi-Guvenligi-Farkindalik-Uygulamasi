@@ -140,7 +140,7 @@ const QUEST_LIST = [
     requires: ["buy_printer"],
     point: 20,
     penalty: -20,
-    logEventType: "status"
+    logEventType: "cargo"
   },
   {
     id: "register_career_site",
@@ -164,7 +164,7 @@ const QUEST_LIST = [
     requires: ["register_career_site"],
     point: 20,
     penalty: -20,
-    logEventType: "share"
+    logEventType: "postify"
   },
   // ... ve diğer zincir görevler
 ];

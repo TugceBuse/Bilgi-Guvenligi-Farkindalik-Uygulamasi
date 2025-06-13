@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFileContext } from "../../Contexts/FileContext";
+import { useQuestManager } from "../../Contexts/QuestManager"; // EKLENDİ
 import styles from "./FileVault.module.css";
 
 // Token kontrolü
@@ -44,11 +45,21 @@ importantFiles.forEach(f => {
 });
 
 const FileVault = () => {
-  const { updateFileStatus } = useFileContext();
+  const { files, updateFileStatus } = useFileContext(); // files eklendi
+  const { completeQuest } = useQuestManager();
   const [entered, setEntered] = useState(false);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [downloadState, setDownloadState] = useState(initialDownloadState);
+
+  // --- TÜM DOSYALAR İNDİRİLDİ Mİ, KONTROL ET ---
+  useEffect(() => {
+    const allDownloaded = importantFiles.every(f => files?.[f.key]?.available);
+    if (allDownloaded) {
+      completeQuest("download_cloud");
+    }
+  }, [files, completeQuest]);
+  // --- SONU ---
 
   const handleEntry = (e) => {
     e.preventDefault();
@@ -61,7 +72,8 @@ const FileVault = () => {
   };
 
   const handleDownload = (file) => {
-    if (downloadState[file.name].status !== "idle") return;
+    const fileAvailable = files?.[file.key]?.available;
+    if (fileAvailable || downloadState[file.name].status !== "idle") return;
 
     const isMB = file.size.toLowerCase().includes("mb");
     const rawSize = parseFloat(file.size);
@@ -98,7 +110,6 @@ const FileVault = () => {
       [file.name]: { ...prev[file.name], status: "downloading", progress: 0, timer }
     }));
   };
-
 
   const handleCancel = (file) => {
     if (downloadState[file.name].status !== "downloading") return;
@@ -157,6 +168,7 @@ const FileVault = () => {
         <div className={styles.fileList}>
           {importantFiles.map((file, idx) => {
             const state = downloadState[file.name];
+            const fileAvailable = files?.[file.key]?.available;
             return (
               <div key={idx} className={styles.fileCard}>
                 <div className={styles.fileTop}>
@@ -170,7 +182,11 @@ const FileVault = () => {
                   </div>
                 </div>
                 <div className={styles.actionRow}>
-                  {state.status === "downloading" && (
+                  {(fileAvailable || state.status === "done") ? (
+                    <button className={styles.downloadedButton} disabled>
+                      İndirildi
+                    </button>
+                  ) : state.status === "downloading" ? (
                     <div className={styles.downloadArea}>
                       <div className={styles.progressWrapper}>
                         <div className={styles.progressBar}>
@@ -185,15 +201,9 @@ const FileVault = () => {
                         İptal
                       </button>
                     </div>
-                  )}
-                  {state.status === "idle" && (
+                  ) : (
                     <button className={styles.downloadButton} onClick={() => handleDownload(file)}>
                       İndir
-                    </button>
-                  )}
-                  {state.status === "done" && (
-                    <button className={styles.downloadedButton} disabled>
-                      İndirildi
                     </button>
                   )}
                 </div>
@@ -202,9 +212,7 @@ const FileVault = () => {
           })}
         </div>
       </div>
-      <div className={styles.footer}>
-        <span>FileVault, kişisel dosyalarınızı güvenle saklar.</span>
-      </div>
+      {/* ... */}
     </div>
   );
 };
