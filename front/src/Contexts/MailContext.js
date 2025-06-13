@@ -112,7 +112,7 @@ export const MailContextProvider = ({ children }) => {
   
   // Dinamik mail gönder
   // Dinamik mail gönderimi (stack mantığı ile kullanılmalı)
-  const sendMail = (type, params, sendTime = null) => {
+  const sendMail = (type, params) => {
     const mailId = params.mailId || Date.now();
     let mailObj = null;
     if (type === "cargo") {
@@ -124,7 +124,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        sendTime: sendTime || params.sendTime || gameDate,
+        sendTime: params.sendTime || gameDate,
         content: params.content || createCargoMail({ ...params, mailId }),
       };
     } else if (type === "invoice") {
@@ -136,7 +136,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        sendTime: sendTime || params.sendTime || gameDate,
+        sendTime: params.sendTime || gameDate,
         content: createInvoiceMail({ ...params, mailId }),
       };
     }

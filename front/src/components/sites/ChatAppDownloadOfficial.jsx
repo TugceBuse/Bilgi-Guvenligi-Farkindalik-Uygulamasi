@@ -68,7 +68,7 @@ const ChatAppDownloadOfficial = () => {
   return (
     <div className={styles.downloadContainer}>
       <div className={styles.header}>
-        <img src="/icons/speak.png" alt="ChatBox Logo" className={styles.logo} />
+        <img src="/icons/chatting.png" alt="ChatBox Logo" className={styles.logo} />
         <h1>ChatBox</h1>
       </div>
 
