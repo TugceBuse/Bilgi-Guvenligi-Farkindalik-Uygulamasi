@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useFileContext } from "../../Contexts/FileContext";
 import styles from "./SyncNest.module.css";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const dummyCommunityFiles = [
   { label: "hobby_photos.zip", type: "zip", size: "6.2 MB", owner: "Anonim" },
@@ -10,6 +11,7 @@ const dummyCommunityFiles = [
 
 const SyncNest = () => {
   const { files } = useFileContext();
+  const { failQuest } = useQuestManager();
   const downloadsFiles = Object.values(files).filter(
     f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
   );
@@ -66,6 +68,7 @@ const SyncNest = () => {
           ...downloadsFiles.map(f => ({ ...f, owner: user?.email?.split("@")[0] || "Anonim" })),
           ...prev
         ]);
+        failQuest("file_backup");
         setShowUpload(false);
         setUploadProgress(0);
       }

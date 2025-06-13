@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNotificationContext } from "./NotificationContext";
 import { QUEST_LIST } from "../constants/questList";
 
@@ -10,13 +10,12 @@ export function useQuestManager() {
 
 export function QuestManagerProvider({ children }) {
   const [quests, setQuests] = useState(QUEST_LIST);
-  const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false); // Task uygulaması kurulu mu?
+  const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addNotification } = useNotificationContext();
 
-  // Aktif görevleri döndür
+
   const getActiveQuests = () => quests.filter(q => q.status === "active");
 
-  // Görev tamamlama ve zincir görevleri aktive etme + BİLDİRİM
   const completeQuest = (id) => {
     setQuests((prev) => {
       let updated = prev.map(q => {
@@ -27,16 +26,16 @@ export function QuestManagerProvider({ children }) {
         return q;
       });
 
-      // Yeni aktif olan görevleri tutmak için
       let newlyActivated = [];
       updated = updated.map(q => {
         if (
           q.status === "locked" &&
           q.requires &&
           q.requires.length > 0 &&
-          q.requires.every(rid =>
-            updated.find(q2 => q2.id === rid && q2.status === "completed")
-          )
+          q.requires.every(rid => {
+            const st = updated.find(q2 => q2.id === rid)?.status;
+            return st === "completed" || st === "failed";
+          })
         ) {
           console.log(`Zincirleme görev aktif oldu: ${q.id} - ${q.title}`);
           newlyActivated.push(q);
@@ -45,7 +44,6 @@ export function QuestManagerProvider({ children }) {
         return q;
       });
 
-      // BİLDİRİM: Sadece taskapp kuruluysa ve yeni görev açıldıysa
       if (isTaskAppInstalled && newlyActivated.length > 0) {
         newlyActivated.forEach(q =>
           addNotification({
@@ -59,22 +57,60 @@ export function QuestManagerProvider({ children }) {
         );
       }
 
-      // Debug için güncel görev listesini göster
-      console.log("Güncel görev listesi:", updated);
+      console.log("Completed -> Güncel görev listesi:", updated);
 
       return updated;
     });
   };
 
   const failQuest = (id) => {
-    setQuests((prev) =>
-      prev.map(q => q.id === id ? { ...q, status: "failed" } : q)
-    );
+    setQuests((prev) => {
+      const quest = prev.find(q => q.id === id);
+      if (!quest || quest.status === "completed") {
+        // completed görevi faile çevirmeye izin verme
+        return prev;
+      }
+
+      let updated = prev.map(q => q.id === id ? { ...q, status: "failed" } : q);
+
+      let newlyActivated = [];
+      updated = updated.map(q => {
+        if (
+          q.status === "locked" &&
+          q.requires &&
+          q.requires.length > 0 &&
+          q.requires.every(rid => {
+            const st = updated.find(q2 => q2.id === rid)?.status;
+            return st === "completed" || st === "failed";
+          })
+        ) {
+          newlyActivated.push(q);
+          return { ...q, status: "active" };
+        }
+        return q;
+      });
+
+      if (isTaskAppInstalled && newlyActivated.length > 0) {
+        newlyActivated.forEach(q =>
+          addNotification({
+            appType: "taskapp",
+            title: "Yeni Görev Açıldı",
+            message: q.title,
+            isPopup: true,
+            isTaskbar: false,
+            duration: 3200
+          })
+        );
+      }
+
+      console.log("failed -> Güncel görev listesi:", updated);
+
+      return updated;
+    });
   };
 
   const resetQuests = () => setQuests(QUEST_LIST);
 
-  // Value'ya isTaskAppInstalled ve setter da ekliyoruz!
   const value = {
     quests,
     getActiveQuests,
@@ -83,7 +119,7 @@ export function QuestManagerProvider({ children }) {
     resetQuests,
     setQuests,
     isTaskAppInstalled,
-    setIsTaskAppInstalled, // TaskApp kurulunca erişebilsin
+    setIsTaskAppInstalled,
   };
 
   return (

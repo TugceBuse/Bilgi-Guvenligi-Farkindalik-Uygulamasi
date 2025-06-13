@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import Mailbox, { useMailbox } from '../components/Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../components/Todolist/Todolist';
 import Browser, { useBrowser } from '../components/Browser/Browser';
@@ -11,6 +11,7 @@ import PhoneApp, { usePhoneApp } from '../components/PhoneApp/PhoneApp';
 import DocuLiteApp, { useDocuLiteApp } from '../components/DocuLiteApp/DocuLiteApp';
 import QuickPDFViewApp, { useQuickPDFViewApp } from '../components/QuickPDFViewApp/QuickPDFViewApp';
 import OpenLitePDFApp, { useOpenLitePDFApp } from '../components/OpenLitePDFApp/OpenLitePDFApp';
+import { useQuestManager } from './QuestManager';
 
 const WindowConfigContext = createContext();
 
@@ -139,6 +140,19 @@ const initialWindowConfig = {
 
 export const WindowConfigProvider = ({ children }) => {
   const [windowConfig, setWindowConfig] = useState(initialWindowConfig);
+  const { completeQuest, quests } = useQuestManager();
+
+  // PDF görüntüleyiciden en az biri kurulu ise görev tamamlanmalı
+  useEffect(() => {
+  const pdfViewers = ["pdfviewer", "quickpdfviewer", "openlitepdfviewer"];
+  const anyAvailable = pdfViewers.some(name => windowConfig[name]?.available);
+
+  // Görev tamamlanmışsa tekrar çağırma
+  const pdfQuest = quests.find(q => q.id === "pdf_viewer_install");
+  if (anyAvailable && pdfQuest?.status !== "completed") {
+    completeQuest("pdf_viewer_install");
+  }
+}, [windowConfig, completeQuest, quests]);
 
   const updateAvailableStatus = (windowName, available) => {
     setWindowConfig((prevConfig) => {

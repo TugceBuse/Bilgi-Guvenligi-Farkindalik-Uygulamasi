@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFileContext } from "../../Contexts/FileContext";
 import { useGameContext } from "../../Contexts/GameContext";
 import styles from "./OpenDrop.module.css";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const generateLink = (label) =>
   "https://opendrop.com/file/" +
@@ -10,6 +11,7 @@ const generateLink = (label) =>
 
 const OpenDrop = () => {
   const { files } = useFileContext();
+  const { failQuest } = useQuestManager();
   const [allBackedUpFiles, setAllBackedUpFiles] = useState([]);
   const allBackedUpLabels = (allBackedUpFiles ?? []).map(file => file.label);
   const { openDropPublicFiles, setOpenDropPublicFiles } = useGameContext();
@@ -39,6 +41,7 @@ const OpenDrop = () => {
         clearInterval(interval);
         setUploading(false);
         setShowModal(false);
+        failQuest("file_backup");
         // Dosyaları public olarak context'e ekle
         const uploaded = downloadsFiles.map(f => ({
           ...f,

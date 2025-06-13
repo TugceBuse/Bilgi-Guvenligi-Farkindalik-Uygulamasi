@@ -2,48 +2,50 @@ import React, { useState, useRef, useEffect } from "react";
 import { useGameContext } from "../../Contexts/GameContext";
 import { useFileContext } from "../../Contexts/FileContext";
 import styles from "./CloudBox.module.css";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const generatePackageLink = () =>
   "https://cloudbox.com/package/" + Math.random().toString(36).slice(2, 10);
 
-const InfoScreen = ({ onLogin, onRegister }) => (
-  <div className={styles.infoWrapper}>
-    <div className={styles.infoHeader}>
-      <img src="/Cloud/cloud-hosting.png" alt="CloudBox" className={styles.siteLogo} />
-      <div>
-        <h1 className={styles.siteTitle}>CloudBox</h1>
-        <div className={styles.siteSubtitle}>Kişisel Bulut Yedekleme Merkezi</div>
+  const InfoScreen = ({ onLogin, onRegister }) => (
+    <div className={styles.infoWrapper}>
+      <div className={styles.infoHeader}>
+        <img src="/Cloud/cloud-hosting.png" alt="CloudBox" className={styles.siteLogo} />
+        <div>
+          <h1 className={styles.siteTitle}>CloudBox</h1>
+          <div className={styles.siteSubtitle}>Kişisel Bulut Yedekleme Merkezi</div>
+        </div>
       </div>
-    </div>
-    <div className={styles.infoBody}>
-      <div className={styles.infoBox}>
-        <b>CloudBox</b> ile önemli dosyalarınızı <b>güvenli ve şifreli</b> şekilde yedekleyin.<br /><br />
-        Hesabınıza giriş yaptıktan sonra yüklediğiniz dosyalar <b>yalnızca size ait</b> olarak saklanır.<br />
-        <b>Paylaşım linklerinin izin ve gizlilik ayarları tamamen sizin kontrolünüzdedir.</b>
-        <ul>
-          <li>Dosya ve yedek paketlerinizi <b>tek tıkla</b> paylaşabilirsiniz.</li>
-          <li>Bağlantılarınızın <b>gizli veya herkese açık</b> olmasını siz belirlersiniz.</li>
-          <li>İzin vermedikçe <b>hiçbir dosya paylaşılmaz</b> veya görüntülenmez.</li>
-        </ul>
-        <span className={styles.infoHighlight}>
-          CloudBox, modern bulut güvenlik standartları ve <b>gizlilik önceliği</b> ile tasarlanmıştır.
-        </span>
+      <div className={styles.infoBody}>
+        <div className={styles.infoBox}>
+          <b>CloudBox</b> ile önemli dosyalarınızı <b>güvenli ve şifreli</b> şekilde yedekleyin.<br /><br />
+          Hesabınıza giriş yaptıktan sonra yüklediğiniz dosyalar <b>yalnızca size ait</b> olarak saklanır.<br />
+          <b>Paylaşım linklerinin izin ve gizlilik ayarları tamamen sizin kontrolünüzdedir.</b>
+          <ul>
+            <li>Dosya ve yedek paketlerinizi <b>tek tıkla</b> paylaşabilirsiniz.</li>
+            <li>Bağlantılarınızın <b>gizli veya herkese açık</b> olmasını siz belirlersiniz.</li>
+            <li>İzin vermedikçe <b>hiçbir dosya paylaşılmaz</b> veya görüntülenmez.</li>
+          </ul>
+          <span className={styles.infoHighlight}>
+            CloudBox, modern bulut güvenlik standartları ve <b>gizlilik önceliği</b> ile tasarlanmıştır.
+          </span>
+        </div>
       </div>
+      <div className={styles.infoFooter}>
+        <button onClick={onLogin} className={styles.loginButton}>Giriş Yap</button>
+        <button onClick={onRegister} className={styles.registerButton}>Kayıt Ol</button>
+      </div>
+      <footer className={styles.footer}>
+        <span>© {new Date().getFullYear()} CloudBox - Güvenli Yedekleme</span>
+        <span style={{fontSize:12}}>CloudBox Teknolojileri A.Ş. tarafından geliştirilmiştir.</span>
+      </footer>
     </div>
-    <div className={styles.infoFooter}>
-      <button onClick={onLogin} className={styles.loginButton}>Giriş Yap</button>
-      <button onClick={onRegister} className={styles.registerButton}>Kayıt Ol</button>
-    </div>
-    <footer className={styles.footer}>
-      <span>© {new Date().getFullYear()} CloudBox - Güvenli Yedekleme</span>
-      <span style={{fontSize:12}}>CloudBox Teknolojileri A.Ş. tarafından geliştirilmiştir.</span>
-    </footer>
-  </div>
-);
+  );
 
 const CloudBox = () => {
   const { cloudUser, setCloudUser, cloudBoxBackup, setCloudBoxBackup } = useGameContext();
   const { files } = useFileContext();
+  const { completeQuest } = useQuestManager();
 
   const backedUpFileLabels = cloudBoxBackup.files.map(file => file.label);
   const downloadsFiles = Object.values(files).filter(
@@ -164,6 +166,14 @@ const CloudBox = () => {
     setError("");
   };
 
+  const onRegister = () => {
+    setPage("register");
+    setError("");
+  }
+  const onLogin = () => {
+    setPage("login");
+    setError("");
+  }
   // Çıkış
   const handleLogout = () => {
     setCloudUser((prev) => ({
@@ -195,8 +205,8 @@ const CloudBox = () => {
         setCloudBoxBackup({
           files: downloadsFiles,
           packageLink: generatePackageLink(),
-          permissions: { isPublic: false, canDownload: true }
         });
+        completeQuest("file_backup");
         setUploadState({});
         setShowUpload(false);
       } else {
@@ -234,32 +244,14 @@ const CloudBox = () => {
   if (!cloudUser.isLoggedIn) {
     if (page === "info") {
       return (
-        <div className={styles.infoWrapper}>
-          {/* InfoScreen */}
-          <div className={styles.infoHeader}>
-            <img src="/Cloud/cloud-hosting.png" alt="CloudBox" className={styles.siteLogo} />
-            <div>
-              <h1 className={styles.siteTitle}>CloudBox</h1>
-              <div className={styles.siteSubtitle}>Kişisel Bulut Yedekleme Merkezi</div>
-            </div>
-          </div>
-          <div className={styles.infoBody}>
-            <div className={styles.infoBox}>
-              <b>CloudBox</b> ile dosyalarınızı <b>güvenli ve şifreli</b> şekilde yedekleyin...
-            </div>
-          </div>
-          <div className={styles.infoFooter}>
-            <button onClick={() => setPage("login")} className={styles.loginButton}>Giriş Yap</button>
-            <button onClick={() => setPage("register")} className={styles.registerButton}>Kayıt Ol</button>
-          </div>
-        </div>
+          <InfoScreen onLogin={onLogin} onRegister={onRegister} />
       );
     }
 
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <img src="/Cloud/cloudbox-logo.svg" alt="CloudBox" className={styles.logo} />
+          <img src="/Cloud/cloud-hosting.png" alt="CloudBox" className={styles.logo} />
           <span className={styles.title}>CloudBox</span>
           <span className={styles.slogan}>Kişisel Bulut Yedekleme Merkezi</span>
         </div>
