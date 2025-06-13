@@ -340,3 +340,17 @@
   text-align: center;
   user-select: text;
 }
+.cancelButton {
+  background: #ff4545;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-weight: 600;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cancelButton:hover {
+  background: #c22c2c;
+}

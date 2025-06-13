@@ -220,7 +220,7 @@ const Desktop = ({ hacked, onFormat }) => {
         handleClose={() => setShowAlert(false)}
         message="Internet bağlantısı bulunamadı"
       />
-      {viruses.some(v => v.type === 'adware') && <PopupThrower/>}
+      {viruses.some(v => v.type === 'adware' || v.type === 'credential-stealer') && <PopupThrower/>}
       {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
       <TaskApp />
     </div>

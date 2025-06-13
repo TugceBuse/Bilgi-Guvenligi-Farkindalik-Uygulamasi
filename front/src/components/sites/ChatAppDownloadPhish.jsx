@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import styles from './ChatAppDownloadPhish.module.css';
-import { useWindowConfig } from '../../Contexts/WindowConfigContext';
+import { useVirusContext } from '../../Contexts/VirusContext';
 
 // Sahte öne çıkarılan özellikler
 const highlights = [
@@ -34,28 +34,48 @@ const fakeClients = [
 ];
 
 const ChatAppF = () => {
-  const { updateAvailableStatus } = useWindowConfig();
+  const { addVirus } = useVirusContext();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const intervalRef = useRef(null);
 
+  const [cancelled, setCancelled] = useState(false);
+
   const startDownload = () => {
+    setCancelled(false);
     setDownloading(true);
     setProgress(0);
+
     intervalRef.current = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
           setShowPopup(true);
-          updateAvailableStatus("chatappf", { available: true });
-          setTimeout(() => setShowPopup(false), 2000);
-          setDownloading(false);
+
+          // 2sn sonra popup kapanacak VE sadece iptal edilmediyse virüs eklenecek
+          setTimeout(() => {
+            setShowPopup(false);
+            setDownloading(false);
+
+            if (!cancelled) {
+              addVirus({ type: "credential-stealer", source: "chatappf.exe" });
+            }
+          }, 2000);
+
           return 100;
         }
         return Math.min(prev + Math.floor(Math.random() * 6) + 4, 100);
       });
     }, 130);
+  };
+
+  const cancelDownload = () => {
+    setCancelled(true);
+    setDownloading(false);
+    setProgress(0);
+    setShowPopup(false);
+    clearInterval(intervalRef.current);
   };
 
   return (
@@ -83,12 +103,17 @@ const ChatAppF = () => {
               disabled={downloading}
             >
               <img src="/icons/downloading.png" alt="indir" />
-              ChatBoxPro_Setup.exe
+              ChatBox_Setup.exe
             </button>
             {downloading &&
-              <div className={styles.progressBar}>
-                <div className={styles.progressFill} style={{ width: `${progress}%` }} />
-                <span className={styles.progressText}>{progress}%</span>
+              <div>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: `${progress}%` }} />
+                  <span className={styles.progressText}>{progress}%</span>
+                </div>
+                <button className={styles.cancelButton} onClick={cancelDownload}>
+                  İptal Et
+                </button>
               </div>
             }
             {showPopup && (
