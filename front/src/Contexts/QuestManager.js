@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNotificationContext } from "./NotificationContext";
 import { QUEST_LIST } from "../constants/questList";
 
@@ -13,6 +13,10 @@ export function QuestManagerProvider({ children }) {
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addNotification } = useNotificationContext();
 
+  useEffect(() => {
+    console.log("QUESTS : ", quests);
+  }, [quests]);
+  
   const getActiveQuests = () => quests.filter(q => q.status === "active");
 
   const completeQuest = (id) => {
