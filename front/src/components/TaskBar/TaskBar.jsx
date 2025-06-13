@@ -303,10 +303,6 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
           <div className="start-menu-container">
             {!hacked && (
               <>
-                <div className="start-menu-item">
-                  <img src="/icons/synchronize.png" alt="Synchronize Icon" />
-                  <p style={{ marginLeft: -12 }}>Yedekle</p>
-                </div>
                 <div className="start-menu-item"
                   onClick={() => setShowSystemSettings(true)}
                 >
@@ -428,7 +424,7 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
                          <strong>
                           <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
                             <img style={{ width: 30, height: 30 }} src={notif.icon} alt="Notification Icon" />
-                            {notif.title}
+                            <p className='notif-title'>{notif.title}</p>
                             <p
                               className='mail-notification-close'
                               onClick={e => { e.stopPropagation(); removeNotification(notif.id); }}
