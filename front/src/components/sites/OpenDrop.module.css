@@ -319,10 +319,14 @@ body {
   border-radius: 7px;
   padding: 4px 13px;
   margin-top: 5px;
-  width: fit-content;
+  width: 100%;
   text-align: center;
   text-decoration: none;
   transition: background 0.16s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+  display: block; 
 }
 .linkBtn:hover { background: #197da7; }
 

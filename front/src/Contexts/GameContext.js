@@ -181,8 +181,8 @@ export const GameContextProvider = ({ children }) => {
   });
 
   const [openDropPublicFiles, setOpenDropPublicFiles] = useState([
-    { label: "YeniÇıkanlar2025.pdf", type: "pdf", size: "2.1 MB", url: "https://opendrop.com/file/yenicikanlar2025ab2x" },
-    { label: "EtkinlikPosteri.jpg", type: "jpg", size: "1.4 MB", url: "https://opendrop.com/file/etkinlikposteri9sd7" }
+    { label: "YeniÇıkanlar2025.pdf", type: "pdf", size: "2.1 MB", icon: "/icons/pdf.png", url: "https://opendrop.com/file/yenicikanlar2025ab2x" },
+    { label: "EtkinlikPosteri.jpg", type: "jpg", size: "1.4 MB", icon: "/icons/gallery.png", url: "https://opendrop.com/file/etkinlikposteri9sd7" }
   ]);
 
   // --- Kargo takibi için zaman bazlı adım güncelleyici (TimeContext ile) ---

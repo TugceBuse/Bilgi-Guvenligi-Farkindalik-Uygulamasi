@@ -47,7 +47,7 @@ const CloudBox = () => {
 
   const backedUpFileLabels = cloudBoxBackup.files.map(file => file.label);
   const downloadsFiles = Object.values(files).filter(
-    f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type) &&
+    f => f.location === "downloads" && ["doc", "pdf", "txt", "jpg"].includes(f.type) &&
     !backedUpFileLabels.includes(f.label)
   );
 
@@ -225,7 +225,6 @@ const CloudBox = () => {
     // Her giriş/kayıt ekranı değişiminde inputları temizle
     setName("");
     setSurname("");
-    setEmail("");
     setPassword("");
     setError("");
     setLockMessage("");
@@ -260,7 +259,7 @@ const CloudBox = () => {
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <img src="/icons/cloudbox-logo.svg" alt="CloudBox" className={styles.logo} />
+          <img src="/Cloud/cloudbox-logo.svg" alt="CloudBox" className={styles.logo} />
           <span className={styles.title}>CloudBox</span>
           <span className={styles.slogan}>Kişisel Bulut Yedekleme Merkezi</span>
         </div>
@@ -289,7 +288,7 @@ const CloudBox = () => {
               type="email"
               required
               placeholder="E-posta"
-              value={cloudUser.email}
+              value={email}
               onChange={e => setEmail(e.target.value)}
               autoComplete="username"
               disabled={cloudUser.lockoutUntil && Date.now() < cloudUser.lockoutUntil}
