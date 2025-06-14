@@ -66,13 +66,19 @@ const CloudBox = () => {
   const [uploadState, setUploadState] = useState({});
   const errorRef = useRef(null);
 
-  
+   const showTemporaryError = (msg) => {
+      setError(msg);
+      setTimeout(() => {
+        showTemporaryError("");
+      }, 2000);
+    };
+
   useEffect(() => {
     if (!cloudUser.isLoggedIn) {
       setName("");
       setSurname("");
       setPassword("");
-      setError("");
+      showTemporaryError("");
     }
   }, [cloudUser.isLoggedIn]);
 
@@ -93,22 +99,30 @@ const CloudBox = () => {
     return diff > 0 ? Math.ceil(diff / 60000) : 0;
   };
 
+  
+
   // login/register işlemleri
   // Kayıt Ol
   const handleRegister = (e) => {
     e.preventDefault();
     if (cloudUser.isRegistered && cloudUser.email === email) {
-      setError("Bu e-posta adresi ile zaten bir hesap var!");
+      showTemporaryError("Bu e-posta adresi ile zaten bir hesap var!");
       return;
     }
     if (!name || !surname || !email || !password) {
-      setError("Lütfen tüm alanları doldurun!");
+      showTemporaryError("Lütfen tüm alanları doldurun!");
       return;
     }
     if (email.length < 6 || !email.includes("@")) {
-      setError("Geçerli bir e-posta girin.");
+      showTemporaryError("Lütfen geçerli bir e-posta adresi girin.");
       return;
     }
+
+    if (password.length < 4) {
+      showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+      return;
+    }
+    
     setCloudUser({
       name,
       surname,
@@ -121,7 +135,7 @@ const CloudBox = () => {
       loginAttempts: 0
     });
     setPage("main");
-    setError("");
+    showTemporaryError("");
   };
 
 
@@ -144,7 +158,7 @@ const CloudBox = () => {
         setLockMessage("🚫 Çok fazla giriş denemesi yapıldı.");
         setTimeout(() => {
           setLockMessage("");
-          setError("");
+          showTemporaryError("");
           setPage("info");
         }, 3000);
       } else {
@@ -163,16 +177,16 @@ const CloudBox = () => {
       loginAttempts: 0
     }));
     setPage("main");
-    setError("");
+    showTemporaryError("");
   };
 
   const onRegister = () => {
     setPage("register");
-    setError("");
+    showTemporaryError("");
   }
   const onLogin = () => {
     setPage("login");
-    setError("");
+    showTemporaryError("");
   }
   // Çıkış
   const handleLogout = () => {
@@ -236,7 +250,7 @@ const CloudBox = () => {
     setName("");
     setSurname("");
     setPassword("");
-    setError("");
+    showTemporaryError("");
     setLockMessage("");
   }, [page]);
 

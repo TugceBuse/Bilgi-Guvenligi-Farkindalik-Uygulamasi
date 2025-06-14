@@ -167,7 +167,6 @@ const getRelativeTime = (timestamp) => {
   return `${Math.floor(diff / 86400)} gün önce`;
 };
 
-
 const Postify = () => {
   const { PostifyInfo, setPostifyInfo } = useGameContext();
 
@@ -181,6 +180,7 @@ const Postify = () => {
   const [showMessages, setShowMessages] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState("");
+  const [error, setError] = useState("");
   
   const [posts, setPosts] = useState(initialPosts);
   const [likes, setLikes] = useState(() => {
@@ -193,6 +193,14 @@ const Postify = () => {
     });
     return initial;
   });
+
+  
+  const showTemporaryError = (msg) => {
+    setError(msg);
+    setTimeout(() => {
+      showTemporaryError("");
+    }, 2000);
+  };
 
   const [newPostContent, setNewPostContent] = useState('');
   const [timestamps, setTimestamps] = useState({});
@@ -289,6 +297,11 @@ const Postify = () => {
 const handlePasswordUpdate = () => {
       if (!newPassword) return;
   
+      if (newPassword.length < 4) {
+          showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+          return;
+      }
+
       const strong = isPasswordStrongEnough(newPassword);
       setPostifyInfo({
         ...PostifyInfo,
@@ -370,6 +383,7 @@ const handlePasswordUpdate = () => {
                 onChange={(e) => setNewPassword(e.target.value)}
               />
               {successPassword && <p className={styles.successMessage}>{successPassword}</p>}
+              {error && <p className={styles.errorMessage}>{error}</p>}
 
               <button onClick={handlePasswordUpdate}>Güncelle</button>
               <p>📢 Bildirimler: <button>Değiştir</button></p>

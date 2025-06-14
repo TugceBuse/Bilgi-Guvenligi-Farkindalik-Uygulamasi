@@ -6,6 +6,7 @@ import { useMailContext } from '../../Contexts/MailContext';
 import { useChatContext } from '../../Contexts/ChatContext';
 import { statusSteps } from "../../utils/cargoStatus";
 import { useTimeContext } from "../../Contexts/TimeContext";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const cards = [
   {
@@ -219,6 +220,7 @@ const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders, cargoTrackingList, addCargoTracking, secondsRef } = useGameContext();
   const { gameDate } = useTimeContext();
   const { sendMail } = useMailContext();
+  const { completeQuest } = useQuestManager();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -264,7 +266,7 @@ const TechDepo = ({scrollRef}) => {
         setName("");
         setSurname("");
         setPassword("");
-        setErrorMessage("");
+        showTemporaryError("");
     } 
   }, [TechInfo.isLoggedIn]);
 
@@ -350,7 +352,7 @@ const TechDepo = ({scrollRef}) => {
   const showTemporaryError = (msg) => {
     setErrorMessage(msg);
     setTimeout(() => {
-      setErrorMessage("");
+      showTemporaryError("");
     }, 2000);
   };
 
@@ -362,12 +364,6 @@ const TechDepo = ({scrollRef}) => {
   };
 
   const handleAuth = () => {
-    const showError = (message) => {
-      setErrorMessage(message);
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 3000); 
-    };
   
     if (!isLogin) {
       if (TechInfo.isRegistered && TechInfo.email === email) {
@@ -379,6 +375,11 @@ const TechDepo = ({scrollRef}) => {
         return;
       }
   
+      if (password.length < 4) {
+        showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+        return;
+      }
+
       setTechInfo({
         ...TechInfo,
         name,
@@ -390,7 +391,7 @@ const TechDepo = ({scrollRef}) => {
         isLoggedIn: true,
         isPasswordStrong: passwordStrong,
       });
-      setErrorMessage("");
+      showTemporaryError("");
     } else {
       if (!TechInfo.isRegistered || TechInfo.email !== email) {
         showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
@@ -412,7 +413,7 @@ const TechDepo = ({scrollRef}) => {
         ...TechInfo,
         isLoggedIn: true,
       });
-      setErrorMessage("");
+      showTemporaryError("");
     }
   
     setPage("welcome");
@@ -444,7 +445,7 @@ const TechDepo = ({scrollRef}) => {
     setName("");
     setSurname("");
     setPassword("");
-    setErrorMessage("");
+    showTemporaryError("");
   };
 
   // Sepete ekleme bildirimi ve ödeme bildirimi için state
@@ -621,6 +622,14 @@ const TechDepo = ({scrollRef}) => {
 //   });
 // }, [orders, sendMail, TechInfo, addCargoTracking, setOrders]);
 
+  const generateFakeOrderNo = () => {
+    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ"; // I, O gibi karışabilecek harfleri çıkar
+    const randomLetter = () => letters[Math.floor(Math.random() * letters.length)];
+    const randomDigit = () => Math.floor(Math.random() * 10);
+    
+    // Örnek format: TD9Z4-F73K (rastgele ama düzenli ve anlamlı görünümlü)
+    return `TD${randomDigit()}${randomLetter()}${randomDigit()}-${randomLetter()}${randomDigit()}${randomLetter()}${randomLetter()}`;
+  };
 
   const finalizePayment = () => {
     setCodeTimer(120);
@@ -691,7 +700,7 @@ const TechDepo = ({scrollRef}) => {
         total: newOrder.total,
         from: "faturalar@techdepo.com",
         title: "TechDepo - Satın Alma Faturanız",
-        precontent: "Fatura ektedir.",
+        precontent: "Faturanız ektedir.",
         isFake: false,
       }, { delaySeconds: 20 });
 
@@ -700,38 +709,38 @@ const TechDepo = ({scrollRef}) => {
       name: `${TechInfo.name} ${TechInfo.surname}`,
       productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
       invoiceNo: "TD-2025-" + Date.now(),
-      orderNo: newOrder.id + "-FAKE",
+      orderNo: generateFakeOrderNo(),
       price: newOrder.total,
       company: "TechDepo",
       tax: (newOrder.total * 0.20).toFixed(2),
       total: newOrder.total,
       from: "e-fatura@teehdeppo-billing.com",
       title: "E-Arşiv Fatura Belgeniz",
-      precontent: "Şüpheli fatura bildirimi",
+      precontent: "Fatura Bildirimi",
       isFake: true,
       fakeOptions: {
         from: "e-fatura@teehdeppo-billing.com",
         title: "E-Arşiv Fatura Belgeniz",
         fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
-        precontent: "Şüpheli fatura bildirimi"
+        precontent: "Fatura Bildirimi"
       }
     }, { delaySeconds: 45 });
 
     sendMail("cargo", {
       name: `${TechInfo.name} ${TechInfo.surname}`,
-      productName: newOrder.items.map(item => item.name).join(", "),
+      productName: cards[Math.floor(Math.random() * cards.length)].name + " (1 adet)",
       trackingNo: newOrder.trackingNo,
       shippingCompany: newOrder.shipping,
       orderNo: newOrder.id + "-FAKE",
       from: "kargo@cargo-n0va.com",
       title: "Kargo Takip Bilgilendirme",
-      precontent: "Şüpheli gönderi uyarısı!",
+      precontent: "Kargoya Verildi!",
       isFake: true,
       fakeOptions: {
         from: "kargo@cargo-n0va.com",
         title: "Kargo Takip Bilgilendirme",
         link: "http://cargo-n0va-support.xyz/tracking",
-        precontent: "Şüpheli gönderi uyarısı!"
+        precontent: "Kargoya Verildi!"
       }
     }, { delaySeconds: 80 });
 
@@ -758,6 +767,7 @@ const TechDepo = ({scrollRef}) => {
     setTimeout(() => setShowCartNotice(false), 2000);
 
     if (newOrder.items.some(item => item.id === 15)) {
+        completeQuest("buy_printer");
         // Yazıcı satın alımı sonrası...
         addChatMessage(1, {
           sender: 'them',
@@ -1136,7 +1146,7 @@ const TechDepo = ({scrollRef}) => {
                   } else {
                     setErrorMessage("Öncelikle giriş yapmalısınız!");
                     setTimeout(() => {
-                      setErrorMessage("");
+                      showTemporaryError("");
                     }, 3000); 
                     setPage("login");                      
                   }
@@ -1154,7 +1164,7 @@ const TechDepo = ({scrollRef}) => {
                     } else {
                       setErrorMessage("Öncelikle giriş yapmalısınız!");
                       setTimeout(() => {
-                        setErrorMessage("");
+                        showTemporaryError("");
                       }, 3000); 
                       setPage("login");                      
                     }
