@@ -1,8 +1,10 @@
 import React, { useState, useRef } from "react";
 import styles from "./QuickPDFView.module.css";
 import { useWindowConfig } from "../../Contexts/WindowConfigContext";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const QuickPDFViewSite = () => {
+  const { completeQuest } = useQuestManager();
   const { updateAvailableStatus } = useWindowConfig();
   const [progress, setProgress] = useState(0);
   const [downloading, setDownloading] = useState(false);
@@ -18,8 +20,8 @@ const QuickPDFViewSite = () => {
       if (prev >= 100) {
         clearInterval(intervalRef.current);
         setShowPopup(true);
-        updateAvailableStatus("quickpdfviewer", true); // ✅ doğru pencere adı
-        console.log("QuickPDFView indirildi.");
+        updateAvailableStatus("quickpdfviewer", true);
+        completeQuest("pdf_viewer_install");
         setTimeout(() => setShowPopup(false), 3000);
         setDownloading(false);
         return 100;

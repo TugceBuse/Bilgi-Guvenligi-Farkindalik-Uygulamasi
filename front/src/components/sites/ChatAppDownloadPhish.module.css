@@ -1,388 +1,356 @@
 .downloadContainer {
   max-width: 1100px;
   margin: 44px auto;
-  background: #231921;
-  border-radius: 22px;
-  box-shadow: 0 6px 32px #591b3618, 0 2px 12px #0006;
+  background: #242426;
+  border-radius: 20px;
+  box-shadow: 0 6px 32px #221a18cc, 0 2px 12px #0006;
   padding: 36px 32px 18px 32px;
-  color: #f7f1f8;
+  color: #ffeede;
   font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
   letter-spacing: 0.01em;
-  border: 2.5px solid #6c213c;
+  border: 2.5px solid #ff784622;
   position: relative;
 }
-
-/* Başlık ve logo satırı */
 .header {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 19px;
-  font-size: 1.19rem;
-  color: #c7b7bd;
-  font-weight: 800;
-  margin-bottom: 21px;
+  gap: 14px;
+  font-size: 1.18rem;
+  color: #ffbba2;
+  font-weight: 700;
+  margin-bottom: 18px;
+  text-shadow: 0 1px 4px #1b1a1833;
 }
 .logo {
   width: 64px;
   height: 64px;
   object-fit: contain;
   border-radius: 16px;
-  background: #351c28;
-  border: 2.5px solid #952046;
-  box-shadow: 0 2px 10px #6c213c28;
+  background: #232426;
+  border: 2px solid #ff7846;
+  box-shadow: 0 2px 10px #ff784626;
+  padding: 4px;
+  filter: blur(1.3px) brightness(1.06) contrast(1.12);
 }
-.subtitle {
-  color: #a14e71;
+.slogan {
+  color: #ff7846;
   font-size: 1.01rem;
   font-weight: 600;
   letter-spacing: 0.03em;
-  margin-top: 2px;
-  margin-left: 2px;
+  margin-top: 1px;
   display: block;
 }
-
 .heroSection {
   display: flex;
   gap: 44px;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 28px;
-  background: #2e1b27;
+  margin-bottom: 30px;
+  background: #1a1816;
   border-radius: 18px;
-  padding: 20px 18px 20px 28px;
-  border: 1.7px solid #952046;
+  padding: 22px 20px 24px 26px;
+  border: 1.7px solid #ff78463d;
 }
-
-/* Sol içerik */
-.heroLeft {
+.leftColumn {
   flex: 1 1 420px;
   min-width: 340px;
   padding-right: 18px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 22px;
 }
-.introText {
-  font-size: 1.13rem;
-  line-height: 1.57;
-  color: #eec6de;
-  margin-bottom: 22px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  background: #3d2235;
-  border-radius: 10px;
-  padding: 13px 18px;
-  border-left: 7px solid #952046;
-  box-shadow: 0 2px 9px #6c213c11;
-}
-.introText b {
-  color: #952046;
-  font-weight: 800;
-}
-
-/* Özellikler listesi */
-.featureList {
-  padding-left: 0;
-  margin: 0 0 16px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 1.07rem;
-  color: #f6e7ee;
-  font-weight: 500;
-  list-style: none;
-}
-.featureList li {
-  background: #331b28;
-  border-radius: 8px;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  box-shadow: 0 2px 8px #95204618;
-  border: 1.3px solid #4e2237;
-  transition: background 0.14s, border 0.14s;
-  cursor: default;
-  user-select: text;
-}
-.featureList li:hover {
-  background: #4a2440;
-  border-color: #952046;
-  color: #e6b7c7;
-}
-
-.platformGrid {
+.statsRow {
   display: flex;
   gap: 18px;
-  margin: 17px 0 12px 0;
-}
-.platformBtn {
-  flex: 1 1 160px;
-  min-width: 145px;
-  max-width: 240px;
-  background: #a14e71;
-  color: #fff6f6;
-  border: 2px solid #952046;
-  border-radius: 12px;
-  padding: 17px 0 13px 0;
-  font-size: 1.04rem;
+  font-size: 1.03rem;
   font-weight: 700;
+  color: #ffb48d;
+  margin-bottom: 13px;
+}
+.downloadBox {
+  background: #292a2d;
+  border-radius: 13px;
+  padding: 16px 18px 14px 18px;
+  border: 1.3px solid #ff784656;
+  box-shadow: 0 1.5px 8px #ff784610;
+  margin-bottom: 10px;
+}
+.downloadTitle {
+  font-size: 1.09rem;
+  font-weight: 700;
+  margin-bottom: 9px;
+  color: #ffeede;
+}
+.downloadButton {
   display: flex;
   align-items: center;
   gap: 13px;
-  justify-content: center;
-  box-shadow: 0 1.5px 6px #95204622;
+  background: linear-gradient(90deg, #ff7846 0%, #ffbba2 100%);
+  color: #242426;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 23px 11px 19px;
+  box-shadow: 0 1px 7px #ff784624;
   cursor: pointer;
-  position: relative;
-  transition: background 0.15s, box-shadow 0.14s, color 0.13s, border 0.16s;
+  transition: background 0.12s, transform 0.12s;
+  margin-bottom: 10px;
 }
-.platformBtn:hover:enabled {
-  border-color: #6c213c;
-  background: #8d3159;
-  box-shadow: 0 3px 13px #c74a6a33, 0 1.5px 7px #0005;
-  color: #fff;
-}
-.platformBtn:active:enabled {
-  background: #6c213c;
-  border-color: #6c213c;
-}
-.platformBtn:disabled {
-  opacity: 0.54;
+.downloadButton:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
-.iconBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #3a1930;
-  border-radius: 8px;
-  padding: 7px;
-  margin-right: 3px;
-  border: 1.5px solid #952046;
-}
-.platformBtn img {
+.downloadButton img {
   width: 27px;
   height: 27px;
-  filter: grayscale(0.09) brightness(1.09);
 }
-.platformLabel {
-  font-size: 0.91rem;
-  color: #e3bed3;
-  font-weight: 400;
-  margin-top: 1px;
+.legalText {
+  font-size: 0.95rem;
+  color: #ffd6be;
+  margin-top: 7px;
+  margin-bottom: 2px;
 }
-
-/* Progress Bar */
 .progressBar {
   width: 100%;
-  background: #361e2e;
+  background: #191919;
   border-radius: 7px;
   height: 17px;
-  margin: 10px 0;
+  margin: 8px 0;
   position: relative;
   overflow: hidden;
-  border: 1.2px solid #a14e71;
+  border: 1.2px solid #ff7846;
 }
 .progressFill {
-  background: #952046;
+  background: #ff7846;
   height: 100%;
   border-radius: 7px 0 0 7px;
-  transition: width 0.24s cubic-bezier(.29,.95,.42,1);
+  transition: width 0.23s cubic-bezier(.29,.95,.42,1);
 }
 .progressText {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 0;
   height: 100%;
-  color: #fff1f7;
+  color: #fffbe7;
   font-weight: 700;
   font-size: 1.01rem;
   display: flex;
   align-items: center;
 }
-
-/* Popup */
 .popup {
   margin-top: 13px;
-  background: #3b1e2e;
-  color: #eebee0;
-  border: 2px solid #a14e71;
+  background: #232426;
+  color: #ffbba2;
+  border: 2px solid #ff7846;
   border-radius: 10px;
   font-weight: 700;
   padding: 13px 16px;
   text-align: center;
   font-size: 1.08rem;
-  box-shadow: 0 2px 10px #a14e7136;
+  box-shadow: 0 2px 10px #ff78463b;
 }
-
-.heroRight {
+.mustKnows {
+  background: #232426;
+  border-radius: 10px;
+  padding: 13px 18px;
+  margin-top: 13px;
+  border-left: 5px solid #ff7846;
+  box-shadow: 0 1.5px 7px #ff784613;
+}
+.mustKnows h3 {
+  font-size: 1.03rem;
+  color: #ffbba2;
+  margin-bottom: 8px;
+}
+.mustKnows ul {
+  margin: 0;
+  padding-left: 17px;
+  color: #fffaed;
+  font-size: 0.99rem;
+}
+.mustKnows li {
+  margin-bottom: 7px;
+}
+/* SAĞ KOLON */
+.rightColumn {
   min-width: 300px;
   flex: 0 0 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  color: #ffd8bb;
+  font-size: 1.09rem;
+  line-height: 1.54;
+  font-weight: 500;
+  background: #222123;
+  border-radius: 12px;
+  padding: 18px 19px 13px 18px;
+  border: 1.3px solid #ff78462e;
+  box-shadow: 0 1.5px 10px #ff78461a;
 }
-.previewImg {
-  width: 100%;
-  max-width: 265px;
-  border-radius: 13px;
-  margin-bottom: 7px;
-  border: 2px solid #952046;
-  box-shadow: 0 1.5px 10px #a14e7131;
+.appPreview {
+  width: 65%;
+  max-width: 255px;
+  margin: 13px 0 7px 0;
+  border-radius: 11px;
+  border: 2px solid #ff7846;
+  box-shadow: 0 1.5px 10px #ff784613;
+  background: #fff2;
 }
-.ratingBox {
-  background: #3a2432;
-  color: #eebee0;
-  border-radius: 8px;
-  padding: 7px 15px;
-  font-weight: 700;
-  margin-top: 0;
-  font-size: 1.05rem;
-  border: 1.2px solid #a14e71;
+.clientsRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 7px;
 }
-
+.clientsRow img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ff7846;
+  background: #1b1816;
+}
+/* HIGHLIGHTS (ALT KARTLAR) */
+.highlightsSection {
+  display: flex;
+  gap: 24px;
+  margin: 33px 0 19px 0;
+  justify-content: center;
+}
+.highlightCard {
+  background: #232426;
+  border-radius: 11px;
+  padding: 22px 20px 15px 20px;
+  min-width: 190px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  color: #fff3e3;
+  box-shadow: 0 1.5px 6px #ff784615;
+  border: 2px solid #ff78465a;
+  transition: background 0.13s, box-shadow 0.13s;
+}
+.highlightCard img {
+  width: 36px;
+  height: 36px;
+}
+.highlightCard h4 {
+  color: #ff7846;
+  font-size: 1.09rem;
+  margin-bottom: 2px;
+}
+.highlightCard p {
+  font-size: 0.97rem;
+  text-align: center;
+  color: #ffbba2;
+}
+/* GÜVENLİK BÖLÜMÜ */
 .securitySection {
-  background: #311e2c;
+  background: #292a2d;
   border-radius: 13px;
   margin: 21px 0 16px 0;
   padding: 19px 28px 13px 28px;
-  color: #eebee0;
-  border-left: 6px solid #952046;
-  border-top: 1.1px solid #a14e71;
-  box-shadow: 0 1.5px 8px #a14e7111;
+  color: #ffd8bb;
+  border-left: 6px solid #ff7846;
+  border-top: 1.1px solid #ff784669;
+  box-shadow: 0 1.5px 8px #ff784611;
 }
 .securitySection h2 {
-  color: #952046;
-  font-size: 1.14rem;
+  color: #ff7846;
+  font-size: 1.15rem;
   margin-bottom: 7px;
 }
 .securitySection ul {
   margin: 0;
   padding-left: 22px;
-  font-size: 1.03rem;
+  font-size: 1.04rem;
 }
 .securitySection li {
   margin-bottom: 7px;
   line-height: 1.49;
 }
-
-/* Kullanıcı yorumları */
-.reviewsSection {
-  margin: 25px 0 18px 0;
-}
-.reviewGrid {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-.reviewCard {
-  background: #322131;
-  color: #f8e3f4;
-  border-radius: 11px;
-  padding: 13px 17px 13px 17px;
-  box-shadow: 0 1.5px 6px #a14e7122;
-  min-width: 180px;
-  max-width: 260px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-  font-size: 1rem;
-}
-.reviewCard img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #a14e71;
-}
-.reviewCard b {
-  color: #a14e71;
-  font-size: 1.03rem;
-}
-
-/* SSS */
-.faqSection {
-  margin: 29px 0 18px 0;
-}
-.faqSection h2 {
-  color: #a14e71;
-  font-size: 1.13rem;
-  margin-bottom: 7px;
-}
-.faqSection ul {
-  padding-left: 0;
-}
-.faqSection li {
-  margin-bottom: 7px;
-  list-style: none;
-}
-.faqSection details {
-  background: #271824;
-  border-radius: 8px;
-  padding: 8px 14px;
-  color: #f6cfe7;
-  font-size: 1.01rem;
-  cursor: pointer;
-  border: 1px solid #3d2032;
-}
-.faqSection summary {
-  font-weight: 700;
-  color: #a14e71;
-  outline: none;
-  margin-bottom: 2px;
-  cursor: pointer;
-}
-.faqSection details[open] {
-  background: #311a2b;
-}
-
-/* Footer */
+/* FOOTER */
 .footer {
   margin-top: 25px;
   text-align: center;
-  color: #b294a7;
+  color: #ffbba2;
   font-size: 0.97rem;
-  opacity: 0.86;
+  opacity: 0.92;
 }
-.footer a {
-  color: #a14e71;
-  text-decoration: underline dotted;
-  font-weight: 600;
-  margin-left: 6px;
-  transition: color 0.14s;
+.footerSpan{
+  color: #ff7846;
+  font-weight: 700;
+  cursor: default;
 }
-.footer a:hover {
-  color: #fff;
-  background: #a14e71;
-  border-radius: 3px;
-  padding: 1px 4px;
-}
-
-/* Responsive */
+/* RESPONSIVE TASARIM */
 @media (max-width: 900px) {
   .downloadContainer {
-    padding: 16px 2vw 11px 2vw;
+    padding: 14px 2vw 11px 2vw;
   }
   .heroSection {
     flex-direction: column;
-    gap: 19px;
+    gap: 18px;
     padding: 10px 6px;
   }
-  .heroRight, .heroLeft {
+  .leftColumn, .rightColumn {
     min-width: unset;
     width: 100%;
     padding-right: 0;
+    margin-bottom: 11px;
   }
-  .platformGrid {
+  .highlightsSection {
     flex-direction: column;
-    gap: 11px;
-  }
-  .reviewGrid {
-    flex-direction: column;
-    gap: 11px;
+    gap: 13px;
     align-items: center;
   }
+  .clientsRow {
+    gap: 13px;
+  }
+}
+@media (max-width: 600px) {
+  .downloadContainer {
+    padding: 5px 0 5px 0;
+  }
+  .heroSection {
+    padding: 3px 0;
+    border-radius: 10px;
+  }
+  .leftColumn, .rightColumn {
+    padding: 6px 5px;
+    border-radius: 8px;
+  }
+  .highlightCard {
+    min-width: 140px;
+    padding: 13px 7px 8px 7px;
+  }
+  .securitySection {
+    padding: 12px 7px 8px 10px;
+  }
+}
+.phishHint {
+  color: #ff7846cc;
+  font-size: 0.95rem;
+  font-style: italic;
+  margin-top: 6px;
+  opacity: 0.75;
+  text-align: center;
+  user-select: text;
+}
+.cancelButton {
+  background: #ff4545;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-weight: 600;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cancelButton:hover {
+  background: #c22c2c;
 }

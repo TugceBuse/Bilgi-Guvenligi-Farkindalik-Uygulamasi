@@ -14,15 +14,17 @@ export const MailContextProvider = ({ children }) => {
   const [initspamMails, setInitSpamMails] = useState(initialSpamMails);
   const [spamboxMails, setSpamboxMails] = useState(initialSpamMails.filter(mail => mail.used));
   const [selectedMail, setSelectedMail] = useState(null);
-  const [pendingMails, setPendingMails] = useState([]); // Wifi yokken biriken mailler
+  const [pendingMails, setPendingMails] = useState([]); // Statik mailler için, Wifi yokken bekletmek amacıyla
+  const [pendingMailQueue, setPendingMailQueue] = useState([]); // Dinamik delayli gönderimler
 
   const { isWificonnected } = useSecurityContext();
-  const { gameDate } = useTimeContext();
+  const { gameDate, secondsRef } = useTimeContext();
   const { addNotification, removeNotification } = useNotificationContext();
   const { openWindow } = useUIContext();
 
-  const addMailToMailbox = (type, id) => {
-    setPendingMails(prev => [...prev, { type, id }]);
+  // --- Statik (senaryo/ilk atama) mailleri için ---
+  const addMailToMailbox = (type, id, sendTime = gameDate) => {
+    setPendingMails(prev => [...prev, { type, id, sendTime }]);
   };
 
   // Mail okundu işaretle + bildirimden kaldır
@@ -65,7 +67,7 @@ export const MailContextProvider = ({ children }) => {
     });
   };
 
-  // Inbox ve spam’a mail ekleme
+  // Statik senaryo maillerini uygun anda inbox/spam'a at
   useEffect(() => {
     if (isWificonnected && pendingMails.length > 0) {
       pendingMails.forEach(mail => {
@@ -76,7 +78,7 @@ export const MailContextProvider = ({ children }) => {
             const updatedMail = { 
               ...mailToAdd, 
               used: true, 
-              sendTime: mailToAdd.sendTime || gameDate // <-- Güncellendi
+              sendTime: mail.sendTime || mailToAdd.sendTime || gameDate
             };
             setInitMail(prevMails =>
               prevMails.map(m =>
@@ -92,7 +94,7 @@ export const MailContextProvider = ({ children }) => {
             const updatedSpam = { 
               ...spamToAdd, 
               used: true, 
-              sendTime: spamToAdd.sendTime || gameDate // <-- Güncellendi
+              sendTime: mail.sendTime || spamToAdd.sendTime || gameDate
             };
             setInitSpamMails(prevMails =>
               prevMails.map(m =>
@@ -107,10 +109,9 @@ export const MailContextProvider = ({ children }) => {
       setPendingMails([]); // Stack boşaltılır
     }
   }, [isWificonnected, pendingMails, initMail, initspamMails, gameDate]);
-  
-  // Dinamik mail gönder
-  // Dinamik mail gönderimi (stack mantığı ile kullanılmalı)
-  const sendMail = (type, params) => {
+
+  // --- Dinamik, delay ile gönderilen (sipariş sonrası) mailler için ---
+  const actuallySendMail = (type, params) => {
     const mailId = params.mailId || Date.now();
     let mailObj = null;
     if (type === "cargo") {
@@ -122,7 +123,7 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        sendTime: gameDate, // <-- Güncellendi
+        sendTime: params.sendTime || gameDate,
         content: params.content || createCargoMail({ ...params, mailId }),
       };
     } else if (type === "invoice") {
@@ -134,17 +135,49 @@ export const MailContextProvider = ({ children }) => {
         readMail: false,
         notified: false,
         used: false,
-        sendTime: gameDate, // <-- Güncellendi
+        sendTime: params.sendTime || gameDate,
         content: createInvoiceMail({ ...params, mailId }),
       };
     }
-    // ...diğer türler aynı şekilde eklenebilir
+    // ...diğer türler burada genişletilebilir
 
     if (mailObj) {
       setInitMail(prev => [...prev, mailObj]);
-      addMailToMailbox('inbox', mailObj.id);
+      setInboxMails(prev => [...prev, mailObj]);
+      createMailNotification(mailObj);
     }
   };
+
+  // sendMail fonksiyonu (opsiyonel gecikmeli!)
+  // sendMail(type, params, {delaySeconds: 20})
+  const sendMail = (type, params, options = {}) => {
+    const delaySeconds = options.delaySeconds || 0;
+    if (delaySeconds > 0 && secondsRef && typeof secondsRef.current === 'number') {
+      setPendingMailQueue(prev => [
+        ...prev,
+        {
+          type,
+          params,
+          triggerSeconds: secondsRef.current + delaySeconds,
+        }
+      ]);
+    } else {
+      actuallySendMail(type, params);
+    }
+  };
+
+  // Delay queue watcher (sipariş sonrası delayli mailleri zamanında gönder)
+  useEffect(() => {
+    if (!isWificonnected) return;
+    if (!secondsRef || typeof secondsRef.current !== "number") return;
+    setPendingMailQueue(prev => {
+      const now = secondsRef.current;
+      const ready = prev.filter(mail => mail.triggerSeconds <= now);
+      const waiting = prev.filter(mail => mail.triggerSeconds > now);
+      ready.forEach(mail => actuallySendMail(mail.type, mail.params));
+      return waiting;
+    });
+  }, [secondsRef.current, isWificonnected]);
 
   return (
     <MailContext.Provider value={{
@@ -154,8 +187,8 @@ export const MailContextProvider = ({ children }) => {
       initspamMails, setInitSpamMails,
       spamboxMails, setSpamboxMails,
       selectedMail, setSelectedMail,
-      addMailToMailbox,
-      sendMail,
+      addMailToMailbox, // statik mailler için aynen bırakıldı!
+      sendMail, // dinamik ve gecikmeli gönderim
       markMailAsReadAndRemoveNotification, 
     }}>
       {children}

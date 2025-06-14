@@ -71,7 +71,7 @@ const ComputerCanvas= () =>{
     if (isAuthenticated) {
       navigate("/game");
     } else {
-      navigate("/login");
+      navigate("/login", { state: { reason: "auth_required" } });
     }
   };
 

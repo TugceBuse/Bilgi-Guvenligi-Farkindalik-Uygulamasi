@@ -1,101 +1,130 @@
 import React, { useState, useRef } from "react";
 import styles from './ChatAppDownloadPhish.module.css';
-import { useWindowConfig } from '../../Contexts/WindowConfigContext';
+import { useVirusContext } from '../../Contexts/VirusContext';
+import { useQuestManager } from "../../Contexts/QuestManager";
 
+// Sahte öne çıkarılan özellikler
 const highlights = [
   {
     title: "Akıllı Yanıtlar",
-    icon: "/icons/ai.png",
-    desc: "ChatBox, gelen mesajları analiz ederek hızlı cevap önerileri sunar. Zaman kazanın, iletişimi hızlandırın."
-  },
-  {
-    title: "Topluluk Alanları",
-    icon: "/icons/group.png",
-    desc: "Her ekip ve konu için ayrı sohbet odaları. Gelişmiş rol ve yetkilendirme."
+    icon: "/icons/conversation.png",
+    desc: "ChatBox, mesajları analiz ederek anında yanıt önerileri sunar. Hiçbir sohbeti kaçırmayın."
   },
   {
     title: "Kurumsal Entegrasyon",
-    icon: "/icons/integrate.png",
-    desc: "Slack, Teams, Asana ve Google Drive entegrasyonları ile iş akışınızı merkezileştirin."
+    icon: "/icons/live-chat.png",
+    desc: "Bir çok işletim sistemi ile tam uyumlu! Dosya ve toplantı entegrasyonu."
+  },
+  {
+    title: "Rol & Erişim Yönetimi",
+    icon: "/icons/roles.png",
+    desc: "Her seviyeden çalışan için ayrı ayrı yetkilendirme, şifreli arşiv ve detaylı raporlar."
   }
 ];
 
 const mustKnows = [
-  "ChatBox, tüm ekiplerin mesajlaşma deneyimini modernleştirir.",
-  "Premium mod ile sohbetlerinizi kişiselleştirin.",
-  "Mesajlarınızı 2 yıl boyunca otomatik arşivleyin.",
-  "Sınırsız dosya, resim ve bağlantı paylaşımı.",
-  "Masaüstü ve tarayıcıdan anında erişim."
+  "ChatBox ile tüm ekibinizle gerçek zamanlı iletişim kurun.",
+  "Premium üyelik ile sınırsız sohbet ve dosya transferi.",
+  "Mesajlarınızı 2 yıl boyunca otomatik yedekleyin.",
+  "Masaüstü, web ve mobil uyumlu erişim.",
+  "KVKK ve GDPR uyumlu arşivleme."
 ];
 
 const fakeClients = [
-  "/clients/brand1.png", "/clients/brand2.png", "/clients/brand3.png", "/clients/brand4.png"
+  "/avatars/avatar12.png", "/avatars/avatar5.png", "/avatars/avatar8.png", "/avatars/avatar11.png"
 ];
 
-const ChatAppDownloadPhish = () => {
-  const { updateAvailableStatus } = useWindowConfig();
+const ChatAppF = () => {
+  const { addVirus } = useVirusContext();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const intervalRef = useRef(null);
+  const failQuest = useQuestManager();
+
+  const [cancelled, setCancelled] = useState(false);
 
   const startDownload = () => {
+    setCancelled(false);
     setDownloading(true);
     setProgress(0);
+
     intervalRef.current = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
           setShowPopup(true);
-          updateAvailableStatus("chatappf", { available: true });
-          setTimeout(() => setShowPopup(false), 2200);
-          setDownloading(false);
+
+          // 2sn sonra popup kapanacak VE sadece iptal edilmediyse virüs eklenecek
+          setTimeout(() => {
+            setShowPopup(false);
+            setDownloading(false);
+
+            if (!cancelled) {
+              addVirus({ type: "credential-stealer", source: "chatappf.exe" });
+              failQuest("download_chatapp");
+            }
+          }, 2000);
+
           return 100;
         }
-        return Math.min(prev + Math.floor(Math.random() * 7) + 4, 100);
+        return Math.min(prev + Math.floor(Math.random() * 6) + 4, 100);
       });
-    }, 150);
+    }, 130);
+  };
+
+  const cancelDownload = () => {
+    setCancelled(true);
+    setDownloading(false);
+    setProgress(0);
+    setShowPopup(false);
+    clearInterval(intervalRef.current);
   };
 
   return (
     <div className={styles.downloadContainer}>
       <header className={styles.header}>
-        <img src="/icons/speak.png" alt="ChatBox Pro" className={styles.logo} />
+        <img src="/icons/chatting.png" alt="ChatBox" className={styles.logo} />
         <div>
-          <h1>ChatBox Pro</h1>
-          <span className={styles.slogan}>Mesajlaşmanın geleceği: Güvenli. Akıllı. Kolay.</span>
+          <h1>ChatBox <span style={{color:"#e36a9d"}}></span></h1>
+          <span className={styles.slogan}>Kurumsal iletişimin yeni nesil güvencesi.</span>
         </div>
       </header>
 
       <section className={styles.heroSection}>
         <div className={styles.leftColumn}>
           <div className={styles.statsRow}>
-            <span><b>10.000+</b> aktif ekip</span>
-            <span><b>9M+</b> mesaj</span>
-            <span><b>120+</b> ülke</span>
+            <span><b>11.000+</b> aktif kurum</span>
+            <span><b>15M+</b> mesaj</span>
+            <span><b>134</b> ülke</span>
           </div>
           <div className={styles.downloadBox}>
-            <p className={styles.downloadTitle}>ChatBox Pro'yu Ücretsiz İndir</p>
+            <p className={styles.downloadTitle}>ChatBox'ı Şimdi İndir</p>
             <button
               className={styles.downloadButton}
               onClick={startDownload}
               disabled={downloading}
             >
               <img src="/icons/downloading.png" alt="indir" />
-              Windows İçin ChatBoxProSetup.exe
+              ChatBox_Setup.exe
             </button>
             {downloading &&
-              <div className={styles.progressBar}>
-                <div className={styles.progressFill} style={{ width: `${progress}%` }} />
-                <span className={styles.progressText}>{progress}%</span>
+              <div>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: `${progress}%` }} />
+                  <span className={styles.progressText}>{progress}%</span>
+                </div>
+                <button className={styles.cancelButton} onClick={cancelDownload}>
+                  İptal Et
+                </button>
               </div>
             }
             {showPopup && (
               <div className={styles.popup}>
-                Kurulum dosyası indirildi! <b>ChatBox Pro'yu hemen kurun.</b>
+                Kurulum dosyası indirildi! <b>Hemen kuruluma başlayın.</b>
               </div>
             )}
-            <div className={styles.legalText}>Kurulum ile lisans ve KVKK koşullarını kabul etmiş olursunuz.</div>
+            <div className={styles.legalText}>Kurulum ile tüm sözleşme ve veri politikalarını kabul etmiş sayılırsınız.</div>
           </div>
           <div className={styles.mustKnows}>
             <h3>Bilmeniz Gerekenler</h3>
@@ -105,7 +134,8 @@ const ChatAppDownloadPhish = () => {
           </div>
         </div>
         <div className={styles.rightColumn}>
-          <img src="/chatbox/preview.png" alt="ChatBox Sohbet Ekranı" className={styles.appPreview} />
+          Her yerde, herkesle güvenli iletişim. ChatBox ekiplerinizi buluşturur, işlerinizi hızlandırır ve bulutta şifreli tutar.
+          <img src="/icons/group-discussion.png" alt="ChatBox Sohbet" className={styles.appPreview} />
           <div className={styles.clientsRow}>
             {fakeClients.map((logo, i) => (
               <img key={i} src={logo} alt="Kurumsal Müşteri" />
@@ -123,30 +153,25 @@ const ChatAppDownloadPhish = () => {
           </div>
         ))}
       </section>
-
+      <span className={styles.phishHint}>Bu sayfa ChatBox'ın resmi sitesi değildir.</span>
       <section className={styles.securitySection}>
         <h2>Veri Güvenliği & Altyapı</h2>
         <ul>
-          <li>Aktif kimlik doğrulama ve MFA (Multi Factor Auth)</li>
-          <li>Yerleşik virüs koruması & dosya tarama altyapısı</li>
-          <li>Verileriniz Avrupa’daki ISO 27001 sertifikalı sunucularda saklanır</li>
-          <li>Her ay bağımsız güvenlik denetimi</li>
-          <li>Silinen sohbetler 48 saat içinde kurtarılabilir</li>
+          <li>Çok katmanlı kimlik doğrulama ve MFA (Multi Factor Auth)</li>
+          <li>Dosya yüklemelerinde gelişmiş virüs taraması</li>
+          <li>Verileriniz sadece Avrupa merkezli ISO 27001 sertifikalı sunucularda tutulur</li>
+          <li>Düzenli dış bağımsız güvenlik denetimi</li>
+          <li>Silinen sohbetler 72 saat içinde kurtarılabilir</li>
         </ul>
       </section>
 
       <footer className={styles.footer}>
-        <div className={styles.storesRow}>
-          <img src="/stores/windows.svg" alt="Windows" />
-          <img src="/stores/apple.svg" alt="Mac" />
-          <img src="/stores/linux.svg" alt="Linux" />
-        </div>
         <p>
-          © 2025 ChatBox Ltd. | <a href="/privacy">Gizlilik & Kullanım Koşulları</a>
+          © 2025 ChatBox Ltd. | <span className={styles.footerSpan}>Kullanım & Gizlilik Sözleşmesi</span>
         </p>
       </footer>
     </div>
   );
 };
 
-export default ChatAppDownloadPhish;
+export default ChatAppF;

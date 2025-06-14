@@ -167,7 +167,6 @@ const getRelativeTime = (timestamp) => {
   return `${Math.floor(diff / 86400)} gün önce`;
 };
 
-
 const Postify = () => {
   const { PostifyInfo, setPostifyInfo } = useGameContext();
 
@@ -181,6 +180,7 @@ const Postify = () => {
   const [showMessages, setShowMessages] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState("");
+  const [error, setError] = useState("");
   
   const [posts, setPosts] = useState(initialPosts);
   const [likes, setLikes] = useState(() => {
@@ -193,6 +193,14 @@ const Postify = () => {
     });
     return initial;
   });
+
+  
+  const showTemporaryError = (msg) => {
+    setError(msg);
+    setTimeout(() => {
+      showTemporaryError("");
+    }, 2000);
+  };
 
   const [newPostContent, setNewPostContent] = useState('');
   const [timestamps, setTimestamps] = useState({});
@@ -289,6 +297,11 @@ const Postify = () => {
 const handlePasswordUpdate = () => {
       if (!newPassword) return;
   
+      if (newPassword.length < 4) {
+          showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+          return;
+      }
+
       const strong = isPasswordStrongEnough(newPassword);
       setPostifyInfo({
         ...PostifyInfo,
@@ -323,7 +336,13 @@ const handlePasswordUpdate = () => {
                   {PostifyInfo.isLoggedIn && showUserMenu && (
                     <div className={styles.userPanel}>
                       <p className={styles.userName}>👤 {PostifyInfo.name}</p>
-                      <button className={styles.settingsButton} onClick={() => setShowSettings(!showSettings)}>⚙ Ayarlar</button>
+                      <button className={styles.settingsButton} 
+                      onClick={() => {
+                        setShowSettings(true);
+                        setShowUserMenu(false);
+                      }}>
+                        ⚙ Ayarlar
+                      </button>
                       <button className={styles.logoutButton} onClick={handleLogout}>Çıkış Yap</button>
                     </div>
                   )}
@@ -344,6 +363,17 @@ const handlePasswordUpdate = () => {
             <p>📱 Telefon Numarası:</p>
             <input type="text" value={PostifyInfo.phone} disabled />
 
+            <p>🔒 Hesap Gizliliği (Hesabın kimlere açık?):</p>
+            <select
+              value={PostifyInfo.accountPrivacy}
+              onChange={e => setPostifyInfo({ ...PostifyInfo, accountPrivacy: e.target.value })}
+              className={styles.privacyDropdown}
+            >
+              <option value="Herkese Açık">🌐 Herkese Açık</option>
+              <option value="Sadece Bağlantılarım">👥 Sadece Bağlantılarım</option>
+              <option value="Gizli">🔒 Gizli</option>
+            </select>
+
             <div>
               <p>🔐 Parola Güncelle:</p>
               <input
@@ -353,6 +383,7 @@ const handlePasswordUpdate = () => {
                 onChange={(e) => setNewPassword(e.target.value)}
               />
               {successPassword && <p className={styles.successMessage}>{successPassword}</p>}
+              {error && <p className={styles.errorMessage}>{error}</p>}
 
               <button onClick={handlePasswordUpdate}>Güncelle</button>
               <p>📢 Bildirimler: <button>Değiştir</button></p>

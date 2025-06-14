@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFileContext } from "../../Contexts/FileContext";
 import { useGameContext } from "../../Contexts/GameContext";
 import styles from "./OpenDrop.module.css";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const generateLink = (label) =>
   "https://opendrop.com/file/" +
@@ -10,9 +11,15 @@ const generateLink = (label) =>
 
 const OpenDrop = () => {
   const { files } = useFileContext();
-  const personalFiles = Object.values(files).filter(f => f.location === "personal");
-
+  const { failQuest } = useQuestManager();
+  const [allBackedUpFiles, setAllBackedUpFiles] = useState([]);
+  const allBackedUpLabels = (allBackedUpFiles ?? []).map(file => file.label);
   const { openDropPublicFiles, setOpenDropPublicFiles } = useGameContext();
+
+  const downloadsFiles = Object.values(files).filter(
+    f => f.location === "downloads" && ["doc", "pdf", "txt", "jpg"].includes(f.type) &&
+    !allBackedUpLabels.includes(f.label)
+  );
 
   const [showModal, setShowModal] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -25,7 +32,7 @@ const OpenDrop = () => {
   const handleUploadAll = () => {
     setUploading(true);
     setProgress(0);
-    let step = Math.max(1, Math.floor(100 / (personalFiles.length * 4 + 6)));
+    let step = Math.max(1, Math.floor(100 / (downloadsFiles.length * 4 + 6)));
     let percent = 0;
     const interval = setInterval(() => {
       percent += step;
@@ -34,14 +41,33 @@ const OpenDrop = () => {
         clearInterval(interval);
         setUploading(false);
         setShowModal(false);
+        failQuest("file_backup");
         // Dosyaları public olarak context'e ekle
-        const uploaded = personalFiles.map(f => ({
+        const uploaded = downloadsFiles.map(f => ({
           ...f,
           url: generateLink(f.label),
         }));
+
+        // Bütün yedeklenenleri tut
+        setAllBackedUpFiles(prev => {
+          const prevLabels = prev.map(f => f.label);
+          // Sadece yeni olanları ekle
+          const newUnique = uploaded.filter(f => !prevLabels.includes(f.label));
+          return [...prev, ...newUnique];
+        });
+
         setOpenDropPublicFiles(prev => {
-          const newList = [...uploaded, ...prev];
-          return newList.slice(0, 3); // Sadece son 3 dosyayı tutar
+          const total = [...uploaded, ...prev];
+          // Farklı label’lar, tekrar yok
+          const unique = [];
+          const labels = new Set();
+          for (let f of total) {
+            if (!labels.has(f.label)) {
+              unique.push(f);
+              labels.add(f.label);
+            }
+          }
+          return unique.slice(0, 3); // son 3 (en yeni yüklenenler başta)
         });
         setProgress(0);
       }
@@ -86,16 +112,16 @@ const OpenDrop = () => {
           <div className={styles.folderModal}>
             <div className={styles.folderHeader}>
               <span className={styles.folderIcon}>📁</span>
-              <span className={styles.folderTitle}>Kişisel Dosyalarım</span>
+              <span className={styles.folderTitle}>Dosyalarım</span>
             </div>
             <div className={styles.folderGrid}>
-              {personalFiles.length === 0 ? (
-                <span className={styles.noFile}>Yedeklenecek kişisel dosya yok.</span>
+              {downloadsFiles.length === 0 ? (
+                <span className={styles.noFile}>Yedeklenecek dosya yok.</span>
               ) : (
-                personalFiles.map((f, i) => (
+                downloadsFiles.map((f, i) => (
                   <div key={f.label} className={styles.folderFile}>
                     <div className={styles.bigIcon}>
-                      {f.type === "pdf" ? "📄" : f.type === "jpg" ? "🖼️" : "📁"}
+                      <img src={f.icon} alt="Files"/>
                     </div>
                     <div className={styles.fileMeta}>
                       <span className={styles.fileName}>{f.label}</span>
@@ -105,7 +131,7 @@ const OpenDrop = () => {
                 ))
               )}
             </div>
-            {personalFiles.length > 0 && (
+            {downloadsFiles.length > 0 && (
               <button className={styles.uploadAllBtn} onClick={handleUploadAll} disabled={uploading}>
                 Tümünü Yükle
               </button>
@@ -133,7 +159,7 @@ const OpenDrop = () => {
             : openDropPublicFiles.slice(0, 8).map((file, idx) => (
               <div key={file.url + idx} className={styles.fileCard}>
                 <span className={styles.fileIcon}>
-                  {file.type === "pdf" ? "📄" : file.type === "jpg" ? "🖼️" : "📁"}
+                  <img src={file.icon} alt="Files"/>
                 </span>
                 <span className={styles.fileName}>{file.label}</span>
                 <span className={styles.fileSize}>{file.size}</span>

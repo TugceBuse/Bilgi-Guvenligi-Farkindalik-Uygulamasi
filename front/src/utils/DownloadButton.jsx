@@ -3,11 +3,17 @@ import styles from './DownloadButton.module.css';
 import { useFileContext } from '../Contexts/FileContext';
 import { useGameContext } from '../Contexts/GameContext';
 import { useMailContext } from '../Contexts/MailContext';
+import { useChatContext } from '../Contexts/ChatContext';
+import { useTimeContext } from '../Contexts/TimeContext';
+import { useQuestManager } from '../Contexts/QuestManager';
 
 const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => {
   const { addFile, updateFileStatus, files, openFile } = useFileContext();
   const { isWificonnected } = useGameContext();
   const { selectedMail } = useMailContext();
+  const { addChatMessage, setUserOptions, addUploadTask } = useChatContext();
+  const { gameDate } = useTimeContext();
+  const { completeQuest, failQuest } = useQuestManager();
 
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -60,6 +66,17 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
 
   useEffect(() => {
     if (progress >= 100 && downloading && !cancelled && isActive) {
+
+       // ÖZEL DURUM: sahtefatura dosyasıysa, virüslü olarak ekle
+      if (fileName === "sahtefatura") {
+        updateFileStatus("sahtefatura", {
+          available: true,
+          infected: true,
+          virusType: "ransomwareHash",
+        });
+        failQuest("save_invoice");
+      }
+
       // Dinamik dosya ekle!
       if (!files[fileName]) {
         addFile(fileName, {
@@ -70,7 +87,7 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
           virusType: null,
           type: "pdf",
           size: `${(fileContent?.length || 1024) / 1024}KB`,
-          location: "personal",
+          location: "downloads",
           label: fileLabel || fileName,
           icon: "/icons/pdf.png",
           content: fileContent
@@ -80,6 +97,26 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
       } else {
         updateFileStatus(fileName, { available: true });
       }
+
+      // Eğer Fatura PDF’si indirildiyse
+      if ((fileName?.toLowerCase()?.includes('fatura') || fileLabel?.toLowerCase()?.includes('fatura'))) {
+        addUploadTask({
+          userId: 3,
+          allowedTypes: ["pdf"],
+          filterLabelContains: "fatura",
+          buttonText: "Fatura Yükle"
+        });
+        completeQuest("save_invoice");
+        addChatMessage(3, {
+          sender: "them",
+          text: "Merhaba, fatura belgenizi dosya olarak bize iletir misiniz? İnceleme için yükleme alanını kullanabilirsiniz.",
+          senderName: "Satış Departmanı",
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+          requestInvoice: true,
+        }, true);
+        setUserOptions(3, []);
+      }
+
       setDownloading(false);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2500);

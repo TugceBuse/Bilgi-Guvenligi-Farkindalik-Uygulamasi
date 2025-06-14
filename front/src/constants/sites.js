@@ -394,7 +394,7 @@ const sites = {
   isSponsored: false,
   seoScore: 10,
 },
-"http://chatbox.com": {
+"https://chatbox.com": {
   title: "ChatBox — Güvenli Mesajlaşma",
   type: "component",
   component: "ChatAppDownloadOfficial",
@@ -410,29 +410,30 @@ const sites = {
     "hızlı sohbet uygulaması"
   ],
   clickable: true,
-  protocol: "http",
+  protocol: "https",
   color: "#ff7846",
   isSponsored: false,
   seoScore: 90
 },
-"http://chatbox-app-download.net": {
-  title: "ChatBox (Phishing Site)",
+"https://chatbox-app-download.net": {
+  title: "ChatBox",
   type: "component",
   component: "ChatAppDownloadPhish",
-  statement: "DİKKAT: Bu site gerçek ChatBox değildir. Bilgilerinizi veya cihazınızı riske atabilirsiniz.",
+  statement: "Anında indirin, güvenli iletişim dünyasına katılın! ChatBox: Gerçek zamanlı, hızlı ve şifreli mesajlaşma.",
   searchKeys: [
     "chatbox indir",
+    "ücretsiz chat uygulaması",
+    "güvenli sohbet",
+    "anlık mesajlaşma",
     "chatbox download",
-    "ücretsiz chat indir",
-    "güvenli sohbet indir",
-    "chatbox setup",
-    "anlık mesaj indir",
-    "bedava chat uygulaması"
+    "whatsapp alternatifi",
+    "güvenli sohbet programı",
+    "hızlı sohbet uygulaması"
   ],
   clickable: true,
   protocol: "https",
-  color: "#6c213c",
-  isSponsored: false,
+  color: "#ff7846",
+  isSponsored: true,
   seoScore: 7
 },
 

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { useNotificationContext } from "./NotificationContext";
 import { useUIContext } from './UIContext';
+import { useWindowConfig } from "./WindowConfigContext";
 
 const ChatContext = createContext();
 
@@ -18,6 +19,31 @@ export const ChatContextProvider = ({ children }) => {
   const [cargoStepShared, setCargoStepShared] = useState({});
   const { addNotification, removeNotification } = useNotificationContext();
   const { openWindow } = useUIContext();
+  const { windowConfig } = useWindowConfig();
+
+  const [uploadTasks, setUploadTasks] = useState([]);
+
+  // Görev ekleme (tekrarlı eklemez)
+  const addUploadTask = (task) => {
+    setUploadTasks(prev =>
+      prev.some(t =>
+        t.userId === task.userId &&
+        t.allowedTypes?.join(',') === task.allowedTypes?.join(',') &&
+        t.filterLabelContains === task.filterLabelContains
+      )
+        ? prev
+        : [...prev, { ...task, completed: false }]
+    );
+  };
+
+  // Görev tamamlandığında
+  const markUploadTaskCompleted = (userId, filter) => {
+    setUploadTasks(prev => prev.map(t =>
+      t.userId === userId && (!filter || t.filterLabelContains === filter)
+        ? { ...t, completed: true }
+        : t
+    ));
+  };
 
   const addUser = (user) => setUsers(prev => [...prev, user]);
 
@@ -36,33 +62,35 @@ export const ChatContextProvider = ({ children }) => {
           : prev
     );
     // Bildirim tetikle
-    if (notify && msg.sender === "them") {
-      
-    const notificationId = (Date.now() + Math.random());
-    console.log("CHAT POPUP TETİKLENDİ", msg, notificationId);
-    addNotification({
-      id: notificationId,
-      type: "info",
-      appType: "chatapp",
-      title: msg.senderName || "IT Destek",
-      message: msg.text,
-      icon: "/icons/user (2).png",
-      isPopup: true, // Bunu MUTLAKA true ver
-      isTaskbar: true,
-      duration: 7000,
-      actions: [
-        {
-          label: "Sohbete Git",
-          onClick: () => openWindow('chatapp')
-        },
-        {
-          label: "Bildirimden Kaldır",
-          onClick: () => removeNotification(notificationId)
-        }
-      ],
-      appData: { userId }
-    });
-  }
+    if( notify &&
+        msg.sender === "them" &&
+        windowConfig?.chatapp?.available === true) 
+    { 
+      const notificationId = (Date.now() + Math.random());
+      console.log("CHAT POPUP TETİKLENDİ", msg, notificationId);
+      addNotification({
+        id: notificationId,
+        type: "info",
+        appType: "chatapp",
+        title: msg.senderName || "IT Destek",
+        message: msg.text,
+        icon: "/icons/user (2).png",
+        isPopup: true, // Bunu MUTLAKA true ver
+        isTaskbar: true,
+        duration: 7000,
+        actions: [
+          {
+            label: "Sohbete Git",
+            onClick: () => openWindow('chatapp', { userId })
+          },
+          {
+            label: "Bildirimden Kaldır",
+            onClick: () => removeNotification(notificationId)
+          }
+        ],
+        appData: { userId }
+      });
+    }
   };
   
   // Örnek mesaj ekleme, eğer kişi yoksa ekler
@@ -87,7 +115,8 @@ export const ChatContextProvider = ({ children }) => {
       messages, addChatMessage,
       options, setUserOptions,
       cargoStepShared, setCargoStepShared,
-      users, addUser, setUsers
+      users, addUser, setUsers,
+      uploadTasks, addUploadTask, markUploadTaskCompleted,
     }}>
       {children}
     </ChatContext.Provider>

@@ -3,12 +3,15 @@ import { useMailContext } from './MailContext';
 import { statusSteps } from '../utils/cargoStatus';
 import { useTimeContext } from './TimeContext'; // 🆕
 import { useSecurityContext } from './SecurityContext';
+import { useQuestManager } from './QuestManager'; // 🆕
 
 const GameContext = createContext();
 
 export const GameContextProvider = ({ children }) => {
   // Zaman artık TimeContext'ten alınacak!
-  const { seconds, secondsRef, gameStart, getRelativeDate } = useTimeContext();
+  const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
+  const { sendMail } = useMailContext();
+  const { failQuest } = useQuestManager(); // 🆕
 
   // --- Mevcut State'ler ---
   const {isWificonnected, setIsWificonnected} = useSecurityContext()
@@ -32,6 +35,12 @@ export const GameContextProvider = ({ children }) => {
     cardExpiryDate: '05/26',
     cardCVV: '123',
   };
+
+  useEffect(() => {
+    if (parseFloat(cardBalance) < 4979) {
+      failQuest("buy_printer");
+    }
+  }, [cardBalance]);
 
   const [ProCareerHubInfo, setProCareerHubInfo] = useState({
     name: '',
@@ -69,6 +78,7 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
+    accountPrivacy: "Herkese Açık", 
     privacySettings: "Herkese Açık",
     userPosts: [], 
     likedPosts: [],
@@ -162,9 +172,15 @@ export const GameContextProvider = ({ children }) => {
 
   // CloudBox
   const [cloudUser, setCloudUser] = useState({
-    email: "",
-    password: "",
-    isLoggedIn: false
+    name: '',     
+    surname: '',  
+    email: constUser.email,   
+    password: '',  
+    isRegistered: false,
+    isLoggedIn: false,   
+    isPasswordStrong: false,
+    lockoutUntil: null, 
+    loginAttempts: 0    
   });
   const [cloudBoxBackup, setCloudBoxBackup] = useState({
     files: [],
@@ -173,8 +189,8 @@ export const GameContextProvider = ({ children }) => {
   });
 
   const [openDropPublicFiles, setOpenDropPublicFiles] = useState([
-    { label: "YeniÇıkanlar2025.pdf", type: "pdf", size: "2.1 MB", url: "https://opendrop.com/file/yenicikanlar2025ab2x" },
-    { label: "EtkinlikPosteri.jpg", type: "jpg", size: "1.4 MB", url: "https://opendrop.com/file/etkinlikposteri9sd7" }
+    { label: "YeniÇıkanlar2025.pdf", type: "pdf", size: "2.1 MB", icon: "/icons/pdf.png", url: "https://opendrop.com/file/yenicikanlar2025ab2x" },
+    { label: "EtkinlikPosteri.jpg", type: "jpg", size: "1.4 MB", icon: "/icons/gallery.png", url: "https://opendrop.com/file/etkinlikposteri9sd7" }
   ]);
 
   // --- Kargo takibi için zaman bazlı adım güncelleyici (TimeContext ile) ---
@@ -199,6 +215,65 @@ export const GameContextProvider = ({ children }) => {
     );
   }, [seconds]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOrders(prevOrders =>
+        prevOrders.map(order => {
+          if (!order.orderPlacedSeconds) return order;
+          const elapsed = (secondsRef.current || 0) - order.orderPlacedSeconds;
+          let newStatus = order.status || 0;
+          if (elapsed >= 60 && order.status < 2) newStatus = 2;
+          else if (elapsed >= 15 && order.status < 1) newStatus = 1;
+          if (order.status !== newStatus) {
+            return { ...order, status: newStatus };
+          }
+          return order;
+        })
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [secondsRef]);
+
+  useEffect(() => {
+    orders.forEach(order => {
+      if (
+        order.status === 2 &&
+        !order.cargoMailSent
+      ) {
+        sendMail("cargo", {
+          name: `${TechInfo.name} ${TechInfo.surname}`,
+          productName: order.items.map(item => item.name).join(", "),
+          trackingNo: order.trackingNo,
+          shippingCompany: order.shipping,
+          orderNo: order.id,
+          from: "info@" + (order.shipping || "cargo") + ".com",
+          title: (order.shipping || "") + " Kargo Takip",
+          precontent: `${order.shipping} ile gönderiniz yola çıktı!`,
+          isFake: false
+        });
+
+        setOrders(prevOrders =>
+          prevOrders.map(o =>
+            o.id === order.id ? { ...o, cargoMailSent: true } : o
+          )
+        );
+
+        if (typeof addCargoTracking === "function" && !order.cargoTrackingStarted) {
+          addCargoTracking({
+            trackingNo: order.trackingNo,
+            shippingCompany: order.shipping,
+            startSeconds: order.orderPlacedSeconds + 60
+          });
+          setOrders(prevOrders =>
+            prevOrders.map(o =>
+              o.id === order.id ? { ...o, cargoTrackingStarted: true } : o
+            )
+          );
+        }
+      }
+    });
+  }, [orders, sendMail, TechInfo, addCargoTracking, setOrders]);
+
   // Wifi bağlanınca ilk mailleri gönder (kendi fonksiyonunu bozmadan)
   useEffect(() => {
       addMailToMailbox('inbox', 5);
@@ -207,8 +282,8 @@ export const GameContextProvider = ({ children }) => {
       addMailToMailbox('spam', 31);
       addMailToMailbox('spam', 32);
       const timeoutId = setTimeout(() => {
-        addMailToMailbox('inbox', 3);
-      }, 180000);
+        addMailToMailbox('inbox', 3, getDateFromseconds(secondsRef.current + 1));
+      }, 60000);
       return () => clearTimeout(timeoutId);
   }, []);
 

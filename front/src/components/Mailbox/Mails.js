@@ -122,7 +122,13 @@ import DownloadButton from '../../utils/DownloadButton';
 
     // Sahte ve gerçek buton ayrımı
     const faturaButton = isFake
-      ? <button className="claim-button" title={fakeOptions.fakePdfLink || "http://teehdeppo-billing.com/download/fatura-2025.zip"}>🧾 Faturayı PDF Olarak İndir</button>
+      ? <DownloadButton
+          label="🧾 Faturayı PDF olarak indir"
+          fileName="sahtefatura"
+          fileLabel="TechDepo Fatura - 764213938402"
+          fileContent={"Sahte fatura verisi..."}
+          mailId={mailId}
+        />
       : <DownloadButton
           label="🧾 Faturayı PDF olarak indir"
           fileName={fileName}
@@ -139,12 +145,7 @@ import DownloadButton from '../../utils/DownloadButton';
           🧾 <b>Fatura Numarası:</b> {fakeInvoiceNo}<br/>
           📦 <b>Sipariş No:</b> {orderNo}<br/>
           📅 <b>Tarih:</b> {new Date().toLocaleDateString()}<br/><br/>
-          <b>Fatura Detayı:</b><br/>
-          ───────────────────────────────<br/>
-          🔹 {productName}      {price} TL<br/>
-          🔸 KDV (%20)           {tax} TL<br/>
-          <b>Genel Toplam:</b>   <b>{total} TL</b><br/>
-          ───────────────────────────────<br/><br/>
+          
           {/* Fatura indirme veya açma butonu */}
           {faturaButton}
           <br/>Bu belge elektronik ortamda düzenlenmiştir.<br/><br/>

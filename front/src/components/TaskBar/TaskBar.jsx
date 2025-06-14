@@ -10,6 +10,7 @@ import SystemSettings from '../SystemSettings/SystemSettings';
 import { useNotificationContext } from '../../Contexts/NotificationContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
 import { useSecurityContext } from '../../Contexts/SecurityContext';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 const TaskBar = ({ windowConfig, hacked, onFormat }) => {
   const [showStartMenu, setShowStartMenu] = useState(false);
@@ -27,6 +28,8 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
   const pass = "1234";
   const navigate = useNavigate();
   const { gameDate } = useTimeContext();
+
+  const { completeQuest } = useQuestManager();
 
   const {
     isWificonnected, setIsWificonnected
@@ -96,6 +99,8 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
     } else {
       setIsWificonnected(true);
       setWifiname(wifiName);
+      completeQuest("connect_wifi");
+      completeQuest("login_mailbox");
     }
   };
 
@@ -199,7 +204,7 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
     } else if (notif.appType === "phone") {
       handleOpenPhoneNotification(notif);
     } else if (notif.appType === "chatapp") {
-      openWindow('chatapp');
+      openWindow('chatapp', { userId: notif.appData?.userId });
       removeNotification(notif.id);
       setShowNotifications(false);
     } else {
@@ -298,10 +303,6 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
           <div className="start-menu-container">
             {!hacked && (
               <>
-                <div className="start-menu-item">
-                  <img src="/icons/synchronize.png" alt="Synchronize Icon" />
-                  <p style={{ marginLeft: -12 }}>Yedekle</p>
-                </div>
                 <div className="start-menu-item"
                   onClick={() => setShowSystemSettings(true)}
                 >
@@ -423,7 +424,7 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
                          <strong>
                           <div style={{ display: "flex", gap: 10, alignItems: "center", position: "relative" }}>
                             <img style={{ width: 30, height: 30 }} src={notif.icon} alt="Notification Icon" />
-                            {notif.title}
+                            <p className='notif-title'>{notif.title}</p>
                             <p
                               className='mail-notification-close'
                               onClick={e => { e.stopPropagation(); removeNotification(notif.id); }}

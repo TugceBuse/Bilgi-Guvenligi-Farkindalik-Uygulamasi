@@ -6,6 +6,8 @@ import { useGameContext } from '../../Contexts/GameContext';
 import { statusSteps } from '../../utils/cargoStatus';
 import { useChatContext } from '../../Contexts/ChatContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
+import FileUploadButton from './FileUploadButton';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 export const useChatApp = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -20,7 +22,11 @@ const ChatApp = ({ closeHandler, style }) => {
   MakeDraggable(chatAppRef, `.${styles.chatHeader}`);
 
   const { cargoTrackingList, orders, cargoTrackingSiteVisited } = useGameContext();
+  const { completeQuest } = useQuestManager();
+  const { windowProps } = useUIContext();
+  const chatProps = windowProps?.chatapp || {};
   const { gameDate } = useTimeContext();
+
   const printerOrder = orders.find(order =>
     order.items.some(item => item.id === 15)
   );
@@ -35,11 +41,26 @@ const ChatApp = ({ closeHandler, style }) => {
     users.length > 0 ? users[0] : null
   );
 
+  const { uploadTasks, markUploadTaskCompleted } = useChatContext();
+
+  const activeUploadTask = uploadTasks.find(
+    t => t.userId === selectedUser?.id && !t.completed
+  );
   // Yeni user eklenirse, varsayılan seçimi güncelle
   useEffect(() => {
     if (selectedUser) return;
     if (users.length > 0) setSelectedUser(users[0]);
   }, [users, selectedUser]);
+
+  // Gelen bildirim pop-up ından chatapp açılırsa ilgili sohbeti aç
+  useEffect(() => {
+    if (chatProps.userId && users.length > 0) {
+      const targetUser = users.find(u => u.id === chatProps.userId);
+      if (targetUser) {
+        setSelectedUser(targetUser);
+      }
+    }
+  }, [chatProps.userId, users]);
 
   // Kargo adım butonlarını sadece flag'e bakarak ekle
   useEffect(() => {
@@ -93,6 +114,7 @@ const ChatApp = ({ closeHandler, style }) => {
         ...prev,
         [trackingNo]: true 
       }));
+      completeQuest("share_cargo_status");
       setTimeout(() => {
         addChatMessage(selectedUser.id, {
           sender: "them",
@@ -192,6 +214,32 @@ const ChatApp = ({ closeHandler, style }) => {
           </div>
         </div>
       </div>
+      <FileUploadButton
+      visible={!!activeUploadTask}
+      allowedTypes={activeUploadTask?.allowedTypes}
+      filterLabelContains={activeUploadTask?.filterLabelContains}
+      buttonText={activeUploadTask?.buttonText || "Dosya Yükle"}
+      onFileSend={file => {
+        addChatMessage(selectedUser.id, {
+          sender: "me",
+          text: `${file.label} (PDF) gönderildi.`,
+          time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+          uploadedInvoice: true,
+          fileName: file.label
+        });
+        completeQuest("share_invoice");
+        setTimeout(() => {
+          addChatMessage(selectedUser.id, {
+            sender: "them",
+            senderName: selectedUser.name || "Satış Departmanı",
+            text: "Teşekkürler, fatura belgesi başarıyla alındı! ✅",
+            time: gameDate.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+          });
+          setUserOptions(selectedUser.id, []);
+          markUploadTaskCompleted(selectedUser.id, activeUploadTask?.filterLabelContains);
+        }, 1000);
+      }}
+    />
     </div>
   );
 };

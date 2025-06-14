@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { use } from 'react';
 
 const VirusContext = createContext();
 
@@ -33,6 +34,11 @@ export const VirusProvider = ({ children }) => {
     };
     const removeAllViruses = () => setViruses([]);
 
+   
+    useEffect(() => {
+        console.log("Virüsler güncellendi:", viruses);
+    }, [viruses]);
+    
     return (
         <VirusContext.Provider value={{
             viruses,

@@ -6,6 +6,7 @@ import { useMailContext } from '../../Contexts/MailContext';
 import { useChatContext } from '../../Contexts/ChatContext';
 import { statusSteps } from "../../utils/cargoStatus";
 import { useTimeContext } from "../../Contexts/TimeContext";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const cards = [
   {
@@ -219,6 +220,7 @@ const TechDepo = ({scrollRef}) => {
   const { TechInfo, setTechInfo, cardBalance, setCardBalance, orders, setOrders, cargoTrackingList, addCargoTracking, secondsRef } = useGameContext();
   const { gameDate } = useTimeContext();
   const { sendMail } = useMailContext();
+  const { completeQuest } = useQuestManager();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -264,7 +266,7 @@ const TechDepo = ({scrollRef}) => {
         setName("");
         setSurname("");
         setPassword("");
-        setErrorMessage("");
+        showTemporaryError("");
     } 
   }, [TechInfo.isLoggedIn]);
 
@@ -350,7 +352,7 @@ const TechDepo = ({scrollRef}) => {
   const showTemporaryError = (msg) => {
     setErrorMessage(msg);
     setTimeout(() => {
-      setErrorMessage("");
+      showTemporaryError("");
     }, 2000);
   };
 
@@ -362,12 +364,6 @@ const TechDepo = ({scrollRef}) => {
   };
 
   const handleAuth = () => {
-    const showError = (message) => {
-      setErrorMessage(message);
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 3000); 
-    };
   
     if (!isLogin) {
       if (TechInfo.isRegistered && TechInfo.email === email) {
@@ -379,6 +375,11 @@ const TechDepo = ({scrollRef}) => {
         return;
       }
   
+      if (password.length < 4) {
+        showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+        return;
+      }
+
       setTechInfo({
         ...TechInfo,
         name,
@@ -390,7 +391,7 @@ const TechDepo = ({scrollRef}) => {
         isLoggedIn: true,
         isPasswordStrong: passwordStrong,
       });
-      setErrorMessage("");
+      showTemporaryError("");
     } else {
       if (!TechInfo.isRegistered || TechInfo.email !== email) {
         showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
@@ -412,7 +413,7 @@ const TechDepo = ({scrollRef}) => {
         ...TechInfo,
         isLoggedIn: true,
       });
-      setErrorMessage("");
+      showTemporaryError("");
     }
   
     setPage("welcome");
@@ -444,7 +445,7 @@ const TechDepo = ({scrollRef}) => {
     setName("");
     setSurname("");
     setPassword("");
-    setErrorMessage("");
+    showTemporaryError("");
   };
 
   // Sepete ekleme bildirimi ve ödeme bildirimi için state
@@ -555,127 +556,80 @@ const TechDepo = ({scrollRef}) => {
     }
   }, [errors]);
 
-   // Sipariş ve mail ilerleme mantığı 
-  useEffect(() => {
-    setOrders(prevOrders =>
-      prevOrders.map(order => {
-        if (!order.orderPlacedSeconds) return order;
-        const elapsed = secondsRef.current - order.orderPlacedSeconds;
-        let newStatus = order.status || 0;
-        if (elapsed >= 60 && order.status < 2) newStatus = 2;
-        else if (elapsed >= 15 && order.status < 1) newStatus = 1;
-        // Flag'lı mail tetikleyici:
-        let updated = { ...order };
+//   // Order Status Güncelleyici
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setOrders(prevOrders =>
+//         prevOrders.map(order => {
+//           if (!order.orderPlacedSeconds) return order;
+//           const elapsed = (secondsRef.current || 0) - order.orderPlacedSeconds;
+//           let newStatus = order.status || 0;
+//           if (elapsed >= 60 && order.status < 2) newStatus = 2;
+//           else if (elapsed >= 15 && order.status < 1) newStatus = 1;
+//           if (order.status !== newStatus) {
+//             return { ...order, status: newStatus };
+//           }
+//           return order;
+//         })
+//       );
+//     }, 1000);
 
-        // --- Status ilerlemesi için ayrı kontrol ---
-        if (order.status !== newStatus) {
-          updated.status = newStatus;
-        }
+//     return () => clearInterval(interval);
+//   }, [setOrders, secondsRef]);
 
-        // Fatura maili
-        if (elapsed >= 20 && !order.invoiceMailSent) {
-          sendMail("invoice", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
-            invoiceNo: "TD-2025-" + Date.now(),
-            orderNo: order.id,
-            price: order.total,
-            company: "TechDepo",
-            tax: (order.total * 0.20).toFixed(2),
-            total: order.total,
-            from: "faturalar@techdepo.com",
-            title: "TechDepo - Satın Alma Faturanız",
-            precontent: "Fatura ektedir.",
-            isFake: false,
-          });
-          updated.invoiceMailSent = true;
-        }
-        // Sahte fatura maili
-        if (elapsed >= 45 && !order.fakeInvoiceMailSent) {
-          sendMail("invoice", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
-            invoiceNo: "TD-2025-" + Date.now(),
-            orderNo: order.id + "-FAKE",
-            price: order.total,
-            company: "TechDepo",
-            tax: (order.total * 0.20).toFixed(2),
-            total: order.total,
-            from: "e-fatura@teehdeppo-billing.com",
-            title: "E-Arşiv Fatura Belgeniz",
-            precontent: "Şüpheli fatura bildirimi",
-            isFake: true,
-            fakeOptions: {
-              from: "e-fatura@teehdeppo-billing.com",
-              title: "E-Arşiv Fatura Belgeniz",
-              fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
-              precontent: "Şüpheli fatura bildirimi"
-            }
-          });
-          updated.fakeInvoiceMailSent = true;
-        }
-        // Kargo maili
-        if (elapsed >= 60 && !order.cargoMailSent) {
-          sendMail("cargo", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => item.name).join(", "),
-            trackingNo: order.trackingNo,
-            shippingCompany: order.shipping,
-            orderNo: order.id,
-            from: "info@" + (order.shipping || "cargo") + ".com",
-            title: (order.shipping || "") + " Kargo Takip",
-            precontent: `${order.shipping} ile gönderiniz yola çıktı!`,
-            isFake: false
-          });
-          updated.cargoMailSent = true;
 
-          // Kargo takibi başlatıcı
-          if (typeof addCargoTracking === "function" && !order.cargoTrackingStarted) {
-            addCargoTracking({
-              trackingNo: order.trackingNo,
-              shippingCompany: order.shipping,
-              startSeconds: order.orderPlacedSeconds + 60
-            });
-            updated.cargoTrackingStarted = true;
-          }
-        }
-        // Sahte kargo maili
-        if (elapsed >= 80 && !order.fakeCargoMailSent) {
-          sendMail("cargo", {
-            name: `${TechInfo.name} ${TechInfo.surname}`,
-            productName: order.items.map(item => item.name).join(", "),
-            trackingNo: order.trackingNo,
-            shippingCompany: order.shipping,
-            orderNo: order.id + "-FAKE",
-            from: "kargo@cargo-n0va.com",
-            title: "Kargo Takip Bilgilendirme",
-            precontent: "Şüpheli gönderi uyarısı!",
-            isFake: true,
-            fakeOptions: {
-              from: "kargo@cargo-n0va.com",
-              title: "Kargo Takip Bilgilendirme",
-              link: "http://cargo-n0va-support.xyz/tracking",
-              precontent: "Şüpheli gönderi uyarısı!"
-            }
-          });
-          updated.fakeCargoMailSent = true;
-        }
-        // Status güncellendiyse dön, yoksa aynı order'ı döndür
-        if (
-          updated.status !== order.status ||
-          updated.invoiceMailSent !== order.invoiceMailSent ||
-          updated.fakeInvoiceMailSent !== order.fakeInvoiceMailSent ||
-          updated.cargoMailSent !== order.cargoMailSent ||
-          updated.fakeCargoMailSent !== order.fakeCargoMailSent ||
-          updated.cargoTrackingStarted !== order.cargoTrackingStarted
-        ) {
-          return updated;
-        }
-        return order;
-      })
-    );
-  }, [secondsRef.current, sendMail, TechInfo, addCargoTracking, setOrders]);
+//   // Kargo maili gönderimi ve takibi Order Status Güncelleyici ile entegre
+//   useEffect(() => {
+//   orders.forEach(order => {
+//     // Kargo maili henüz gönderilmemişse VE statü 2'ye geçtiyse gönder
+//     if (
+//       order.status === 2 &&
+//       !order.cargoMailSent
+//     ) {
+//       sendMail("cargo", {
+//         name: `${TechInfo.name} ${TechInfo.surname}`,
+//         productName: order.items.map(item => item.name).join(", "),
+//         trackingNo: order.trackingNo,
+//         shippingCompany: order.shipping,
+//         orderNo: order.id,
+//         from: "info@" + (order.shipping || "cargo") + ".com",
+//         title: (order.shipping || "") + " Kargo Takip",
+//         precontent: `${order.shipping} ile gönderiniz yola çıktı!`,
+//         isFake: false
+//       });
 
+//       // Siparişin cargoMailSent flag'ını güncelle
+//       setOrders(prevOrders =>
+//         prevOrders.map(o =>
+//           o.id === order.id ? { ...o, cargoMailSent: true } : o
+//         )
+//       );
+
+//       // Kargo takibi başlatıcı (daha önce vardı, yeniden entegre ediyorum)
+//       if (typeof addCargoTracking === "function" && !order.cargoTrackingStarted) {
+//         addCargoTracking({
+//           trackingNo: order.trackingNo,
+//           shippingCompany: order.shipping,
+//           startSeconds: order.orderPlacedSeconds + 60 // siparişten 1 dk sonra başlat
+//         });
+//         setOrders(prevOrders =>
+//           prevOrders.map(o =>
+//             o.id === order.id ? { ...o, cargoTrackingStarted: true } : o
+//           )
+//         );
+//       }
+//     }
+//   });
+// }, [orders, sendMail, TechInfo, addCargoTracking, setOrders]);
+
+  const generateFakeOrderNo = () => {
+    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ"; // I, O gibi karışabilecek harfleri çıkar
+    const randomLetter = () => letters[Math.floor(Math.random() * letters.length)];
+    const randomDigit = () => Math.floor(Math.random() * 10);
+    
+    // Örnek format: TD9Z4-F73K (rastgele ama düzenli ve anlamlı görünümlü)
+    return `TD${randomDigit()}${randomLetter()}${randomDigit()}-${randomLetter()}${randomDigit()}${randomLetter()}${randomLetter()}`;
+  };
 
   const finalizePayment = () => {
     setCodeTimer(120);
@@ -733,6 +687,62 @@ const TechDepo = ({scrollRef}) => {
       fakeCargoMailSent: false,
       orderPlacedSeconds
     };
+        
+      // Sipariş anında gecikmeli mail gönderimi
+      sendMail("invoice", {
+        name: `${TechInfo.name} ${TechInfo.surname}`,
+        productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
+        invoiceNo: "TD-2025-" + Date.now(),
+        orderNo: newOrder.id,
+        price: newOrder.total,
+        company: "TechDepo",
+        tax: (newOrder.total * 0.20).toFixed(2),
+        total: newOrder.total,
+        from: "faturalar@techdepo.com",
+        title: "TechDepo - Satın Alma Faturanız",
+        precontent: "Faturanız ektedir.",
+        isFake: false,
+      }, { delaySeconds: 20 });
+
+
+     sendMail("invoice", {
+      name: `${TechInfo.name} ${TechInfo.surname}`,
+      productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
+      invoiceNo: "TD-2024-" + Date.now(),
+      orderNo: generateFakeOrderNo(),
+      price: newOrder.total,
+      company: "TechDepo",
+      tax: (newOrder.total * 0.20).toFixed(2),
+      total: newOrder.total,
+      from: "e-fatura@teehdeppo-billing.com",
+      title: "E-Arşiv Fatura Belgeniz",
+      precontent: "Fatura Bildirimi",
+      isFake: true,
+      fakeOptions: {
+        from: "e-fatura@teehdeppo-billing.com",
+        title: "E-Arşiv Fatura Belgeniz",
+        fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
+        precontent: "Fatura Bildirimi"
+      }
+    }, { delaySeconds: 45 });
+
+    sendMail("cargo", {
+      name: `${TechInfo.name} ${TechInfo.surname}`,
+      productName: cards[Math.floor(Math.random() * cards.length)].name + " (1 adet)",
+      trackingNo: newOrder.trackingNo,
+      shippingCompany: newOrder.shipping,
+      orderNo: newOrder.id + "-FAKE",
+      from: "kargo@cargo-n0va.com",
+      title: "Kargo Takip Bilgilendirme",
+      precontent: "Kargoya Verildi!",
+      isFake: true,
+      fakeOptions: {
+        from: "kargo@cargo-n0va.com",
+        title: "Kargo Takip Bilgilendirme",
+        link: "http://cargo-n0va-support.xyz/tracking",
+        precontent: "Kargoya Verildi!"
+      }
+    }, { delaySeconds: 80 });
 
     setOrders(prevOrders => [newOrder, ...prevOrders]);
     setCardBalance(prev => prev - grandTotal);
@@ -757,6 +767,7 @@ const TechDepo = ({scrollRef}) => {
     setTimeout(() => setShowCartNotice(false), 2000);
 
     if (newOrder.items.some(item => item.id === 15)) {
+        completeQuest("buy_printer");
         // Yazıcı satın alımı sonrası...
         addChatMessage(1, {
           sender: 'them',
@@ -836,11 +847,6 @@ const TechDepo = ({scrollRef}) => {
     // Hatalar yoksa işlemi başlat
     setErrors({});
     setIsPaying(true);
-
-    if (is3DWaiting) {
-      finalizePayment(); // anında çalıştır
-      return;
-    }
 
     setTimeout(() => {
       finalizePayment();
@@ -1140,7 +1146,7 @@ const TechDepo = ({scrollRef}) => {
                   } else {
                     setErrorMessage("Öncelikle giriş yapmalısınız!");
                     setTimeout(() => {
-                      setErrorMessage("");
+                      showTemporaryError("");
                     }, 3000); 
                     setPage("login");                      
                   }
@@ -1158,7 +1164,7 @@ const TechDepo = ({scrollRef}) => {
                     } else {
                       setErrorMessage("Öncelikle giriş yapmalısınız!");
                       setTimeout(() => {
-                        setErrorMessage("");
+                        showTemporaryError("");
                       }, 3000); 
                       setPage("login");                      
                     }

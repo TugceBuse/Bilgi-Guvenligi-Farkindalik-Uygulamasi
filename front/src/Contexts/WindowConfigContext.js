@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import Mailbox, { useMailbox } from '../components/Mailbox/Mailbox';
 import Todolist, { useTodoList } from '../components/Todolist/Todolist';
 import Browser, { useBrowser } from '../components/Browser/Browser';
@@ -11,6 +11,7 @@ import PhoneApp, { usePhoneApp } from '../components/PhoneApp/PhoneApp';
 import DocuLiteApp, { useDocuLiteApp } from '../components/DocuLiteApp/DocuLiteApp';
 import QuickPDFViewApp, { useQuickPDFViewApp } from '../components/QuickPDFViewApp/QuickPDFViewApp';
 import OpenLitePDFApp, { useOpenLitePDFApp } from '../components/OpenLitePDFApp/OpenLitePDFApp';
+import { useQuestManager } from './QuestManager';
 
 const WindowConfigContext = createContext();
 
@@ -46,13 +47,13 @@ const initialWindowConfig = {
     requiresInternet: true
   },
   chatapp: {
-    icon: '/icons/speak.png',
+    icon: '/icons/chatting.png',
     label: 'Sohbet',
     component: ChatApp,
     useComponent: useChatApp,
     location: 'desktop',
     clickable: true,
-    available: true,
+    available: false,
     requiresInternet: true
   },
   folder: {
@@ -92,7 +93,7 @@ const initialWindowConfig = {
     useComponent: useNovabankApp,
     location: 'desktop',
     clickable: true,
-    available: true,
+    available: false,
     requiresInternet: true
   },
   phoneapp: {
@@ -141,13 +142,17 @@ export const WindowConfigProvider = ({ children }) => {
   const [windowConfig, setWindowConfig] = useState(initialWindowConfig);
 
   const updateAvailableStatus = (windowName, available) => {
-    setWindowConfig((prevConfig) => ({
-      ...prevConfig,
+    setWindowConfig((prevConfig) => {
+    if (!prevConfig[windowName]) return prevConfig; // Yoksa dokunma
+    const { [windowName]: existingApp, ...rest } = prevConfig;
+    return {
+      ...rest,
       [windowName]: {
-        ...prevConfig[windowName],
-        available,
-      },
-    }));
+        ...existingApp,
+        available: true
+      }
+    };
+  });
   };
 
  const addWindowApp = (appName, appConfig) => {          // ÖRNEK KULLANIM:

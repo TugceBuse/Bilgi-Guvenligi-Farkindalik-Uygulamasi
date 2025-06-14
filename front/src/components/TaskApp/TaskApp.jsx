@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './TaskApp.css';
 import { useGameContext } from '../../Contexts/GameContext';
-import { useTodoContext } from '../../Contexts/TodoContext';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 const TaskApp = () => {
   const { isTaskAppInstalled } = useGameContext();
-  const { todos } = useTodoContext();
+  const { getActiveQuests } = useQuestManager();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [openedDescId, setOpenedDescId] = useState(null);
 
   useEffect(() => {
     if (!isTaskAppInstalled) return;
@@ -16,7 +17,7 @@ const TaskApp = () => {
       if (e.key === 'Tab') {
         e.preventDefault();
         setVisible(true);
-        setClosing(false); // tekrar Tab'a basınca hemen açılır
+        setClosing(false);
       }
     };
 
@@ -40,11 +41,17 @@ const TaskApp = () => {
 
   if (!isTaskAppInstalled || !visible) return null;
 
+  const handleTaskClick = (id) => {
+    setOpenedDescId(prev => (prev === id ? null : id));
+  };
+
+  // Sadece aktif quest'leri al
+  const activeQuests = getActiveQuests();
+
   return (
     <div className={`task-app-container ${closing ? 'closing' : ''}`}>
       <div className="rotated-header">
-        {/* Onclick kaldırıldı sadece taba basılı tutmakla açılıyor */}
-        <button className="slide-close-button" ></button>
+        <button className="slide-close-button"></button>
         TaskApp
       </div>
 
@@ -57,19 +64,30 @@ const TaskApp = () => {
         </div>
 
         <div className="task-app-content">
-          {todos.length > 0 ? (
+          {activeQuests && activeQuests.length > 0 ? (
             <ul className="task-list">
-              {todos.map((task) => (
-                <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
-                  {task.completed && (
-                    <img src="/icons/mission-complete.png" alt="Tamamlandı" className="task-status-icon" />
+              {activeQuests.map((quest) => (
+                <React.Fragment key={quest.id}>
+                  <li
+                    className={`task-item active`}
+                    title={quest.description}
+                    onClick={() => handleTaskClick(quest.id)}
+                    tabIndex={0}
+                  >
+                    <span className="task-status-dot"></span>
+                    <span>{quest.title}</span>
+                    <span className="task-status-label">Aktif</span>
+                  </li>
+                  {openedDescId === quest.id && (
+                    <div className="task-desc-box">
+                      <span>{quest.description}</span>
+                    </div>
                   )}
-                  {task.text}
-                </li>
+                </React.Fragment>
               ))}
             </ul>
           ) : (
-            <p className="no-tasks">Henüz bir görevin yok!</p>
+            <p className="no-tasks">Aktif görevin yok!</p>
           )}
         </div>
       </div>

@@ -12,6 +12,7 @@ import { TodoProvider } from '../../Contexts/TodoContext';
 import { useVirusContext } from '../../Contexts/VirusContext';
 import TaskApp from '../TaskApp/TaskApp';
 import PopupThrower from '../PopupThrower/PopupThrower';
+import RansomwareHash from '../RansomwareHash/RansomwareHash';
 
 
 const Desktop = ({ hacked, onFormat }) => {
@@ -220,8 +221,9 @@ const Desktop = ({ hacked, onFormat }) => {
         handleClose={() => setShowAlert(false)}
         message="Internet bağlantısı bulunamadı"
       />
-      {viruses.some(v => v.type === 'adware') && <PopupThrower/>}
+      {viruses.some(v => v.type === 'adware' || v.type === 'credential-stealer') && <PopupThrower/>}
       {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
+      {viruses.some(v => v.type === 'ransomwareHash') && <RansomwareHash />}
       <TaskApp />
     </div>
   );
