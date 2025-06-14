@@ -122,6 +122,15 @@
   box-shadow: 0 2px 7px #68eeff21;
   transition: background 0.15s;
 }
+.downloadBtn:disabled {
+  background: #bfc5da !important;
+  color: #7b839b !important;
+  cursor: not-allowed !important;
+  opacity: 0.63;
+  filter: grayscale(0.18) blur(0.3px);
+  box-shadow: none;
+}
+
 .downloadBtn:hover {
   background: linear-gradient(90deg, #5a4fff 60%, #2dd5ee 100%);
 }

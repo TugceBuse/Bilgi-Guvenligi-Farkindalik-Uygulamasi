@@ -65,6 +65,25 @@ const CloudBox = () => {
   const [showUpload, setShowUpload] = useState(false);
   const [uploadState, setUploadState] = useState({});
   const errorRef = useRef(null);
+  const [uploadPermissions, setUploadPermissions] = useState({
+    isPublic: false,
+    canDownload: true
+  });
+
+  useEffect(() => {
+    // Eğer paket varsa onun izinlerini göster, yoksa default true olsun
+    if (cloudBoxBackup.packageLink) {
+      setUploadPermissions({
+        isPublic: !!cloudBoxBackup.permissions?.isPublic,
+        canDownload: !!cloudBoxBackup.permissions?.canDownload
+      });
+    } else {
+      setUploadPermissions({
+        isPublic: true,
+        canDownload: true
+      });
+    }
+  }, [cloudBoxBackup.packageLink, cloudBoxBackup.permissions]);
 
    const showTemporaryError = (msg) => {
       setError(msg);
@@ -219,6 +238,7 @@ const CloudBox = () => {
         setCloudBoxBackup({
           files: downloadsFiles,
           packageLink: generatePackageLink(),
+          permissions: uploadPermissions
         });
         completeQuest("file_backup");
         setUploadState({});
@@ -434,16 +454,46 @@ const CloudBox = () => {
               <label>
                 <input
                   type="checkbox"
-                  checked={cloudBoxBackup.permissions.isPublic}
-                  onChange={() => togglePermission("isPublic")}
+                  checked={uploadPermissions.isPublic}
+                  onChange={() => {
+                    const newValue = !uploadPermissions.isPublic;
+                    setUploadPermissions(prev => ({
+                      ...prev,
+                      isPublic: newValue
+                    }));
+                    if (cloudBoxBackup.packageLink) {
+                      setCloudBoxBackup(prev => ({
+                        ...prev,
+                        permissions: {
+                          ...prev.permissions,
+                          isPublic: newValue
+                        }
+                      }));
+                    }
+                  }}
                 />
                 Herkese Açık
               </label>
               <label>
                 <input
                   type="checkbox"
-                  checked={cloudBoxBackup.permissions.canDownload}
-                  onChange={() => togglePermission("canDownload")}
+                  checked={uploadPermissions.canDownload}
+                  onChange={() => {
+                    const newValue = !uploadPermissions.canDownload;
+                    setUploadPermissions(prev => ({
+                      ...prev,
+                      canDownload: newValue
+                    }));
+                    if (cloudBoxBackup.packageLink) {
+                      setCloudBoxBackup(prev => ({
+                        ...prev,
+                        permissions: {
+                          ...prev.permissions,
+                          canDownload: newValue
+                        }
+                      }));
+                    }
+                  }}
                 />
                 İndirilebilir
               </label>
