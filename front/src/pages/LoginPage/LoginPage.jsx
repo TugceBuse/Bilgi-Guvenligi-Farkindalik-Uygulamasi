@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./LoginPage.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../../Contexts/AuthContext";
 import {Icon} from 'react-icons-kit';
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
 import {eye} from "react-icons-kit/feather/eye";
 
 const LoginPage = () => {
+    const location = useLocation();
   const { login, error, clearError } = useAuthContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +19,11 @@ const LoginPage = () => {
 
   useEffect(() => {
     clearError();
-    setLocalError(null);
+    if (location.state?.reason === "auth_required") {
+      setLocalError("🔒 Lütfen önce giriş yapınız.");
+    } else {
+      setLocalError(null);
+    }
   }, []);
 
   useEffect(() => {
@@ -60,6 +65,17 @@ const LoginPage = () => {
        setType('password')
     }
   }
+
+  useEffect(() => {
+    if (error || localError) {
+      const timeout = setTimeout(() => {
+        clearError();
+        setLocalError(null);
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [error, localError]);
 
   return (
     <div className="login_page">
