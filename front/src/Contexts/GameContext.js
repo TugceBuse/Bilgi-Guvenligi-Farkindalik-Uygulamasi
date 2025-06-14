@@ -3,6 +3,7 @@ import { useMailContext } from './MailContext';
 import { statusSteps } from '../utils/cargoStatus';
 import { useTimeContext } from './TimeContext'; // 🆕
 import { useSecurityContext } from './SecurityContext';
+import { useQuestManager } from './QuestManager'; // 🆕
 
 const GameContext = createContext();
 
@@ -10,6 +11,7 @@ export const GameContextProvider = ({ children }) => {
   // Zaman artık TimeContext'ten alınacak!
   const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
   const { sendMail } = useMailContext();
+  const { failQuest } = useQuestManager(); // 🆕
 
   // --- Mevcut State'ler ---
   const {isWificonnected, setIsWificonnected} = useSecurityContext()
@@ -33,6 +35,12 @@ export const GameContextProvider = ({ children }) => {
     cardExpiryDate: '05/26',
     cardCVV: '123',
   };
+
+  useEffect(() => {
+    if (parseFloat(cardBalance) < 4979) {
+      failQuest("buy_printer");
+    }
+  }, [cardBalance]);
 
   const [ProCareerHubInfo, setProCareerHubInfo] = useState({
     name: '',

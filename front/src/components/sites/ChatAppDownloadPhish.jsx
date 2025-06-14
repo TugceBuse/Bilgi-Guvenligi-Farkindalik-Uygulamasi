@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import styles from './ChatAppDownloadPhish.module.css';
 import { useVirusContext } from '../../Contexts/VirusContext';
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 // Sahte öne çıkarılan özellikler
 const highlights = [
@@ -39,6 +40,7 @@ const ChatAppF = () => {
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const intervalRef = useRef(null);
+  const failQuest = useQuestManager();
 
   const [cancelled, setCancelled] = useState(false);
 
@@ -60,6 +62,7 @@ const ChatAppF = () => {
 
             if (!cancelled) {
               addVirus({ type: "credential-stealer", source: "chatappf.exe" });
+              failQuest("download_chatapp");
             }
           }, 2000);
 
