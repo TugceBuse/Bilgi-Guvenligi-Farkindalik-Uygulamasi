@@ -49,7 +49,7 @@ const CloudBox = () => {
 
   const backedUpFileLabels = cloudBoxBackup.files.map(file => file.label);
   const downloadsFiles = Object.values(files).filter(
-    f => f.location === "downloads" && ["doc", "pdf", "txt", "jpg"].includes(f.type) &&
+    f => f.location === "downloads" && ["doc", "pdf", "txt", "jpg"].includes(f.type) && f.available &&
     !backedUpFileLabels.includes(f.label)
   );
 
