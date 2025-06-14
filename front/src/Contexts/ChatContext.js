@@ -81,7 +81,7 @@ export const ChatContextProvider = ({ children }) => {
         actions: [
           {
             label: "Sohbete Git",
-            onClick: () => openWindow('chatapp')
+            onClick: () => openWindow('chatapp', { userId })
           },
           {
             label: "Bildirimden Kaldır",

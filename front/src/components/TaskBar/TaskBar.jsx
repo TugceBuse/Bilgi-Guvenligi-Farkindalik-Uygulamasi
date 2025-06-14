@@ -204,7 +204,7 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
     } else if (notif.appType === "phone") {
       handleOpenPhoneNotification(notif);
     } else if (notif.appType === "chatapp") {
-      openWindow('chatapp');
+      openWindow('chatapp', { userId: notif.appData?.userId });
       removeNotification(notif.id);
       setShowNotifications(false);
     } else {

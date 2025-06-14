@@ -22,8 +22,11 @@ const ChatApp = ({ closeHandler, style }) => {
   MakeDraggable(chatAppRef, `.${styles.chatHeader}`);
 
   const { cargoTrackingList, orders, cargoTrackingSiteVisited } = useGameContext();
-    const { completeQuest } = useQuestManager();
+  const { completeQuest } = useQuestManager();
+  const { windowProps } = useUIContext();
+  const chatProps = windowProps?.chatapp || {};
   const { gameDate } = useTimeContext();
+
   const printerOrder = orders.find(order =>
     order.items.some(item => item.id === 15)
   );
@@ -48,6 +51,16 @@ const ChatApp = ({ closeHandler, style }) => {
     if (selectedUser) return;
     if (users.length > 0) setSelectedUser(users[0]);
   }, [users, selectedUser]);
+
+  // Gelen bildirim pop-up ından chatapp açılırsa ilgili sohbeti aç
+  useEffect(() => {
+    if (chatProps.userId && users.length > 0) {
+      const targetUser = users.find(u => u.id === chatProps.userId);
+      if (targetUser) {
+        setSelectedUser(targetUser);
+      }
+    }
+  }, [chatProps.userId, users]);
 
   // Kargo adım butonlarını sadece flag'e bakarak ekle
   useEffect(() => {

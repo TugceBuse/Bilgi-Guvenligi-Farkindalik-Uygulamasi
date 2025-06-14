@@ -116,7 +116,7 @@ const ChatAppDownloadOfficial = () => {
           )}
         </div>
         <div className={styles.heroRight}>
-          <img src="/icons/speak.png" alt="ChatBox Sohbet Ekranı" className={styles.previewImg} />
+          <img src="/icons/chatting.png" alt="ChatBox Sohbet Ekranı" className={styles.previewImg} />
           <div className={styles.ratingBox}>
             ⭐ 4.9/5 – 1.000+ kullanıcı yorumu
           </div>
