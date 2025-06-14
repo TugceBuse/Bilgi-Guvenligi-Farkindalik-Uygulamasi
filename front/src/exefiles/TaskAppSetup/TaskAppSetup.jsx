@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './TaskAppSetup.css';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useFileContext } from '../../Contexts/FileContext';
-import { useGameContext } from '../../Contexts/GameContext';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 export const useTaskSetup = () => {
   const { toggleWindow } = useUIContext();
@@ -19,7 +19,7 @@ export const useTaskSetup = () => {
 };
 
 const TaskAppSetup = ({ file, fileName, onAntivirusCheck }) => {
-  const { isTaskAppInstalled, setIsTaskAppInstalled } = useGameContext();
+  const { isTaskAppInstalled, setIsTaskAppInstalled } = useQuestManager();
   const SetupRef = useRef(null);
 
   const [step, setStep] = useState(1);

@@ -17,7 +17,6 @@ export const GameContextProvider = ({ children }) => {
   const {isWificonnected, setIsWificonnected} = useSecurityContext()
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [wifiMailSent, setWifiMailSent] = useState(false);
-  const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addMailToMailbox } = useMailContext();
   const [cardBalance, setCardBalance] = useState("12345");
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
@@ -297,7 +296,6 @@ export const GameContextProvider = ({ children }) => {
         getRelativeDate,
         isWificonnected, setIsWificonnected,
         updating_antivirus, setUpdating_antivirus,
-        isTaskAppInstalled, setIsTaskAppInstalled,
         ProCareerHubInfo, setProCareerHubInfo,
         SkillForgeHubInfo, setSkillForgeHubInfo,
         PostifyInfo, setPostifyInfo,
