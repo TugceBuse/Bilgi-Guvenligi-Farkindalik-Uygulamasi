@@ -623,6 +623,14 @@ const TechDepo = ({scrollRef}) => {
 //   });
 // }, [orders, sendMail, TechInfo, addCargoTracking, setOrders]);
 
+  const generateFakeOrderNo = () => {
+    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ"; // I, O gibi karışabilecek harfleri çıkar
+    const randomLetter = () => letters[Math.floor(Math.random() * letters.length)];
+    const randomDigit = () => Math.floor(Math.random() * 10);
+    
+    // Örnek format: TD9Z4-F73K (rastgele ama düzenli ve anlamlı görünümlü)
+    return `TD${randomDigit()}${randomLetter()}${randomDigit()}-${randomLetter()}${randomDigit()}${randomLetter()}${randomLetter()}`;
+  };
 
   const finalizePayment = () => {
     setCodeTimer(120);
@@ -693,7 +701,7 @@ const TechDepo = ({scrollRef}) => {
         total: newOrder.total,
         from: "faturalar@techdepo.com",
         title: "TechDepo - Satın Alma Faturanız",
-        precontent: "Fatura ektedir.",
+        precontent: "Faturanız ektedir.",
         isFake: false,
       }, { delaySeconds: 20 });
 
@@ -702,38 +710,38 @@ const TechDepo = ({scrollRef}) => {
       name: `${TechInfo.name} ${TechInfo.surname}`,
       productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
       invoiceNo: "TD-2025-" + Date.now(),
-      orderNo: newOrder.id + "-FAKE",
+      orderNo: generateFakeOrderNo(),
       price: newOrder.total,
       company: "TechDepo",
       tax: (newOrder.total * 0.20).toFixed(2),
       total: newOrder.total,
       from: "e-fatura@teehdeppo-billing.com",
       title: "E-Arşiv Fatura Belgeniz",
-      precontent: "Şüpheli fatura bildirimi",
+      precontent: "Fatura Bildirimi",
       isFake: true,
       fakeOptions: {
         from: "e-fatura@teehdeppo-billing.com",
         title: "E-Arşiv Fatura Belgeniz",
         fakePdfLink: "http://teehdeppo-billing.com/download/fatura-2025.zip",
-        precontent: "Şüpheli fatura bildirimi"
+        precontent: "Fatura Bildirimi"
       }
     }, { delaySeconds: 45 });
 
     sendMail("cargo", {
       name: `${TechInfo.name} ${TechInfo.surname}`,
-      productName: newOrder.items.map(item => item.name).join(", "),
+      productName: cards[Math.floor(Math.random() * cards.length)].name + " (1 adet)",
       trackingNo: newOrder.trackingNo,
       shippingCompany: newOrder.shipping,
       orderNo: newOrder.id + "-FAKE",
       from: "kargo@cargo-n0va.com",
       title: "Kargo Takip Bilgilendirme",
-      precontent: "Şüpheli gönderi uyarısı!",
+      precontent: "Kargoya Verildi!",
       isFake: true,
       fakeOptions: {
         from: "kargo@cargo-n0va.com",
         title: "Kargo Takip Bilgilendirme",
         link: "http://cargo-n0va-support.xyz/tracking",
-        precontent: "Şüpheli gönderi uyarısı!"
+        precontent: "Kargoya Verildi!"
       }
     }, { delaySeconds: 80 });
 
