@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 import styles from "./OpenLitePDF.module.css";
-import { useFileContext } from "../../Contexts/FileContext";
 import { useWindowConfig } from "../../Contexts/WindowConfigContext";
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const OpenLitePDF = () => {
-  const { updateFileStatus } = useFileContext();
+  const { completeQuest } = useQuestManager();
   const { updateAvailableStatus } = useWindowConfig();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -20,8 +20,8 @@ const OpenLitePDF = () => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
           setShowPopup(true);
-          updateFileStatus("openlitesetup", { available: true });
           updateAvailableStatus("openlitepdfviewer", true);
+          completeQuest("pdf_viewer_install");
           setTimeout(() => setShowPopup(false), 3000);
           setDownloading(false);
           return 100;

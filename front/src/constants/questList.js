@@ -33,6 +33,17 @@ const QUEST_LIST = [
     penalty: -10,
     logEventType: "mailbox"
   },
+  {//opsiyonel gizli görev
+    id: "antivirus_install",
+    title: "Antivirüs Yazılımı Kur",
+    description: "Sistemini korumak için bir antivirüs yazılımı indir ve kur.",
+    status: "locked",
+    unlocks: null,
+    requires: null,
+    point: 50,
+    penalty: null,
+    logEventType: "antivirus"
+  },
   {
     id: "download_taskapp",
     title: "TaskApp İndir & Kur",
@@ -74,7 +85,7 @@ const QUEST_LIST = [
     status: "locked",
     // unlocks: [""],
     unlocks: null,
-    requires: ["pdf_viewer_install"],
+    requires: ["pdf_viewer_install", "download_cloud", "save_invoice"],
     point: 20,
     penalty: -20,
     logEventType: "backup"
@@ -95,8 +106,7 @@ const QUEST_LIST = [
     title: "Mesajlaşma Uygulaması Kur",
     description: "Bir çevrimiçi mmesajlaşma uygulaması indirip kur. (Tarayıcı üzerinden ilgili kelimeleri aratarak bulabilirsin).",
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
+     unlocks: ["register_career_site", "share_invoice"],
     requires: ["download_taskapp"],
     point: 20,
     penalty: -20,
@@ -109,8 +119,7 @@ const QUEST_LIST = [
      (Banka uygulamandan bakiyene bakmayı unutma,maillerinden ya da sosyal medya üzerinden
       fırsatları yakalamayı da ihmal etme! Ne kadar ucuz o kadar iyi...`,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
+    unlocks: ["save_invoice"],
     requires: ["download_novabank"],
     point: 20,
     penalty: -20,
@@ -121,9 +130,8 @@ const QUEST_LIST = [
     title: "Satın alınan yazıcının faturasını kaydet",
     description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet.`,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
-    requires: ["buy_printer"],
+    unlocks: ["share_invoice", "file_backup"],
+    requires: ["buy_printer", "download_novabank"],
     point: 20,
     penalty: -20,
     logEventType: "save-invoice"
@@ -133,9 +141,8 @@ const QUEST_LIST = [
     title: "Satın alınan yazıcının faturasını satış departmanıyla paylaş",
     description:  `Satın alınan renkli baskı destekli yazıcının faturasını Chat uygulaması üzerinden Satış departmanıyla paylaş.`,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
-    requires: ["save_invoice", "download_chatapp","download_novabank", "buy_printer"],
+    unlocks: ["share_cargo_status"],
+    requires: ["save_invoice", "buy_printer", "download_novabank", "download_chatapp"],
     point: 20,
     penalty: -20,
     logEventType: "share-invoice"
@@ -147,7 +154,7 @@ const QUEST_LIST = [
     status: "locked",
     // unlocks: [""],
     unlocks: null,
-    requires: ["share_invoice", "download_chatapp"],
+    requires: ["share_invoice", "save_invoice", "buy_printer", "download_novabank"],
     point: 20,
     penalty: -20,
     logEventType: "cargo"
@@ -157,8 +164,7 @@ const QUEST_LIST = [
     title: "Kariyer Sitesine Kayıt Ol",
     description:  `Browser üzerinden bir kariyer sitesine kayıt ol. Bu, şirket içi fırsatları takip edebilmen için önemlidir.`,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
+    unlocks: ["sharing_post"],
     requires: ["download_chatapp"],
     point: 20,
     penalty: -20,
@@ -171,7 +177,7 @@ const QUEST_LIST = [
     status: "locked",
     // unlocks: [""],
     unlocks: null,
-    requires: ["register_career_site"],
+    requires: ["register_career_site", "download_chatapp"],
     point: 20,
     penalty: -20,
     logEventType: "postify"
