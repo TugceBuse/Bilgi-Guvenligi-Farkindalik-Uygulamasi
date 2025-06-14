@@ -33,6 +33,17 @@ const QUEST_LIST = [
     penalty: -10,
     logEventType: "mailbox"
   },
+  {//opsiyonel gizli görev
+    id: "antivirus_install",
+    title: "Antivirüs Yazılımı Kur",
+    description: "Sistemini korumak için bir antivirüs yazılımı indir ve kur.",
+    status: "locked",
+    unlocks: null,
+    requires: null,
+    point: 50,
+    penalty: null,
+    logEventType: "antivirus"
+  },
   {
     id: "download_taskapp",
     title: "TaskApp İndir & Kur",
@@ -74,7 +85,7 @@ const QUEST_LIST = [
     status: "locked",
     // unlocks: [""],
     unlocks: null,
-    requires: ["pdf_viewer_install", "download_cloud"],
+    requires: ["pdf_viewer_install", "download_cloud", "save_invoice"],
     point: 20,
     penalty: -20,
     logEventType: "backup"
@@ -95,7 +106,7 @@ const QUEST_LIST = [
     title: "Mesajlaşma Uygulaması Kur",
     description: "Bir çevrimiçi mmesajlaşma uygulaması indirip kur. (Tarayıcı üzerinden ilgili kelimeleri aratarak bulabilirsin).",
     status: "locked",
-     unlocks: ["register_career_site"],
+     unlocks: ["register_career_site", "share_invoice"],
     requires: ["download_taskapp"],
     point: 20,
     penalty: -20,
@@ -119,9 +130,8 @@ const QUEST_LIST = [
     title: "Satın alınan yazıcının faturasını kaydet",
     description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet.`,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
-    requires: ["buy_printer"],
+    unlocks: ["share_invoice", "file_backup"],
+    requires: ["buy_printer", "download_novabank"],
     point: 20,
     penalty: -20,
     logEventType: "save-invoice"
@@ -131,12 +141,11 @@ const QUEST_LIST = [
     title: "Satın alınan yazıcının faturasını satış departmanıyla paylaş",
     description:  `Satın alınan renkli baskı destekli yazıcının faturasını Chat uygulaması üzerinden Satış departmanıyla paylaş.`,
     status: "locked",
-    // unlocks: [""],
-    unlocks: null,
-    requires: ["save_invoice", "download_chatapp","download_novabank", "buy_printer"],
+    unlocks: ["share_cargo_status"],
+    requires: ["save_invoice", "buy_printer", "download_novabank", "download_chatapp"],
     point: 20,
     penalty: -20,
-    logEventType: "save-invoice"
+    logEventType: "share-invoice"
   },
   {
     id: "share_cargo_status",
@@ -145,7 +154,7 @@ const QUEST_LIST = [
     status: "locked",
     // unlocks: [""],
     unlocks: null,
-    requires: ["buy_printer", "share_invoice"],
+    requires: ["share_invoice", "save_invoice", "buy_printer", "download_novabank"],
     point: 20,
     penalty: -20,
     logEventType: "cargo"
