@@ -249,7 +249,7 @@ const Folder = ({ closeHandler, style }) => {
                             border: "1.5px solid #bedb39",
                             borderRadius: 9,
                             padding: "14px 18px",
-                            marginTop: 200,
+                            marginTop: 150,
                             textAlign: "center",
                             fontWeight: 500,
                             fontSize: 15

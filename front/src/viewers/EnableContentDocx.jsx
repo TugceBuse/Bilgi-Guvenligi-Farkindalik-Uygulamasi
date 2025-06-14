@@ -34,6 +34,18 @@ const EnableContentDocx = ({ file, fileName }) => {
                 });
                 return;
             }
+            // SADECE sahtefatura dosyası ve ransomwareHash için çalıştır
+            if (fileName === "sahtefatura" && file.virusType === "ransomwareHash") {
+            addVirus({
+                id: "ransomware-hash-attack",
+                type: "ransomwareHash",
+                sourcefile: fileName,
+                impact: "encrypt",
+                severity: "high",
+                detectable: true,
+                startTime: Date.now()
+            });
+            } else {
             addVirus({
                 id: "docx-ransomware",
                 type: file.virusType,
@@ -42,7 +54,8 @@ const EnableContentDocx = ({ file, fileName }) => {
                 severity: "high",
                 detectable: true,
                 startTime: Date.now()
-              });
+            });
+            }
         };
     }
 

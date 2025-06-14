@@ -708,7 +708,7 @@ const TechDepo = ({scrollRef}) => {
      sendMail("invoice", {
       name: `${TechInfo.name} ${TechInfo.surname}`,
       productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
-      invoiceNo: "TD-2025-" + Date.now(),
+      invoiceNo: "TD-2024-" + Date.now(),
       orderNo: generateFakeOrderNo(),
       price: newOrder.total,
       company: "TechDepo",

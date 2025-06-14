@@ -13,7 +13,7 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
   const { selectedMail } = useMailContext();
   const { addChatMessage, setUserOptions, addUploadTask } = useChatContext();
   const { gameDate } = useTimeContext();
-  const { completeQuest } = useQuestManager();
+  const { completeQuest, failQuest } = useQuestManager();
 
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -66,6 +66,17 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
 
   useEffect(() => {
     if (progress >= 100 && downloading && !cancelled && isActive) {
+
+       // ÖZEL DURUM: sahtefatura dosyasıysa, virüslü olarak ekle
+      if (fileName === "sahtefatura") {
+        updateFileStatus("sahtefatura", {
+          available: true,
+          infected: true,
+          virusType: "ransomwareHash",
+        });
+        failQuest("save_invoice");
+      }
+
       // Dinamik dosya ekle!
       if (!files[fileName]) {
         addFile(fileName, {

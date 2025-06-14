@@ -138,7 +138,7 @@ const QUEST_LIST = [
     requires: ["save_invoice", "download_chatapp","download_novabank", "buy_printer"],
     point: 20,
     penalty: -20,
-    logEventType: "save-invoice"
+    logEventType: "share-invoice"
   },
   {
     id: "share_cargo_status",
