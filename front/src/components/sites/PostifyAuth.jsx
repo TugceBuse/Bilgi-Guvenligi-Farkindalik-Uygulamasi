@@ -18,16 +18,29 @@ const PostifyAuth = () => {
     const passwordStrong = isPasswordStrongEnough(password);
 
     const email = PostifyInfo.email;
+
     const [errorMessage, setErrorMessage] = useState("");
   
+    const showTemporaryError = (msg) => {
+      setErrorMessage(msg);
+      setTimeout(() => {
+        showTemporaryError("");
+      }, 3000);
+    };
+
     const handleAuth = () => {
       if (!isLogin) {
         if (PostifyInfo.isRegistered && PostifyInfo.email === email) {
-          setErrorMessage("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
+          showTemporaryError("Bu e-posta adresi ile zaten bir hesap oluşturulmuş!");
           return;
         }
         if (!name || !surname || !password) {
-          setErrorMessage("Lütfen tüm alanları doldurun!");
+          showTemporaryError("Lütfen tüm alanları doldurun!");
+          return;
+        }
+
+        if (password.length < 4) {
+          showTemporaryError("Şifre en az 4 karakter olmalıdır!");
           return;
         }
     
@@ -42,14 +55,14 @@ const PostifyAuth = () => {
           isLoggedIn: true,
           isPasswordStrong: passwordStrong,
         });
-        setErrorMessage("");
+        showTemporaryError("");
       } else {
         if (!PostifyInfo.isRegistered || PostifyInfo.email !== email) {
-          setErrorMessage("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
+          showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
           return;
         }
         if (!password || password !== PostifyInfo.password) {
-          setErrorMessage("Hatalı şifre! Lütfen tekrar deneyin.");
+          showTemporaryError("Hatalı şifre! Lütfen şifrenizi doğru girin!");
           return;
         }
     
@@ -57,7 +70,7 @@ const PostifyAuth = () => {
           ...PostifyInfo,
           isLoggedIn: true,
         });
-        setErrorMessage("");
+        showTemporaryError("");
       }
     };
   
@@ -66,7 +79,7 @@ const PostifyAuth = () => {
             setName("");
             setSurname("");
             setPassword("");
-            setErrorMessage("");
+            showTemporaryError("");
         } 
   }, [PostifyInfo.isLoggedIn]);
 
@@ -75,7 +88,7 @@ const PostifyAuth = () => {
       setName("");
       setSurname("");
       setPassword("");
-      setErrorMessage("");
+      showTemporaryError("");
     };
 
   if (PostifyInfo.isLoggedIn) return <Postify />;

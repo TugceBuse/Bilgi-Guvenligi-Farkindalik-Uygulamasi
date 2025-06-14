@@ -68,6 +68,10 @@ const SkillForgeHub = () => {
         showTemporaryError("Lütfen tüm alanları doldurun!");
         return;
       }
+      if (password.length < 4) {
+        showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+        return;
+      }
 
       setSkillForgeHubInfo({
         ...SkillForgeHubInfo,
@@ -82,6 +86,7 @@ const SkillForgeHub = () => {
       });
         completeQuest("register_career_site"); 
       setIsLoginOpen(false);
+      showTemporaryError("");
     } else {
       if (
         !SkillForgeHubInfo.isRegistered ||
@@ -153,7 +158,7 @@ const SkillForgeHub = () => {
     setPassword("");
     setNewPassword("");
     setTwoFACodeInput("");
-    setErrorMessage("");
+    showTemporaryError("");
     setLockMessage("");
   }, [isLogin]);
 
@@ -173,6 +178,11 @@ const SkillForgeHub = () => {
 
   const handlePasswordUpdate = () => {
     if (!newPassword) return;
+
+    if (newPassword.length < 4) {
+        showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+        return;
+    }
 
     const strong = isPasswordStrongEnough(newPassword);
     setSkillForgeHubInfo({
@@ -238,6 +248,7 @@ const SkillForgeHub = () => {
             {successPassword && (
               <p className={styles.successMessage}>{successPassword}</p>
             )}
+            {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
             <button onClick={handlePasswordUpdate}>Güncelle</button>
             <p>
               📢 Bildirimler: <button>Değiştir</button>

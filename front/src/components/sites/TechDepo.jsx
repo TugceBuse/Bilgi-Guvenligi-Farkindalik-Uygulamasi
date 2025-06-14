@@ -266,7 +266,7 @@ const TechDepo = ({scrollRef}) => {
         setName("");
         setSurname("");
         setPassword("");
-        setErrorMessage("");
+        showTemporaryError("");
     } 
   }, [TechInfo.isLoggedIn]);
 
@@ -352,7 +352,7 @@ const TechDepo = ({scrollRef}) => {
   const showTemporaryError = (msg) => {
     setErrorMessage(msg);
     setTimeout(() => {
-      setErrorMessage("");
+      showTemporaryError("");
     }, 2000);
   };
 
@@ -364,12 +364,6 @@ const TechDepo = ({scrollRef}) => {
   };
 
   const handleAuth = () => {
-    const showError = (message) => {
-      setErrorMessage(message);
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 3000); 
-    };
   
     if (!isLogin) {
       if (TechInfo.isRegistered && TechInfo.email === email) {
@@ -381,6 +375,11 @@ const TechDepo = ({scrollRef}) => {
         return;
       }
   
+      if (password.length < 4) {
+        showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+        return;
+      }
+
       setTechInfo({
         ...TechInfo,
         name,
@@ -392,7 +391,7 @@ const TechDepo = ({scrollRef}) => {
         isLoggedIn: true,
         isPasswordStrong: passwordStrong,
       });
-      setErrorMessage("");
+      showTemporaryError("");
     } else {
       if (!TechInfo.isRegistered || TechInfo.email !== email) {
         showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
@@ -414,7 +413,7 @@ const TechDepo = ({scrollRef}) => {
         ...TechInfo,
         isLoggedIn: true,
       });
-      setErrorMessage("");
+      showTemporaryError("");
     }
   
     setPage("welcome");
@@ -446,7 +445,7 @@ const TechDepo = ({scrollRef}) => {
     setName("");
     setSurname("");
     setPassword("");
-    setErrorMessage("");
+    showTemporaryError("");
   };
 
   // Sepete ekleme bildirimi ve ödeme bildirimi için state
@@ -1147,7 +1146,7 @@ const TechDepo = ({scrollRef}) => {
                   } else {
                     setErrorMessage("Öncelikle giriş yapmalısınız!");
                     setTimeout(() => {
-                      setErrorMessage("");
+                      showTemporaryError("");
                     }, 3000); 
                     setPage("login");                      
                   }
@@ -1165,7 +1164,7 @@ const TechDepo = ({scrollRef}) => {
                     } else {
                       setErrorMessage("Öncelikle giriş yapmalısınız!");
                       setTimeout(() => {
-                        setErrorMessage("");
+                        showTemporaryError("");
                       }, 3000); 
                       setPage("login");                      
                     }

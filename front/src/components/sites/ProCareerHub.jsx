@@ -47,8 +47,8 @@ const ProCareerHub = () => {
   const showTemporaryError = (msg) => {
     setErrorMessage(msg);
     setTimeout(() => {
-      setErrorMessage("");
-    }, 2000);
+      showTemporaryError("");
+    }, 3000);
   };
 
   const getLockoutRemainingMinutes = () => {
@@ -118,6 +118,10 @@ const ProCareerHub = () => {
         showTemporaryError("Lütfen tüm alanları doldurun!");
         return;
       }
+      if (password.length < 4) {
+        showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+        return;
+      }
 
       setProCareerHubInfo({
         ...ProCareerHubInfo,
@@ -130,7 +134,7 @@ const ProCareerHub = () => {
         isLoggedIn: true,
       });
         completeQuest("register_career_site");
-      setErrorMessage("");
+      showTemporaryError("");
     } else {
       if (!ProCareerHubInfo.isRegistered || ProCareerHubInfo.email !== email) {
         showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
@@ -149,7 +153,7 @@ const ProCareerHub = () => {
       }
 
       setProCareerHubInfo(prev => ({ ...prev, isLoggedIn: true }));
-      setErrorMessage("");
+      showTemporaryError("");
     }
   };
 
@@ -186,6 +190,11 @@ const ProCareerHub = () => {
   const handlePasswordUpdate = () => {
     if (!newPassword) return;
   
+    if (newPassword.length < 4) {
+        showTemporaryError("Şifre en az 4 karakter olmalıdır!");
+        return;
+    }
+
     const passwordStrong = isPasswordStrongEnough(newPassword);
 
     setProCareerHubInfo({
@@ -281,6 +290,7 @@ const ProCareerHub = () => {
             <button onClick={handlePasswordUpdate}>Güncelle</button>
           </div>
           {successPassword && <p className={styles.successMessage}>{successPassword}</p>}
+          {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
 
           <p>📢 Bildirimler: <button>Değiştir</button></p>
 
