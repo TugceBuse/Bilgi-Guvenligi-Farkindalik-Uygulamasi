@@ -140,19 +140,6 @@ const initialWindowConfig = {
 
 export const WindowConfigProvider = ({ children }) => {
   const [windowConfig, setWindowConfig] = useState(initialWindowConfig);
-  const { completeQuest, quests } = useQuestManager();
-
-  // PDF görüntüleyiciden en az biri kurulu ise görev tamamlanmalı
-  useEffect(() => {
-  const pdfViewers = ["pdfviewer", "quickpdfviewer", "openlitepdfviewer"];
-  const anyAvailable = pdfViewers.some(name => windowConfig[name]?.available);
-
-  // Görev tamamlanmışsa tekrar çağırma
-  const pdfQuest = quests.find(q => q.id === "pdf_viewer_install");
-  if (anyAvailable && pdfQuest?.status !== "completed") {
-    completeQuest("pdf_viewer_install");
-  }
-}, [windowConfig, completeQuest, quests]);
 
   const updateAvailableStatus = (windowName, available) => {
     setWindowConfig((prevConfig) => {

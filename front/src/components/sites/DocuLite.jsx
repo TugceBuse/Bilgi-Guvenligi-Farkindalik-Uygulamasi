@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from './DocuLite.module.css';
-import { useFileContext } from "../../Contexts/FileContext";
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 import FeatureCard from './FeatureCard'; 
+import { useQuestManager } from "../../Contexts/QuestManager";
 
 const DocuLiteSite = () => {
   const { updateAvailableStatus } = useWindowConfig();
-
+  const { completeQuest } = useQuestManager();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
@@ -22,6 +22,7 @@ const DocuLiteSite = () => {
           clearInterval(intervalRef.current);
           setShowPopup(true);
           updateAvailableStatus("pdfviewer", { available: true });
+          completeQuest("pdf_viewer_install");
           setTimeout(() => setShowPopup(false), 3000);
           setDownloading(false);
           return 100;

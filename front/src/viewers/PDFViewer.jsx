@@ -3,6 +3,7 @@ import './PDFViewer.css';
 import { useFileContext } from '../Contexts/FileContext';
 import { MakeDraggable } from '../utils/Draggable';
 import { useWindowConfig } from '../Contexts/WindowConfigContext';
+import { useQuestManager } from "../Contexts/QuestManager";
 
 const viewerDefs = [
   { key: "pdfviewer", theme: "doculite", label: "DocuLite PDF", icon: "/PDFViewer/pdf-file-format.png" },
