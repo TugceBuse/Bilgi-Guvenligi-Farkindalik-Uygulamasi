@@ -13,7 +13,6 @@ export function QuestManagerProvider({ children }) {
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addNotification } = useNotificationContext();
 
-
   const getActiveQuests = () => quests.filter(q => q.status === "active");
 
   const completeQuest = (id) => {
@@ -21,7 +20,13 @@ export function QuestManagerProvider({ children }) {
       let updated = prev.map(q => {
         if (q.id === id && q.status !== "completed" && q.status !== "failed") {
           console.log(`Görev tamamlandı: ${q.id} - ${q.title}`);
-          return { ...q, status: "completed" };
+          return {
+            ...q,
+            status: "completed",
+            completedAt: new Date().toISOString(),
+            score: q.point || 0,
+            logEventType: q.logEventType,
+          };
         }
         return q;
       });
@@ -45,7 +50,7 @@ export function QuestManagerProvider({ children }) {
       });
 
       if (isTaskAppInstalled && newlyActivated.length > 0) {
-        console.log("TASKAPP :" , isTaskAppInstalled)
+        console.log("TASKAPP :", isTaskAppInstalled)
         newlyActivated.forEach(q =>
           addNotification({
             appType: "taskapp",
@@ -72,7 +77,17 @@ export function QuestManagerProvider({ children }) {
         return prev;
       }
 
-      let updated = prev.map(q => q.id === id ? { ...q, status: "failed" } : q);
+      let updated = prev.map(q =>
+        q.id === id
+          ? {
+              ...q,
+              status: "failed",
+              completedAt: new Date().toISOString(),
+              score: q.penalty || 0,
+              logEventType: q.logEventType,
+            }
+          : q
+      );
 
       let newlyActivated = [];
       updated = updated.map(q => {
@@ -110,7 +125,17 @@ export function QuestManagerProvider({ children }) {
     });
   };
 
-  const resetQuests = () => setQuests(QUEST_LIST);
+  // resetQuests fonksiyonu, ekstra alanları temizler
+  const resetQuests = () =>
+    setQuests(
+      QUEST_LIST.map(q => ({
+        ...q,
+        status: q.status || "locked",
+        completedAt: null,
+        score: 0,
+        logEventType: q.logEventType,
+      }))
+    );
 
   const value = {
     quests,
