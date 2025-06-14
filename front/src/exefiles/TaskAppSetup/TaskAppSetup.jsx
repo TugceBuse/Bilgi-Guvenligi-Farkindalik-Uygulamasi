@@ -19,7 +19,7 @@ export const useTaskSetup = () => {
 };
 
 const TaskAppSetup = ({ file, fileName, onAntivirusCheck }) => {
-  const { isTaskAppInstalled, setIsTaskAppInstalled } = useQuestManager();
+  const { isTaskAppInstalled, setIsTaskAppInstalled, completeQuest } = useQuestManager();
   const SetupRef = useRef(null);
 
   const [step, setStep] = useState(1);
@@ -53,6 +53,7 @@ const TaskAppSetup = ({ file, fileName, onAntivirusCheck }) => {
       setButtonLoading(false);
       setStep(step + 1);
       setIsTaskAppInstalled(true);
+      completeQuest("download_taskapp");
     }, 4000);
   };
 

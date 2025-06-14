@@ -45,6 +45,7 @@ export function QuestManagerProvider({ children }) {
       });
 
       if (isTaskAppInstalled && newlyActivated.length > 0) {
+        console.log("TASKAPP :" , isTaskAppInstalled)
         newlyActivated.forEach(q =>
           addNotification({
             appType: "taskapp",

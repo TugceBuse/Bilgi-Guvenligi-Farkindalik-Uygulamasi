@@ -297,16 +297,6 @@ const defaultFileSchema = {
         console.log('openedFiles:', openedFiles);
     }, [openedFiles]);
 
-    useEffect(() => {
-        // TaskApp kurulum dosyası açıldığında, TaskApp uygulamasının kurulu olduğunu belirt
-        if (files.taskappsetup.available) {
-            setIsTaskAppInstalled(true);
-            completeQuest('download_taskapp');
-        } else {
-            setIsTaskAppInstalled(false);
-        }
-    }, [files.taskappsetup, setIsTaskAppInstalled]);
-
     // 📌 Dosya açma fonksiyonu
     const openFile = (fileName, theme) => {
         if (
