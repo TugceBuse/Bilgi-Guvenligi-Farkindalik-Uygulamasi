@@ -192,7 +192,7 @@ const NovabankApp = ({ closeHandler, style }) => {
                         if (BankInfo.rememberMe) {
                           addEventLog({
                             type: "login_novabank",
-                            guestId: null,
+                            questId: null,
                             logEventType: "login",
                             value: -5,
                             data: {

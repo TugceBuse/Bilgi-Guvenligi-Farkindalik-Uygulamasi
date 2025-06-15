@@ -393,6 +393,16 @@ const TechDepo = ({scrollRef}) => {
         isLoggedIn: true,
         isPasswordStrong: passwordStrong,
       });
+      addEventLog({
+        type: "login_techdepo",
+        questId: "buy_printer",
+        logEventType: "login",
+        value: passwordStrong ? 5 : -5,
+        data: 
+        {
+          isStrong: passwordStrong,
+        }
+      });
       showTemporaryError("");
     } else {
       if (!TechInfo.isRegistered || TechInfo.email !== email) {
