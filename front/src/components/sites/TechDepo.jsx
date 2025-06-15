@@ -355,7 +355,7 @@ const TechDepo = ({scrollRef}) => {
     setErrorMessage(msg);
     setTimeout(() => {
       showTemporaryError("");
-    }, 2000);
+    }, 3000);
   };
 
   // 2FA kodu gönderme süresi
@@ -403,7 +403,6 @@ const TechDepo = ({scrollRef}) => {
           isStrong: passwordStrong,
         }
       });
-      showTemporaryError("");
     } else {
       if (!TechInfo.isRegistered || TechInfo.email !== email) {
         showTemporaryError("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
@@ -420,12 +419,10 @@ const TechDepo = ({scrollRef}) => {
         return;
       }
 
-  
       setTechInfo({
         ...TechInfo,
         isLoggedIn: true,
       });
-      showTemporaryError("");
     }
   
     setPage("welcome");
@@ -1197,9 +1194,6 @@ const TechDepo = ({scrollRef}) => {
                     setPage(`product_${card.id}`);
                   } else {
                     setErrorMessage("Öncelikle giriş yapmalısınız!");
-                    setTimeout(() => {
-                      showTemporaryError("");
-                    }, 3000); 
                     setPage("login");                      
                   }
                 }}  
@@ -1215,9 +1209,6 @@ const TechDepo = ({scrollRef}) => {
                       addToCart(card);
                     } else {
                       setErrorMessage("Öncelikle giriş yapmalısınız!");
-                      setTimeout(() => {
-                        showTemporaryError("");
-                      }, 3000); 
                       setPage("login");                      
                     }
                   }}
