@@ -72,8 +72,9 @@ const NovaBankAppSetup = ({ fileName, onInstallComplete, onAntivirusCheck }) => 
           const fileMeta = files?.[fileName];
           const isFake = fileMeta?.infected === true || fileMeta?.virusType === "adware";
           addEventLog({
-            type: "setup",
+            type: "setup_novabank",
             guestId: "download_novabank",
+            logEventType: "setup",
             value: isFake ? -10 : 10,
             data: 
             {

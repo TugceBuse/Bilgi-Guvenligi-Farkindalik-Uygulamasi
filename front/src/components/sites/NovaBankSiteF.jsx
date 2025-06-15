@@ -43,6 +43,7 @@ const NovaBankSiteF = () => {
           addEventLog({
             type: "download_setup",
             guestId: "download_novabank",
+            logEventType: "download",
             value: -10,
             data: 
             {

@@ -191,10 +191,12 @@ const NovabankApp = ({ closeHandler, style }) => {
                         setPage("dashboard");
                         if (BankInfo.rememberMe) {
                           addEventLog({
-                            type: "login",
+                            type: "login_novabank",
+                            guestId: null,
+                            logEventType: "login",
                             value: -5,
                             data: {
-                              app: "novabank",
+                              to: "novabank",
                               rememberMe: true,
                             }
                           });
