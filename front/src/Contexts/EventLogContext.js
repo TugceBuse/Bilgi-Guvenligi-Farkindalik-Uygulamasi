@@ -17,7 +17,7 @@ export function EventLogProvider({ children }) {
       ...prev,
       {
         ...event,
-        timestamp: event.timestamp || gameDate.toISOString(),
+        timestamp: event.timestamp || gameDate.toLocaleString("tr-TR"),
       }
     ]);
   };
@@ -28,7 +28,7 @@ export function EventLogProvider({ children }) {
       ...prev,
       ...events.map(event => ({
         ...event,
-        timestamp: event.timestamp || gameDate.toISOString(),
+        timestamp: event.timestamp || gameDate.toLocaleString("tr-TR"),
       }))
     ]);
   };

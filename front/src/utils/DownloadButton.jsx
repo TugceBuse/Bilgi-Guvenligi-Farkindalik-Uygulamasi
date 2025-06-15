@@ -6,8 +6,10 @@ import { useMailContext } from '../Contexts/MailContext';
 import { useChatContext } from '../Contexts/ChatContext';
 import { useTimeContext } from '../Contexts/TimeContext';
 import { useQuestManager } from '../Contexts/QuestManager';
+import { useEventLog } from '../Contexts/EventLogContext';
 
 const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => {
+  const { addEventLog } = useEventLog();
   const { addFile, updateFileStatus, files, openFile } = useFileContext();
   const { isWificonnected } = useGameContext();
   const { selectedMail } = useMailContext();
@@ -117,6 +119,52 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
 
       setDownloading(false);
       setShowSuccess(true);
+
+      if( fileName === "sahtefatura" ) {
+        addEventLog({
+          type: "download_phishing_mail",
+          questId: "save_invoice",
+          value: -10,
+          data: 
+          {
+            mailId: mailId,
+            file: fileName
+          },
+        });
+      } 
+      else if (fileName?.toLowerCase()?.includes('fatura')){
+        addEventLog({
+          type: "download_mail",
+          questId: "save_invoice",
+          value: 10,
+          data: {
+            mailId: mailId,
+            file: fileName
+          },
+        });
+      }
+      else if (fileName === "taskappsetup") {
+        addEventLog({
+          type: "download_mail",
+          questId: "download_taskapp",
+          value: 10,
+          data: {
+            mailId: mailId,
+            file: fileName
+          },
+        });
+      }
+      else if (fileName === "taskappsetupf") {
+        addEventLog({
+          type: "download_phishing_mail",
+          questId: "download_taskapp",
+          value: -10,
+          data: {
+            mailId: mailId,
+            file: fileName
+          },
+        });
+      }
       setTimeout(() => setShowSuccess(false), 2500);
     }
   }, [progress, downloading, cancelled, isActive, fileName, fileContent, addFile, updateFileStatus, files, fileLabel]);
