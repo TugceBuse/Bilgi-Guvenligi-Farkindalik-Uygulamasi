@@ -4,6 +4,7 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { useGameContext } from '../../Contexts/GameContext';
 import { usePhoneContext } from '../../Contexts/PhoneContext';
+import { useEventLog } from '../../Contexts/EventLogContext';
 import ConnectionOverlay from '../../utils/ConnectionOverlay'; // import path projene göre ayarlanmalı
 
 export const useNovabankApp = () => {
@@ -23,6 +24,7 @@ export const useNovabankApp = () => {
 const NovabankApp = ({ closeHandler, style }) => {
   const { constUser, BankInfo, setBankInfo, cardBalance, isWificonnected } = useGameContext();
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
+  const { addEventLog } = useEventLog();
 
   const [is2FAwaiting, setIs2FAwaiting] = useState(false);
   const [twoFACodeInput, setTwoFACodeInput] = useState("");
@@ -187,6 +189,16 @@ const NovabankApp = ({ closeHandler, style }) => {
                         setTwoFACodeInput("");
                         setIs2FAwaiting(false);
                         setPage("dashboard");
+                        if (BankInfo.rememberMe) {
+                          addEventLog({
+                            type: "login",
+                            value: -5,
+                            data: {
+                              app: "novabank",
+                              rememberMe: true,
+                            }
+                          });
+                        }
                       } else {
                         setErrorMessage("⚠ Kod hatalı!");
                         setTimeout(() => setErrorMessage(""), 2000);

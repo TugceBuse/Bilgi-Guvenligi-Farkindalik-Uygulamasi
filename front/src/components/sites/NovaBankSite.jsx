@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from './NovaBankSite.module.css';
-import { useGameContext } from "../../Contexts/GameContext";
 import { useFileContext } from "../../Contexts/FileContext";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 const NovaBankSite = () => {
   const { updateFileStatus } = useFileContext();
+  const { addEventLog } = useEventLog();
 
   const [progress, setProgress] = useState(0);
   const [downloading, setDownloading] = useState(false);
@@ -21,6 +22,16 @@ const NovaBankSite = () => {
           clearInterval(intervalRef.current);
           setShowPopup(true);
           updateFileStatus("novabankappsetup", { available: true });
+          addEventLog({
+            type: "download_setup",
+            guestId: "download_novabank",
+            value: 10,
+            data: 
+            {
+              file: "novabankappsetup",
+              isFake: false,
+            }
+          });
           setTimeout(() => setShowPopup(false), 3000);
           setDownloading(false);
           return 100;

@@ -1,14 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useUIContext } from './UIContext';
 import NovaBankAppSetup from '../exefiles/NovaBankAppSetup/NovaBankAppSetup';
-import { useQuestManager } from './QuestManager';
 
 const FileContext = createContext();
 
 export const FileContextProvider = ({ children }) => {
     const { openWindow, closeWindow } = useUIContext();
-    const { setIsTaskAppInstalled, completeQuest } = useQuestManager();
-
+    
     // Standart dosya şeması
 const defaultFileSchema = {
     available: true,
