@@ -7,6 +7,7 @@ import { useChatContext } from '../../Contexts/ChatContext';
 import { statusSteps } from "../../utils/cargoStatus";
 import { useTimeContext } from "../../Contexts/TimeContext";
 import { useQuestManager } from "../../Contexts/QuestManager";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 const cards = [
   {
@@ -221,6 +222,7 @@ const TechDepo = ({scrollRef}) => {
   const { gameDate } = useTimeContext();
   const { sendMail } = useMailContext();
   const { completeQuest } = useQuestManager();
+  const { addEventLog } = useEventLog();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -766,7 +768,42 @@ const TechDepo = ({scrollRef}) => {
     setShowCartNotice(true);
     setTimeout(() => setShowCartNotice(false), 2000);
 
-    if (newOrder.items.some(item => item.id === 15)) {
+    const boughtPrinter = newOrder.items.some(item => item.id === 15);
+
+    newOrder.items.forEach(item => {
+      const boughtPrinter = item.id === 15;
+
+      let value = 0;
+      if (boughtPrinter) value += 10;
+      if (TechInfo.is3DChecked){
+        value += 5; // 3D Secure seçilmişse ekstra puan
+      } else {
+        value -= 5; // 3D Secure seçilmemişse eksi puan
+      }
+      if (saveCard) {
+        value -= 5; // Kart kaydedilmişse eksi puan
+      } else {
+        value += 5; // Kart kaydedilmemişse artı puan
+      }
+
+      addEventLog({
+        type: "payment",
+        questId: boughtPrinter ? "buy_printer" : null,
+        logEventType: "e-commerce",
+        value,
+        data: {
+          store: "TechDepo",
+          isFake: false,
+          is3DChecked: TechInfo.is3DChecked,
+          isSaveCard: saveCard,
+          itemPrice: item.price,
+          itemName: item.name,
+          itemId: item.id,
+        }
+      });
+    });
+
+    if (boughtPrinter) {
         completeQuest("buy_printer");
         // Yazıcı satın alımı sonrası...
         addChatMessage(1, {
@@ -835,6 +872,11 @@ const TechDepo = ({scrollRef}) => {
     if (is3DChecked && !is3DWaiting) {
       // önce işleniyor yazısı çıksın
       setIsPaying(true);
+
+      setTechInfo(prev => ({
+        ...prev,
+        is3DChecked: true,
+      }));
 
       setTimeout(() => {
         generateCodeMessage("TechDepo 3D Secure", "techdepo-payment");

@@ -101,6 +101,7 @@ export const GameContextProvider = ({ children }) => {
     cardExpiryDate: constUser.cardExpiryDate,
     cardCVV: constUser.cardCVV,
     saveCard: false,
+    is3DChecked: false,
     adres: constUser.adres,
     lockoutUntil: null,
     loginAttempts: 0,
