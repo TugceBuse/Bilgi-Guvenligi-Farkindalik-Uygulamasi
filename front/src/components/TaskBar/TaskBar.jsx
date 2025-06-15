@@ -11,6 +11,8 @@ import { useNotificationContext } from '../../Contexts/NotificationContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
 import { useSecurityContext } from '../../Contexts/SecurityContext';
 import { useQuestManager } from '../../Contexts/QuestManager';
+import { useEventLog } from '../../Contexts/EventLogContext';
+
 
 const TaskBar = ({ windowConfig, hacked, onFormat }) => {
   const [showStartMenu, setShowStartMenu] = useState(false);
@@ -27,6 +29,8 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
 
   const pass = "1234";
   const navigate = useNavigate();
+
+  const { addEventLog } = useEventLog();
   const { gameDate } = useTimeContext();
 
   const { completeQuest } = useQuestManager();
@@ -99,7 +103,18 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
     } else {
       setIsWificonnected(true);
       setWifiname(wifiName);
-      completeQuest("connect_wifi");
+      addEventLog({
+        type: "wifi_connect",
+        questId: "wifi_connect",
+        logEventType: "wifi",
+        value: -10,
+        data: 
+        { 
+          wifi: wifiName,
+          isPrivate: false
+        },
+      })
+      completeQuest("wifi_connect");
       completeQuest("login_mailbox");
     }
   };
@@ -110,6 +125,18 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
     setShowPasswordPrompt(false);
     if (password === pass) {
       setIsWificonnected(true);
+      setWifiname(selectedWifi);
+      addEventLog({
+        type: "wifi_connect",
+        questId: "wifi_connect",
+        logEventType: "wifi",
+        value: 10,
+        data: 
+        { 
+          wifi: selectedWifi,
+          isPrivate: true
+        },
+      });
     } else {
       setShowPassAlert(true);
       setIsWificonnected(false);

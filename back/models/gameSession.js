@@ -9,12 +9,12 @@ const EventLogSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now }       // Olay zamanı
 }, { _id: false });
 
-const QuestStatusSchema = new mongoose.Schema({
+const QuestStatusSchema = new mongoose.Schema({  //Quests dizisi uygun doldurulup oyun sonu bu şemada gamesession'a eklenir
   questId: { type: String, required: true },
   status: { type: String, enum: ['locked', 'active', 'completed', 'failed'], required: true },
   completedAt: { type: Date },                      // Görev tamamlandıysa zamanı
   score: { type: Number, default: 0 },            // Bu görevden kazanılan puan
-  logEventType: { type: String },                    // O görevin event türü (örn: wifi, mailbox)
+  logEventType: { type: String }                    // O görevin event türü (örn: wifi, mailbox)
 }, { _id: false });
 
 const GameSessionSchema = new mongoose.Schema({

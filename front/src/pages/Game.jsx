@@ -17,6 +17,7 @@
   import IntroScreen from '../components/IntroScreen/IntroScreen.jsx';
   import { QuestManagerProvider } from '../Contexts/QuestManager';
   import { NotepadProvider } from '../Contexts/NotepadContext.js';
+import { EventLogProvider } from "../Contexts/EventLogContext.js";
 
     const Game = () => {
       useEffect(() => {
@@ -32,41 +33,43 @@
 
     return (
       <TimeProvider>
-        <UIContextProvider>
-          <NotificationProvider>
-            <Notification />
-              <QuestManagerProvider>
-              <SecurityProvider>
-                <VirusProvider>
-                  <FileContextProvider>
-                    <WindowConfigProvider>
-                      <MailContextProvider>
-                        <PhoneProvider>
-                          <GameContextProvider>
-                            <TodoProvider>
-                              <ChatContextProvider>
-                                <NotepadProvider>
-                                <CargoMailNotifier />
-                                <div className="game">
-                                  {/* {phase === "intro" && <IntroScreen onFinish={() => setPhase("hacked")} />}
-                                  {(phase === "hacked" || phase === "desktop") && (
-                                    <Desktop hacked={phase === "hacked"} onFormat={phase === "hacked" ? () => setPhase("desktop") : undefined} />
-                                  )}                       */}
-                                  {phase === "desktop" && <Desktop />}
-                                </div>
-                                </NotepadProvider>
-                              </ChatContextProvider>
-                            </TodoProvider>
-                          </GameContextProvider>
-                        </PhoneProvider>
-                      </MailContextProvider>
-                    </WindowConfigProvider> 
-                  </FileContextProvider>
-                </VirusProvider>
-              </SecurityProvider>
-            </QuestManagerProvider>
-          </NotificationProvider>
-        </UIContextProvider>
+        <EventLogProvider>
+          <UIContextProvider>
+            <NotificationProvider>
+              <Notification />
+                <QuestManagerProvider>
+                  <SecurityProvider>
+                    <VirusProvider>
+                      <FileContextProvider>
+                        <WindowConfigProvider>
+                          <MailContextProvider>
+                            <PhoneProvider>
+                              <GameContextProvider>
+                                <TodoProvider>
+                                  <ChatContextProvider>
+                                    <NotepadProvider>
+                                    <CargoMailNotifier />
+                                    <div className="game">
+                                    {/* {phase === "intro" && <IntroScreen onFinish={() => setPhase("hacked")} />}
+                                    {(phase === "hacked" || phase === "desktop") && (
+                                      <Desktop hacked={phase === "hacked"} onFormat={phase === "hacked" ? () => setPhase("desktop") : undefined} />
+                                    )}                       */}
+                                    {phase === "desktop" && <Desktop />}
+                                  </div>
+                                  </NotepadProvider>
+                                </ChatContextProvider>
+                              </TodoProvider>
+                            </GameContextProvider>
+                          </PhoneProvider>
+                        </MailContextProvider>
+                      </WindowConfigProvider> 
+                    </FileContextProvider>
+                  </VirusProvider>
+                </SecurityProvider>
+              </QuestManagerProvider>
+            </NotificationProvider>
+          </UIContextProvider>
+        </EventLogProvider>
       </TimeProvider>
     );
   };

@@ -12,7 +12,7 @@
 
 const QUEST_LIST = [
   {
-    id: "connect_wifi",
+    id: "wifi_connect",
     title: "WiFi Bağlantısı",
     description: "Maillerini görebilmek ve gerekli uygulamaları indirebilmek için bir WiFi ağına bağlan.",
     status: "active",
@@ -28,7 +28,7 @@ const QUEST_LIST = [
     description: "Maillerinizi görebilmek için Mailbox'a phishville hesap bilgilerinizle giriş yapın.",
     status: "locked",
     unlocks: ["download_taskapp"],
-    requires: ["connect_wifi"],
+    requires: ["wifi_connect"],
     point: 10,
     penalty: -10,
     logEventType: "mailbox"
