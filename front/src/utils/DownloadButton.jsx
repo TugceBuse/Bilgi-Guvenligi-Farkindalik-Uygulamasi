@@ -23,11 +23,14 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
 
   const downloadMailIdRef = useRef(null);
 
+  // Dosya daha önce indirildiyse burada tutulacak (available true ise)
+  const isDownloaded = !!files[fileName]?.available;
+
   // Yeni: Sadece bu maile ait butonda etkileşim
   const isActive = !mailId || (selectedMail?.id === mailId);
 
   const handleDownload = () => {
-    if (!isWificonnected || !isActive) return;
+    if (!isWificonnected || !isActive || isDownloaded) return; // Ek kontrol
     setDownloading(true);
     setCancelled(false);
     setProgress(0);
@@ -67,12 +70,10 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
   useEffect(() => {
     if (progress >= 100 && downloading && !cancelled && isActive) {
 
-       // ÖZEL DURUM: sahtefatura dosyasıysa, virüslü olarak ekle
+      // ÖZEL DURUM: sahtefatura dosyasıysa, virüslü olarak ekle
       if (fileName === "sahtefatura") {
         updateFileStatus("sahtefatura", {
           available: true,
-          infected: true,
-          virusType: "ransomwareHash",
         });
         failQuest("save_invoice");
       }
@@ -128,7 +129,22 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
 
   return (
     <div className={styles.container}>
-      {!downloading ? (
+      {/* Dosya indirildiyse: buton tamamen pasifleşir, "İndirildi" gösterimi */}
+      {isDownloaded ? (
+        <div className={`${styles.attachmentBox} ${styles.wrapperWithBubble}`}>
+          <div className={styles.successBubble}>✔ İndirildi</div>
+          <span className={styles.downloadIcon}>📎</span>
+          <span>{label}</span>
+          <button
+            className={styles.downloadAction}
+            disabled
+            style={{ opacity: 0.4, cursor: "not-allowed" }}
+            title="Bu dosya zaten indirildi"
+          >
+            İndir
+          </button>
+        </div>
+      ) : !downloading ? (
         <div className={`${styles.attachmentBox} ${styles.wrapperWithBubble}`}>
           {showSuccess && <div className={styles.successBubble}>✔ İndirildi</div>}
           {showCancelled && <div className={styles.cancelBubble}>❌ İptal Edildi</div>}
@@ -137,12 +153,14 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
           <button
             className={styles.downloadAction}
             onClick={handleDownload}
-            disabled={!isWificonnected || !isActive}
+            disabled={!isWificonnected || !isActive || isDownloaded}
             title={
               !isWificonnected
                 ? 'Wi-Fi bağlantısı yok'
                 : !isActive
                 ? 'Yanlış mail'
+                : isDownloaded
+                ? 'Bu dosya zaten indirildi'
                 : ''
             }
           >
