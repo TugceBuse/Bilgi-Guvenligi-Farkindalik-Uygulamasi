@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styles from './ChatAppDownloadOfficial.module.css';
 import { useWindowConfig } from '../../Contexts/WindowConfigContext';
 import { useQuestManager } from "../../Contexts/QuestManager";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 const userReviews = [
   {
@@ -43,6 +44,7 @@ const faqs = [
 
 const ChatAppDownloadOfficial = () => {
   const { updateAvailableStatus } = useWindowConfig();
+  const { addEventLog } = useEventLog();
   const { completeQuest } = useQuestManager();
   const [ downloading, setDownloading ] = useState(false);
   const [ progress, setProgress ] = useState(0);
@@ -59,6 +61,17 @@ const ChatAppDownloadOfficial = () => {
           setShowPopup(true);
           updateAvailableStatus("chatapp", { available: true});
           completeQuest("download_chatapp");
+          addEventLog({
+            type: "download_setup",
+            questId: "download_chatapp",
+            logEventType: "download",
+            value: 10,
+            data: 
+            {
+              site: "ChatAppDownload",
+              infected: false,
+            }
+          });
           setTimeout(() => setShowPopup(false), 2500);
           setDownloading(false);
           return 100;
