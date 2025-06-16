@@ -8,6 +8,7 @@ import { useChatContext } from '../../Contexts/ChatContext';
 import { useTimeContext } from '../../Contexts/TimeContext';
 import FileUploadButton from './FileUploadButton';
 import { useQuestManager } from '../../Contexts/QuestManager';
+import { useEventLog } from '../../Contexts/EventLogContext';
 
 export const useChatApp = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -22,6 +23,7 @@ const ChatApp = ({ closeHandler, style }) => {
   MakeDraggable(chatAppRef, `.${styles.chatHeader}`);
 
   const { cargoTrackingList, orders, cargoTrackingSiteVisited } = useGameContext();
+  const { addEventLog } = useEventLog();
   const { completeQuest } = useQuestManager();
   const { windowProps } = useUIContext();
   const chatProps = windowProps?.chatapp || {};
@@ -115,6 +117,17 @@ const ChatApp = ({ closeHandler, style }) => {
         [trackingNo]: true 
       }));
       completeQuest("share_cargo_status");
+      addEventLog({
+        type: "share",
+        questId: "share_cargo_status",
+        logEventType: "share_information",
+        value: 10, 
+        data: 
+        {
+          app: "ChatApp",
+          userId: selectedUser.id,
+        }
+      });
       setTimeout(() => {
         addChatMessage(selectedUser.id, {
           sender: "them",
@@ -228,6 +241,17 @@ const ChatApp = ({ closeHandler, style }) => {
           fileName: file.label
         });
         completeQuest("share_invoice");
+        addEventLog({
+          type: "share",
+          questId: "share_invoice",
+          logEventType: "share_information",
+          value: 10, 
+          data: 
+          {
+            app: "ChatApp",
+            userId: selectedUser.id,
+          }
+        });
         setTimeout(() => {
           addChatMessage(selectedUser.id, {
             sender: "them",

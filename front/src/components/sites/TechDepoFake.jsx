@@ -86,13 +86,13 @@ const TechDepo = ({scrollRef}) => {
         isPasswordStrong: passwordStrong,
       });
       addEventLog({
-        type: "login_techdepof",
+        type: "register_techdepof",
         questId: "buy_printer",
-        logEventType: "login",
+        logEventType: "register",
         value: passwordStrong ? 0 : -10, //techdepof sitesine kayıt olduğu için hali hazırda -5 yiyor, eğer güçlü şifre giriyorsa +5 den 0 puan alıyor, yoksa -10 a çıkıyor puanı
         data: 
         {
-          store: "TechDepoF",
+          for: "TechDepoF",
           isStrong: passwordStrong,
         }
       });
@@ -111,6 +111,18 @@ const TechDepo = ({scrollRef}) => {
         ...TechInfoF,
         isLoggedIn: true,
         isGuest: false,
+      });
+
+      addEventLog({
+        type: "login_techdepof",
+        questId: "buy_printer",
+        logEventType: "login",
+        value: -1, //techdepof sitesine kayıt olduğu için hali hazırda -5 yiyor, eğer güçlü şifre giriyorsa +5 den 0 puan alıyor, yoksa -10 a çıkıyor puanı
+        data: 
+        {
+          to: "TechDepoF",
+          password: password,
+        }
       });
       setErrorMessage("");
     }

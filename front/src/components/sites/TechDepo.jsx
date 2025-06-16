@@ -186,13 +186,13 @@ const TechDepo = ({scrollRef}) => {
         isPasswordStrong: passwordStrong,
       });
       addEventLog({
-        type: "login_techdepo",
+        type: "register_techdepo",
         questId: "buy_printer",
-        logEventType: "login",
+        logEventType: "register",
         value: passwordStrong ? 5 : -5,
         data: 
         {
-          store: "TechDepo",
+          for: "TechDepo",
           isStrong: passwordStrong,
         }
       });
@@ -215,6 +215,17 @@ const TechDepo = ({scrollRef}) => {
       setTechInfo({
         ...TechInfo,
         isLoggedIn: true,
+      });
+      addEventLog({
+        type: "login_techdepo",
+        questId: "buy_printer",
+        logEventType: "login",
+        value: -1,
+        data: 
+        {
+          to: "TechDepo",
+          password: password,
+        }
       });
     }
   
