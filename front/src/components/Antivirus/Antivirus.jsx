@@ -80,8 +80,10 @@ const Antivirus = ({ closeHandler, style }) => {
       const quarantinedFilesSet = new Set();
   
       // 🔎 1. Aktif virüsleri analiz et (Virüs context’ten gelenler)
-      const detectableViruses = viruses.filter(v => v.detectable && v.sourcefile);
-      console.log("Detectable Viruses:", detectableViruses);
+      const detectableViruses = antivirusUpdated
+      ? viruses.filter(v => v.detectable && v.sourcefile)
+      : [];
+    console.log("Detectable Viruses:", detectableViruses);
   
       detectableViruses.forEach(virus => {
         const fileKey = Object.keys(files).find(
@@ -110,6 +112,7 @@ const Antivirus = ({ closeHandler, style }) => {
         console.log("FileName:", fileName);
         console.log("FileData:", fileData);
         const isDetectableInfected =
+          antivirusUpdated &&
           fileData.detectable &&
           fileData.infected &&
           fileData.available &&
@@ -297,7 +300,7 @@ const Antivirus = ({ closeHandler, style }) => {
 
             {scanComplete && quarantinedFiles.length > 0 && (
               <div className="antivirus-scan-complete warning">
-                <img src="/icons/caution.png" alt="Caution Icon" />
+                <img src="/icons/warning.png" alt="Warning Icon" />
                 <p>Tarama tamamlandı. {quarantinedFiles.length} dosya karantinaya alındı:</p>
                 <ul>
                   {quarantinedFiles.map(({ fileName, virusType }) => (
