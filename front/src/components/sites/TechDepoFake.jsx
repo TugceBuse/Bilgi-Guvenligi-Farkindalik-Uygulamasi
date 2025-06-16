@@ -332,6 +332,9 @@ const TechDepo = ({scrollRef}) => {
       } else {
         value += 5; // Kampanya koşullarını kabul etmişse eksi puan
       }
+      if (TechInfoF.tckn && TechInfoF.birthDate && TechInfoF.motherMaiden) {
+        value -= 5; // Fazla kişisel bilgi girişi yapmışsa eksi puan
+      }
 
       addEventLog({
         type: "payment",
@@ -343,7 +346,10 @@ const TechDepo = ({scrollRef}) => {
           isFake: true,
           isSaveCard: saveCard,
           isAcceptedCampaignTerms: TechInfoF.acceptedCampaignTerms,
-          isAcceptedPreApprovedLoan: TechInfoF.acceptedPreApprovedLoan
+          isAcceptedPreApprovedLoan: TechInfoF.acceptedPreApprovedLoan,
+          tckn: TechInfoF.tckn,
+          birthDate: TechInfoF.birthDate,
+          motherMaiden: TechInfoF.motherMaiden,
         }
       });
 
