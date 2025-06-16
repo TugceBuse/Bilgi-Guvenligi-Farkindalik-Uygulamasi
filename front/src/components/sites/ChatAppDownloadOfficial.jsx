@@ -65,6 +65,7 @@ const ChatAppDownloadOfficial = () => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(intervalRef.current);
+          setAlreadyDownloaded(true);
           setShowPopup(true);
           updateAvailableStatus("chatapp", { available: true});
           completeQuest("download_chatapp");
