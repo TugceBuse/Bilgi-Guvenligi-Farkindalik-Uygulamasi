@@ -3,14 +3,12 @@ import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext"; 
 import { useEventLog } from "../../Contexts/EventLogContext";
-import { useVirusContext } from "../../Contexts/VirusContext"; // 🧠 Keylogger virüsü için
 import cardsData from "../../constants/cards";
 const cards = cardsData.cards;
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfoF, setTechInfoF } = useGameContext();
   const {addEventLog} = useEventLog();
-  const { addVirus } = useVirusContext(); 
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -91,7 +89,7 @@ const TechDepo = ({scrollRef}) => {
         type: "register_techdepof",
         questId: "buy_printer",
         logEventType: "register",
-        value: passwordStrong ? 5 : -5,
+        value: passwordStrong ? 0 : -10,
         data: 
         {
           for: "TechDepoF",
@@ -119,7 +117,7 @@ const TechDepo = ({scrollRef}) => {
         type: "login_techdepof",
         questId: "buy_printer",
         logEventType: "login",
-        value: 0, 
+        value: -1, 
         data: 
         {
           to: "TechDepoF",
@@ -334,7 +332,7 @@ const TechDepo = ({scrollRef}) => {
       if (TechInfoF.acceptedPreApprovedLoan){
         value -= 5; // Bilgilerini kampanya karşılığı paylaşmayı kabul ederse -5
       } else {
-        value += 5; // Bilgilerini kampanya karşılığı paylaşmayı kabul ederse +5
+        value += 5; // Bilgilerini kampanya karşılığı paylaşmayı kabul etmezse +5
       }
       if (saveCard) {
         value -= 5; // Kart kaydedilmişse eksi puan
@@ -344,7 +342,7 @@ const TechDepo = ({scrollRef}) => {
       if (TechInfoF.acceptedCampaignTerms) {
         value -= 5; // Kampanya koşullarını kabul etmişse eksi puan
       } else {
-        value += 5; // Kampanya koşullarını kabul etmişse eksi puan
+        value += 5; // Kampanya koşullarını kabul etmemişse eksi puan
       }
       if (TechInfoF.tckn && TechInfoF.birthDate && TechInfoF.motherMaiden) {
         value -= 5; // Fazla kişisel bilgi girişi yapmışsa eksi puan
@@ -352,7 +350,7 @@ const TechDepo = ({scrollRef}) => {
 
       addEventLog({
         type: "payment",
-        questId: null,
+        questId: "buy_printer",
         logEventType: "e-commerce",
         value,
         data: {
@@ -365,16 +363,6 @@ const TechDepo = ({scrollRef}) => {
           birthDate: TechInfoF.birthDate,
           motherMaiden: TechInfoF.motherMaiden,
         }
-      });
-
-      // Keylogger virüsü ekle (özelleştirilebilir)
-      addVirus({
-        id: "keylogger",
-        name: "Keylogger",
-        type: "spyware",
-        description: "Kullanıcının tuş vuruşlarını kaydeder.",
-        effect: "keyboardLogging",
-        timestamp: Date.now()
       });
 
       setTechInfoF(prev => ({

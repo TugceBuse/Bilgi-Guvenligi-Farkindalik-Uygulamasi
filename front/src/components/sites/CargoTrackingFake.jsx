@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styles from "./CargoTrackingFake.module.css";
-import { useVirusContext } from "../../Contexts/VirusContext"; // 🧠 Keylogger virüsü için
 import { useEventLog } from "../../Contexts/EventLogContext"; // Oyun içi etkinlik günlüğü için
 
 const statusSteps = [
@@ -59,7 +58,6 @@ const CargoTrackingFake = (props) => {
   const [formPhone, setFormPhone] = useState("");
 
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const { addVirus } = useVirusContext(); // 🧠 Keylogger virüsünü tetikleyecek
 
   const handleSubmit = () => {
     if (!/^\d{2}\/\d{2}\/\d{4}$/.test(formBirthDate)) {
@@ -77,16 +75,6 @@ const CargoTrackingFake = (props) => {
     }
     setFormSubmitted(true);
 
-    // Keylogger virüsü ekle
-    addVirus({
-      id: "keylogger",
-      name: "Keylogger",
-      type: "spyware",
-      description: "Kullanıcının tuş vuruşlarını kaydeder.",
-      effect: "keyboardLogging",
-      timestamp: Date.now()
-    });
-
     addEventLog({
       type: "submit_form",
       questId: null,
@@ -96,6 +84,7 @@ const CargoTrackingFake = (props) => {
       {
         site: "CargoTrackingFake",
         formSubmitted: formSubmitted,
+        isFake: true,
       }
     });
 
