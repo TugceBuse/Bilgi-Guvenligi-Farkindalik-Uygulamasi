@@ -241,6 +241,7 @@ export const GameContextProvider = ({ children }) => {
         !order.cargoMailSent
       ) {
         sendMail("cargo", {
+          mailId: 101,
           name: `${TechInfo.name} ${TechInfo.surname}`,
           productName: order.items.map(item => item.name).join(", "),
           trackingNo: order.trackingNo,

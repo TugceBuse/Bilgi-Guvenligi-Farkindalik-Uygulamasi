@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.attachmentBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1f1f1f;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  font-size: 0.95rem;
+  gap: 8px;
+  margin: 4px 0;
+  position: relative;
+}
+
+.downloadIcon {
+  font-size: 1.2rem;
+}
+
+.downloadAction {
+  background: #23a2e3;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease-in-out;
+}
+
+.downloadAction:hover {
+  background: #1b8ac4;
+}

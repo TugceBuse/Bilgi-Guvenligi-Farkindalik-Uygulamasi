@@ -1,5 +1,6 @@
 import './Mailbox.css';
 import DownloadButton from '../../utils/DownloadButton';
+import LinkButton from '../../utils/LinkButton';
 
  // Kargo maili
     export function createCargoMail({ 
@@ -47,6 +48,16 @@ import DownloadButton from '../../utils/DownloadButton';
         displayLink = `http://${companyString.toLowerCase()}.com/takip?trackingNo=${trackingNo}`;
       }
 
+      const openLinkInBrowser = () => {
+        window.dispatchEvent(new CustomEvent("open-browser-url", {
+          detail: {
+            url: displayLink,
+            shippingCompany,
+            trackingNo: displayTrackingNo,
+            orderNo: displayOrderNo,
+          }
+        }))
+      };
 
       return (
         <div className="mail-content">
@@ -57,22 +68,19 @@ import DownloadButton from '../../utils/DownloadButton';
             🧾 <b>Sipariş No:</b> {displayOrderNo}<br/>
             📦 <b>Kargo Durumu:</b> Yola çıktı - Teslimat 1-2 iş günü içinde gerçekleşecek<br/><br/>
             Paketinizi takip etmek için:<br/>
-              <a
-                href="#"
-                title={displayLink}
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent("open-browser-url", {
-                    detail: {
-                      url: displayLink,
-                      shippingCompany,
-                      trackingNo: displayTrackingNo,
-                      orderNo: displayOrderNo,
-                    }
-                  }))
-                }}
-              >
-                {displayLink}
-              </a><br/><br/>
+               <LinkButton
+                label="Kargo Takip Sayfasına Git"
+                url={displayLink}
+                questId= "share_cargo_status"
+                type= "share"
+                logEventType="share_information"
+                value={isFake ? -10 : 10}
+                mailId={from?.id}
+                shippingCompany={shippingCompany}
+                trackingNo={displayTrackingNo}
+                orderNo={displayOrderNo}
+              />
+              <br/><br/>
             <b>{shippingCompany} Ekibi</b>
           </pre>
         </div>
@@ -764,372 +772,6 @@ export const mails = [
                  </div>
                )
               },
-
-              /* 101.Mail Content CargoNova Gerçek Kargo Maili*/
-              {
-                id: 101,
-                from: 'info@cargonova.com',
-                title: 'CargoNova Kargo Takip',
-                precontent: 'Yazıcınız yolda! CargoNova ile gönderiniz işleme alındı.',
-                readMail: false, notified: false, used: false,
-                content: (
-                  <div className="mail-content">
-                    <pre>
-                      <b>Sayın Onur,</b><br/><br/>
-                      Sipariş ettiğiniz <b>JetPrint 220 Renkli Yazıcı</b> CargoNova kargo firmamız tarafından işleme alınmıştır.<br/><br/>
-
-                      🚚 <b>Takip No:</b> CN2025001TR<br/>
-                      📦 <b>Kargo Durumu:</b> Yola çıktı - Teslimat 1-2 iş günü içinde gerçekleşecek<br/><br/>
-
-                      Departmandaki raporların çıktısını alabileceğiniz bu yazıcı, yüksek çözünürlüklü renkli baskı desteği sunar. 
-                      Yalnızca fiyat olarak avantajlı değil, aynı zamanda hızlı ve ekonomik teslimat fırsatıyla da sizi destekliyoruz!<br/><br/>
-
-                      Paketinizi takip etmek için:
-                      <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}> cargoNova.com/takip</span><br/><br/>
-
-                      <b>CargoNova Ekibi</b>
-                    </pre>
-                  </div>
-                )
-            },
-
-            /* 102.Mail Content FlyTakip Gerçek Kargo Maili*/
-            {
-              id: 102,
-              from: 'takip@flykargo.net',
-              title: 'FlyTakip Gönderi Bilgisi',
-              precontent: 'FlyTakip ile gönderiniz çıktı almayı bekliyor!',
-              readMail: false, notified: false, used: false,
-              content: (
-                <div className="mail-content">
-                  <pre>
-                    <b>Merhaba,</b><br/><br/>
-                    Sipariş ettiğiniz <b>JetPrint 220 Yazıcı</b> FlyTakip kargo sistemi ile kargolanmıştır.<br/><br/>
-
-                    📦 <b>Takip Kodu:</b> FLY-93210578-TR<br/>
-                    📍 <b>Durum:</b> Dağıtıma çıktı - Bugün teslim edilmesi planlanıyor.<br/><br/>
-
-                    Renkli baskı destekli bu yazıcı sayesinde artık raporlarınızı daha net ve profesyonelce sunabileceksiniz. 
-                    Sınırlı süreli kampanya fiyatından faydalandığınız için sizi tebrik ederiz!<br/><br/>
-
-                    Gönderinizi online takip etmek için:
-                    <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}> flytakip.net/gonderi</span><br/><br/>
-
-                    <b>FlyTakip Kargo Departmanı</b>
-                  </pre>
-                </div>
-              )
-            },
-
-            /* 103.Mail Content TrendyTaşıma Gerçek Kargo Maili*/
-            {
-              id: 103,
-              from: 'gonderi@trendytasima.com',
-              title: 'TrendyTaşıma Gönderi Detayı',
-              precontent: 'Yazıcınız TrendyTaşıma ile yola çıktı!',
-              readMail: false, notified: false, used: false,
-              content: (
-                <div className="mail-content">
-                  <pre>
-                    <b>Değerli Müşterimiz,</b><br/><br/>
-                    TrendyTaşıma ile JetPrint 220 renkli yazıcınız kargoya verildi. 
-                    Siparişiniz kısa süre içerisinde adresinize ulaştırılacaktır.<br/><br/>
-
-                    🚛 <b>Takip Numarası:</b> TRDY-10982-TR<br/>
-                    📅 <b>Tahmini Teslimat:</b> 1 iş günü içinde teslim edilir.<br/><br/>
-
-                    Yazıcınız, departman raporlarının kaliteli renkli çıktıları için mükemmel bir tercihtir. 
-                    Görevinizi başarıyla tamamlamak için teknik ihtiyaçlarınız bizden, dikkatli analiz sizden!<br/><br/>
-
-                    Kargo takip sayfası:
-                    <span style={{color:"orange", textDecoration: "underline", cursor:"pointer"}}> trendytasima.com/takip</span><br/><br/>
-
-                    <b>TrendyTaşıma Ekibi</b>
-                  </pre>
-                </div>
-              )
-            },
-
-            /* 104.Mail Content Gerçek Ürün Fatura Maili*/
-            {
-              id: 104,
-              from: 'faturalar@techdepo.com',
-              title: 'TechDepo - Satın Alma Faturanız',
-              precontent: 'JetPrint 220 yazıcıya ait fatura belgeniz ektedir.',
-              readMail: false, notified: false, used: false,
-              content: (
-                <div className="mail-content">
-                  <pre>
-                    <b>Sayın Onur Karaca,</b><br/><br/>
-
-                    Aşağıda, TechDepo üzerinden yapmış olduğunuz alışverişe ait e-fatura bilgilerinizi bulabilirsiniz.<br/><br/>
-
-                    🧾 <b>Fatura Numarası:</b> TD-2025-001472<br/>
-                    📦 <b>Sipariş No:</b> 8927316503<br/>
-                    📅 <b>Sipariş Tarihi:</b> {new Date().toLocaleDateString()}<br/><br/>
-
-                    <b>Fatura Detayı:</b><br/>
-                    ───────────────────────────────<br/>
-                    🔹 JetPrint 220 Renkli Yazıcı (1 adet)      4.899,00 TL<br/>
-                    🔸 KDV (%20)                                979,80 TL<br/>
-                    <b>Genel Toplam:</b>                         <b>5.878,80 TL</b><br/>
-                    ───────────────────────────────<br/><br/>
-
-                    Bu belge, Vergi Usul Kanunu hükümlerine göre düzenlenmiş olup elektronik ortamda oluşturulmuştur. 
-                    Islak imza ve kaşe gerektirmez.<br/><br/>
-
-                    <b>TechDepo A.Ş.</b><br/>
-                    Vergi No: 456 123 7890<br/>
-                    İletişim: faturalar@techdepo.com<br/>
-                    Adres: Teknokent Mah. Siber Sok. No:42, İstanbul<br/><br/>
-                  </pre>
-                </div>
-              )
-            },
-
-          /* 105.Mail Content TechDepo Gerçek JetPrint 220 Yazıcı Kampanyası*/
-            {
-              id: 105,
-              from: 'kampanya@techdepo.com',
-              title: 'TechDepo Yazıcı Kampanyası!',
-              precontent: 'JetPrint 220 yazıcıda geçerli özel indirim kodunuzu kaçırmayın!',
-              readMail: false, notified: false, used: false,
-              content: (
-                <div className="mail-content">
-                  <pre>
-                    <b>Merhaba Onur,</b><br/><br/>
-                    JetPrint 220 renkli yazıcıda <b>₺500 indirim</b> fırsatını kaçırma!<br/><br/>
-
-                    📅 Kampanya Süresi: 3 Gün<br/>
-                    💡 Kullanım Alanı: TechDepo üzerinden yapılacak yazıcı alışverişlerinde geçerlidir.<br/><br/>
-
-                    <b>İndirim Kodunuz:</b> <span style={{color:"orange", fontWeight:"bold"}}>JET500TL</span><br/><br/>
-
-                    🛍️ Bu kodu ödeme ekranında girerek ürünü uygun fiyata satın alabilirsiniz.<br/>
-                    ⚠️ Bu fırsat sadece <b>resmi TechDepo sitesinde</b> geçerlidir.<br/><br/>
-
-                    Güvenli alışverişler dileriz!<br/><br/>
-
-                    <b>TechDepo Satış Ekibi</b><br/>
-                    kampanya@techdepo.com
-                  </pre>
-                </div>
-              )
-          },
-
-          /* 106.Mail Content NovaTekno Gerçek JetPrint 220 Yazıcı Kampanyası*/
-          {
-            id: 106,
-            from: 'firsat@novatekno.com',
-            title: 'NovaTekno Yazıcı Fırsatı!',
-            precontent: 'Renkli yazıcı alışverişinize özel anlık indirim fırsatını yakalayın!',
-            readMail: false, notified: false, used: false,
-            content: (
-              <div className="mail-content">
-                <pre>
-                  <b>Sayın Müşterimiz,</b><br/><br/>
-                  NovaTekno'da yalnızca bu haftaya özel <b>₺600 indirim</b> kampanyası başladı!<br/><br/>
-
-                  🖨️ <b>Kampanya Ürünü:</b> JetPrint 220 Renkli Yazıcı<br/>
-                  🕐 <b>Geçerlilik:</b> İlk 100 müşteri<br/><br/>
-
-                  <b>İndirim Kodu:</b> <span style={{color:"orange", fontWeight:"bold"}}>COLOR600</span><br/><br/>
-
-                  💳 Kodu ödeme ekranında uygulayın, indirimi anında kazanın.<br/>
-                  🚫 Güvenliğiniz için sadece <b>novatekno.com</b> adresini kullanın.<br/><br/>
-
-                  NovaTekno ile teknolojiyi uygun fiyata keşfedin!<br/><br/>
-
-                  <b>NovaTekno Kampanya Departmanı</b><br/>
-                  firsat@novatekno.com
-                </pre>
-              </div>
-            )
-          },
-
-          /* 107.Mail Content TechDepo Sahte JetPrint 220 Yazıcı Kampanyası*/
-          {
-            id: 107,
-            from: 'kampanya@techd3ppo.com',
-            title: 'TechDepo %50 İndirim Kampanyası!',
-            precontent: 'Sadece bugün: Yazıcıda %50 indirim! Kodunuzu hemen alın!',
-            readMail: false, notified: false, used: false,
-            content: (
-              <div className="mail-content">
-                <pre>
-                  <b>Merhaba,</b><br/><br/>
-                  TechDepo'nun en büyük kampanyası başladı! Renkli yazıcılar için <b>%50 indirim</b> sizi bekliyor.<br/><br/>
-
-                  🎁 <b>İndirim Kodu:</b> <span style={{color:"orange", fontWeight:"bold"}}>TEKD50</span><br/>
-                  📅 Geçerlilik: Sadece bugün<br/><br/>
-
-                  İndirimi uygulamak için aşağıdaki bağlantıya tıklayın ve kodu girin:<br/>
-                  <span 
-                    style={{color:"orange", textDecoration: "underline", cursor: "pointer"}}
-                    title="http://techd3ppo-deals.net/discount"
-                  >
-                  🔗 Kampanyaya Git
-                  </span><br/><br/>
-
-                  ⚠️ Dikkat: Bu bağlantı sahte bir TechDepo sitesine yönlendirecek. Kullanıcılar bu bağlantıya tıklarsa kredi kartı bilgilerini çaldırabilir veya ransomware etkisi devreye girebilir.<br/><br/>
-
-                  <b>Siber Güvenlik Uyarısı:</b> Gerçek TechDepo sitesi <b>techdepo.com</b>'dur. Bu e-posta görünüm olarak benzer ama alan adı farklıdır.<br/><br/>
-
-                  <b>Taklit TechDepo Ekibi</b><br/>
-                  kampanya@techd3ppo.com
-                </pre>
-              </div>
-            )
-          },
-
-          /* 108.Mail Content Novatekno Sahte JetPrint 220 Yazıcı Kampanyası*/
-          {
-            id: 108,
-            from: 'firsat@novateknn0.info',
-            title: 'NovaTekno Özel Kupon: %60 İndirim!',
-            precontent: 'Bu e-postayla gelen kodu kullanın, yazıcıda %60 indirim kazanın!',
-            readMail: false, notified: false, used: false,
-            content: (
-              <div className="mail-content">
-                <pre>
-                  <b>Sayın Kullanıcı,</b><br/><br/>
-                  Yalnızca size özel <b>%60 indirim kodu</b> hazır! JetPrint yazıcınızı şimdi al, %60 daha az öde!<br/><br/>
-
-                  🔓 <b>Kod:</b> NOVAFALL60<br/>
-                  🕒 <b>Son Kullanım Tarihi:</b> 24 saat içinde<br/><br/>
-
-                  Aşağıdaki butona tıklayarak kampanyayı aktif edin:<br/><br/>
-
-                  <button
-                    className="claim-button"
-                    title="http://novateknn0.info/apply-code"
-                  >
-                  💸 İndirimi Uygula
-                  </button><br/><br/>
-
-                  ⚠️ Bu buton sahte NovaTekno sayfasına yönlendirir. Gerçek olmayan bir sayfada ödeme ekranı görünür. Oyuncu kart bilgilerini girerse verileri çalınır veya arka planda ransomware yüklenir.<br/><br/>
-
-                  <b>Güvenlik Bilgilendirmesi:</b> Gerçek NovaTekno alan adı <b>novatekno.com</b>'dur.<br/><br/>
-
-                  <b>Sahte NovaTekno İletişim Ekibi</b><br/>
-                  firsat@novateknn0.info
-                </pre>
-              </div>
-            )
-          },
-
-          /* 109.Mail Content TechDepo Sahte Fatura Maili*/
-          {
-            id: 109,
-            from: 'e-fatura@teehdeppo-billing.com',
-            title: 'E-Arşiv Faturanız - TEEHDEPPO',
-            precontent: 'Yazıcı satın alma işleminize ait e-arşiv faturanız hazırlandı.',
-            readMail: false, notified: false, used: false,
-            content: (
-              <div className="mail-content">
-                <pre>
-                  <b>Sayın Kullanici,</b><br/><br/>
-                  JetColor Printer yazıcınız için ödemeniz başarıyla alınmış olup, e-fatura işleminiz sistemimizce oluşturulmuştur.<br/><br/>
-
-                  📦 <b>Ürün:</b> JetColor 220 Yazıcı<br/>
-                  🧾 <b>Fatura No:</b> TD/2025/009912<br/>
-                  📅 <b>Tarih:</b> {new Date().toLocaleDateString()}<br/>
-                  💳 <b>Ödenen Tutar:</b> <span style={{color:"red"}}>5.999 TL</span><br/><br/>
-
-                  <b>Faturayı Görüntülemek İçin:</b><br/>
-                  <button
-                    className="claim-button"
-                    title="http://teehdeppo-billing.com/download/fatura-2025.zip"
-                  >
-                  🧾 Faturayı PDF Olarak İndir
-                  </button><br/><br/>
-
-                  ⚠️ Bu bağlantıya tıklanırsa oyuncuya zararlı dosya verilebilir (örneğin: `zip` içinde `fatura.exe` şeklinde). Ayrıca bu butonla birlikte `addVirus()` gibi işlemler tetiklenebilir.<br/><br/>
-
-                  🛡️ Gerçek fatura sistemleri `.zip` veya `.exe` ile dosya göndermez. Alan adı sahte (<b>teehdeppo-billing.com</b>) olduğundan güvenlik açığı içerir.<br/><br/>
-
-                  <b>İletişim:</b> support@teehdeppo-billing.com<br/>
-                  <b>Not:</b> Bu belge dijital olarak imzalanmıştır. Islak imza aranmaz.
-                </pre>
-              </div>
-            )
-          },
-
-          /* 110.Mail Content NovaTekno Gerçek Fatura Maili*/
-          {
-            id: 110,
-            from: 'fatura@novatekno.com',
-            title: 'NovaTekno - Satın Alma Faturanız',
-            precontent: 'NovaTekno üzerinden yaptığınız alışverişin fatura bilgileri ektedir.',
-            readMail: false, notified: false, used: false,
-            content: (
-              <div className="mail-content">
-                <pre>
-                  <b>Sayın Onur Karaca,</b><br/><br/>
-
-                  NovaTekno'dan yaptığınız alışverişe ait fatura bilgileri aşağıdadır.<br/><br/>
-
-                  🧾 <b>Fatura Numarası:</b> NVTK-2025-07234<br/>
-                  📦 <b>Sipariş No:</b> 783415998<br/>
-                  📅 <b>Sipariş Tarihi:</b> {new Date().toLocaleDateString()}<br/><br/>
-
-                  <b>Ürün Bilgileri:</b><br/>
-                  ───────────────────────────────<br/>
-                  🔹 JetPrint 220 Renkli Yazıcı (1 adet)      4.899,00 TL<br/>
-                  🔸 KDV (%20)                                979,80 TL<br/>
-                  <b>Toplam:</b>                                <b>5.878,80 TL</b><br/>
-                  ───────────────────────────────<br/><br/>
-
-                  Bu belge elektronik ortamda düzenlenmiştir ve 213 sayılı Vergi Usul Kanunu uyarınca geçerlidir.<br/><br/>
-
-                  <b>NovaTekno Bilişim Teknolojileri A.Ş.</b><br/>
-                  Vergi No: 456 123 7890<br/>
-                  Adres: Siber Mah. Dijital Cad. No:17, İstanbul<br/>
-                  İletişim: fatura@novatekno.com
-                </pre>
-              </div>
-            )
-          },
-
-          /* 111.Mail Content NovaTekno Sahte Fatura Maili*/
-          {
-            id: 111,
-            from: 'e-fatura@novateccno.net',
-            title: 'NovaTekno E-Arşiv Fatura Belgesi',
-            precontent: 'Satın aldığınız ürün için faturanızı şimdi görüntüleyin.',
-            readMail: false, notified: false, used: false,
-            content: (
-              <div className="mail-content">
-                <pre>
-                  <b>Sayin Müsteri,</b><br/><br/>
-
-                  Almış oldugunuz JetPint 220 yazıcınız için faturaniz düzenlenmiştir.<br/><br/>
-
-                  🧾 <b>Fatura ID:</b> NOVF-0003245<br/>
-                  📅 <b>Tarih:</b> {new Date().toLocaleDateString()}<br/>
-                  💰 <b>Toplam Ödeme:</b> 5.899 TL<br/><br/>
-
-                  Faturanızı görüntülemek için aşağıdaki bağlantıya tıklayınız:<br/><br/>
-
-                  <button
-                    className="claim-button"
-                    title="http://novateccno.net/download/invoice_pdf_2025.zip"
-                  >
-                  🧾 Faturayı PDF Olarak Görüntüle
-                  </button><br/><br/>
-
-                  ⚠️ Bu bağlantı görünürde bir PDF dosyası içeriyor gibi olsa da aslında bir ZIP içindeki .exe çalıştırabilir.<br/>
-                  Eğer kullanıcı tıklarsa `addVirus("fakeInvoiceTrojan")` gibi bir etki devreye alınabilir.<br/><br/>
-
-                  <b>DİKKAT:</b> Gerçek NovaTekno alan adı <b>novatekno.com</b>'dur.<br/>
-                  Bu mail, sahte bir etki oluşturmak amacıyla görünüm olarak taklit edilmiştir.<br/><br/>
-
-                  <b>NovaTekno Finas Departmanı(!)</b><br/>
-                  e-fatura@novateccno.net
-                </pre>
-              </div>
-            )
-          }
   ];
 
   // Gönderilen Mailler (SendBox)

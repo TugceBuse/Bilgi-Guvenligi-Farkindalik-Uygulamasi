@@ -220,7 +220,7 @@ const TechDepo = ({scrollRef}) => {
         type: "login_techdepo",
         questId: "buy_printer",
         logEventType: "login",
-        value: -1,
+        value: 0,
         data: 
         {
           to: "TechDepo",
@@ -503,6 +503,7 @@ const TechDepo = ({scrollRef}) => {
         
       // Sipariş anında gecikmeli mail gönderimi
       sendMail("invoice", {
+        mailId: 103,
         name: `${TechInfo.name} ${TechInfo.surname}`,
         productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
         invoiceNo: "TD-2025-" + Date.now(),
@@ -519,6 +520,7 @@ const TechDepo = ({scrollRef}) => {
 
 
      sendMail("invoice", {
+      mailId: 104,
       name: `${TechInfo.name} ${TechInfo.surname}`,
       productName: newOrder.items.map(item => `${item.name} (${item.quantity} adet)`).join(", "),
       invoiceNo: "TD-2024-" + Date.now(),
@@ -540,6 +542,7 @@ const TechDepo = ({scrollRef}) => {
     }, { delaySeconds: 45 });
 
     sendMail("cargo", {
+      mailId: 102,
       name: `${TechInfo.name} ${TechInfo.surname}`,
       productName: cards[Math.floor(Math.random() * cards.length)].name + " (1 adet)",
       trackingNo: newOrder.trackingNo,

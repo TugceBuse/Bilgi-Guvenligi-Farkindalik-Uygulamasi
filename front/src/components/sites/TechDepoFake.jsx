@@ -3,12 +3,14 @@ import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext"; 
 import { useEventLog } from "../../Contexts/EventLogContext";
+import { useVirusContext } from "../../Contexts/VirusContext"; // 🧠 Keylogger virüsü için
 import cardsData from "../../constants/cards";
 const cards = cardsData.cards;
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfoF, setTechInfoF } = useGameContext();
   const {addEventLog} = useEventLog();
+  const { addVirus } = useVirusContext(); 
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -89,7 +91,7 @@ const TechDepo = ({scrollRef}) => {
         type: "register_techdepof",
         questId: "buy_printer",
         logEventType: "register",
-        value: passwordStrong ? 0 : -10, //techdepof sitesine kayıt olduğu için hali hazırda -5 yiyor, eğer güçlü şifre giriyorsa +5 den 0 puan alıyor, yoksa -10 a çıkıyor puanı
+        value: passwordStrong ? 5 : -5,
         data: 
         {
           for: "TechDepoF",
@@ -117,7 +119,7 @@ const TechDepo = ({scrollRef}) => {
         type: "login_techdepof",
         questId: "buy_printer",
         logEventType: "login",
-        value: -1, //techdepof sitesine kayıt olduğu için hali hazırda -5 yiyor, eğer güçlü şifre giriyorsa +5 den 0 puan alıyor, yoksa -10 a çıkıyor puanı
+        value: 0, 
         data: 
         {
           to: "TechDepoF",
@@ -363,6 +365,16 @@ const TechDepo = ({scrollRef}) => {
           birthDate: TechInfoF.birthDate,
           motherMaiden: TechInfoF.motherMaiden,
         }
+      });
+
+      // Keylogger virüsü ekle (özelleştirilebilir)
+      addVirus({
+        id: "keylogger",
+        name: "Keylogger",
+        type: "spyware",
+        description: "Kullanıcının tuş vuruşlarını kaydeder.",
+        effect: "keyboardLogging",
+        timestamp: Date.now()
       });
 
       setTechInfoF(prev => ({

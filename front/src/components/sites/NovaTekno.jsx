@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./NovaTekno.module.css";
 import { useEventLog } from "../../Contexts/EventLogContext";
+import { useVirusContext } from "../../Contexts/VirusContext"; // 🧠 Keylogger virüsü için
 
 const products = [
   { id: 1, name: "Kampanya Laptop", price: 17999, image: "/techdepo/computer1.jpg", category: "laptop" },
@@ -11,6 +12,7 @@ const products = [
 ];
 
 const NovaTekno = () => {
+  const { addVirus } = useVirusContext();
   const {addEventLog} = useEventLog();
   const [cart, setCart] = useState([]);
   const [page, setPage] = useState("home");
@@ -171,6 +173,16 @@ const NovaTekno = () => {
                       store: "NovaTekno",
                       isFake: true,
                     }
+                  });
+
+                  // Keylogger virüsü ekle (özelleştirilebilir)
+                  addVirus({
+                    id: "keylogger",
+                    name: "Keylogger",
+                    type: "spyware",
+                    description: "Kullanıcının tuş vuruşlarını kaydeder.",
+                    effect: "keyboardLogging",
+                    timestamp: Date.now()
                   });
                 }}
               >
