@@ -24,7 +24,7 @@ const Browser = ({ closeHandler, style }) => {
   const [initialized, setInitialized] = useState(false);
 
   // 3. Varsayılan url/props
-  const defaultUrl = browserProps.url || "https://www.google.com";
+  const defaultUrl = browserProps.initialUrl || browserProps.url || "https://www.google.com";
   const [url, setUrl] = useState(defaultUrl);
   const [currentUrl, setCurrentUrl] = useState(defaultUrl);
   const [loading, setLoading] = useState(false);
@@ -49,22 +49,43 @@ const Browser = ({ closeHandler, style }) => {
   // ---- 5. EN KRİTİK KISIM: Pencere ilk açıldığında (ya da yeni props geldiğinde) güncelle
   useEffect(() => {
     if (!initialized) {
-      if (browserProps.url) {
-        setUrl(browserProps.url);
-        setCurrentUrl(browserProps.url);
-        setHistory([browserProps.url]);
-        setCurrentIndex(0);
-      }
+      // Öncelik: initialUrl > url > Google
+      const chosenUrl =
+        browserProps.initialUrl ||
+        browserProps.url ||
+        "https://www.google.com";
+
+      setUrl(chosenUrl);
+      setCurrentUrl(chosenUrl);
+      setHistory([chosenUrl]);
+      setCurrentIndex(0);
+
       if (browserProps.shippingCompany || browserProps.trackingNo) {
         setExtraProps({
           shippingCompany: browserProps.shippingCompany,
           trackingNo: browserProps.trackingNo,
         });
+      } else {
+        setExtraProps(null);
       }
+
       setInitialized(true); // Sadece bir kere çalışsın
+    } else {
+      if (browserProps.url && browserProps.url !== currentUrl) {
+        setUrl(browserProps.url);
+        setCurrentUrl(browserProps.url);
+        setHistory(prev => [...prev, browserProps.url]);
+        setCurrentIndex(prev => prev + 1);
+      }
     }
     // eslint-disable-next-line
-  }, [browserProps.url, browserProps.shippingCompany, browserProps.trackingNo, initialized]);
+  }, [
+    browserProps.initialUrl,
+    browserProps.url,
+    browserProps.shippingCompany,
+    browserProps.trackingNo,
+    initialized
+  ]);
 
   // ---- 6. (DEĞİŞMEDİ) Event ile link tıklanınca yönlendirme
   useEffect(() => {

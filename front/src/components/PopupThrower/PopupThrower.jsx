@@ -3,6 +3,7 @@ import { useVirusContext } from "../../Contexts/VirusContext";
 import { useNotificationContext } from "../../Contexts/NotificationContext";
 import { useUIContext } from "../../Contexts/UIContext";
 import "./PopupThrower.css";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 // Sahte sistem bildirimleri
 const fakeNotifications = [
@@ -33,52 +34,88 @@ const fakeNotifications = [
 ];
 
 // Reklam popup içerikleri
-const AdPopupVPN = ({ onClick }) => (
+const AdPopupVPN = ({ onClick, onLog }) => (
   <div>
     <h3>🔒 NovaVPN - 6 Aylık Ücretsiz!</h3>
     <p>
       Tüm cihazlarınızda sınırsız koruma. <br />
       Kimliğinizi gizleyin, internet özgürlüğünün tadını çıkarın.
     </p>
-    <button className="popup-btn" onClick={onClick}>Şimdi Etkinleştir</button>
+    <button className="popup-btn" onClick={() => {
+    onLog && onLog({
+      type: "adware_popup",
+      questId: null,
+      logEventType: "adware_click",
+      value: -5,
+      data: { popupType: "vpn", button: "Şimdi Etkinleştir" }
+    });
+    onClick();
+  }}>Şimdi Etkinleştir</button>
   </div>
 );
 
-const AdPopupPrize = ({ onClick }) => (
+const AdPopupPrize = ({ onClick, onLog  }) => (
   <div>
     <h3>🎁 1000 TL Değerinde Alışveriş Çeki!</h3>
     <p>
       Sadece bugün için geçerli! <br />
       Şanslı 100 kişiden biri siz olun. Numaranızı doğrulayın.
     </p>
-    <button className="popup-btn" onClick={onClick}>Ödülümü Al</button>
+    <button className="popup-btn" onClick={() => {
+    onLog && onLog({
+      type: "adware_popup",
+      questId: null,
+      logEventType: "adware_click",
+      value: -5,
+      data: { popupType: "vpn", button: "Şimdi Etkinleştir" }
+    });
+    onClick();
+  }}>Ödülümü Al</button>
   </div>
 );
 
-const AdPopupCleaner = ({ onClick }) => (
+const AdPopupCleaner = ({ onClick, onLog  }) => (
   <div>
     <h3>🧼 NovaCleaner - Ücretsiz Sistem Temizleyici</h3>
     <p>
       Bilgisayarınız yavaşladı mı? <br />
       Tek tıkla derin temizlik, gereksiz dosyalardan kurtulun!
     </p>
-    <button className="popup-btn" onClick={onClick}>Temizlemeye Başla</button>
+    <button className="popup-btn" onClick={() => {
+    onLog && onLog({
+      type: "adware_popup",
+      questId: null,
+      logEventType: "adware_click",
+      value: -5,
+      data: { popupType: "vpn", button: "Şimdi Etkinleştir" }
+    });
+    onClick();
+  }}>Temizlemeye Başla</button>
   </div>
 );
 
-const AdPopupCard = ({ onClick }) => (
+const AdPopupCard = ({ onClick, onLog  }) => (
   <div>
     <h3>💳 Kart Aidatı Geri Ödeme</h3>
     <p>
       Banka aidatlarınızı geri alın. <br />
       Başvurunuzu yapın, son 6 ayın ücretlerini anında iade alın!
     </p>
-    <button className="popup-btn" onClick={onClick}>Geri Ödeme Talep Et</button>
+    <button className="popup-btn" onClick={() => {
+      onLog && onLog({
+        type: "adware_popup",
+        questId: null,
+        logEventType: "adware_click",
+        value: -5,
+        data: { popupType: "vpn", button: "Şimdi Etkinleştir" }
+      });
+      onClick();
+  }}>Geri Ödeme Talep Et</button>
   </div>
 );
 
 // Banka - Credentail Stealer Popup
-const CredentialStealerPopup = ({ onSubmit }) => {
+const CredentialStealerPopup = ({ onClick, onLog }) => {
   const [form, setForm] = useState({ tckn: '', password: '' });
   return (
     <div>
@@ -88,6 +125,7 @@ const CredentialStealerPopup = ({ onSubmit }) => {
       </p>
       <input
         type="text"
+        required
         placeholder="TCKN"
         value={form.tckn}
         maxLength={11}
@@ -98,6 +136,7 @@ const CredentialStealerPopup = ({ onSubmit }) => {
       />
       <input
         type="password"
+        required
         placeholder="NovaBank Şifresi"
         value={form.password}
         onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
@@ -107,7 +146,16 @@ const CredentialStealerPopup = ({ onSubmit }) => {
       />
       <button
         className="popup-btn"
-        onClick={() => onSubmit(form)}
+        onClick={() => {
+        onLog && onLog({
+          type: "credential_stealer",
+          questId: null,
+          logEventType: "credential_submit",
+          value: -5,
+          data: { popupType: "novabank", tckn: form.tckn }
+        });
+        onClick(form);
+      }}
       >
         Giriş Yap
       </button>
@@ -116,7 +164,7 @@ const CredentialStealerPopup = ({ onSubmit }) => {
 };
 
 // ChatApp - Credential Stealer Popup
-const ChatAppStealerPopup = ({ onSubmit }) => {
+const ChatAppStealerPopup = ({ onClick, onLog }) => {
   const [form, setForm] = useState({ email: '', password: '' });
   return (
     <div>
@@ -126,6 +174,7 @@ const ChatAppStealerPopup = ({ onSubmit }) => {
       </p>
       <input
         type="email"
+        required
         placeholder="E-posta"
         value={form.email}
         onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
@@ -135,6 +184,7 @@ const ChatAppStealerPopup = ({ onSubmit }) => {
       />
       <input
         type="password"
+        required
         placeholder="Şifre"
         value={form.password}
         onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
@@ -142,7 +192,16 @@ const ChatAppStealerPopup = ({ onSubmit }) => {
           marginBottom: 13, width: "80%", padding: 8, borderRadius: 5, border: "1px solid #ddd", fontSize: "1rem"
         }}
       />
-      <button className="popup-btn" onClick={() => onSubmit(form)}>
+      <button className="popup-btn" onClick={() => {
+        onLog && onLog({
+          type: "credential_stealer",
+          questId: null,
+          logEventType: "credential_submit",
+          value: -5,
+          data: { popupType: "novabank", tckn: form.tckn }
+        });
+        onClick(form);
+      }}>
         Giriş Yap
       </button>
     </div>
@@ -155,53 +214,77 @@ const PopupThrower = () => {
   const { addNotification } = useNotificationContext();
   const { openWindows, openWindow, setWindowProps, setActiveWindow } = useUIContext();
   const [ openPopups, setOpenPopups ] = useState([]);
+  const { addEventLog } = useEventLog();
 
-  const popupComponents = [
+  const handlePopupLog = ({ type, questId, logEventType, value = 0, data = {} }) => {
+    addEventLog({
+      type,
+      questId,
+      logEventType,
+      value,
+      data: { ...data, time: Date.now() }
+    });
+  };
+
+
+  const adwarePopups = [
     { component: AdPopupVPN, url: "https://novasecure.com/vpn-promo" },
     { component: AdPopupPrize, url: "https://novasecure.com/prize" },
     { component: AdPopupCleaner, url: "https://novasecure.com/cleaner" },
     { component: AdPopupCard, url: "https://novasecure.com/card-refund" },
-    { component: CredentialStealerPopup, url: null },
-    { component: ChatAppStealerPopup, url: null },
+  ];
+  const credentialPopups = [
+    { component: CredentialStealerPopup },
+    { component: ChatAppStealerPopup }
   ];
 
   const handleBrowserOpen = (url) => {
     if (openWindows.includes("browser")) {
-      setWindowProps(prev => ({ ...prev, browser: { initialUrl: url } }));
+      setWindowProps(prev => ({
+        ...prev,
+        browser: {
+          ...prev.browser,
+          initialUrl: prev.browser?.initialUrl || url,
+          url // URL'yi de dışarıdan gönderiyoruz
+        }
+      }));
       setActiveWindow("browser");
     } else {
-      openWindow("browser", { initialUrl: url });
+      openWindow("browser", { initialUrl: url, url });
     }
   };
 
-
-  const credStealerTimeoutRef = useRef(null);
-  useEffect(() => {
-  // Adware ve Credential Stealer virüslerini kontrol et
   const isAdwareActive = viruses.some(v => v.type === "adware");
   const isCredentialActive = viruses.some(v => v.type === "credential-stealer");
 
-  // 1) ADWARE POPUP VE NOTIFICATION’LARI
-  if (isAdwareActive) {
-    const scheduleNext = () => {
-      const delay = Math.floor(Math.random() * 5000) + 10000; // 10–15s
+  const credStealerTimeoutRef = useRef(null);
+   // Adware popup/notification yönetimi
+  useEffect(() => {
+    if (!isAdwareActive) return;
+    let stopped = false;
 
+    function scheduleNextAdware() {
+      if (stopped) return;
+      const delay = Math.floor(Math.random() * 5000) + 10000;
       setTimeout(() => {
-        const showPopup = Math.random() < 0.5;
-
-        if (showPopup) {
-          const ComponentSet = popupComponents[Math.floor(Math.random() * popupComponents.length)];
-          const newPopup = {
-            id: Date.now(),
-            Component: ComponentSet.component,
-            url: ComponentSet.url,
-            position: {
-              top: `${Math.floor(Math.random() * 300) + 50}px`,
-              left: `${Math.floor(Math.random() * 600) + 100}px`
+        if (Math.random() < 0.5) {
+          // Adware popup
+          const { component: Component, url } = adwarePopups[Math.floor(Math.random() * adwarePopups.length)];
+          setOpenPopups(prev => [
+            ...prev,
+            {
+              id: Date.now() + Math.random(),
+              type: "adware",
+              Component,
+              url,
+              position: {
+                top: `${Math.floor(Math.random() * 300) + 50}px`,
+                left: `${Math.floor(Math.random() * 600) + 100}px`
+              }
             }
-          };
-          setOpenPopups(prev => [...prev, newPopup]);
+          ]);
         } else {
+          // Sistem bildirimi
           const notif = fakeNotifications[Math.floor(Math.random() * fakeNotifications.length)];
           addNotification({
             type: notif.type,
@@ -215,59 +298,48 @@ const PopupThrower = () => {
             actions: []
           });
         }
-
-        scheduleNext();
+        scheduleNextAdware();
       }, delay);
-    };
-    scheduleNext();
-  }
+    }
+    scheduleNextAdware();
+    return () => { stopped = true; };
+  }, [isAdwareActive]);
 
-  // 2) CREDENTIAL-STEALER POPUP
-    // Önce eski timer'ı temizle
+
+  useEffect(() => {
     if (credStealerTimeoutRef.current) {
       clearTimeout(credStealerTimeoutRef.current);
       credStealerTimeoutRef.current = null;
     }
-
-    if (isCredentialActive) {
-      // 60sn–120sn arası random gecikme
-      const delay = Math.floor(Math.random() * 60000) + 60000;
-
-      credStealerTimeoutRef.current = setTimeout(() => {
-        setOpenPopups(prev => {
-          const alreadyOpen = prev.some(
-            p => [CredentialStealerPopup, ChatAppStealerPopup].includes(p.Component)
-          );
-          if (alreadyOpen) return prev;
-
-          const components = [CredentialStealerPopup, ChatAppStealerPopup];
-          const randomIndex = Math.floor(Math.random() * components.length);
-          const SelectedComponent = components[randomIndex];
-
-          return [
-            ...prev,
-            {
-              id: Date.now(),
-              Component: SelectedComponent,
-              url: null,
-              position: {
-                top: `${Math.floor(Math.random() * 200) + 80}px`,
-                left: `${Math.floor(Math.random() * 400) + 120}px`
-              }
+    if (!isCredentialActive) return;
+    const delay = Math.floor(Math.random() * 60000) + 60000;
+    credStealerTimeoutRef.current = setTimeout(() => {
+      setOpenPopups(prev => {
+        // Aynı tip zaten açık mı kontrolü
+        const alreadyOpen = prev.some(
+          p => credentialPopups.some(cp => p.Component === cp.component)
+        );
+        if (alreadyOpen) return prev;
+        const { component: Component } = credentialPopups[Math.floor(Math.random() * credentialPopups.length)];
+        return [
+          ...prev,
+          {
+            id: Date.now() + Math.random(),
+            type: "credential-stealer",
+            Component,
+            url: null,
+            position: {
+              top: `${Math.floor(Math.random() * 200) + 80}px`,
+              left: `${Math.floor(Math.random() * 400) + 120}px`
             }
-          ];
-        });
-      }, delay);
-    }
-
-    // Temizlik: Virüs kaldırılırsa timer da dursun
+          }
+        ];
+      });
+    }, delay);
     return () => {
-      if (credStealerTimeoutRef.current) {
-        clearTimeout(credStealerTimeoutRef.current);
-        credStealerTimeoutRef.current = null;
-      }
+      if (credStealerTimeoutRef.current) clearTimeout(credStealerTimeoutRef.current);
     };
-}, [viruses]);
+  }, [isCredentialActive]);
 
   const closePopup = (id) => {
     setOpenPopups(prev => prev.filter(p => p.id !== id));
@@ -275,7 +347,7 @@ const PopupThrower = () => {
 
   return (
     <>
-      {openPopups.map(({ id, Component, position, url }) => (
+      {openPopups.map(({ id, Component, position, url, type }) => (
         <div
           key={id}
           className="adware-browser-popup"
@@ -299,7 +371,9 @@ const PopupThrower = () => {
             background: "#222", color: "#fff", padding: "8px",
             display: "flex", justifyContent: "space-between", alignItems: "center"
           }}>
-            <span>Reklam - Sponsorlu İçerik</span>
+            <span>
+              {type === "adware" ? "Reklam - Sponsorlu İçerik" : "Güvenlik Bildirimi"}
+            </span>
             <button onClick={() => closePopup(id)}
               style={{
                 background: "#e74c3c", color: "#fff",
@@ -310,10 +384,15 @@ const PopupThrower = () => {
           </div>
           <div style={{ padding: "16px", fontSize: "14px", overflowY: "auto", flexGrow: 1 }}>
             <div className="ad-popup-content">
-              <Component onClick={() => {
-                handleBrowserOpen(url);
-                closePopup(id);
-              }} />
+              <Component
+                onClick={() => {
+                  if (type === "adware" && url) handleBrowserOpen(url);
+                  closePopup(id);
+                }}
+                onLog={handlePopupLog}
+                url={url}
+                popupType={type}
+              />
             </div>
           </div>
         </div>

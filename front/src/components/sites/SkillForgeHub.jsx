@@ -216,6 +216,17 @@ const SkillForgeHub = () => {
       isPasswordStrong: strong,
     });
 
+    addEventLog({
+      type: "update_password",
+      questId: "register_career_site",
+      logEventType: "update",
+      value: passwordStrong ? 1 : -1,
+      data: 
+      {
+        for: "SkillForgeHub",
+        isStrong: passwordStrong,
+      }
+    });
     setSuccessPassword("Şifreniz başarıyla güncellendi!");
     setNewPassword("");
     setTimeout(() => setSuccessPassword(""), 2000);

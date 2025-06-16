@@ -225,6 +225,17 @@ const ProCareerHub = () => {
       password: newPassword,
       isPasswordStrong: passwordStrong,
     });
+    addEventLog({
+      type: "update_password",
+      questId: "register_career_site",
+      logEventType: "update",
+      value: passwordStrong ? 1 : -1,
+      data: 
+      {
+        for: "ProCareerHub",
+        isStrong: passwordStrong,
+      }
+    });
     console.log(passwordStrong);
     setSuccessPassword("Şifreniz başarıyla güncellendi!");
     setNewPassword("");
