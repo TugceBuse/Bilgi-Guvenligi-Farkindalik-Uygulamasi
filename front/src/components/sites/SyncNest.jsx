@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFileContext } from "../../Contexts/FileContext";
 import styles from "./SyncNest.module.css";
 import { useQuestManager } from "../../Contexts/QuestManager";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 const dummyCommunityFiles = [
   { label: "hobby_photos.zip", type: "zip", size: "6.2 MB", owner: "Anonim" },
@@ -11,6 +12,7 @@ const dummyCommunityFiles = [
 
 const SyncNest = () => {
   const { files } = useFileContext();
+  const { addEventLog } = useEventLog();
   const { failQuest } = useQuestManager();
   const downloadsFiles = Object.values(files).filter(
     f => f.location === "downloads" && ["doc", "pdf", "txt"].includes(f.type)
@@ -33,12 +35,34 @@ const SyncNest = () => {
     if (!form.email || !form.password || !form.birth || !form.address) return setError("Tüm alanları doldurun.");
     setUser({ ...form });
     setError("");
+    addEventLog({
+      type: "register_SyncNest",
+      questId: "file_backup",
+      logEventType: "register",
+      value: -5,
+      data: 
+      {
+        for: "SyncNest",
+        isFake: true,
+      }
+    });
   };
   // Giriş işlemi
   const handleLogin = (e) => {
     e.preventDefault();
     if (form.email === user?.email && form.password === user?.password) {
       setUser({ ...user, isLoggedIn: true });
+      addEventLog({
+        type: "login_SyncNest",
+        questId: "file_backup",
+        logEventType: "login",
+        value: -1, 
+        data: 
+        {
+          to: "SyncNest",
+          isFake: true,
+        }
+      });
       setError("");
     } else {
       setError("Kullanıcı bulunamadı veya bilgiler hatalı.");
@@ -69,6 +93,16 @@ const SyncNest = () => {
           ...prev
         ]);
         failQuest("file_backup");
+        addEventLog({
+          type: "backup",
+          questId: "file_backup",
+          logEventType: "cloud_backup",
+          value: -10,
+          data: {
+            site: "SyncNest",
+            isFake: true,
+          }
+        });
         setShowUpload(false);
         setUploadProgress(0);
       }

@@ -3,6 +3,7 @@ import { useGameContext } from "../../Contexts/GameContext";
 import { useFileContext } from "../../Contexts/FileContext";
 import styles from "./CloudBox.module.css";
 import { useQuestManager } from "../../Contexts/QuestManager";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 const generatePackageLink = () =>
   "https://cloudbox.com/package/" + Math.random().toString(36).slice(2, 10);
@@ -44,6 +45,7 @@ const generatePackageLink = () =>
 
 const CloudBox = () => {
   const { cloudUser, setCloudUser, cloudBoxBackup, setCloudBoxBackup } = useGameContext();
+  const { addEventLog } = useEventLog();
   const { files } = useFileContext();
   const { completeQuest } = useQuestManager();
 
@@ -58,7 +60,13 @@ const CloudBox = () => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState(cloudUser.email || "");
+
   const [password, setPassword] = useState("");
+  const isPasswordStrongEnough = (password) => {
+    return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).{8,}$/.test(password);
+  };
+  const passwordStrong = isPasswordStrongEnough(password);
+
   const [error, setError] = useState("");
   const [lockMessage, setLockMessage] = useState("");
   const [codeTimer, setCodeTimer] = useState(120);
@@ -153,6 +161,17 @@ const CloudBox = () => {
       lockoutUntil: null,
       loginAttempts: 0
     });
+    addEventLog({
+      type: "register_cloudbox",
+      questId: "file_backup",
+      logEventType: "register",
+      value: passwordStrong ? 5 : -5,
+      data: 
+      {
+        for: "CloudBox",
+        isStrong: passwordStrong,
+      }
+    });
     setPage("main");
     showTemporaryError("");
   };
@@ -195,6 +214,17 @@ const CloudBox = () => {
       isLoggedIn: true,
       loginAttempts: 0
     }));
+    addEventLog({
+      type: "login_cloudbox",
+      questId: "file_backup",
+      logEventType: "login",
+      value: 0,
+      data: 
+      {
+        to: "CloudBox",
+        password: password,
+      }
+    });
     setPage("main");
     showTemporaryError("");
   };
@@ -241,6 +271,16 @@ const CloudBox = () => {
           permissions: uploadPermissions
         });
         completeQuest("file_backup");
+        addEventLog({
+          type: "backup",
+          questId: "file_backup",
+          logEventType: "cloud_backup",
+          value: 10,
+          data: {
+            site: "CloudBox",
+            isFake: false,
+          }
+        });
         setUploadState({});
         setShowUpload(false);
       } else {
