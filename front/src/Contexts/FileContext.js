@@ -41,6 +41,7 @@ const defaultFileSchema = {
             icon: "/icons/txt.png", 
             content: "/files/benioku.txt",
             locked: false,
+            hash: " ",
         },
         rapor_2025: { 
             available: false, 
@@ -56,6 +57,7 @@ const defaultFileSchema = {
             icon: "/icons/docx.png", 
             specialView : "enableContentDocx" ,
             locked: false,
+            hash: " ",
         },
         sahtefatura: { 
             available: false,
@@ -71,6 +73,7 @@ const defaultFileSchema = {
             icon: "/icons/docx.png", 
             specialView: "enableContentDocx",
             locked: false,
+            hash: " ",
         },
         antivirussetup: { 
             available: true,
@@ -184,6 +187,7 @@ const defaultFileSchema = {
             icon: "/icons/pdf.png",
             content: "/files/Kişisel_Kullanıcı_Bilgileri.txt",
             locked: false,
+            hash: " ",
         },
         issozlesmesi: {
             available: false,
@@ -198,6 +202,7 @@ const defaultFileSchema = {
             icon: "/icons/pdf.png",
             content: "/files/İş_Sözleşmesi.txt",
             locked: false,
+            hash: " ",
         },
         gizlilikpolitikasi: {
             available: false,
@@ -212,6 +217,7 @@ const defaultFileSchema = {
             icon: "/icons/pdf.png",
             content: "/files/Gizlilik_Politikası.txt",
             locked: false,
+            hash: " ",
         },
         personelelkitabi: {
             available: false,
@@ -226,6 +232,7 @@ const defaultFileSchema = {
             icon: "/icons/pdf.png",
             content: "/files/Personel_El_Kitabı.txt",
             locked: false,
+            hash: " ",
         }
     });
 
