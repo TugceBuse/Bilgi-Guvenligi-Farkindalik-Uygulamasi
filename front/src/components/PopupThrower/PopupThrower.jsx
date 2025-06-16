@@ -152,7 +152,6 @@ const ChatAppStealerPopup = ({ onSubmit }) => {
 
 const PopupThrower = () => {
   const { viruses } = useVirusContext();
-  console.log("Aktif Virüsler:", viruses);
   const { addNotification } = useNotificationContext();
   const { openWindows, openWindow, setWindowProps, setActiveWindow } = useUIContext();
   const [ openPopups, setOpenPopups ] = useState([]);
