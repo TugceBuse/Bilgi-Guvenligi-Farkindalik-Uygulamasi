@@ -38,7 +38,7 @@ const fakeClients = [
 ];
 
 const ChatAppF = () => {
-  const { addFile } = useFileContext();
+  const { addFile, updateFileStatus } = useFileContext();
   const { addVirus } = useVirusContext();
 
   const { addEventLog } = useEventLog();
@@ -68,47 +68,68 @@ const ChatAppF = () => {
           clearInterval(intervalRef.current);
           setAlreadyDownloaded(true);
           setShowPopup(true);
-          addFile("chatbox", {
-            available: true,
-            clickable: true,
-            infected: true,
-            detectable: true,
-            virusType: "credential-stealer",
-            type: "zip",
-            size: "720KB",
-            location: "desktop",
-            label: "ChatBox.zip",
-            icon: "/icons/zip-file.png",
-            onOpen: () => {
-              addVirus({
-                type: "credential-stealer",
-                source: "chatbox",
-                timestamp: Date.now()
-              });
+          addFile("chatboxzip", {
+          label: "ChatBox.zip",
+          icon: "/icons/zip-file.png",
+          location: "desktop",
+          type: "zip",
+          clickable: true,
+          onOpen: () => {
+            addFile("chatboxsetup", {
+              label: "ChatBox_Setup.exe",
+              icon: "/icons/chatting.png",
+              location: "desktop",
+              type: "exe",
+              clickable: true,
+              infected: true,
+              detectable: true,
+              virusType: "credential-stealer",
+              onOpen: () => {
+                // virüs bulaştır
+                addVirus({
+                  type: "credential-stealer",
+                  source: "chatboxsetup",
+                  timestamp: Date.now()
+                });
 
-              addEventLog({
-                type: "open_file",
-                questId: "download_chatapp",
-                logEventType: "open_file",
-                value: -15,
-                data: {
-                  file: "chatbox",
-                  virusType: "credential-stealer"
-                }
-              });
+                addEventLog({
+                  type: "open_file",
+                  questId: "download_chatapp",
+                  logEventType: "open_file",
+                  value: -10,
+                  data: {
+                    file: "chatboxsetup",
+                    virusType: "credential-stealer"
+                  }
+                });
 
-              showFakeCMD({
-                lines: [
-                  "Yürütülüyor: steal_credentials.exe",
-                  "Gönderiliyor -> https://leakhost.com/db/user_dump.txt",
-                  "İşlem tamamlandı: 5 kullanıcı verisi sızdırıldı.",
-                  "Bağlantı kapatıldı.",
-                ],
-                duration: 1000
-              });
-            }
-          });
+                showFakeCMD({
+                  title: "CMD - ChatBox.exe çalıştırılıyor...",
+                  lines: [
+                    "Yürütülüyor: chatbox_stealer.exe",
+                    "Kullanıcı bilgileri toplanıyor...",
+                    "Veriler leakhost.com adresine gönderildi!",
+                    "Bağlantı kapatıldı."
+                  ],
+                  duration: 1000
+                });
+              }
+            });
 
+            updateFileStatus("chatboxzip", { label: "ChatBox.zip (Ayıklandı)", clickable: false });
+
+            addEventLog({
+              type: "unzip_file",
+              questId: "download_chatapp",
+              logEventType: "unzip",
+              value: -5,
+              data: {
+                archive: "chatboxzip",
+                extracted: ["chatboxsetup"]
+              }
+            });
+          }
+        });
           // 2sn sonra popup kapanacak VE sadece iptal edilmediyse virüs eklenecek
           setTimeout(() => {
             setShowPopup(false);
