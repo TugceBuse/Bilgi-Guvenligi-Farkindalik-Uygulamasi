@@ -96,18 +96,25 @@ const Desktop = ({ hacked, onFormat }) => {
   }, [openWindows, openedFiles]);
 
   const handleDesktopClick = (windowKey) => {
-    const { openHandler } = handlers[windowKey];
-    if (!openHandler) {
-      console.error(`openHandler is not defined for ${windowKey}`);
-      return;
-    }
-    if (!openWindows.includes(windowKey)) {
-      const requiresInternet = windowConfig[windowKey]?.requiresInternet;
-      if (requiresInternet && !isWificonnected) {
-        setShowAlert(true);
-      } else {
-        openHandler();
-        handleIconClick(windowKey);
+    const handler = handlers[windowKey];
+
+    if (handler?.openHandler) {
+      if (!openWindows.includes(windowKey)) {
+        const requiresInternet = windowConfig[windowKey]?.requiresInternet;
+        if (requiresInternet && !isWificonnected) {
+          setShowAlert(true);
+        } else {
+          handler.openHandler();
+          handleIconClick(windowKey);
+        }
+      }
+    } else {
+      // Eğer bir pencere handler'ı yoksa ama dosyaysa
+      const file = files[windowKey] || files.find?.(f => f.id === windowKey);
+      if (file?.onOpen) {
+        file.onOpen();
+      }else {
+        console.error(`No openHandler or onOpen found for ${windowKey}`);
       }
     }
   };
