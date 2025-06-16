@@ -24,7 +24,7 @@ export const useNovabankApp = () => {
 const NovabankApp = ({ closeHandler, style }) => {
   const { constUser, BankInfo, setBankInfo, cardBalance, isWificonnected } = useGameContext();
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
-  const { addEventLog } = useEventLog();
+  const { addEventLogOnce } = useEventLog();
 
   const [is2FAwaiting, setIs2FAwaiting] = useState(false);
   const [twoFACodeInput, setTwoFACodeInput] = useState("");
@@ -189,18 +189,21 @@ const NovabankApp = ({ closeHandler, style }) => {
                         setTwoFACodeInput("");
                         setIs2FAwaiting(false);
                         setPage("dashboard");
-                        if (BankInfo.rememberMe) {
-                          addEventLog({
+                        addEventLogOnce(
+                          "login_novabank",
+                          "rememberMe",
+                          BankInfo.rememberMe,
+                          {
                             type: "login_novabank",
                             questId: null,
                             logEventType: "login",
-                            value: -5,
+                            value: BankInfo.rememberMe ? -5 : 0,
                             data: {
                               to: "novabank",
-                              rememberMe: true,
+                              rememberMe: BankInfo.rememberMe,
                             }
-                          });
-                        }
+                          }
+                        );
                       } else {
                         setErrorMessage("⚠ Kod hatalı!");
                         setTimeout(() => setErrorMessage(""), 2000);
@@ -237,11 +240,11 @@ const NovabankApp = ({ closeHandler, style }) => {
                   <div className={styles.cardDetails}>
                     <div>
                       <label>Son Kullanım</label>
-                      <p>12/26</p>
+                      <p>{constUser.cardExpiryDate}</p>
                     </div>
                     <div>
                       <label>Kart Sahibi</label>
-                      <p>Onur Yılmaz</p>
+                      <p>{constUser.cardName}</p>
                     </div>
                   </div>
                 </div>
