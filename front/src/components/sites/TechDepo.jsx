@@ -192,6 +192,7 @@ const TechDepo = ({scrollRef}) => {
         value: passwordStrong ? 5 : -5,
         data: 
         {
+          store: "TechDepo",
           isStrong: passwordStrong,
         }
       });

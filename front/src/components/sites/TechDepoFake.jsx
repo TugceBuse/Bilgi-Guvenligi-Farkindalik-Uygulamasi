@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./TechDepo.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext"; 
+import { useEventLog } from "../../Contexts/EventLogContext";
 import cardsData from "../../constants/cards";
 const cards = cardsData.cards;
 
 const TechDepo = ({scrollRef}) => {
   const { TechInfoF, setTechInfoF } = useGameContext();
+  const {addEventLog} = useEventLog();
   const [productInfo, setProductInfo] = useState({
     productIDs: []
   });
@@ -82,6 +84,17 @@ const TechDepo = ({scrollRef}) => {
         isLoggedIn: true,
         isGuest: false,
         isPasswordStrong: passwordStrong,
+      });
+      addEventLog({
+        type: "login_techdepof",
+        questId: "buy_printer",
+        logEventType: "login",
+        value: passwordStrong ? 0 : -10, //techdepof sitesine kayıt olduğu için hali hazırda -5 yiyor, eğer güçlü şifre giriyorsa +5 den 0 puan alıyor, yoksa -10 a çıkıyor puanı
+        data: 
+        {
+          store: "TechDepoF",
+          isStrong: passwordStrong,
+        }
       });
       setErrorMessage("");
     } else {
@@ -302,6 +315,38 @@ const TechDepo = ({scrollRef}) => {
       setNoticeType("payment");
       setShowCartNotice(true);
       setTimeout(() => setShowCartNotice(false), 2000);
+
+      let value = 0;
+      if (TechInfoF.acceptedPreApprovedLoan){
+        value -= 5; // Bilgilerini kampanya karşılığı paylaşmayı kabul ederse -5
+      } else {
+        value += 5; // Bilgilerini kampanya karşılığı paylaşmayı kabul ederse +5
+      }
+      if (saveCard) {
+        value -= 5; // Kart kaydedilmişse eksi puan
+      } else {
+        value += 5; // Kart kaydedilmemişse artı puan
+      }
+      if (TechInfoF.acceptedCampaignTerms) {
+        value -= 5; // Kampanya koşullarını kabul etmişse eksi puan
+      } else {
+        value += 5; // Kampanya koşullarını kabul etmişse eksi puan
+      }
+
+      addEventLog({
+        type: "payment",
+        questId: null,
+        logEventType: "e-commerce",
+        value,
+        data: {
+          store: "TechDepoF",
+          isFake: true,
+          isSaveCard: saveCard,
+          isAcceptedCampaignTerms: TechInfoF.acceptedCampaignTerms,
+          isAcceptedPreApprovedLoan: TechInfoF.acceptedPreApprovedLoan
+        }
+      });
+
       setTechInfoF(prev => ({
         ...prev,
         tckn: "",
@@ -626,7 +671,9 @@ const TechDepo = ({scrollRef}) => {
                 setTechInfoF(prev => ({
                   ...prev,
                   isLoggedIn: false,
-                  isGuest: true
+                  isGuest: true ,
+                  name: "Misafir",
+                  surname: "Kullanıcı"
                 }));
                 setPage("payment");
               }}
