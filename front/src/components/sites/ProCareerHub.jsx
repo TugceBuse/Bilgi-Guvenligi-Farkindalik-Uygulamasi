@@ -3,10 +3,12 @@ import styles from "./ProCareerHub.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext";
 import { useQuestManager } from "../../Contexts/QuestManager";
+import  {useEventLog } from "../../Contexts/EventLogContext";
 
 const ProCareerHub = () => {
 
   const { ProCareerHubInfo, setProCareerHubInfo} = useGameContext();
+  const { addEventLog } = useEventLog();
   const { completeQuest } = useQuestManager();
 
   const [isLogin, setIsLogin] = useState(true);
@@ -32,7 +34,6 @@ const ProCareerHub = () => {
 
   const [showSettings, setShowSettings] = useState(false);
   const [showAd, setShowAd] = useState(false); // Reklam gösterme kontrolü
-  const [showWarning, setShowWarning] = useState(false);
   const [showFakeBrowser, setShowFakeBrowser] = useState(false);
 
   useEffect(() => {
@@ -133,6 +134,17 @@ const ProCareerHub = () => {
         isRegistered: true,
         isLoggedIn: true,
       });
+      addEventLog({
+        type: "register_procareerhub",
+        questId: "register_career_site",
+        logEventType: "register",
+        value: passwordStrong ? 0 : -10,
+        data: 
+        {
+          for: "ProCareerHub",
+          isStrong: passwordStrong,
+        }
+      });
         completeQuest("register_career_site");
       showTemporaryError("");
     } else {
@@ -153,6 +165,17 @@ const ProCareerHub = () => {
       }
 
       setProCareerHubInfo(prev => ({ ...prev, isLoggedIn: true }));
+      addEventLog({
+        type: "login_procareerhub",
+        questId: "register_career_site",
+        logEventType: "login",
+        value: -1, 
+        data: 
+        {
+          to: "ProCareerHub",
+          password: password,
+        }
+      });
       showTemporaryError("");
     }
   };
@@ -212,7 +235,16 @@ const ProCareerHub = () => {
   const handleAdClick = () => {
     setShowFakeBrowser(true);
     setShowAd(false);
-
+    addEventLog({
+      type: "click_ad_popup",
+      questId: "register_career_site",
+      logEventType: "click_ad",
+      value: -5,
+      data: 
+      {
+        site: "ProCareerHub",
+      }
+    });
     // 3 saniye sonra sahte siteyi kapat
     setTimeout(() => {
       setShowFakeBrowser(false);
@@ -259,18 +291,10 @@ const ProCareerHub = () => {
           </div>
           <div className={styles.fakeBrowserContent}>
             <h1>⚠ Dikkat!</h1>
-            <p>Bu site güvenli değil! Kişisel bilgilerinizi paylaşmayın.</p>
+            <p>Bilgileriniz izinsiz paylaşılıyor olabilir.</p>
           </div>
         </div>
       )}
-
-      {/* Güvenlik Uyarısı Bildirimi */}
-      {showWarning && (
-        <div className={styles.warningNotification}>
-          ⚠ Dikkat! Güvensiz bir bağlantıya tıklamış olabilirsiniz. Bilinmeyen bağlantılara tıklamayın!
-        </div>
-      )}
-
       {showSettings && (
         <div className={styles.settingsMenu}>
           <h3>⚙ Kullanıcı Ayarları</h3>

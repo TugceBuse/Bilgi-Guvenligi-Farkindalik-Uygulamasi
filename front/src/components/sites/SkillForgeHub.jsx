@@ -3,9 +3,11 @@ import styles from "./SkillForgeHub.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext";
 import { useQuestManager } from "../../Contexts/QuestManager";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 const SkillForgeHub = () => {
   const { SkillForgeHubInfo, setSkillForgeHubInfo } = useGameContext();
+  const { addEventLog } = useEventLog();
   const { completeQuest } = useQuestManager();
 
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
@@ -84,6 +86,18 @@ const SkillForgeHub = () => {
         isLoggedIn: true,
         isPasswordStrong: passwordStrong,
       });
+
+      addEventLog({
+        type: "register_skillforgehub",
+        questId: "register_career_site",
+        logEventType: "register",
+        value: passwordStrong ? 5 : -5,
+        data: 
+        {
+          for: "SkillForgeHub",
+          isStrong: passwordStrong,
+        }
+      });
         completeQuest("register_career_site"); 
       setIsLoginOpen(false);
       showTemporaryError("");
@@ -111,6 +125,17 @@ const SkillForgeHub = () => {
       setSkillForgeHubInfo({
         ...SkillForgeHubInfo,
         isLoggedIn: true,
+      });
+      addEventLog({
+        type: "login_skillforgehub",
+        questId: "register_career_site",
+        logEventType: "login",
+        value: 0,
+        data: 
+        {
+          to: "SkillForgeHub",
+          password: password,
+        }
       });
       setIsLoginOpen(false);
     }

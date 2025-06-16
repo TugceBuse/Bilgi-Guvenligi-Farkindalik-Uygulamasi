@@ -398,9 +398,9 @@
 
 /* Reklam Pop-up (Gelişmiş İçerik) */
 .adPopup {
-  position: fixed;
+  position: absolute;
   top: 35%;
-  left: 43%;
+  left: 40%;
   transform: translate(-50%, -50%);
   width: 300px;
   background: linear-gradient(135deg, #ff9800, #ffeb3b);
