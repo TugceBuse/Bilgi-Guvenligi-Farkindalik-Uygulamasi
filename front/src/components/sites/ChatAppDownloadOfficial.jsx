@@ -51,7 +51,14 @@ const ChatAppDownloadOfficial = () => {
   const [ showPopup, setShowPopup ] = useState(false);
   const intervalRef = useRef(null);
 
+  const [alreadyDownloaded, setAlreadyDownloaded] = useState(false);
+
   const startDownload = () => {
+     if (alreadyDownloaded) {
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 2500);
+      return;
+    }
     setDownloading(true);
     setProgress(0);
     intervalRef.current = setInterval(() => {
@@ -124,7 +131,7 @@ const ChatAppDownloadOfficial = () => {
           }
           {showPopup && (
             <div className={styles.popup}>
-              Kurulum dosyası başarıyla indirildi!
+              {alreadyDownloaded ? "Bu uygulama zaten indirildi." : "Uygulama başarıyla indirildi!"}
             </div>
           )}
         </div>
