@@ -656,7 +656,7 @@ const TechDepo = ({scrollRef}) => {
     if (TechInfo) {
       const cardMatches =
         cardNumber === TechInfo.cardNumber &&
-        cardName === TechInfo.cardName &&
+        cardName.toLocaleLowerCase("tr-TR") === (TechInfo.cardName || "").toLocaleLowerCase("tr-TR") &&
         expiryDate === TechInfo.cardExpiryDate &&
         cvv === TechInfo.cardCVV;
     

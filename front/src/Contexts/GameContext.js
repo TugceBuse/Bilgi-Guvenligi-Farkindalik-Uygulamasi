@@ -1,13 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useMailContext } from './MailContext';
 import { statusSteps } from '../utils/cargoStatus';
-import { useTimeContext } from './TimeContext'; // 🆕
+import { useTimeContext } from './TimeContext';
 import { useSecurityContext } from './SecurityContext';
-import { useQuestManager } from './QuestManager'; // 🆕
+import { useQuestManager } from './QuestManager';
+import { useAuthContext } from './AuthContext';
 
 const GameContext = createContext();
 
 export const GameContextProvider = ({ children }) => {
+  
+  // AuthContext'ten kullanıcı bilgileri ve fonksiyonlar
+  const { user } = useAuthContext();
   // Zaman artık TimeContext'ten alınacak!
   const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
   const { sendMail } = useMailContext();
@@ -23,7 +27,7 @@ export const GameContextProvider = ({ children }) => {
   const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});
 
   // Kullanıcı bilgileri ve site bazlı bilgiler (aynen korunur)
-  const constUser = {
+  const [constUser, setConstUser] = useState({
     email: "hilal.kaya@oriontech.colum",
     phone: "054164944",
     adres: "Atatürk Mahallesi, Gökkuşağı Sokak No:17/3, 34850, Yıldızlı İlçesi, İstanbul",
@@ -33,7 +37,93 @@ export const GameContextProvider = ({ children }) => {
     cardName: 'Tugce Buse',
     cardExpiryDate: '05/26',
     cardCVV: '123',
-  };
+    firstName: "",
+    lastName: "",
+    fullName: "",
+  });
+
+  useEffect(() => {
+    if (!user) return;
+    setConstUser(prev => ({
+      ...prev,
+      id: user._id || user.id || prev.id,
+      firstName: user.firstName !== undefined ? user.firstName : prev.firstName,
+      lastName: user.lastName !== undefined ? user.lastName : prev.lastName,
+      fullName: `${user.firstName} ${user.lastName}`,
+      email: user.email !== undefined ? user.email : prev.email,
+      username: user.username !== undefined ? user.username : prev.username,
+      phone: user.phone !== undefined ? user.phone : prev.phone,
+      adres: user.adres !== undefined ? user.adres : prev.adres,
+      tcNo: user.tcNo !== undefined ? user.tcNo : prev.tcNo,
+      digitalPassword: user.digitalPassword !== undefined ? user.digitalPassword : prev.digitalPassword,
+      cardNumber: user.cardNumber !== undefined ? user.cardNumber : prev.cardNumber,
+      cardName:
+        user.firstName && user.lastName
+          ? `${user.firstName} ${user.lastName}`
+          : prev.cardName,
+      cardExpiryDate: user.cardExpiryDate !== undefined ? user.cardExpiryDate : prev.cardExpiryDate,
+      cardCVV: user.cardCVV !== undefined ? user.cardCVV : prev.cardCVV,
+    }));
+  }, [user]);
+
+  useEffect(() => {
+    console.log("Const User güncellendi:", constUser);
+  }, [constUser]);
+
+  useEffect(() => {
+    setProCareerHubInfo(prev => ({
+      ...prev,
+      email: constUser.email,
+      phone: constUser.phone,
+      name: constUser.firstName,
+      surname: constUser.lastName,
+    }));
+    setSkillForgeHubInfo(prev => ({
+      ...prev,
+      email: constUser.email,
+      phone: constUser.phone,
+      name: constUser.firstName,
+      surname: constUser.lastName,
+    }));
+    setPostifyInfo(prev => ({
+      ...prev,
+      email: constUser.email,
+      phone: constUser.phone,
+      name: constUser.firstName,
+      surname: constUser.lastName,
+    }));
+    setTechInfo(prev => ({
+      ...prev,
+      email: constUser.email,
+      phone: constUser.phone,
+      name: constUser.firstName,
+      surname: constUser.lastName,
+      cardNumber: constUser.cardNumber,
+      cardName: constUser.cardName,
+      cardExpiryDate: constUser.cardExpiryDate,
+      cardCVV: constUser.cardCVV,
+      adres: constUser.adres,
+    }));
+    setTechInfoF(prev => ({
+      ...prev,
+      email: constUser.email,
+      phone: constUser.phone,
+      name: constUser.firstName,
+      surname: constUser.lastName,
+      cardNumber: constUser.cardNumber,
+      cardName: constUser.cardName,
+      cardExpiryDate: constUser.cardExpiryDate,
+      cardCVV: constUser.cardCVV,
+      adres: constUser.adres,
+    }));
+    setCloudUser(prev => ({
+      ...prev,
+      email: constUser.email,
+      name: constUser.firstName,
+      surname: constUser.lastName,
+    }));
+  }, [constUser]);
+
 
   useEffect(() => {
     if (parseFloat(cardBalance) < 4979) {

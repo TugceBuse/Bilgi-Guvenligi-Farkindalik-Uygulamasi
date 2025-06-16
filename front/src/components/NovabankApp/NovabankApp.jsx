@@ -229,7 +229,7 @@ const NovabankApp = ({ closeHandler, style }) => {
         {page === 'dashboard' && (
           <div className={styles.dashboard}>
             <header className={styles.dashboardHeader}>
-              <span className={styles.userInfo}>👋 Hoşgeldin, Onur Yıldız</span>
+              <span className={styles.userInfo}>👋 Hoşgeldin, {constUser.fullName}</span>
             </header>
 
             <section className={styles.accountInfo}>
