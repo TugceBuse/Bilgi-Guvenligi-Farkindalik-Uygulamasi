@@ -83,7 +83,7 @@ const initialWindowConfig = {
     useComponent: useAntivirus,
     location: 'desktop',
     clickable: true,
-    available: true,
+    available: false,
     requiresInternet: false
   },
   novabankapp: {

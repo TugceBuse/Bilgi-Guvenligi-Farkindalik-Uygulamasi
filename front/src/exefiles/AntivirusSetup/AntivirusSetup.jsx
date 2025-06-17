@@ -34,7 +34,6 @@ const AntivirusSetup = ({ file, fileName }) => {
     const { closeFile } = useFileContext();
     const { updateAvailableStatus } = useWindowConfig();
     const { windowConfig } = useWindowConfig();
-    const { setRealTimeProtection } = useVirusContext();
 
     const handleNextStep = () => {
         if (windowConfig.antivirus.available) {
@@ -63,8 +62,6 @@ const AntivirusSetup = ({ file, fileName }) => {
                 value: 30,
                 data: null
             });
-
-            setRealTimeProtection(true); // Antivirüs açıldı
         }, 5000);
        
     };

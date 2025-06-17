@@ -139,7 +139,7 @@ const sites = {
     component: "CyberSentinel",
     statement: "Kurumsal güvenlik ve antivirüs hizmetleri sunuyoruz.",
     searchKeys: ["antivirus", "firewall", "malware", "cyber", "cybersentinel", "sentinel"],
-    clickable: true,
+    clickable: false,
     protocol: "https",
     isSponsored: false,
     seoScore: 70
