@@ -212,7 +212,7 @@ const Antivirus = ({ closeHandler, style }) => {
           type: "antivirus_update_check",
           questId: "antivirus_install",
           logEventType: "antivirus",
-          value: 0,
+          value: 5,
           data: { checked: true }
         },
         30 * 60 * 1000 // 30 dakika cooldown
@@ -255,7 +255,7 @@ const Antivirus = ({ closeHandler, style }) => {
               type: "antivirus_update_completed",
               questId: "antivirus_install",
               logEventType: "antivirus",
-              value: 20,
+              value: 10,
               data: { completed: true }
             }
           );
@@ -314,7 +314,7 @@ const Antivirus = ({ closeHandler, style }) => {
     // LOG: Dosya silindi
     addEventLog({
       type: "file_deleted",
-      questId: "antivirus_install",
+      questId: null,
       logEventType: "antivirus",
       value: 0,
       data: { fileName }
@@ -326,9 +326,9 @@ const Antivirus = ({ closeHandler, style }) => {
     // LOG: Dosya karantinadan çıkarıldı
     addEventLog({
       type: "file_restored",
-      questId: "antivirus_install",
+      questId: null,
       logEventType: "antivirus",
-      value: 0,
+      value: -3,
       data: { fileName }
     });
   };
