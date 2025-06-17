@@ -76,7 +76,7 @@ const defaultFileSchema = {
             hash: " ",
         },
         antivirussetup: { 
-            available: true,
+            available: false,
             quarantined: false, 
             clickable: true,
             infected: false,

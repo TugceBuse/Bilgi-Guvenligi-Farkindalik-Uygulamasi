@@ -18,6 +18,55 @@
     background-color: rgba(255, 255, 255, 0.3);
     animation: progress 10s linear forwards;
   }
+
+  .progress-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.progress-bar-outer {
+  position: relative;
+  width: 180px;
+  height: 32px;
+  background: #1b4747;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid #0dd2a3;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #48e1c1 0%, #2bd6c6 100%);
+  transition: width 0.25s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.progress-bar-text {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #002623;
+  z-index: 2;
+  font-size: 1.15rem;
+  pointer-events: none;
+}
+
+/* Yüzde değeri bar %50'yi geçene kadar bar üstü text görünür, aksi halde bar üstü text görünmez */
+.progress-bar-text-fg {
+  color: #1b4747;
+  z-index: 3;
+  pointer-events: none;
+}
+
   
   @keyframes progress {
     0% { width: 0; }
