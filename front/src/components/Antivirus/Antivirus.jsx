@@ -86,7 +86,7 @@ const Antivirus = ({ closeHandler, style }) => {
         value: 10,
         data: {}
       },
-      1 // 30sn örnek, ihtiyaca göre artır
+      30 * 1000 * 60 // 30sn örnek, ihtiyaca göre artır
     );
 
     const now = new Date();
@@ -142,8 +142,8 @@ const Antivirus = ({ closeHandler, style }) => {
 
       // 🔍 2. Dosya içinden doğrudan enfekte olanları analiz et (aktif virüs olmasa bile)
       Object.entries(files).forEach(([fileName, fileData]) => {
-        console.log("FileName:", fileName);
-        console.log("FileData:", fileData);
+        // console.log("FileName:", fileName);
+        // console.log("FileData:", fileData);
         const isDetectableInfected =
           antivirusUpdated &&
           fileData.detectable &&

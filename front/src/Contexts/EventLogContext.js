@@ -11,17 +11,18 @@ export function EventLogProvider({ children }) {
   const [eventLogs, setEventLogs] = useState([]);
   const { gameDate } = useTimeContext();
 
-  // Türkiye saatinde string timestamp üretir
+  // Türkiye saatinde string timestamp üretir (gösterim için)
   const turkishTimeString = (dateObj) =>
     dateObj.toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" });
 
-  // Tüm event eklemeleri buraya yönlendirilir (her zaman doğru timestamp ile)
+  // Tüm loglara otomatik olarak hem string timestamp hem numeric timestampMs ekler
   const addEventLog = (event) => {
     setEventLogs((prev) => [
       ...prev,
       {
         ...event,
-        timestamp: turkishTimeString(gameDate),
+        timestamp: turkishTimeString(gameDate), // Ekranda okunur haliyle
+        timestampMs: gameDate.getTime(),        // Numeric, güvenli kıyas için
       }
     ]);
   };
@@ -77,22 +78,23 @@ export function EventLogProvider({ children }) {
     uniqueField,
     uniqueValue,
     eventObj,
-    cooldownMs = 60 * 60 * 1000
+    cooldownMs = 60 * 60 * 1000 // Varsayılan: 1 saat
   ) => {
     const now = gameDate.getTime();
     const filteredLogs = eventLogs.filter(ev =>
       ev.type === type &&
       (uniqueField == null || (ev.data && ev.data[uniqueField] === uniqueValue))
     );
+    // En son eklenen logu bul
     const lastLog = filteredLogs.sort((a, b) =>
-      new Date(b.timestamp) - new Date(a.timestamp)
+      b.timestampMs - a.timestampMs
     )[0];
 
-    if (!lastLog || now - new Date(lastLog.timestamp).getTime() > cooldownMs) {
+    if (!lastLog || now - lastLog.timestampMs > cooldownMs) {
       addEventLog(eventObj);
     }
   };
-  // Kullanım örneği (30dk cooldown, sadece type kontrolü):
+  // Kullanım örneği:
   // addEventLogWithCooldown(
   //   "antivirus_scan",
   //   null,
@@ -112,6 +114,7 @@ export function EventLogProvider({ children }) {
   // State değişiminde logla (örn. toggle)
   // uniqueField ile hangi state'e bakılacağı belirlenir
   const addEventLogOnChange = (type, uniqueField, newValue, eventObj) => {
+    // Son durumu bulmak için logları tersten dolaş
     const lastLog = [...eventLogs].reverse().find(ev =>
       ev.type === type &&
       (uniqueField == null || (ev.data && ev.data[uniqueField] !== undefined))
@@ -125,7 +128,7 @@ export function EventLogProvider({ children }) {
       addEventLog(eventObj);
     }
   };
-  // Kullanım örneği (remember me toggle):
+  // Kullanım örneği:
   // addEventLogOnChange(
   //   "remember_me_toggled",
   //   "state",

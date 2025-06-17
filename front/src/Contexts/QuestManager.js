@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNotificationContext } from "./NotificationContext";
 import { QUEST_LIST } from "../constants/questList";
+import { useTimeContext } from "./TimeContext";
 
 const QuestManagerContext = createContext();
 
@@ -8,7 +9,11 @@ export function useQuestManager() {
   return useContext(QuestManagerContext);
 }
 
+ const turkishTimeString = (dateObj) =>
+    dateObj.toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" });
+
 export function QuestManagerProvider({ children }) {
+  const { gameDate } = useTimeContext();
   const [quests, setQuests] = useState(QUEST_LIST);
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addNotification } = useNotificationContext();
@@ -23,7 +28,7 @@ export function QuestManagerProvider({ children }) {
           return {
             ...q,
             status: "completed",
-            completedAt: new Date().toISOString(),
+            completedAt: turkishTimeString(gameDate),
             score: q.point || 0,
             logEventType: q.logEventType,
           };
@@ -82,7 +87,7 @@ export function QuestManagerProvider({ children }) {
           ? {
               ...q,
               status: "failed",
-              completedAt: new Date().toISOString(),
+              completedAt: turkishTimeString(gameDate),
               score: q.penalty || 0,
               logEventType: q.logEventType,
             }
