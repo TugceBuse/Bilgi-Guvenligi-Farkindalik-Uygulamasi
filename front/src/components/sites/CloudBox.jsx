@@ -279,6 +279,8 @@ const CloudBox = () => {
           data: {
             site: "CloudBox",
             isFake: false,
+            files: downloadsFiles.map(f => f.label),
+            fileCount: downloadsFiles.length
           }
         });
         setUploadState({});
@@ -355,7 +357,7 @@ const CloudBox = () => {
               required
               placeholder="E-posta"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              readOnly
               autoComplete="username"
               disabled={cloudUser.lockoutUntil && Date.now() < cloudUser.lockoutUntil}
             />
