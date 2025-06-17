@@ -59,7 +59,7 @@ const AntivirusSetup = ({ file, fileName }) => {
                 type: 'antivirus_install',
                 questId: 'antivirus_install',
                 logEventType: 'setup',
-                value: 30,
+                value: 0,
                 data: null
             });
         }, 5000);
