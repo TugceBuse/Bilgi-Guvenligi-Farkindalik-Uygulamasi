@@ -11,17 +11,17 @@ export function EventLogProvider({ children }) {
   const [eventLogs, setEventLogs] = useState([]);
   const { gameDate } = useTimeContext();
 
-  // Her loga Türkiye saatiyle timestamp ekler
+  // Türkiye saatinde string timestamp üretir
   const turkishTimeString = (dateObj) =>
     dateObj.toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" });
 
-  // Standart tek log ekle (her zaman ekler)
+  // Tüm event eklemeleri buraya yönlendirilir (her zaman doğru timestamp ile)
   const addEventLog = (event) => {
     setEventLogs((prev) => [
       ...prev,
       {
         ...event,
-        timestamp: event.timestamp || turkishTimeString(gameDate),
+        timestamp: turkishTimeString(gameDate),
       }
     ]);
   };
@@ -34,15 +34,9 @@ export function EventLogProvider({ children }) {
   //   data: { url: "phish.com" }
   // });
 
-  // Çoklu event log ekle
+  // Çoklu event log ekler (her event yine addEventLog ile eklenir)
   const addEventLogs = (events) => {
-    setEventLogs((prev) => [
-      ...prev,
-      ...events.map(event => ({
-        ...event,
-        timestamp: event.timestamp || turkishTimeString(gameDate),
-      }))
-    ]);
+    events.forEach(ev => addEventLog(ev));
   };
   // Kullanım örneği:
   // addEventLogs([
@@ -78,13 +72,21 @@ export function EventLogProvider({ children }) {
 
   // Cooldown ile tekrar log engelle
   // uniqueField/uniqueValue null geçilirse sadece type kontrolü yapılır
-  const addEventLogWithCooldown = (type, uniqueField, uniqueValue, eventObj, cooldownMs = 60 * 60 * 1000) => {
+  const addEventLogWithCooldown = (
+    type,
+    uniqueField,
+    uniqueValue,
+    eventObj,
+    cooldownMs = 60 * 60 * 1000
+  ) => {
     const now = gameDate.getTime();
     const filteredLogs = eventLogs.filter(ev =>
       ev.type === type &&
       (uniqueField == null || (ev.data && ev.data[uniqueField] === uniqueValue))
     );
-    const lastLog = filteredLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+    const lastLog = filteredLogs.sort((a, b) =>
+      new Date(b.timestamp) - new Date(a.timestamp)
+    )[0];
 
     if (!lastLog || now - new Date(lastLog.timestamp).getTime() > cooldownMs) {
       addEventLog(eventObj);
@@ -114,7 +116,12 @@ export function EventLogProvider({ children }) {
       ev.type === type &&
       (uniqueField == null || (ev.data && ev.data[uniqueField] !== undefined))
     );
-    if (!lastLog || (uniqueField ? lastLog.data[uniqueField] !== newValue : lastLog.data?.state !== newValue)) {
+    if (
+      !lastLog ||
+      (uniqueField
+        ? lastLog.data[uniqueField] !== newValue
+        : lastLog.data?.state !== newValue)
+    ) {
       addEventLog(eventObj);
     }
   };
@@ -139,7 +146,7 @@ export function EventLogProvider({ children }) {
   // resetEventLogs();
 
   useEffect(() => {
-    console.log("Event logs updated:", eventLogs);
+    // console.log("Event logs updated:", eventLogs);
   }, [eventLogs]);
 
   const value = {

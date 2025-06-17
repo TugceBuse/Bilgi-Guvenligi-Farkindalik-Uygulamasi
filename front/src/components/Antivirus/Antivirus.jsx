@@ -86,7 +86,7 @@ const Antivirus = ({ closeHandler, style }) => {
         value: 10,
         data: {}
       },
-      30 * 1000 // 30sn örnek, ihtiyaca göre artır
+      1 // 30sn örnek, ihtiyaca göre artır
     );
 
     const now = new Date();
@@ -204,7 +204,7 @@ const Antivirus = ({ closeHandler, style }) => {
       setCheckingUpdates(false);
       setHasCheckedUpdates(true);
       // LOG: Güncellemeler kontrol edildi (sadece 1 kez logla)
-      addEventLogOnce(
+      addEventLogWithCooldown(
         "antivirus_update_check",
         null,
         null,
@@ -214,7 +214,8 @@ const Antivirus = ({ closeHandler, style }) => {
           logEventType: "antivirus",
           value: 0,
           data: { checked: true }
-        }
+        },
+        30 * 60 * 1000 // 30 dakika cooldown
       );
     }, 2000);
   };
