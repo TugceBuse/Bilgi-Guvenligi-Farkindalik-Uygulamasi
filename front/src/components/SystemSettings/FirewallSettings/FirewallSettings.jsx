@@ -1,6 +1,7 @@
 
 import styles from './FirewallSettings.module.css';
 import { useVirusContext } from '../../../Contexts/VirusContext';
+import { useSecurityContext } from '../../../Contexts/SecurityContext';
 
 const FirewallSettings = ({ onClose }) => {
   const { 
@@ -10,7 +11,7 @@ const FirewallSettings = ({ onClose }) => {
     setPrivateNetworkEnabled, 
     publicNetworkEnabled, 
     setPublicNetworkEnabled
-  } = useVirusContext();
+  } = useSecurityContext();
 
   return (
      <div className={styles.firewallContainer}>
