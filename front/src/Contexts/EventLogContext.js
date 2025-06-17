@@ -146,7 +146,7 @@ export function EventLogProvider({ children }) {
   // resetEventLogs();
 
   useEffect(() => {
-    // console.log("Event logs updated:", eventLogs);
+    console.log("Event logs updated:", eventLogs);
   }, [eventLogs]);
 
   const value = {
