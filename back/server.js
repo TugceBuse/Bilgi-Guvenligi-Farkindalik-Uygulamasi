@@ -33,6 +33,10 @@ app.get('/', (req, res) => {
 const userRoutes = require('./routes/users');
 app.use('/api/users', userRoutes);  // Kullanıcı işlemleri için /api/users endpoint'i
 
+// Oyun oturumu işlemleri için route'ları dahil et
+const gameSessionRoutes = require('./routes/gameSessions');
+app.use('/api/gamesessions', gameSessionRoutes); // oyun oturumları için endpoint
+
 // Sunucu dinlemeye başla
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
