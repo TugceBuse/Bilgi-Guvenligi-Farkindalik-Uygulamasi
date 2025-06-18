@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Postify.module.css';
 import { useGameContext } from "../../Contexts/GameContext";
 import PostifyAuth from './PostifyAuth';
-import { useUIContext } from "../../Contexts/UIContext";
-import { useWindowConfig } from "../../Contexts/WindowConfigContext";
+import { useEventLog } from '../../Contexts/EventLogContext';
 
 const initialPosts = [
   {
@@ -169,6 +168,7 @@ const getRelativeTime = (timestamp) => {
 
 const Postify = () => {
   const { PostifyInfo, setPostifyInfo } = useGameContext();
+  const { addEventLog, addEventLogOnChange } = useEventLog();
 
   const [showSettings, setShowSettings] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -252,6 +252,18 @@ const Postify = () => {
       ...PostifyInfo,
       userPosts: [newPost, ...(PostifyInfo.userPosts || [])]
     });
+
+    addEventLog({
+      type: "create_post",
+      questId: "post_share",
+      logEventType: "post_share",
+      value: 0,
+      data: {
+        postId: newPost.id,
+        content: newPostContent.slice(0, 120), // Çok uzun içeriklerin sadece ilk kısmı
+        privacy: PostifyInfo.privacySettings
+      }
+    });
   };
 
   const dummyChats = [
@@ -263,6 +275,16 @@ const Postify = () => {
   const handleSendMessage = () => {
     if (messageText.trim() && selectedChat) {
       selectedChat.messages.push(messageText);
+      addEventLog({
+        type: "send_message",
+        questId: null,
+        logEventType: "message",
+        value: 0,
+        data: {
+          to: selectedChat.id,
+          text: messageText.slice(0, 100)
+        }
+      });
       setMessageText("");
     }
   };
@@ -274,6 +296,16 @@ const Postify = () => {
       privacySettings: option
     });
     setShowPrivacyOptions(false);
+
+    addEventLog({
+      type: "change_privacy",
+      questId: null,
+      logEventType: "privacy",
+      value: 0,
+      data: {
+        newPrivacy: option
+      }
+    });
   };
 
   const [newPassword, setNewPassword] = useState("");
@@ -289,8 +321,15 @@ const Postify = () => {
       isLoggedIn: false,
     });
     setShowSettings(false);
+    addEventLog({
+      type: "logout_postify",
+      questId: null,
+      logEventType: "logout",
+      value: 0,
+      data: {}
+    });
     if(!PostifyInfo.isLoggedIn){
-         return <PostifyAuth />;
+        return <PostifyAuth />;
     }
   };
 
@@ -307,6 +346,16 @@ const handlePasswordUpdate = () => {
         ...PostifyInfo,
         password: newPassword,
         isPasswordStrong: strong,
+      });
+
+      addEventLog({
+        type: "update_password",
+        questId: null,
+        logEventType: "password_update",
+        value: strong ? 2 : -2,
+        data: {
+          isStrong: strong
+        }
       });
   
       setSuccessPassword("Şifreniz başarıyla güncellendi!");
@@ -396,6 +445,21 @@ const handlePasswordUpdate = () => {
                   ...PostifyInfo,
                   is2FAEnabled: !PostifyInfo.is2FAEnabled,
                 });
+                addEventLogOnChange(
+                  "toggle_2fa",
+                  "state",
+                  newValue,
+                  {
+                    type: "toggle_2fa",
+                    questId: "register_career_site", // Postify'e özel farklı bir quest varsa burayı değiştir!
+                    logEventType: "2fa",
+                    value: newValue ? 5 : -5,
+                    data: {
+                      for: "Postify",
+                      state: newValue,
+                    }
+                  }
+                );
               }}
             >
               {PostifyInfo.is2FAEnabled ? "2FA Kapat" : "2FA Aç"}

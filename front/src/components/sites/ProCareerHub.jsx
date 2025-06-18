@@ -8,7 +8,7 @@ import  {useEventLog } from "../../Contexts/EventLogContext";
 const ProCareerHub = () => {
 
   const { ProCareerHubInfo, setProCareerHubInfo} = useGameContext();
-  const { addEventLog } = useEventLog();
+  const { addEventLog, addEventLogOnChange } = useEventLog();
   const { completeQuest } = useQuestManager();
 
   const [isLogin, setIsLogin] = useState(true);
@@ -190,6 +190,13 @@ const ProCareerHub = () => {
 
   const handleLogout = () => {
     setProCareerHubInfo(prev => ({ ...prev, isLoggedIn: false }));
+    addEventLog({
+     type: "logout_procareerhub",
+     questId: "register_career_site",
+     logEventType: "logout",
+     value: 0,
+     data: { for: "ProCareerHub" }
+    });
     setName("");
     setSurname("");
     setPassword("");
@@ -204,10 +211,27 @@ const ProCareerHub = () => {
   };
 
   const toggle2FA = () => {
+    const prevValue = ProCareerHubInfo.is2FAEnabled;
+    const newValue = !ProCareerHubInfo.is2FAEnabled;
     setProCareerHubInfo({
       ...ProCareerHubInfo,
-      is2FAEnabled: !ProCareerHubInfo.is2FAEnabled,
+      is2FAEnabled: newValue,
     });
+    addEventLogOnChange(
+      "toggle_2fa",
+      "state",
+      newValue,
+      {
+        type: "toggle_2fa",
+        questId: "register_career_site",
+        logEventType: "2fa",
+        value: newValue ? 5 : -5,
+        data: {
+          for: "ProCareerHub",
+          state: newValue,
+        }
+      }
+    );
   };
 
   const handlePasswordUpdate = () => {

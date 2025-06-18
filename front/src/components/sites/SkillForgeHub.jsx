@@ -7,7 +7,7 @@ import { useEventLog } from "../../Contexts/EventLogContext";
 
 const SkillForgeHub = () => {
   const { SkillForgeHubInfo, setSkillForgeHubInfo } = useGameContext();
-  const { addEventLog } = useEventLog();
+  const { addEventLog, addEventLogOnChange } = useEventLog();
   const { completeQuest } = useQuestManager();
 
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
@@ -192,6 +192,13 @@ const SkillForgeHub = () => {
       ...SkillForgeHubInfo,
       isLoggedIn: false,
     });
+    addEventLog({
+      type: "logout_skillforgehub",
+      questId: "register_career_site",
+      logEventType: "logout",
+      value: 0,
+      data: { for: "SkillForgeHub" }
+    });
     setName("");
     setSurname("");
     setPassword("");
@@ -199,6 +206,32 @@ const SkillForgeHub = () => {
     setSuccessPassword("");
     setShowSettings(false);
     setIsLogin("Giriş Yap");
+  };
+
+  const toggle2FA = () => {
+    const prevValue = SkillForgeHubInfo.is2FAEnabled;
+    const newValue = !SkillForgeHubInfo.is2FAEnabled;
+
+    setSkillForgeHubInfo({
+      ...SkillForgeHubInfo,
+      is2FAEnabled: newValue,
+    });
+
+    addEventLogOnChange(
+      "toggle_2fa",
+      "state",
+      newValue,
+      {
+        type: "toggle_2fa",
+        questId: "register_career_site",
+        logEventType: "2fa",
+        value: newValue ? 5 : -5,
+        data: {
+          for: "SkillForgeHub",
+          state: newValue,
+        }
+      }
+    );
   };
 
   const handlePasswordUpdate = () => {
@@ -294,12 +327,7 @@ const SkillForgeHub = () => {
 
             <button
               className={styles.twoFAButton}
-              onClick={() => {
-                setSkillForgeHubInfo({
-                  ...SkillForgeHubInfo,
-                  is2FAEnabled: !SkillForgeHubInfo.is2FAEnabled,
-                });
-              }}
+              onClick={toggle2FA}
             >
               {SkillForgeHubInfo.is2FAEnabled ? "2FA Kapat" : "2FA Aç"}
             </button>
