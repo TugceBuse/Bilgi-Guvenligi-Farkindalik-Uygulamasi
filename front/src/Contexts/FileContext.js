@@ -121,7 +121,7 @@ const defaultFileSchema = {
             location: "downloads", 
             label: "TaskApp Kurulumu", 
             icon: "/icons/task-list.png", 
-            exeType: "taskappsetup",
+            exeType: "taskappsetupf",
             virusType: "clown",
             detectable: false,
         },
