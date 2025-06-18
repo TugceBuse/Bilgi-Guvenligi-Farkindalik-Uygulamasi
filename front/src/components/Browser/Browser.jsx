@@ -24,7 +24,7 @@ const Browser = ({ closeHandler, style }) => {
   const [initialized, setInitialized] = useState(false);
 
   // 3. Varsayılan url/props
-  const defaultUrl = browserProps.initialUrl || browserProps.url || "https://www.google.com";
+  const defaultUrl = browserProps.initialUrl || browserProps.url || "https://www.searchill.com";
   const [url, setUrl] = useState(defaultUrl);
   const [currentUrl, setCurrentUrl] = useState(defaultUrl);
   const [loading, setLoading] = useState(false);
@@ -49,11 +49,11 @@ const Browser = ({ closeHandler, style }) => {
   // ---- 5. EN KRİTİK KISIM: Pencere ilk açıldığında (ya da yeni props geldiğinde) güncelle
   useEffect(() => {
     if (!initialized) {
-      // Öncelik: initialUrl > url > Google
+      // Öncelik: initialUrl > url > searchill
       const chosenUrl =
         browserProps.initialUrl ||
         browserProps.url ||
-        "https://www.google.com";
+        "https://www.searchill.com";
 
       setUrl(chosenUrl);
       setCurrentUrl(chosenUrl);
@@ -126,10 +126,10 @@ const Browser = ({ closeHandler, style }) => {
   const handleUrlChange = (e) => setUrl(e.target.value);
   const handleKeyDown = (e) => e.key === "Enter" && handleGoClick(e.target.value);
 
-  const handleGoogleSearch = async (searchText, addToHistory = true) => {
+  const handleSearchillSearch = async (searchText, addToHistory = true) => {
     if (!searchText || !searchText.trim()) return;
     const searchQuery = normalizeText(searchText.trim());
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+    const searchUrl = `https://www.searchill.com/search?q=${encodeURIComponent(searchQuery)}`;
     setUrl(searchUrl);
     await startLoading();
     setCurrentUrl(searchUrl);
@@ -175,16 +175,16 @@ const Browser = ({ closeHandler, style }) => {
   };
 
   const goHome = async () => {
-    const googleUrl = "https://www.google.com";
-    setUrl(googleUrl);
+    const searchillUrl = "https://www.searchill.com";
+    setUrl(searchillUrl);
     await startLoading();
-    setCurrentUrl(googleUrl);
-    setHistory([...history.slice(0, currentIndex + 1), googleUrl]);
+    setCurrentUrl(searchillUrl);
+    setHistory([...history.slice(0, currentIndex + 1), searchillUrl]);
     setCurrentIndex(currentIndex + 1);
   };
 
   useEffect(() => {
-    if (currentUrl.startsWith("https://www.google.com/search?q=")) {
+    if (currentUrl.startsWith("https://www.searchill.com/search?q=")) {
       const searchQuery = normalizeText(decodeURIComponent(currentUrl.split("search?q=")[1]));
       const filteredSites = Object.entries(sites)
         .filter(([key, site]) =>
@@ -250,18 +250,18 @@ const Browser = ({ closeHandler, style }) => {
             </div>
     }
 
-    if (currentUrl.startsWith("https://www.google.com/search?q=")) {
+    if (currentUrl.startsWith("https://www.searchill.com/search?q=")) {
       const searchedText = decodeURIComponent(currentUrl.split("search?q=")[1]);
       return (
         <div className="download-pages">
           <div className='searchPart' style={{width:500, height:40, marginBottom:40}}>
-            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
+            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleSearchillSearch(searchInputRef.current.value) } />
             <input 
               type="text"
               defaultValue={searchedText}
-              placeholder="Google'da Ara"
+              placeholder="SearChill'da Ara"
               ref={searchInputRef}
-              onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
+              onKeyDown={(e) => e.key === "Enter" && handleSearchillSearch(e.target.value)} 
             />
 
             <div className='searchPart_right'>
@@ -317,17 +317,17 @@ const Browser = ({ closeHandler, style }) => {
       );
     }
 
-    if (currentUrl === "https://www.google.com") {
+    if (currentUrl === "https://www.searchill.com") {
       return (
         <div className="firstPartOfBrowser">
-          <h1>Google</h1>
+          <h1>SearChill</h1>
           <div className="searchPart"> 
-            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleGoogleSearch(searchInputRef.current.value) } />
+            <img src="./icons/search.png" alt="Search Logo" onClick={() => handleSearchillSearch(searchInputRef.current.value) } />
             <input 
               type="text" 
-              placeholder="Google'da Ara"
+              placeholder="SearChill'da Ara"
               ref={searchInputRef}
-              onKeyDown={(e) => e.key === "Enter" && handleGoogleSearch(e.target.value)} 
+              onKeyDown={(e) => e.key === "Enter" && handleSearchillSearch(e.target.value)} 
             />
             <div className="searchPart_right">
               <img src="./icons/keyboard.png" alt="Keyboard Logo" />

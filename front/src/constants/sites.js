@@ -1,6 +1,6 @@
 const sites = {
-  "https://google.com": { 
-    title: "Google", 
+  "https://searchill.com": { 
+    title: "SearChill", 
     type: "search", 
     statement: "Dünyanın en popüler arama motoru.",
     searchKeys: [],
@@ -9,8 +9,8 @@ const sites = {
     seoScore: 100
   },
 
-  "https://google.com/search?q=": { 
-    title: "Google Search", 
+  "https://searchill.com/search?q=": { 
+    title: "SearChill Search", 
     type: "search-results", 
     statement: "Arama sonuçlarınızı görüntüleyin.",
     searchKeys: [],
