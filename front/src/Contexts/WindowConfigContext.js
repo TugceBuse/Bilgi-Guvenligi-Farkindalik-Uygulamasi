@@ -73,7 +73,7 @@ const initialWindowConfig = {
     useComponent: useScanner,
     location: 'desktop',
     clickable: true,
-    available: true,
+    available: false,
     requiresInternet: false
   },
   antivirus: {

@@ -459,7 +459,7 @@ const handlePasswordUpdate = () => {
               <div className={styles.sidebar}>
                 <ul>
                   <li>📄 Profilim</li>
-                  <li onClick={() => setShowMessages(true)}>💬 Mesajlar</li>
+                  <li>💬 Mesajlar</li>
                   <li>👥 Takip</li>
                   <li>🧑‍💼 Gruplar</li>
                   <li>📅 Etkinlikler</li>
@@ -524,7 +524,9 @@ const handlePasswordUpdate = () => {
                         </div>
                       </div>
                     </div>
-                    <img src={post.image} className={styles.image} alt="reklam" />
+                     {post.image && (
+                        <img src={post.image} className={styles.image} alt="paylaşım görseli" />
+                      )}
                     <div className={styles.content}>{post.content}</div>
                     <div className={styles.metaInfo}>
                       <span>👍 {displayLikeCount}</span>
