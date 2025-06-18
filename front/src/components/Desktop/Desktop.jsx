@@ -16,9 +16,9 @@ import RansomwareHash from '../RansomwareHash/RansomwareHash';
 
 
 const Desktop = ({ hacked, onFormat }) => {
-  const { isWificonnected, isransomware } = useGameContext();
-  const { openWindows, visibleWindows, handleIconClick, zindex, setZindex, windowProps } = useUIContext();
-  const { openedFiles, closeFile, files } = useFileContext();
+  const { isWificonnected } = useGameContext();
+  const { openWindows, visibleWindows, handleIconClick, setZindex, windowProps } = useUIContext();
+  const { openedFiles, files } = useFileContext();
   const { addVirus, viruses, removeVirus } = useVirusContext();
 
   const [showAlert, setShowAlert] = useState(false);
