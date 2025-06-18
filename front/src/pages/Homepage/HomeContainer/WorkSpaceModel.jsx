@@ -69,11 +69,10 @@ const ComputerCanvas= () =>{
   const navigate = useNavigate();
 
   const handleSimulationClick = () => {
-   if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
-
     if (isAuthenticated) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
       navigate("/game");
     } else {
       navigate("/login", { state: { reason: "auth_required" } });

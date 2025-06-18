@@ -373,7 +373,7 @@ const SkillForgeHub = () => {
                 : "Zaten üye misiniz? Giriş yapın!"}
             </p>
             <p 
-              style={{ cursor: "not-allowed", color: "#258cff", marginTop: 6, textDecoration: "underline", marginBottom: 6 }}
+              style={{ cursor: "context-menu", color: "#258cff", marginTop: 6, textDecoration: "underline", marginBottom: 6 }}
             >
               Şifremi Unuttum
             </p>

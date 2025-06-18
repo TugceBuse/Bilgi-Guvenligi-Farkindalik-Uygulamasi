@@ -5,6 +5,7 @@ import { useTimeContext } from './TimeContext';
 import { useSecurityContext } from './SecurityContext';
 import { useQuestManager } from './QuestManager';
 import { useAuthContext } from './AuthContext';
+import { usePhoneContext } from './PhoneContext';
 
 const GameContext = createContext();
 
@@ -14,14 +15,14 @@ export const GameContextProvider = ({ children }) => {
   const { user } = useAuthContext();
   // Zaman artık TimeContext'ten alınacak!
   const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
-  const { sendMail } = useMailContext();
+  const { sendMail, addMailToMailbox, isMailboxLoggedIn, setIsMailboxLoggedIn } = useMailContext();
+  const { isPhoneConnected, setIsPhoneConnected} = usePhoneContext();
   const { failQuest } = useQuestManager(); // 🆕
 
   // --- Mevcut State'ler ---
   const {isWificonnected, setIsWificonnected} = useSecurityContext()
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [wifiMailSent, setWifiMailSent] = useState(false);
-  const { addMailToMailbox } = useMailContext();
   const [cardBalance, setCardBalance] = useState("12345");
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
   const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});
@@ -34,7 +35,6 @@ export const GameContextProvider = ({ children }) => {
     }
     return pass;
   }
-  const [isMailboxLoggedIn, setIsMailboxLoggedIn] = useState(false);
 
   // Kullanıcı bilgileri ve site bazlı bilgiler (aynen korunur)
   const [constUser, setConstUser] = useState({
@@ -418,6 +418,7 @@ export const GameContextProvider = ({ children }) => {
         cardBalance, setCardBalance,
         cargoTrackingSiteVisited, setCargoTrackingSiteVisited,
         isMailboxLoggedIn, setIsMailboxLoggedIn,
+        isPhoneConnected, setIsPhoneConnected,
       }}
     >
       {children}
