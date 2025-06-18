@@ -34,6 +34,7 @@ export const GameContextProvider = ({ children }) => {
     }
     return pass;
   }
+  const [isMailboxLoggedIn, setIsMailboxLoggedIn] = useState(false);
 
   // Kullanıcı bilgileri ve site bazlı bilgiler (aynen korunur)
   const [constUser, setConstUser] = useState({
@@ -416,6 +417,7 @@ export const GameContextProvider = ({ children }) => {
         openDropPublicFiles, setOpenDropPublicFiles,
         cardBalance, setCardBalance,
         cargoTrackingSiteVisited, setCargoTrackingSiteVisited,
+        isMailboxLoggedIn, setIsMailboxLoggedIn,
       }}
     >
       {children}

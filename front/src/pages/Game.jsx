@@ -18,6 +18,7 @@
   import { QuestManagerProvider } from '../Contexts/QuestManager';
   import { NotepadProvider } from '../Contexts/NotepadContext.js';
   import { EventLogProvider } from "../Contexts/EventLogContext.js";
+  import ScreenFadeTransition from "./ScreenFadeTransition.jsx";
 
     const Game = () => {
       useEffect(() => {
@@ -30,6 +31,16 @@
         };
     }, []);
     const [phase, setPhase] = useState("intro");
+
+    const [fade, setFade] = useState(false);
+
+    const handleIntroFinish = () => {
+      setFade(true);                // 1. Fadeyi ekranda göster
+      setTimeout(() => {
+        setPhase("desktop");        // 2. Fade devam ederken phase değiştir
+        setFade(false);             // 3. Fade animasyonu bittiğinde kapat
+      }, 600); // Fade süresi ile aynı olmalı!
+    };
 
     return (
       <TimeProvider>
@@ -50,11 +61,12 @@
                                     <NotepadProvider>
                                     <CargoMailNotifier />
                                     <div className="game">
-                                    {phase === "intro" && <IntroScreen onFinish={() => setPhase("hacked")} />}
-                                    {(phase === "hacked" || phase === "desktop") && (
-                                      <Desktop hacked={phase === "hacked"} onFormat={phase === "hacked" ? () => setPhase("desktop") : undefined} />
-                                    )}                      
-                                    {phase === "desktop" && <Desktop />}
+                                    <ScreenFadeTransition show={fade} duration={1300} />
+                                      {phase === "intro" ? (
+                                        <IntroScreen onFinish={handleIntroFinish} />
+                                      ) : (
+                                        <Desktop />
+                                      )}
                                   </div>
                                   </NotepadProvider>
                                 </ChatContextProvider>

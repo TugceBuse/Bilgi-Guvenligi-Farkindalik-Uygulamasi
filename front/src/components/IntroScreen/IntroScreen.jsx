@@ -4,9 +4,8 @@ import { useGameContext } from "../../Contexts/GameContext";
 
 const introMessages = [
   "Simülasyon başlangıcında kurumumuz tarafından sana atanan [MAIL] e-posta adresi ve [PASS] geçici şifresi ile MailBox uygulamasına giriş yapmalısın.",
-  "Giriş sonrası, PhishVille ekibinden gelen bir hoş geldin e-postası ile karşılaşacaksın. Sana verilen görevleri ve detaylarını ise mailde bulunan 'TaskApp' uygulamasını indirip görevlerini kolayca takip edebilirsin.",
-  "Unutma, aldığın kararlar puanına ve güvenlik seviyene etki eder. Şüpheli durumlarda dikkatli ol!",
-  "Hazırsan simülasyonu başlatabilirsin."
+  "Giriş sonrası, PhishVille ekibinden gelen bir hoş geldin e-postası ile karşılaşacaksın. Sana verilecek olan görevleri ve detaylarını ise mailde bulunan 'TaskApp' uygulamasını indirerek görüntüleyebilirsin. ",
+  "Unutma, aldığın kararlar puanına ve güvenlik seviyene etki eder. Hazırsan simülasyonu başlatabilirsin.",
 ];
 
 const IntroScreen = ({ onFinish }) => {
