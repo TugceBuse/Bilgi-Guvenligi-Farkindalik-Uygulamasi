@@ -26,7 +26,6 @@ export const GameContextProvider = ({ children }) => {
   const { saveGameSession } = useGameSession();
 
   // --- Mevcut State'ler ---
-  const [gameFinished, setGameFinished] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [cardBalance, setCardBalance] = useState("12345");
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
@@ -402,26 +401,45 @@ export const GameContextProvider = ({ children }) => {
   // ---------------------------
   const saveSession = async () => {
     try {
-      // 1) Questlerden gelen toplam puan
-      const questPoints = quests.reduce((sum, q) => sum + (q.score || 0), 0);
+      // 1) Quests'i backend'e uygun şekilde map et
+      const sanitizedQuests = quests.map(q => ({
+        questId: q.questId || q.id,
+        title: q.title,
+        description: q.description,
+        status: q.status,
+        unlocks: q.unlocks,
+        requires: q.requires,
+        score: q.point,
+        penalty: q.penalty,
+        logEventType: q.logEventType,
+        completedAt: q.completedAt && !isNaN(new Date(q.completedAt))
+          ? new Date(q.completedAt).toISOString()
+          : null,
+      }));
 
-      // 2) Loglardan gelen toplam puan
-      const logPoints = eventLogs.reduce((sum, log) => sum + (log.value || 0), 0);
+      // 2) EventLogs'u ISO timestamp ile map et
+      const sanitizedEventLogs = eventLogs.map(log => ({
+        ...log,
+        timestamp: log.timestampMs
+          ? new Date(log.timestampMs).toISOString()
+          : new Date().toISOString()
+      }));
 
-      // Toplam puan
+      // 3) Puan hesapla
+      const questPoints = sanitizedQuests.reduce((sum, q) => sum + (q.score || 0), 0);
+      const logPoints = sanitizedEventLogs.reduce((sum, log) => sum + (log.value || 0), 0);
       const totalScore = questPoints + logPoints;
 
       const gameVersion = "1.0.0";
       const deviceInfo = navigator.userAgent;
 
       await saveGameSession({
-        quests,
-        eventLogs,
+        quests: sanitizedQuests,
+        eventLogs: sanitizedEventLogs,
         totalScore,
         gameVersion,
         deviceInfo,
       });
-
       resetQuests();
       resetEventLogs();
       return true;
@@ -429,6 +447,7 @@ export const GameContextProvider = ({ children }) => {
       return err.message || "Kayıt başarısız.";
     }
   };
+
 
 
   return (

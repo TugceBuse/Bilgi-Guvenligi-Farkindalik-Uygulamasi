@@ -31,14 +31,16 @@ const Desktop = ({ hacked, onFormat }) => {
   const [windowPositions, setWindowPositions] = useState({});
 
 useEffect(() => {
+  console.log("active quests:", getActiveQuests());
+  console.log("finish called:", finishCalled.current);
     if (getActiveQuests().length === 0 && !finishCalled.current) {
       finishCalled.current = true;
       saveSession().then((result) => {
         // Dilersen başarılıysa bildirim veya yönlendirme yapabilirsin
         if (result === true) {
-          // alert("Oyun başarıyla kaydedildi!");
+          alert("Oyun başarıyla kaydedildi!");
         } else {
-          // alert("Oyun kaydedilemedi: " + result);
+          alert("Oyun kaydedilemedi: " + result);
         }
       });
     }

@@ -33,17 +33,17 @@ const QUEST_LIST = [
     penalty: -10,
     logEventType: "mailbox"
   },
-  {//opsiyonel gizli görev
-    id: "antivirus_install",
-    title: "Antivirüs Yazılımı Kur",
-    description: "Sistemini korumak için bir antivirüs yazılımı indir ve kur.",
-    status: "locked",
-    unlocks: null,
-    requires: null,
-    point: 50,
-    penalty: null,
-    logEventType: "antivirus"
-  },
+  // {//opsiyonel gizli görev
+  //   id: "antivirus_install",
+  //   title: "Antivirüs Yazılımı Kur",
+  //   description: "Sistemini korumak için bir antivirüs yazılımı indir ve kur.",
+  //   status: "locked",
+  //   unlocks: null,
+  //   requires: null,
+  //   point: 50,
+  //   penalty: null,
+  //   logEventType: "antivirus"
+  // },
   {
     id: "download_taskapp",
     title: "TaskApp İndir & Kur",
@@ -55,41 +55,41 @@ const QUEST_LIST = [
     penalty: -20,
     logEventType: "taskapp"
   },
-  {
-    id: "download_cloud",
-    title: "Yedeklemiş Olduğun Dosyaları İndir(Detaylar Açıklamada)",
-    description: `Daha önce https://filevault.com sitesini kullanarak yedeklediğin dosyaları 'a92cf10a-27d4-476b-98f3-8d2fa98c7d84' token ile indirip incele.
-     Bu dosyalar kişisel bilgiler içermektedir. Güvenli bir şekilde saklamayı unutma!` ,
-    status: "locked",
-    unlocks: ["pdf_viewer_install"],
-    requires: ["download_taskapp"],
-    point: 20,
-    penalty: -20,
-    logEventType: "cloud"
-  },
-  {
-    id: "pdf_viewer_install",
-    title: "PDF Görüntüleyici İndir",
-    description: `Simülasyon boyunca lazım olacak sanal çalışan bilgilerini görüntüleyebilmek için bir PDF görüntüleyici indir.` ,
-    status: "locked",
-    unlocks: ["file_backup"],
-    requires: ["download_cloud"],
-    point: 20,
-    penalty: -20,
-    logEventType: "pdf"
-  },
-  {
-    id: "file_backup",
-    title: "Dosyalarını Yedekle",
-    description: `Olası bir veri kaybına karşı, önemli dosyalarını Browser üzerinden erişebileceğin bir bulut sitesine yedekle.` ,
-    status: "locked",
-    // unlocks: [""],
-    unlocks: null,
-    requires: ["pdf_viewer_install", "download_cloud", "save_invoice"],
-    point: 20,
-    penalty: -20,
-    logEventType: "backup"
-  },
+  // {
+  //   id: "download_cloud",
+  //   title: "Yedeklemiş Olduğun Dosyaları İndir(Detaylar Açıklamada)",
+  //   description: `Daha önce https://filevault.com sitesini kullanarak yedeklediğin dosyaları 'a92cf10a-27d4-476b-98f3-8d2fa98c7d84' token ile indirip incele.
+  //    Bu dosyalar kişisel bilgiler içermektedir. Güvenli bir şekilde saklamayı unutma!` ,
+  //   status: "locked",
+  //   unlocks: ["pdf_viewer_install"],
+  //   requires: ["download_taskapp"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "cloud"
+  // },
+  // {
+  //   id: "pdf_viewer_install",
+  //   title: "PDF Görüntüleyici İndir",
+  //   description: `Simülasyon boyunca lazım olacak sanal çalışan bilgilerini görüntüleyebilmek için bir PDF görüntüleyici indir.` ,
+  //   status: "locked",
+  //   unlocks: ["file_backup"],
+  //   requires: ["download_cloud"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "pdf"
+  // },
+  // {
+  //   id: "file_backup",
+  //   title: "Dosyalarını Yedekle",
+  //   description: `Olası bir veri kaybına karşı, önemli dosyalarını Browser üzerinden erişebileceğin bir bulut sitesine yedekle.` ,
+  //   status: "locked",
+  //   // unlocks: [""],
+  //   unlocks: null,
+  //   requires: ["pdf_viewer_install", "download_cloud", "save_invoice"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "backup"
+  // },
   {
     id: "download_novabank",
     title: "Banka Uygulaması Kur",
@@ -101,75 +101,75 @@ const QUEST_LIST = [
     penalty: -20,
     logEventType: "novabank"
   },
-  {
-    id: "download_chatapp",
-    title: "Mesajlaşma Uygulaması Kur",
-    description: "Bir çevrimiçi mmesajlaşma uygulaması indirip kur. (Tarayıcı üzerinden ilgili kelimeleri aratarak bulabilirsin).",
-    status: "locked",
-     unlocks: ["register_career_site", "share_invoice"],
-    requires: ["download_taskapp"],
-    point: 20,
-    penalty: -20,
-    logEventType: "chatapp"
-  },
-  {
-    id: "buy_printer",
-    title: "Şirket adına bir yazıcı(printer) satın al",
-    description:  `Departmandaki raporların çıktısını alabilmek için renkli baskı destekli bir yazıcı satın al.
-     (Banka uygulamandan bakiyene bakmayı unutma,maillerinden ya da sosyal medya üzerinden
-      fırsatları yakalamayı da ihmal etme! Ne kadar ucuz o kadar iyi...`,
-    status: "locked",
-    unlocks: ["save_invoice"],
-    requires: ["download_novabank"],
-    point: 20,
-    penalty: -20,
-    logEventType: "e-commerce"
-  },
-  {
-    id: "save_invoice",
-    title: "Satın alınan yazıcının faturasını kaydet",
-    description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet.`,
-    status: "locked",
-    unlocks: ["share_invoice", "file_backup"],
-    requires: ["buy_printer", "download_novabank"],
-    point: 20,
-    penalty: -20,
-    logEventType: "save-invoice"
-  },
-  {
-    id: "share_invoice",
-    title: "Satın alınan yazıcının faturasını satış departmanıyla paylaş",
-    description:  `Satın alınan renkli baskı destekli yazıcının faturasını Chat uygulaması üzerinden Satış departmanıyla paylaş.`,
-    status: "locked",
-    unlocks: ["share_cargo_status"],
-    requires: ["save_invoice", "buy_printer", "download_novabank", "download_chatapp"],
-    point: 20,
-    penalty: -20,
-    logEventType: "share-invoice"
-  },
-  {
-    id: "share_cargo_status",
-    title: "Satın alınan yazıcının kargo durumunu paylaş",
-    description:  `Satın alınan renkli baskı destekli yazıcı kargoya verildiğinde, kargo durumunu sana iletilen mail veya sms yoluyla öğren ve Chat uygulaması üzerinden IT departmanıyla paylaş.`,
-    status: "locked",
-    // unlocks: [""],
-    unlocks: null,
-    requires: ["share_invoice", "save_invoice", "buy_printer", "download_novabank"],
-    point: 20,
-    penalty: -20,
-    logEventType: "cargo"
-  },
-  {
-    id: "register_career_site",
-    title: "Kariyer Sitesine Kayıt Ol",
-    description:  `Browser üzerinden bir kariyer sitesine kayıt ol. Bu, şirket içi fırsatları takip edebilmen için önemlidir.`,
-    status: "locked",
-    unlocks: ["sharing_post"],
-    requires: ["download_chatapp"],
-    point: 20,
-    penalty: -20,
-    logEventType: "career"
-  },
+  // {
+  //   id: "download_chatapp",
+  //   title: "Mesajlaşma Uygulaması Kur",
+  //   description: "Bir çevrimiçi mmesajlaşma uygulaması indirip kur. (Tarayıcı üzerinden ilgili kelimeleri aratarak bulabilirsin).",
+  //   status: "locked",
+  //    unlocks: ["register_career_site", "share_invoice"],
+  //   requires: ["download_taskapp"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "chatapp"
+  // },
+  // {
+  //   id: "buy_printer",
+  //   title: "Şirket adına bir yazıcı(printer) satın al",
+  //   description:  `Departmandaki raporların çıktısını alabilmek için renkli baskı destekli bir yazıcı satın al.
+  //    (Banka uygulamandan bakiyene bakmayı unutma,maillerinden ya da sosyal medya üzerinden
+  //     fırsatları yakalamayı da ihmal etme! Ne kadar ucuz o kadar iyi...`,
+  //   status: "locked",
+  //   unlocks: ["save_invoice"],
+  //   requires: ["download_novabank"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "e-commerce"
+  // },
+  // {
+  //   id: "save_invoice",
+  //   title: "Satın alınan yazıcının faturasını kaydet",
+  //   description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet.`,
+  //   status: "locked",
+  //   unlocks: ["share_invoice", "file_backup"],
+  //   requires: ["buy_printer", "download_novabank"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "save-invoice"
+  // },
+  // {
+  //   id: "share_invoice",
+  //   title: "Satın alınan yazıcının faturasını satış departmanıyla paylaş",
+  //   description:  `Satın alınan renkli baskı destekli yazıcının faturasını Chat uygulaması üzerinden Satış departmanıyla paylaş.`,
+  //   status: "locked",
+  //   unlocks: ["share_cargo_status"],
+  //   requires: ["save_invoice", "buy_printer", "download_novabank", "download_chatapp"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "share-invoice"
+  // },
+  // {
+  //   id: "share_cargo_status",
+  //   title: "Satın alınan yazıcının kargo durumunu paylaş",
+  //   description:  `Satın alınan renkli baskı destekli yazıcı kargoya verildiğinde, kargo durumunu sana iletilen mail veya sms yoluyla öğren ve Chat uygulaması üzerinden IT departmanıyla paylaş.`,
+  //   status: "locked",
+  //   // unlocks: [""],
+  //   unlocks: null,
+  //   requires: ["share_invoice", "save_invoice", "buy_printer", "download_novabank"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "cargo"
+  // },
+  // {
+  //   id: "register_career_site",
+  //   title: "Kariyer Sitesine Kayıt Ol",
+  //   description:  `Browser üzerinden bir kariyer sitesine kayıt ol. Bu, şirket içi fırsatları takip edebilmen için önemlidir.`,
+  //   status: "locked",
+  //   unlocks: ["sharing_post"],
+  //   requires: ["download_chatapp"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "career"
+  // },
   // {
   //   id: "sharing_post",
   //   title: "Sosyal Medya Üzerinden Paylaşım Yap",
