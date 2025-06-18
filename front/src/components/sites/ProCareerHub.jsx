@@ -369,7 +369,7 @@ const ProCareerHub = () => {
           </p>
 
           <p 
-            style={{ cursor: "not-allowed", color: "#258cff", marginTop: 6, textDecoration: "underline" }}
+            style={{ cursor: "context-menu", color: "#258cff", marginTop: 6, textDecoration: "underline" }}
           >
             Şifremi Unuttum
           </p>

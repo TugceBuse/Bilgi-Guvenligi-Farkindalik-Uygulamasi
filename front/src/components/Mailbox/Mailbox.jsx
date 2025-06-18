@@ -85,7 +85,6 @@ const Mailbox = ({ closeHandler, style }) => {
   }
 
   // ----------------- GİRİŞ EKRANI STATE'İ VE FONKSİYONU -----------------
-  // Login ekranı sadece context'ten false ise çıkar!
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -94,7 +93,7 @@ const Mailbox = ({ closeHandler, style }) => {
     e.preventDefault();
     if (loginEmail.trim().toLowerCase() === constUser.email.toLowerCase() &&
         loginPassword === constUser.tempPassword) {
-      setIsMailboxLoggedIn(true); // Context'e giriş oldu olarak yaz
+      setIsMailboxLoggedIn(true); 
       setLoginError('');
       setLoginPassword('');
       setLoginEmail('');
@@ -157,7 +156,7 @@ const Mailbox = ({ closeHandler, style }) => {
   }
   // ----------------- /GİRİŞ EKRANI UI -----------------
 
-  // ------------- BURADAN SONRASI ORİJİNAL MAILBOX RENDER'IN -------------
+  // ------------- BURADAN SONRASI ORİJİNAL MAILBOX RENDER'I -------------
   return (
     <div className="mailbox-window" style={style} ref={mailboxRef} data-window="mailbox" >
       <div className="mailbox-header">

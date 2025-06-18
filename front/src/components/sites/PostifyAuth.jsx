@@ -197,7 +197,7 @@ const PostifyAuth = () => {
             {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
             <p onClick={handleSignInOut}>{isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}</p>
             <p 
-              style={{ cursor: "not-allowed", color: "#258cff", textDecoration: "underline" }}
+              style={{ cursor: "context-menu", color: "#258cff", textDecoration: "underline" }}
             >
               Şifremi Unuttum
             </p> 

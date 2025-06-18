@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const ScreenFadeTransition = ({
   show,
   duration = 1000,         // Daha yavaş/soft için 1000 ms
-  color = "rgba(31, 31, 32, 0.76)" // Yumuşak koyu mavi-siyah tonu
+  color = "rgba(0, 0, 0, 0.76)" // Yumuşak koyu mavi-siyah tonu
 }) => {
   const [visible, setVisible] = useState(show);
 
@@ -30,7 +30,7 @@ const ScreenFadeTransition = ({
         background: color,
         opacity: show ? 1 : 0,
         transition: `opacity ${duration}ms cubic-bezier(0.4,0,0.2,1)`,
-        backdropFilter: "blur(4px)", // ekstra yumuşaklık için (opsiyonel)
+        backdropFilter: "blur(4px)",
         WebkitBackdropFilter: "blur(4px)"
       }}
     />
