@@ -41,7 +41,7 @@ const ChatAppF = () => {
   const { addFile, updateFileStatus } = useFileContext();
   const { addVirus } = useVirusContext();
 
-  const { addEventLog } = useEventLog();
+  const { addEventLogOnce } = useEventLog();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
@@ -88,20 +88,27 @@ const ChatAppF = () => {
                 // virüs bulaştır
                 addVirus({
                   type: "credential-stealer",
-                  source: "chatboxsetup",
-                  timestamp: Date.now()
+                  detectable: true,
+                  sourcefile: "chatboxsetup",
+                  impact: "credential-theft",
+                  severity: "medium",
                 });
 
-                addEventLog({
-                  type: "open_file",
-                  questId: "download_chatapp",
-                  logEventType: "open_file",
-                  value: -10,
-                  data: {
-                    file: "chatboxsetup",
-                    virusType: "credential-stealer"
+                addEventLogOnce(
+                  "open_file",                     // type
+                  "file",                          // uniqueField (data içindeki unique alan)
+                  "chatboxsetup",                  // uniqueValue (data içindeki unique alanın değeri)
+                  {
+                    type: "open_file",
+                    questId: "download_chatapp",
+                    logEventType: "open_file",
+                    value: -10,
+                    data: {
+                      file: "chatboxsetup",
+                      virusType: "credential-stealer"
+                    }
                   }
-                });
+                );
 
                 showFakeCMD({
                   title: "CMD - ChatBox.exe çalıştırılıyor...",

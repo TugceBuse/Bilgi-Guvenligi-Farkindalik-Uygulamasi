@@ -28,7 +28,7 @@ const QuickPDFViewSite = () => {
           type: "download",
           questId: "pdf_viewer_install",
           logEventType: "pdf_viewer_download",
-          value: 10,
+          value: -5,
           data: {
             site: "QuickPDFView",
             isFake: true,

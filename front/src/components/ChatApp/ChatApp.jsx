@@ -101,6 +101,15 @@ const ChatApp = ({ closeHandler, style }) => {
 
   // Seçenekli butona tıklayınca mesaj gönder
   const handleOptionSend = (option) => {
+
+    addEventLog({
+      type: "chat_option_selected",
+      questId: option.questId || null,
+      logEventType: "chat_option",
+      value: 0,
+      data: { userId: selectedUser.id, option }
+    });
+    
     addChatMessage(selectedUser.id, {
       sender: "me",
       text: option.label,
