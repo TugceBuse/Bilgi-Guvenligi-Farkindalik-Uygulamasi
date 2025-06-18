@@ -1,25 +1,25 @@
-// components/TrackedLinkButton.jsx
+// components/LinkButton.jsx
 import React from 'react';
 import styles from './LinkButton.module.css'; 
 import { useEventLog } from '../Contexts/EventLogContext';
 import { useMailContext } from '../Contexts/MailContext';
 
-const LinkButton = ({ 
-    label, 
-    url, 
-    questId, 
-    type = "click_link", 
-    logEventType, 
-    value = 0, 
-    mailId,
-    shippingCompany,
-    trackingNo,
-    orderNo
+const LinkButton = ({
+  url,
+  questId,
+  type = "click_link",
+  logEventType,
+  value = 0,
+  mailId,
+  shippingCompany,
+  trackingNo,
+  orderNo
 }) => {
   const { addEventLog } = useEventLog();
   const { selectedMail } = useMailContext();
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault(); // Linkin dışarı yönlendirmesini engelle, oyun içi aç
     addEventLog({
       type: type,
       questId: questId,
@@ -32,7 +32,6 @@ const LinkButton = ({
       }
     });
 
-    
     // Oyun içi simülasyon tarayıcısında aç
     window.dispatchEvent(new CustomEvent("open-browser-url", {
       detail: {
@@ -47,14 +46,17 @@ const LinkButton = ({
   return (
     <div className={styles.attachmentBox}>
       <span className={styles.downloadIcon}>🔗</span>
-      <span>{label}</span>
-      <button
-        className={styles.downloadAction}
+      <a
+        href={url}
+        className={styles.linkText}
         onClick={handleClick}
-        title="Bağlantıya Git"
+        title={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ wordBreak: "break-all" }}
       >
-        Git
-      </button>
+        {url}
+      </a>
     </div>
   );
 };

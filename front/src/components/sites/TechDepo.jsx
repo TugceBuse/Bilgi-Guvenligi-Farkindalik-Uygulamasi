@@ -547,7 +547,7 @@ const TechDepo = ({scrollRef}) => {
       productName: cards[Math.floor(Math.random() * cards.length)].name + " (1 adet)",
       trackingNo: newOrder.trackingNo,
       shippingCompany: newOrder.shipping,
-      orderNo: newOrder.id + "-FAKE",
+      orderNo: newOrder.id + "-FNT",
       from: "kargo@cargo-n0va.com",
       title: "Kargo Takip Bilgilendirme",
       precontent: "Kargoya Verildi!",
