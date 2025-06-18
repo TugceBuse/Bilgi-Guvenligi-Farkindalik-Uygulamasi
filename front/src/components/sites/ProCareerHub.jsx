@@ -367,6 +367,12 @@ const ProCareerHub = () => {
           <p onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
           </p>
+
+          <p 
+            style={{ cursor: "not-allowed", color: "#258cff", marginTop: 6, textDecoration: "underline" }}
+          >
+            Şifremi Unuttum
+          </p>
         </div>
       )}
 

@@ -390,6 +390,11 @@ const CloudBox = () => {
               : <>Zaten hesabın var mı? <span onClick={() => setPage("login")}>Giriş Yap</span></>
             }
           </div>
+          <p 
+            style={{ cursor: "not-allowed", color: "#258cff", textDecoration: "underline" }}
+          >
+            Şifremi Unuttum
+          </p>
         </div>
       </div>
     );

@@ -734,7 +734,12 @@ const TechDepo = ({scrollRef}) => {
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
           <p onClick={handleSignInOut}>
             {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
-          </p>        
+          </p>     
+          <p 
+            style={{ cursor: "not-allowed", color: "#258cff", textDecoration: "underline" }}
+          >
+            Şifremi Unuttum
+          </p>   
         </div>
       )}
 
