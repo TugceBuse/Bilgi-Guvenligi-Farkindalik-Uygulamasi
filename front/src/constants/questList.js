@@ -170,18 +170,18 @@ const QUEST_LIST = [
     penalty: -20,
     logEventType: "career"
   },
-  {
-    id: "sharing_post",
-    title: "Sosyal Medya Üzerinden Paylaşım Yap",
-    description:  `Şirketin sosyal ağı olan Postify üzerinde yarın yapılacak olan şirket etkinliği için bir paylaşım yap.`,
-    status: "locked",
-    // unlocks: [""],
-    unlocks: null,
-    requires: ["register_career_site", "download_chatapp"],
-    point: 20,
-    penalty: -20,
-    logEventType: "postify"
-  },
+  // {
+  //   id: "sharing_post",
+  //   title: "Sosyal Medya Üzerinden Paylaşım Yap",
+  //   description:  `Şirketin sosyal ağı olan Postify üzerinde yarın yapılacak olan şirket etkinliği için bir paylaşım yap.`,
+  //   status: "locked",
+  //   // unlocks: [""],
+  //   unlocks: null,
+  //   requires: ["register_career_site", "download_chatapp"],
+  //   point: 20,
+  //   penalty: -20,
+  //   logEventType: "postify"
+  // },
   // ... ve diğer zincir görevler
 ];
 

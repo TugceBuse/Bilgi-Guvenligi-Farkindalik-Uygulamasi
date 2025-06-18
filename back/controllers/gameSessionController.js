@@ -1,4 +1,3 @@
-// controllers/gameSessionController.js
 const GameSession = require('../models/gameSession');
 
 exports.createGameSession = async (req, res) => {

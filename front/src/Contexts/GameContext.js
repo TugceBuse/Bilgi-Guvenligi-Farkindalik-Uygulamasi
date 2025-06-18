@@ -6,21 +6,27 @@ import { useSecurityContext } from './SecurityContext';
 import { useQuestManager } from './QuestManager';
 import { useAuthContext } from './AuthContext';
 import { usePhoneContext } from './PhoneContext';
+import { useEventLog } from './EventLogContext'; // EKLENDİ
+import { useGameSession } from '../Hooks/useGameSession'; // EKLENDİ
 
 const GameContext = createContext();
 
 export const GameContextProvider = ({ children }) => {
-  
+
   // AuthContext'ten kullanıcı bilgileri ve fonksiyonlar
   const { user } = useAuthContext();
   // Zaman artık TimeContext'ten alınacak!
   const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
   const { sendMail, addMailToMailbox, isMailboxLoggedIn, setIsMailboxLoggedIn } = useMailContext();
-  const { isPhoneConnected, setIsPhoneConnected} = usePhoneContext();
-  const { failQuest } = useQuestManager(); // 🆕
+  const { isPhoneConnected, setIsPhoneConnected } = usePhoneContext();
+  const { failQuest } = useQuestManager();
+  const { quests, resetQuests } = useQuestManager();
+  const { eventLogs, resetEventLogs } = useEventLog(); 
+  const { isWificonnected, setIsWificonnected } = useSecurityContext()
+  const { saveGameSession } = useGameSession();
 
   // --- Mevcut State'ler ---
-  const {isWificonnected, setIsWificonnected} = useSecurityContext()
+  const [gameFinished, setGameFinished] = useState(false);
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [cardBalance, setCardBalance] = useState("12345");
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
@@ -138,7 +144,6 @@ export const GameContextProvider = ({ children }) => {
     }));
   }, [constUser]);
 
-
   useEffect(() => {
     if (parseFloat(cardBalance) < 4979) {
       failQuest("buy_printer");
@@ -181,9 +186,9 @@ export const GameContextProvider = ({ children }) => {
     isRegistered: false,
     isLoggedIn: false,
     isPasswordStrong: false,
-    accountPrivacy: "Herkese Açık", 
+    accountPrivacy: "Herkese Açık",
     privacySettings: "Herkese Açık",
-    userPosts: [], 
+    userPosts: [],
     likedPosts: [],
     lockoutUntil: null,
     loginAttempts: 0
@@ -276,15 +281,15 @@ export const GameContextProvider = ({ children }) => {
 
   // CloudBox
   const [cloudUser, setCloudUser] = useState({
-    name: '',     
-    surname: '',  
-    email: constUser.email,   
-    password: '',  
+    name: '',
+    surname: '',
+    email: constUser.email,
+    password: '',
     isRegistered: false,
-    isLoggedIn: false,   
+    isLoggedIn: false,
     isPasswordStrong: false,
-    lockoutUntil: null, 
-    loginAttempts: 0    
+    lockoutUntil: null,
+    loginAttempts: 0
   });
   const [cloudBoxBackup, setCloudBoxBackup] = useState({
     files: [],
@@ -381,16 +386,50 @@ export const GameContextProvider = ({ children }) => {
 
   // Wifi bağlanınca ilk mailleri gönder (kendi fonksiyonunu bozmadan)
   useEffect(() => {
-      addMailToMailbox('inbox', 5);
-      addMailToMailbox('inbox', 1);
-      addMailToMailbox('inbox', 2);
-      addMailToMailbox('spam', 31);
-      addMailToMailbox('spam', 32);
-      const timeoutId = setTimeout(() => {
-        addMailToMailbox('inbox', 3, getDateFromseconds(secondsRef.current + 1));
-      }, 60000);
-      return () => clearTimeout(timeoutId);
+    addMailToMailbox('inbox', 5);
+    addMailToMailbox('inbox', 1);
+    addMailToMailbox('inbox', 2);
+    addMailToMailbox('spam', 31);
+    addMailToMailbox('spam', 32);
+    const timeoutId = setTimeout(() => {
+      addMailToMailbox('inbox', 3, getDateFromseconds(secondsRef.current + 1));
+    }, 60000);
+    return () => clearTimeout(timeoutId);
   }, []);
+
+  // ---------------------------
+  // OYUN SONU VERİTABANINA KAYDETME FONKSİYONU (EKLENDİ)
+  // ---------------------------
+  const saveSession = async () => {
+    try {
+      // 1) Questlerden gelen toplam puan
+      const questPoints = quests.reduce((sum, q) => sum + (q.score || 0), 0);
+
+      // 2) Loglardan gelen toplam puan
+      const logPoints = eventLogs.reduce((sum, log) => sum + (log.value || 0), 0);
+
+      // Toplam puan
+      const totalScore = questPoints + logPoints;
+
+      const gameVersion = "1.0.0";
+      const deviceInfo = navigator.userAgent;
+
+      await saveGameSession({
+        quests,
+        eventLogs,
+        totalScore,
+        gameVersion,
+        deviceInfo,
+      });
+
+      resetQuests();
+      resetEventLogs();
+      return true;
+    } catch (err) {
+      return err.message || "Kayıt başarısız.";
+    }
+  };
+
 
   return (
     <GameContext.Provider
@@ -422,6 +461,7 @@ export const GameContextProvider = ({ children }) => {
         cargoTrackingSiteVisited, setCargoTrackingSiteVisited,
         isMailboxLoggedIn, setIsMailboxLoggedIn,
         isPhoneConnected, setIsPhoneConnected,
+        saveSession,
       }}
     >
       {children}

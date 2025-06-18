@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Desktop.css';
 import { useWindowConfig }  from '../../Contexts/WindowConfigContext'
 import { useUIContext } from '../../Contexts/UIContext';
@@ -13,20 +13,42 @@ import { useVirusContext } from '../../Contexts/VirusContext';
 import TaskApp from '../TaskApp/TaskApp';
 import PopupThrower from '../PopupThrower/PopupThrower';
 import RansomwareHash from '../RansomwareHash/RansomwareHash';
+import { useQuestManager } from '../../Contexts/QuestManager';
 
 
 const Desktop = ({ hacked, onFormat }) => {
-  const { isWificonnected } = useGameContext();
+  const { isWificonnected, saveSession } = useGameContext();
   const { openWindows, visibleWindows, handleIconClick, setZindex, windowProps } = useUIContext();
   const { openedFiles, files } = useFileContext();
   const { addVirus, viruses, removeVirus } = useVirusContext();
-
-  const [showAlert, setShowAlert] = useState(false);
-
+  const { quests, getActiveQuests } = useQuestManager();
   const { windowConfig } = useWindowConfig();
+
+  const finishCalled = useRef(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   // Yeni pencere konumlarını tutacak state
   const [windowPositions, setWindowPositions] = useState({});
+
+useEffect(() => {
+    if (getActiveQuests().length === 0 && !finishCalled.current) {
+      finishCalled.current = true;
+      saveSession().then((result) => {
+        // Dilersen başarılıysa bildirim veya yönlendirme yapabilirsin
+        if (result === true) {
+          // alert("Oyun başarıyla kaydedildi!");
+        } else {
+          // alert("Oyun kaydedilemedi: " + result);
+        }
+      });
+    }
+    // Eğer tekrar görev açılırsa tetikleyici sıfırlansın
+    if (getActiveQuests().length > 0) finishCalled.current = false;
+  }, [quests, getActiveQuests, saveSession]);
+
+
+
+
 
   useEffect(() => {
     if (!hacked) return;
