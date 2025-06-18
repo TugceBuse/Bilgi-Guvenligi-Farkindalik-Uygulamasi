@@ -67,7 +67,12 @@ const ComputerCanvas= () =>{
 
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
+
   const handleSimulationClick = () => {
+   if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+
     if (isAuthenticated) {
       navigate("/game");
     } else {

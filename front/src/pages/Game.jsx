@@ -17,7 +17,7 @@
   import IntroScreen from '../components/IntroScreen/IntroScreen.jsx';
   import { QuestManagerProvider } from '../Contexts/QuestManager';
   import { NotepadProvider } from '../Contexts/NotepadContext.js';
-import { EventLogProvider } from "../Contexts/EventLogContext.js";
+  import { EventLogProvider } from "../Contexts/EventLogContext.js";
 
     const Game = () => {
       useEffect(() => {
@@ -29,7 +29,7 @@ import { EventLogProvider } from "../Contexts/EventLogContext.js";
           document.removeEventListener('contextmenu', handleContextMenu);
         };
     }, []);
-    const [phase, setPhase] = useState("desktop");
+    const [phase, setPhase] = useState("intro");
 
     return (
       <TimeProvider>
@@ -50,10 +50,10 @@ import { EventLogProvider } from "../Contexts/EventLogContext.js";
                                     <NotepadProvider>
                                     <CargoMailNotifier />
                                     <div className="game">
-                                    {/* {phase === "intro" && <IntroScreen onFinish={() => setPhase("hacked")} />}
+                                    {phase === "intro" && <IntroScreen onFinish={() => setPhase("hacked")} />}
                                     {(phase === "hacked" || phase === "desktop") && (
                                       <Desktop hacked={phase === "hacked"} onFormat={phase === "hacked" ? () => setPhase("desktop") : undefined} />
-                                    )}                       */}
+                                    )}                      
                                     {phase === "desktop" && <Desktop />}
                                   </div>
                                   </NotepadProvider>

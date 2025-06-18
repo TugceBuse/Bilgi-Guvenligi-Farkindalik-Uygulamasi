@@ -26,6 +26,15 @@ export const GameContextProvider = ({ children }) => {
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
   const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});
 
+  function generateTempPassword() {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    let pass = "";
+    for (let i = 0; i < 12; i++) {
+      pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return pass;
+  }
+
   // Kullanıcı bilgileri ve site bazlı bilgiler (aynen korunur)
   const [constUser, setConstUser] = useState({
     email: "hilal.kaya@oriontech.colum",
@@ -40,6 +49,7 @@ export const GameContextProvider = ({ children }) => {
     firstName: "",
     lastName: "",
     fullName: "",
+    tempPassword: generateTempPassword(),
   });
 
   useEffect(() => {
