@@ -16,9 +16,9 @@ import LinkButton from '../../utils/LinkButton';
       fakeOptions = {} 
     }) {
       orderNo = typeof orderNo === "string" ? orderNo : (orderNo !== undefined && orderNo !== null ? String(orderNo) : "");
-      const fakeTrackingNo = isFake ? "F4K3" + trackingNo.slice(2) : trackingNo;
+      const fakeTrackingNo = isFake ? "A3W1" + trackingNo.slice(2) : trackingNo;
       const fakeOrderNo = isFake
-        ? (fakeOptions.fakeOrderNo || "F4K3" + (orderNo ? orderNo.slice(2) : Math.floor(100000 + Math.random() * 900000)))
+        ? (fakeOptions.fakeOrderNo || "A3W1" + (orderNo ? orderNo.slice(2) : Math.floor(100000 + Math.random() * 900000)))
         : orderNo;
 
       let displayTrackingNo = isFake ? fakeTrackingNo : trackingNo;
@@ -106,7 +106,7 @@ import LinkButton from '../../utils/LinkButton';
     fakeOptions = {},
     mailId // ← Mail id'yi de props ile geçersen daha güvenli olur
 }) {
-    const fakeInvoiceNo = isFake ? "FAKE-" + invoiceNo : invoiceNo;
+    const fakeInvoiceNo = isFake ? "ZPRT-" + invoiceNo : invoiceNo;
 
     // Dinamik fatura txt içeriği
     const txtContent = `
@@ -177,7 +177,7 @@ import LinkButton from '../../utils/LinkButton';
     isFake = false,
     fakeOptions = {}
   }) {
-    const fakeCode = isFake ? fakeOptions.code || ("FAKE-" + code) : code;
+    const fakeCode = isFake ? fakeOptions.code || ("ZPRT-" + code) : code;
     const fakeButton = isFake
       ? <button className="claim-button" title={fakeOptions.link || "http://novateccno.net/apply-code"}>💸 İndirimi Uygula</button>
       : null;
