@@ -441,9 +441,10 @@ const handlePasswordUpdate = () => {
             <button
               className={styles.twoFAButton}
               onClick={() => {
+                const newValue = !PostifyInfo.is2FAEnabled; // Yeni değeri belirle
                 setPostifyInfo({
                   ...PostifyInfo,
-                  is2FAEnabled: !PostifyInfo.is2FAEnabled,
+                  is2FAEnabled: newValue,
                 });
                 addEventLogOnChange(
                   "toggle_2fa",
@@ -451,7 +452,7 @@ const handlePasswordUpdate = () => {
                   newValue,
                   {
                     type: "toggle_2fa",
-                    questId: "register_career_site", // Postify'e özel farklı bir quest varsa burayı değiştir!
+                    questId: "register_career_site", // Gerekirse değiştir
                     logEventType: "2fa",
                     value: newValue ? 5 : -5,
                     data: {
@@ -464,6 +465,7 @@ const handlePasswordUpdate = () => {
             >
               {PostifyInfo.is2FAEnabled ? "2FA Kapat" : "2FA Aç"}
             </button>
+
           </div>
         )}
 
