@@ -35,6 +35,10 @@ export const GameContextProvider = ({ children }) => {
     return pass;
   }
 
+  useEffect(() => {
+    console.log("user: ", user);
+  }, [user]);
+
   // Kullanıcı bilgileri ve site bazlı bilgiler (aynen korunur)
   const [constUser, setConstUser] = useState({
     email: "hilal.kaya@oriontech.colum",
