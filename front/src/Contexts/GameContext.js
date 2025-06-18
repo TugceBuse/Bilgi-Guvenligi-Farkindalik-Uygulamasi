@@ -22,7 +22,6 @@ export const GameContextProvider = ({ children }) => {
   // --- Mevcut State'ler ---
   const {isWificonnected, setIsWificonnected} = useSecurityContext()
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
-  const [wifiMailSent, setWifiMailSent] = useState(false);
   const [cardBalance, setCardBalance] = useState("12345");
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
   const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});

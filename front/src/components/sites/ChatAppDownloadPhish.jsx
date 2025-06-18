@@ -41,7 +41,7 @@ const ChatAppF = () => {
   const { addFile, updateFileStatus } = useFileContext();
   const { addVirus } = useVirusContext();
 
-  const { addEventLogOnce } = useEventLog();
+  const { addEventLog, addEventLogOnce } = useEventLog();
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPopup, setShowPopup] = useState(false);

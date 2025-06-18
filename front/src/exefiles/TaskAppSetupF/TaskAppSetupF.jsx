@@ -37,7 +37,6 @@ const TaskAppSetupF = ({ file, fileName, onAntivirusCheck }) => {
         sourcefile: fileName,
         impact: null,
         severity: "high",
-        startTime: Date.now()
       });
 
       setTimeout(() => {
