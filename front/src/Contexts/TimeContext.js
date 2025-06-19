@@ -11,20 +11,11 @@ export const TimeProvider = ({ children }) => {
     return new Date(now);
   });
   //Oyun başlangıcının gerçek tarihi
-  const [realStart, setRealStart] = useState(null);
+  const realStartRef = useRef(new Date());
 
   // Geçen oyun saniyesi
   const [seconds, setSeconds] = useState(0);
   const secondsRef = useRef(seconds);
-
-   const startTimer= () => {
-    setRealStart(new Date());
-    setSeconds(0);
-  };
-
-  useEffect(() => {
-    startTimer();
-  }, []);
 
   // Saniye güncellemesi
   useEffect(() => {
@@ -70,7 +61,7 @@ export const TimeProvider = ({ children }) => {
       gameStart,
       gameDate,
       gameMs,
-      realStart,
+      realStartRef,
       getRelativeDate,
       getDateFromseconds
     }}>
