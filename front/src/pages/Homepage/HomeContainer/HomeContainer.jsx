@@ -34,9 +34,9 @@ const HomeContainer = ({ scrollTo }) => {
             <h1>Hoş Geldiniz!</h1>
             <h3>Bu simülasyon, bilgi güvenliği farkındalığınızı artırmak, </h3> 
             <h3>olası siber saldırılara karşı sizi hazırlamak amacıyla tasarlanmıştır. </h3>
-            <h3>Çalışma ortamında karşılaşabileceğiniz tehditler ve </h3>
+            <h3>Dijital ortamda karşılaşabileceğiniz tehditler ve </h3>
             <h3>hatalarla ilgili çeşitli senaryolarla kendinizi test edebilir, doğru güvenlik alışkanlıkları kazanabilirsiniz.</h3>
-            <h4>Başlamak için aşağıdaki “Simülasyonu Başlat” butonuna tıklayınız.</h4>
+            <h4>Başlamak için “Simülasyonu Başlat” butonuna tıklayınız.</h4>
           </div>
         </div>
 
