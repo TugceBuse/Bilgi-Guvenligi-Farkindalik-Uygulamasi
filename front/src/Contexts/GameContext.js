@@ -444,7 +444,7 @@ export const GameContextProvider = ({ children }) => {
         totalScore,
         gameVersion,
         deviceInfo,
-        startedAt: realStartRef.toISOString(),
+        startedAt: realStartRef.current.toISOString(),
       });
       resetQuests();
       resetEventLogs();
