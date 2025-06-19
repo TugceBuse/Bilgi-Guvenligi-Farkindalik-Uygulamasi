@@ -79,17 +79,22 @@ const Mailbox = ({ closeHandler, style }) => {
       );
 
       // SPAM MAİL TIKLANDI: Logla ve puan düşür!
-      addEventLog({
-        type: "spam_mail_open",
-        questId: null, // spam ile ilgili questId varsa
-        logEventType: "spam_mail",
-        value: -4, // Her açışta -8 puan (değiştirebilirsin)
-        data: {
-          mailId: mail.id,
-          title: mail.title,
-          from: mail.from,
+      addEventLogOnce(
+        "spam_mail_open",      // type
+        "mailId",              // uniqueField
+        mail.id,               // uniqueValue (her mail için tek)
+        {
+          type: "spam_mail_open",
+          questId: null, // varsa questId ekle
+          logEventType: "spam_mail",
+          value: -4,
+          data: {
+            mailId: mail.id,
+            title: mail.title,
+            from: mail.from,
+          }
         }
-      });
+      );
     }
   };
 
@@ -122,7 +127,7 @@ const Mailbox = ({ closeHandler, style }) => {
       loginEmail.trim().toLowerCase() === constUser.email.toLowerCase() &&
       loginPassword === constUser.tempPassword
     ) {
-      completeQuest("mailbox_login");
+      completeQuest("login_mailbox");
       // DOĞRU GİRİŞ LOGU (wifi logu kaldırıldı)
       addEventLogOnce(
         "mailbox_login",         // type
