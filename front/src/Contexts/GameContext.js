@@ -9,6 +9,7 @@ import { usePhoneContext } from './PhoneContext';
 import { useEventLog } from './EventLogContext';
 import { useGameSession } from '../Hooks/useGameSession';
 import EndGame from '../components/EndGame/EndGame';
+import { useRef } from 'react';
 
 const GameContext = createContext();
 
@@ -28,6 +29,8 @@ export const GameContextProvider = ({ children }) => {
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
   const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});
   const [Totalscore , setTotalscore] = useState(0);
+  const eventLogsRef = useRef(eventLogs);
+  const questsRef = useRef(quests);
 
   // EndGame ekranı kontrolü için state
   const [showEndGame, setShowEndGame] = useState(false);
@@ -35,6 +38,14 @@ export const GameContextProvider = ({ children }) => {
     title: "Oyun Bitti!",
     description: "Tebrikler, oyunu tamamladınız.",
   });
+
+  useEffect(() => {
+    eventLogsRef.current = eventLogs;
+  }, [eventLogs]);
+
+  useEffect(() => {
+    questsRef.current = quests;
+  }, [quests]);
 
   // Oyun sonlandırıcı global fonksiyon
   const endGame = async ({ title, description } = {}) => {
@@ -415,7 +426,7 @@ export const GameContextProvider = ({ children }) => {
   const saveSession = async () => {
     try {
       // 1) Quests'i backend'e uygun şekilde map et
-      const sanitizedQuests = quests.map(q => ({
+      const sanitizedQuests = questsRef.current.map(q => ({
         questId: q.questId || q.id,
         title: q.title,
         description: q.description,
@@ -431,7 +442,7 @@ export const GameContextProvider = ({ children }) => {
       }));
 
       // 2) EventLogs'u ISO timestamp ile map et
-      const sanitizedEventLogs = eventLogs.map(log => ({
+      const sanitizedEventLogs = eventLogsRef.current.map(log => ({
         ...log,
         timestamp: log.timestampMs
           ? new Date(log.timestampMs).toISOString()
