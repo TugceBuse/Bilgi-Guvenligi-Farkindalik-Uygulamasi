@@ -9,11 +9,9 @@ export function useQuestManager() {
   return useContext(QuestManagerContext);
 }
 
- const turkishTimeString = (dateObj) =>
-    dateObj.toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" });
-
 export function QuestManagerProvider({ children }) {
-  const { gameDate } = useTimeContext();
+  // Oyun zamanı artık ms cinsinden alınacak
+  const { gameMs } = useTimeContext();
   const [quests, setQuests] = useState(QUEST_LIST);
   const [isTaskAppInstalled, setIsTaskAppInstalled] = useState(false);
   const { addNotification } = useNotificationContext();
@@ -24,11 +22,10 @@ export function QuestManagerProvider({ children }) {
     setQuests((prev) => {
       let updated = prev.map(q => {
         if (q.id === id && q.status !== "completed" && q.status !== "failed") {
-          console.log(`Görev tamamlandı: ${q.id} - ${q.title}`);
           return {
             ...q,
             status: "completed",
-            completedAt: turkishTimeString(gameDate),
+            completedAt: gameMs, // insan okunur tarih yerine doğrudan ms
             score: q.point || 0,
             logEventType: q.logEventType,
           };
@@ -47,7 +44,6 @@ export function QuestManagerProvider({ children }) {
             return st === "completed" || st === "failed";
           })
         ) {
-          console.log(`Zincirleme görev aktif oldu: ${q.id} - ${q.title}`);
           newlyActivated.push(q);
           return { ...q, status: "active" };
         }
@@ -55,7 +51,6 @@ export function QuestManagerProvider({ children }) {
       });
 
       if (isTaskAppInstalled && newlyActivated.length > 0) {
-        console.log("TASKAPP :", isTaskAppInstalled)
         newlyActivated.forEach(q =>
           addNotification({
             appType: "taskapp",
@@ -67,8 +62,6 @@ export function QuestManagerProvider({ children }) {
           })
         );
       }
-
-      console.log("Completed -> Güncel görev listesi:", updated);
 
       return updated;
     });
@@ -87,7 +80,7 @@ export function QuestManagerProvider({ children }) {
           ? {
               ...q,
               status: "failed",
-              completedAt: turkishTimeString(gameDate),
+              completedAt: gameMs, // insan okunur tarih yerine doğrudan ms
               score: q.penalty || 0,
               logEventType: q.logEventType,
             }
@@ -123,8 +116,6 @@ export function QuestManagerProvider({ children }) {
           })
         );
       }
-
-      console.log("failed -> Güncel görev listesi:", updated);
 
       return updated;
     });

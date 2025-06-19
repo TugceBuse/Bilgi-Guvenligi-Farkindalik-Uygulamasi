@@ -411,8 +411,8 @@ export const GameContextProvider = ({ children }) => {
         score: q.point,
         penalty: q.penalty,
         logEventType: q.logEventType,
-        completedAt: q.completedAt && !isNaN(new Date(q.completedAt))
-          ? new Date(q.completedAt).toISOString()
+        completedAt: typeof q.completedAt === "number" && !isNaN(q.completedAt)
+          ? new Date(gameStart.getTime() + q.completedAt).toISOString()
           : null,
       }));
 
