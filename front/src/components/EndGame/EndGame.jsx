@@ -26,7 +26,7 @@ const EndGame = ({
               <b>{score}</b>
             </div>
           )}
-          Daha fazla bilgi için profilinizi ziyaret edebilirsiniz.
+          Daha fazla bilgi için "Oyun Bilgilerim" sayfasını ziyaret edebilirsiniz.
         </div>
         <div className={styles.footer}>
           {onRestart && (

@@ -30,6 +30,7 @@ export const GameContextProvider = ({ children }) => {
   const [cardBalance, setCardBalance] = useState("12345");
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
   const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});
+  const [Totalscore , setTotalscore] = useState(0);
 
   function generateTempPassword() {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
@@ -425,9 +426,14 @@ export const GameContextProvider = ({ children }) => {
       }));
 
       // 3) Puan hesapla
-      const questPoints = sanitizedQuests.reduce((sum, q) => sum + (q.score || 0), 0);
+      const questPoints = sanitizedQuests.reduce((sum, q) => {
+        if (q.status === 'completed') return sum + (q.score || 0);
+        if (q.status === 'failed') return sum - (q.penalty || 0);
+        return sum;
+      }, 0);
       const logPoints = sanitizedEventLogs.reduce((sum, log) => sum + (log.value || 0), 0);
       const totalScore = questPoints + logPoints;
+      setTotalscore(totalScore);
 
       const gameVersion = "1.0.0";
       const deviceInfo = navigator.userAgent;
@@ -479,7 +485,7 @@ export const GameContextProvider = ({ children }) => {
         cargoTrackingSiteVisited, setCargoTrackingSiteVisited,
         isMailboxLoggedIn, setIsMailboxLoggedIn,
         isPhoneConnected, setIsPhoneConnected,
-        saveSession,
+        saveSession,Totalscore
       }}
     >
       {children}

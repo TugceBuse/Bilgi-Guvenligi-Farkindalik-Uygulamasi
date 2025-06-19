@@ -19,7 +19,7 @@ import EndGame from '../EndGame/EndGame';
 
 
 const Desktop = ({ hacked, onFormat }) => {
-  const { isWificonnected, saveSession } = useGameContext();
+  const { isWificonnected, saveSession, Totalscore } = useGameContext();
   const { openWindows, visibleWindows, handleIconClick, setZindex, windowProps } = useUIContext();
   const { openedFiles, files } = useFileContext();
   const { addVirus, viruses, removeVirus } = useVirusContext();
@@ -253,15 +253,15 @@ useEffect(() => {
         message="Internet bağlantısı bulunamadı"
       />
       {viruses.some(v => v.type === 'adware' || v.type === 'credential-stealer') && <PopupThrower/>}
-      {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
+      {viruses.some(v => v.type === 'ransomware') && <RansomScreen score={Totalscore} saveSession={saveSession}/>}
       {viruses.some(v => v.type === 'ransomwareHash') && <RansomwareHash />}
       <TaskApp />
       {showEndGame && (
       <EndGame
-        title="Simülasyon Tamamlandı!"
-        description="Tüm görevleri başarıyla tamamladınız. Siber farkındalığınız arttı."
-        score={1570}
-        onRestart={() => { navigate("/") }} // isteğe göre değiştir
+        title="Simülasyon Tamamlandrı!"
+        description="Tüm görevleri tamamladınız. Tebrikler!"
+        score={Totalscore}
+        onRestart={() => { navigate("/") }}
         onClose={() => navigate("/") }
       />
       )}
