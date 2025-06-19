@@ -93,15 +93,22 @@ const HomeContainer = ({ scrollTo }) => {
             Görüş, öneri veya iş birliği için bize aşağıdaki kanallardan ulaşabilirsin:
             <ul style={{ marginLeft: 24, marginTop: 4 }}>
               <li>
-                <b>E-posta:</b> <a href="mailto:1030521057@erciyes.edu.tr" style={{ color: '#60a5fa' }}>1030521057@erciyes.edu.tr</a>
-                 <b>E-posta:</b> <a href="mailto:1030521012@erciyes.edu.tr" style={{ color: '#60a5fa' }}>1030521012@erciyes.edu.tr</a>
+                <b>Tugçe Buse ERGÜN E-posta:</b> <a href="mailto:1030521057@erciyes.edu.tr" style={{ color: '#60a5fa' }}>1030521057@erciyes.edu.tr</a>
               </li>
               <li>
-                <b>GitHub:</b> <a href="https://github.com/TugceBuse" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>https://github.com/TugceBuse</a>
-                <b>GitHub:</b> <a href="https://github.com/Ahmetkrks" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>https://github.com/Ahmetkrks</a>
+                 <b> Ahmet KARAKÖSE E-posta:</b> <a href="mailto:1030521012@erciyes.edu.tr" style={{ color: '#60a5fa' }}>1030521012@erciyes.edu.tr</a>
+              </li>           
+            </ul>
+            <ul style={{ marginLeft: 24, marginTop: 4 }}>
+              <li>
+                <b>Tugçe Buse ERGÜN GitHub:</b> <a href="https://github.com/TugceBuse" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>https://github.com/TugceBuse</a>
               </li>
+              <li>
+                <b>Ahmet KARAKÖSE GitHub:</b> <a href="https://github.com/Ahmetkrks" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>https://github.com/Ahmetkrks</a>
+              </li>        
             </ul>
           </p>
+         
 
           {/* <h2 ref={feedbackRef} className="section-title">Görüşler</h2>
           <p>
