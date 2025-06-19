@@ -165,6 +165,17 @@ const DownloadButton = ({ label, fileName, fileContent, fileLabel, mailId }) => 
           },
         });
       }
+      else if (fileName === "rapor_2025") {
+        addEventLog({
+          type: "download_phishing_mail",
+          questId: null,
+          value: -5,
+          data: {
+            mailId: mailId,
+            file: fileName
+          },
+        });
+      }
       setTimeout(() => setShowSuccess(false), 2500);
     }
   }, [progress, downloading, cancelled, isActive, fileName, fileContent, addFile, updateFileStatus, files, fileLabel]);
