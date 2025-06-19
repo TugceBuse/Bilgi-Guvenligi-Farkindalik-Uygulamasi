@@ -6,31 +6,49 @@ import { useSecurityContext } from './SecurityContext';
 import { useQuestManager } from './QuestManager';
 import { useAuthContext } from './AuthContext';
 import { usePhoneContext } from './PhoneContext';
-import { useEventLog } from './EventLogContext'; // EKLENDİ
-import { useGameSession } from '../Hooks/useGameSession'; // EKLENDİ
+import { useEventLog } from './EventLogContext';
+import { useGameSession } from '../Hooks/useGameSession';
+import EndGame from '../components/EndGame/EndGame';
 
 const GameContext = createContext();
 
 export const GameContextProvider = ({ children }) => {
-
-  // AuthContext'ten kullanıcı bilgileri ve fonksiyonlar
   const { user } = useAuthContext();
-  // Zaman artık TimeContext'ten alınacak!
   const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds, realStartRef } = useTimeContext();
   const { sendMail, addMailToMailbox, isMailboxLoggedIn, setIsMailboxLoggedIn } = useMailContext();
   const { isPhoneConnected, setIsPhoneConnected } = usePhoneContext();
   const { failQuest } = useQuestManager();
   const { quests, resetQuests } = useQuestManager();
-  const { eventLogs, resetEventLogs } = useEventLog(); 
-  const { isWificonnected, setIsWificonnected } = useSecurityContext()
+  const { eventLogs, resetEventLogs } = useEventLog();
+  const { isWificonnected, setIsWificonnected } = useSecurityContext();
   const { saveGameSession } = useGameSession();
 
-  // --- Mevcut State'ler ---
   const [updating_antivirus, setUpdating_antivirus] = useState(false);
   const [cardBalance, setCardBalance] = useState("12345");
   const [cargoTrackingList, setCargoTrackingList] = useState([]);
   const [cargoTrackingSiteVisited, setCargoTrackingSiteVisited] = useState({});
   const [Totalscore , setTotalscore] = useState(0);
+
+  // EndGame ekranı kontrolü için state
+  const [showEndGame, setShowEndGame] = useState(false);
+  const [endGameProps, setEndGameProps] = useState({
+    title: "Oyun Bitti!",
+    description: "Tebrikler, oyunu tamamladınız.",
+  });
+
+  // Oyun sonlandırıcı global fonksiyon
+  const endGame = async ({ title, description } = {}) => {
+    if (showEndGame) return; // İkinci kez tetiklenmesin
+    setEndGameProps(prev => ({
+      ...prev,
+      ...(title !== undefined ? { title } : {}),
+      ...(description !== undefined ? { description } : {}),
+    }));
+    setShowEndGame(true);
+    await saveSession(); // Oyun kaydı (asenkron)
+  };
+
+
 
   function generateTempPassword() {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
@@ -41,11 +59,8 @@ export const GameContextProvider = ({ children }) => {
     return pass;
   }
 
-  useEffect(() => {
-    console.log("user: ", user);
-  }, [user]);
+  useEffect(() => { console.log("user: ", user); }, [user]);
 
-  // Kullanıcı bilgileri ve site bazlı bilgiler (aynen korunur)
   const [constUser, setConstUser] = useState({
     email: "hilal.kaya@oriontech.colum",
     phone: "054164944",
@@ -85,9 +100,7 @@ export const GameContextProvider = ({ children }) => {
     }));
   }, [user]);
 
-  useEffect(() => {
-    console.log("Const User güncellendi:", constUser);
-  }, [constUser]);
+  useEffect(() => { console.log("Const User güncellendi:", constUser); }, [constUser]);
 
   useEffect(() => {
     setProCareerHubInfo(prev => ({
@@ -397,7 +410,7 @@ export const GameContextProvider = ({ children }) => {
   }, []);
 
   // ---------------------------
-  // OYUN SONU VERİTABANINA KAYDETME FONKSİYONU (EKLENDİ)
+  // OYUN SONU VERİTABANINA KAYDETME FONKSİYONU
   // ---------------------------
   const saveSession = async () => {
     try {
@@ -437,7 +450,6 @@ export const GameContextProvider = ({ children }) => {
 
       const gameVersion = "1.0.0";
       const deviceInfo = navigator.userAgent;
-      console.log("realStartRef:", realStartRef.current);
       await saveGameSession({
         quests: sanitizedQuests,
         eventLogs: sanitizedEventLogs,
@@ -454,12 +466,9 @@ export const GameContextProvider = ({ children }) => {
     }
   };
 
-
-
   return (
     <GameContext.Provider
       value={{
-        // Zaman bilgisini isteyen componentler burada da ulaşabilir
         seconds,
         secondsRef,
         gameStart,
@@ -486,10 +495,22 @@ export const GameContextProvider = ({ children }) => {
         cargoTrackingSiteVisited, setCargoTrackingSiteVisited,
         isMailboxLoggedIn, setIsMailboxLoggedIn,
         isPhoneConnected, setIsPhoneConnected,
-        saveSession,Totalscore
+        saveSession,
+        Totalscore,
+        endGame,          // Global oyun bitirme fonksiyonu
+        showEndGame,      // EndGame ekran durumu
+        setShowEndGame,   // EndGame ekran kontrol fonksiyonu
       }}
     >
       {children}
+      {/* EndGame ekranı merkezi olarak burada açılır */}
+      {showEndGame && (
+        <EndGame
+          title={endGameProps.title}
+          description={endGameProps.description}
+          score={Totalscore}
+        />
+      )}
     </GameContext.Provider>
   );
 };
