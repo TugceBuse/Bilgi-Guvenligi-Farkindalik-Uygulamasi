@@ -23,20 +23,31 @@ const getStatus = (gs) => {
   const anyFailed = gs.quests.some(q => q.status === "failed");
   if (allCompleted) return "Başarıyla Tamamlandı";
   if (anyFailed) return "Erken Sonlandı";
-  return "Yarıda Kaldı";
+  return "Erken Sonlandı";
 };
 
 // Oyun analizi için eventLogs'u işle
 const extractErrors = (gs) => {
-  // Hem quest bazında hem log bazında hata çek
-  const questErrors = (gs.quests || [])
-    .filter(q => q.status === "failed")
-    .map(q => q.title || "Görev Adı Yok");
+
+  // 1. EventLog'da açık hata olanlar (type: "fail" veya logEventType: "error")
   const logErrors = (gs.eventLogs || [])
     .filter(ev => ev.type === "fail" || ev.logEventType === "error")
     .map(ev => ev.data?.reason || ev.data?.message || ev.logEventType || "Bilinmeyen hata");
-  return [...questErrors, ...logErrors];
+
+  // 2. value < 0 ise ve yukarıdaki tiplerden değilse (ör: puan kaybettiren diğer olaylar)
+  const negativeValueLogs = (gs.eventLogs || [])
+    .filter(ev =>
+      typeof ev.value === "number" && ev.value < 0 &&
+      !(ev.type === "fail" || ev.logEventType === "error")
+    )
+    .map(ev =>
+      (ev.data?.reason || ev.data?.message || ev.logEventType || ev.type || "Negatif Etki")
+      + ` (Puan: ${ev.value})`
+    );
+
+  return [...logErrors, ...negativeValueLogs];
 };
+
 
 const extractViruses = (gs) => {
   if (!gs.eventLogs) return [];

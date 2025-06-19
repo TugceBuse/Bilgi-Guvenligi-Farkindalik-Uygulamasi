@@ -233,7 +233,7 @@ export const mails = [
         <div className="mail-content-first">
           <DownloadButton label="TaskAppInstaller.exe" fileName="taskappsetupf" mailId={2}/>
           <pre>
-              <b>Merhaba Onur,</b><br/><br/>
+              <b>Merhaba,</b><br/><br/>
               🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
       
               Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
@@ -263,7 +263,7 @@ export const mails = [
               <b>Merhaba,</b><br/><br/>
               Sadakat programımız sayesinde kazandığınız puanlar kullanılmaya hazır. İndirim kodlarınızı ve özel fırsatları görmek için aşağıdaki karekodu tarayın.<br/><br/>
               <img style={{width:300, height:300, paddingTop:20, paddingBottom:20}} src="./MailPictures/QrCode.png" alt="QrCode Pic"></img><br/>
-              <b>Puanların Son Kullanım Tarihi:</b> 31 Aralık 2024<br/>
+              <b>Puanların Son Kullanım Tarihi:</b> 31 Aralık 2025<br/>
   
               Bize her alışverişinizde eşlik ettiğiniz için teşekkür ederiz!
 
@@ -282,7 +282,7 @@ export const mails = [
     (
       <div className="mail-content">
           <pre>
-              <b>Merhaba Tuğçe,</b><br/><br/>
+              <b>Merhaba,</b><br/><br/>
               Platformumuza hoş geldiniz! Üyeliğiniz başarıyla oluşturuldu. 
               Hesabınızı hemen kullanmaya başlayabilirsiniz.<br/><br/>
 
