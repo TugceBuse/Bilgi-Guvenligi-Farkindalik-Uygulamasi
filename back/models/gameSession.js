@@ -11,6 +11,7 @@ const EventLogSchema = new mongoose.Schema({
 
 const QuestStatusSchema = new mongoose.Schema({  //Quests dizisi uygun doldurulup oyun sonu bu şemada gamesession'a eklenir
   questId: { type: String, required: true },
+  title: { type: String, required: true },         // Görev başlığı
   status: { type: String, enum: ['locked', 'active', 'completed', 'failed'], required: true },
   completedAt: { type: Date },                      // Görev tamamlandıysa zamanı
   score: { type: Number, default: 0 },            // Bu görevden kazanılan puan

@@ -258,7 +258,7 @@ useEffect(() => {
       <TaskApp />
       {showEndGame && (
       <EndGame
-        title="Simülasyon Tamamlandrı!"
+        title="Simülasyon Tamamlandı!"
         description="Tüm görevleri tamamladınız. Tebrikler!"
         score={Totalscore}
         onRestart={() => { navigate("/") }}

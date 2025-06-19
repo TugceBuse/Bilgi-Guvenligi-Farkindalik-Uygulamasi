@@ -29,11 +29,6 @@ const EndGame = ({
           Daha fazla bilgi için "Oyun Bilgilerim" sayfasını ziyaret edebilirsiniz.
         </div>
         <div className={styles.footer}>
-          {onRestart && (
-            <button className={styles.button} onClick={onRestart}>
-              Yeniden Oyna
-            </button>
-          )}
           <button className={styles.button} onClick={onClose}>
             Kapat
           </button>

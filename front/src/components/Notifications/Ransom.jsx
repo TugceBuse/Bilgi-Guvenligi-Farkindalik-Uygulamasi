@@ -72,8 +72,8 @@ const Ransom = ( { score, saveSession }) => {
   if (!showContent) return null;
   if (showEndGame)
   return <EndGame
-          title="Simülasyon Tamamlandrı!"
-          description="Tüm görevleri tamamladınız. Tebrikler!"
+          title="Simülasyon Sonlandı!"
+          description="Kritik bir virüs sebebiyle simülasyon sonlandı.!"
           score={score}
           onRestart={() => { navigate("/") }}
           onClose={() => navigate("/") }
