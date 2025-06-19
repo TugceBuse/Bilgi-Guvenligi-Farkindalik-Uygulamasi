@@ -11,8 +11,11 @@ const EndGame = ({
   return (
     <div className={styles.overlay}>
       <div className={styles.window}>
-        <div className={styles.header}>
-          <span>🎉</span>
+        <div className={styles.header}>       
+            <img
+            src="icons/game-over.png"
+            alt="Game Over Icon"
+            /> 
           <h2>{title}</h2>
         </div>
         <div className={styles.body}>

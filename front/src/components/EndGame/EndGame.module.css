@@ -37,9 +37,12 @@
   gap: 8px;
 }
 
-.header span {
-  font-size: 2.2rem;
-  margin-bottom: 0.1em;
+.header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease;
 }
 
 .header h2 {

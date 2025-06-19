@@ -72,15 +72,35 @@ const Navbar = () => {
               <div className="user-info" onClick={handleAvatarClick}>
                 <img
                   src="/user (1).png"
-                  alt="user"
+                  alt="User"
                   className="avatar"
                 />
                 <span className="username">{user.username}</span>
 
                 {menuOpen && (
                   <div className="dropdown-menu">
-                    <a href="/profile">👤 Profil</a>
-                    <button onClick={logout}>🚪 Çıkış Yap</button>
+                    <a href="/profile" className="dropdown-menu-a">
+                      <img
+                        src="icons/profile.png"
+                        alt="User Profile"
+                        className="menü-avatar"
+                      /> 
+                      Profil
+                    </a>
+                    <a href="/mygames" className="dropdown-menu-a"> 
+                      <img
+                        src="icons/gamepad.png"
+                        alt="My Games"
+                        className="menü-avatar"
+                      /> Oyun Bilgilerim
+                    </a>
+                    <button onClick={logout}  className="dropdown-menu-button">
+                      <img
+                        src="icons/logout.png"
+                        alt="Logout Icon"
+                        className="menü-avatar"
+                      /> Çıkış Yap
+                      </button>
                   </div>
                 )}
               </div>
