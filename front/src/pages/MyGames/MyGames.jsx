@@ -1,57 +1,51 @@
 import React, { useEffect, useState } from "react";
 import styles from "./MyGames.module.css";
 import { useNavigate } from "react-router-dom";
+import { fetchGameSessions } from "../../services/gameSessionService";
+import { useAuthContext } from "../../Contexts/AuthContext";
 
-// Dummy detay verileri ile birlikte
-const dummyGames = [
-  {
-    id: 1,
-    date: "2024-06-20 21:37",
-    score: 1570,
-    completedQuests: 7,
-    totalQuests: 7,
-    duration: "11 dk 36 sn",
-    status: "Başarıyla Tamamlandı",
-    tasks: [
-      { name: "Mail Girişi", done: true },
-      { name: "Kargo Takibi", done: true },
-      { name: "Virüs Analizi", done: true },
-      { name: "Fake Site Tespiti", done: true },
-      { name: "QR Kodu Testi", done: true },
-      { name: "Sosyal Medya Güvenliği", done: true },
-      { name: "2FA Aktifleştirme", done: true }
-    ],
-    errors: ["Yok"],
-    viruses: [],
-  },
-  {
-    id: 2,
-    date: "2024-06-19 16:18",
-    score: 980,
-    completedQuests: 6,
-    totalQuests: 7,
-    duration: "8 dk 52 sn",
-    status: "Erken Sonlandı",
-    tasks: [
-      { name: "Mail Girişi", done: true },
-      { name: "Kargo Takibi", done: true },
-      { name: "Virüs Analizi", done: false },
-      { name: "Fake Site Tespiti", done: true },
-      { name: "QR Kodu Testi", done: false },
-      { name: "Sosyal Medya Güvenliği", done: true },
-      { name: "2FA Aktifleştirme", done: true }
-    ],
-    errors: [
-      "Virüs Analizinde başarısız",
-      "QR kodu güvenli değildi"
-    ],
-    viruses: ["adware"],
-  },
-];
+const formatDuration = (seconds) => {
+  if (!seconds) return "-";
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+  return `${min} dk ${sec} sn`;
+};
+
+const getStatus = (gs) => {
+  if (!gs.quests) return "-";
+  const failed = gs.quests.some(q => q.status === "failed");
+  const completed = gs.quests.every(q => q.status === "completed");
+  if (completed) return "Başarıyla Tamamlandı";
+  if (failed) return "Erken Sonlandı";
+  return "-";
+};
+
+const mapGameSession = (gs, idx) => ({
+  id: gs._id || idx + 1,
+  date: gs.createdAt ? new Date(gs.createdAt).toLocaleString("tr-TR") : "-",
+  score: gs.totalScore ?? 0,
+  completedQuests: gs.quests?.filter(q => q.status === "completed").length ?? 0,
+  totalQuests: gs.quests?.length ?? 0,
+  duration: gs.duration
+    ? formatDuration(gs.duration)
+    : (gs.startTime && gs.endTime
+        ? formatDuration(Math.floor((new Date(gs.endTime) - new Date(gs.startTime)) / 1000))
+        : "-"),
+  status: getStatus(gs),
+  tasks: (gs.quests || []).map(q => ({
+    name: q.title,
+    done: q.status === "completed"
+  })),
+  errors: (gs.quests || [])
+    .filter(q => q.status === "failed")
+    .map(q => `${q.title} görevi başarısız`),
+  viruses: gs.eventLogs?.filter(ev => ev.logEventType === "virus").map(ev => ev.virusType) || [],
+});
 
 const GameDetailModal = ({ game, onClose }) => (
   <div className={styles.modalOverlay} onClick={onClose}>
     <div className={styles.modal} onClick={e => e.stopPropagation()}>
+      {/* ...modal içeriğin aynı kalabilir */}
       <h3>
         Oyun Detayı <span className={styles.modalDate}>{game.date}</span>
       </h3>
@@ -96,14 +90,27 @@ const GameDetailModal = ({ game, onClose }) => (
 const MyGames = () => {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
-  const [displayedScore, setDisplayedScore] = useState(0); // animasyon için
+  const [displayedScore, setDisplayedScore] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const { token } = useAuthContext(); // Token'ı context'ten veya localden çek
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    setGames(dummyGames);
-  }, []);
+  const loadGames = async () => {
+    setLoading(true);
+    try {
+      const response = await fetchGameSessions(token);
+      setGames(response.map(mapGameSession));
+    } catch (err) {
+      setGames([]);
+      console.error("Oyunlar çekilemedi:", err);
+    }
+    setLoading(false);
+  };
+  loadGames();
+}, [token]);
 
-  // Son oyun için animasyonlu puan sayacı
   useEffect(() => {
     if (!games[0]) return;
     let start = 0;
@@ -120,7 +127,7 @@ const MyGames = () => {
         clearInterval(interval);
       }
       setDisplayedScore(start);
-    }, 16); // yaklaşık 500ms'de tamamlanır
+    }, 16);
     return () => clearInterval(interval);
   }, [games]);
 
@@ -129,17 +136,15 @@ const MyGames = () => {
 
   return (
     <div className={styles.wrapper}>
-        <img src="/phishville.png" alt="PhishVilleLogo" className={styles.phishvilleGoback} title="www.safeClicks.com" onClick={() => navigate("/")}/>
-        <h2>
-          <span role="img" aria-label="gamepad" style={{fontSize: "1.6em", marginRight: 8}}>
-            <img
-              src="icons/gamepad.png"
-              alt="My Games Icon"
-            /> 
-          </span>
-          Oyun Bilgilerim
-        </h2>
-        {latestGame && (
+      <img src="/phishville.png" alt="PhishVilleLogo" className={styles.phishvilleGoback} title="www.safeClicks.com" onClick={() => navigate("/")}/>
+      <h2>
+        <span role="img" aria-label="gamepad" style={{fontSize: "1.6em", marginRight: 8}}>
+          <img src="icons/gamepad.png" alt="My Games Icon"/> 
+        </span>
+        Oyun Bilgilerim
+      </h2>
+      {loading && <div>Yükleniyor...</div>}
+      {latestGame && !loading && (
         <div className={styles.latestGameCard} onClick={() => setSelectedGame(latestGame)}>
           <div className={styles.latestTitle}>En Son Oynanan Oyun</div>
           <div className={styles.scoreCenterArea}>
@@ -147,18 +152,10 @@ const MyGames = () => {
             <div className={styles.animatedScore}>{displayedScore}</div>
           </div>
           <div className={styles.latestContent}>
-            <div>
-              <b>Süre:</b> <span>{latestGame.duration}</span>
-            </div>
-            <div>
-              <b>Durum:</b> <span>{latestGame.status}</span>
-            </div>
-            <div>
-              <b>Tarih:</b> <span>{latestGame.date}</span>
-            </div>
-            <div>
-              <b>Görevler:</b> <span>{latestGame.completedQuests}/{latestGame.totalQuests}</span>
-            </div>
+            <div><b>Süre:</b> <span>{latestGame.duration}</span></div>
+            <div><b>Durum:</b> <span>{latestGame.status}</span></div>
+            <div><b>Tarih:</b> <span>{latestGame.date}</span></div>
+            <div><b>Görevler:</b> <span>{latestGame.completedQuests}/{latestGame.totalQuests}</span></div>
           </div>
           <button className={styles.detailBtn}>Detayları Görüntüle</button>
         </div>
@@ -178,7 +175,7 @@ const MyGames = () => {
             </tr>
           </thead>
           <tbody>
-            {otherGames.length === 0 && (
+            {otherGames.length === 0 && !loading && (
               <tr>
                 <td colSpan={7} style={{textAlign:"center", opacity:0.7}}>Başka oyun kaydı bulunamadı.</td>
               </tr>
@@ -188,9 +185,7 @@ const MyGames = () => {
                 <td>{idx + 2}</td>
                 <td>{game.date}</td>
                 <td>{game.score}</td>
-                <td>
-                  {game.completedQuests}/{game.totalQuests}
-                </td>
+                <td>{game.completedQuests}/{game.totalQuests}</td>
                 <td>{game.duration}</td>
                 <td>{game.status}</td>
                 <td>
