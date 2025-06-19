@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./MyGames.module.css";
+import { useNavigate } from "react-router-dom";
 
 // Dummy detay verileri ile birlikte
 const dummyGames = [
@@ -95,27 +96,57 @@ const GameDetailModal = ({ game, onClose }) => (
 const MyGames = () => {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [displayedScore, setDisplayedScore] = useState(0); // animasyon için
+  const navigate = useNavigate();
 
   useEffect(() => {
     setGames(dummyGames);
   }, []);
+
+  // Son oyun için animasyonlu puan sayacı
+  useEffect(() => {
+    if (!games[0]) return;
+    let start = 0;
+    const end = games[0].score;
+    if (start === end) {
+      setDisplayedScore(end);
+      return;
+    }
+    let step = Math.max(1, Math.floor(end / 35));
+    let interval = setInterval(() => {
+      start += step;
+      if (start >= end) {
+        start = end;
+        clearInterval(interval);
+      }
+      setDisplayedScore(start);
+    }, 16); // yaklaşık 500ms'de tamamlanır
+    return () => clearInterval(interval);
+  }, [games]);
 
   const latestGame = games[0];
   const otherGames = games.slice(1);
 
   return (
     <div className={styles.wrapper}>
-      <h2>
-        <span role="img" aria-label="gamepad" style={{fontSize: "1.6em", marginRight: 8}}>🎮</span>
-        Oyun Bilgilerim
-      </h2>
-      {latestGame && (
+        <img src="/phishville.png" alt="PhishVilleLogo" className={styles.phishvilleGoback} title="www.safeClicks.com" onClick={() => navigate("/")}/>
+        <h2>
+          <span role="img" aria-label="gamepad" style={{fontSize: "1.6em", marginRight: 8}}>
+            <img
+              src="icons/gamepad.png"
+              alt="My Games Icon"
+            /> 
+          </span>
+          Oyun Bilgilerim
+        </h2>
+        {latestGame && (
         <div className={styles.latestGameCard} onClick={() => setSelectedGame(latestGame)}>
           <div className={styles.latestTitle}>En Son Oynanan Oyun</div>
+          <div className={styles.scoreCenterArea}>
+            <div className={styles.scoreLabel}>Puan</div>
+            <div className={styles.animatedScore}>{displayedScore}</div>
+          </div>
           <div className={styles.latestContent}>
-            <div>
-              <b>Puan:</b> <span>{latestGame.score}</span>
-            </div>
             <div>
               <b>Süre:</b> <span>{latestGame.duration}</span>
             </div>
@@ -128,11 +159,10 @@ const MyGames = () => {
             <div>
               <b>Görevler:</b> <span>{latestGame.completedQuests}/{latestGame.totalQuests}</span>
             </div>
-            <button className={styles.detailBtn}>Detayları Görüntüle</button>
           </div>
+          <button className={styles.detailBtn}>Detayları Görüntüle</button>
         </div>
       )}
-
       <div className={styles.sectionHeader}>Diğer Oyunlarım</div>
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
