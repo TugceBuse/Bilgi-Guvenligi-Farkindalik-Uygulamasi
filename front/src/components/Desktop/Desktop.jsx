@@ -36,14 +36,11 @@ const Desktop = ({ hacked, onFormat }) => {
   const [windowPositions, setWindowPositions] = useState({});
 
 useEffect(() => {
-  console.log("active quests:", getActiveQuests());
-  console.log("finish called:", finishCalled.current);
     if (getActiveQuests().length === 0 && !finishCalled.current) {
       finishCalled.current = true;
       saveSession().then((result) => {
         // Dilersen başarılıysa bildirim veya yönlendirme yapabilirsin
         if (result === true) {
-          console.log("Tüm görevler tamamlandı, oyun bitiriliyor.");
           setShowEndGame(true); // EndGame penceresini aç
         } else {
           alert("Oyun kaydedilemedi: " + result);
@@ -53,9 +50,6 @@ useEffect(() => {
     // Eğer tekrar görev açılırsa tetikleyici sıfırlansın
     if (getActiveQuests().length > 0) finishCalled.current = false;
   }, [quests, getActiveQuests, saveSession]);
-
-
-
 
 
   useEffect(() => {
