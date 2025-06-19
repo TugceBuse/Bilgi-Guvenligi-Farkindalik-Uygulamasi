@@ -205,7 +205,7 @@ export const mails = [
           <div className="mail-content-first">
             <DownloadButton label="TaskAppInstaller.exe" fileName="taskappsetup" mailId={1}/>
             <pre>
-                <b>Merhaba Onur,</b><br/><br/>
+                <b>Merhaba,</b><br/><br/>
                 🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
         
                 Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
