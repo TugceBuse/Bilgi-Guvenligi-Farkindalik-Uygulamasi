@@ -3,7 +3,7 @@ import "./Navbar.css";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../../Contexts/AuthContext";
 
-const Navbar = () => {
+const Navbar = ({ setHomeScrollTo }) => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthContext();
   const [scrolled, setScrolled] = useState(false);
@@ -48,7 +48,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
+      <nav  className={`navbar ${scrolled ? "scrolled" : ""}`}>
         <div className="logo-container">
           <div className="logo" onClick={handleLogoClick}></div>
           <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet"></link>
@@ -57,15 +57,15 @@ const Navbar = () => {
      
 
         <div className="rightPart">
-          <a href="https://www.w3schools.com/" className="a">
+          <button className="a navlink-btn" onClick={() => setHomeScrollTo("about")}>
             Hakkında
-          </a>
-          <a href="about.html" className="a">
+          </button>
+          <button className="a navlink-btn" onClick={() => setHomeScrollTo("contact")}>
             İletişim
-          </a>
-          <a href="about.html" className="a">
+          </button>
+          {/* <button className="a navlink-btn" onClick={() => setHomeScrollTo("feedback")}>
             Görüşler
-          </a>
+          </button> */}
 
           <div className="loginPart">
             {isAuthenticated ? (
