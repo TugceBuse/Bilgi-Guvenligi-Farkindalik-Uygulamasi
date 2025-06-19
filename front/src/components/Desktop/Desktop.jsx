@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Desktop.css';
 import { useWindowConfig }  from '../../Contexts/WindowConfigContext'
 import { useUIContext } from '../../Contexts/UIContext';
@@ -14,6 +15,7 @@ import TaskApp from '../TaskApp/TaskApp';
 import PopupThrower from '../PopupThrower/PopupThrower';
 import RansomwareHash from '../RansomwareHash/RansomwareHash';
 import { useQuestManager } from '../../Contexts/QuestManager';
+import EndGame from '../EndGame/EndGame';
 
 
 const Desktop = ({ hacked, onFormat }) => {
@@ -23,6 +25,9 @@ const Desktop = ({ hacked, onFormat }) => {
   const { addVirus, viruses, removeVirus } = useVirusContext();
   const { quests, getActiveQuests } = useQuestManager();
   const { windowConfig } = useWindowConfig();
+  const navigate = useNavigate();
+
+  const [showEndGame, setShowEndGame] = useState(false);
 
   const finishCalled = useRef(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -38,7 +43,8 @@ useEffect(() => {
       saveSession().then((result) => {
         // Dilersen başarılıysa bildirim veya yönlendirme yapabilirsin
         if (result === true) {
-          alert("Oyun başarıyla kaydedildi!");
+          console.log("Tüm görevler tamamlandı, oyun bitiriliyor.");
+          setShowEndGame(true); // EndGame penceresini aç
         } else {
           alert("Oyun kaydedilemedi: " + result);
         }
@@ -256,6 +262,15 @@ useEffect(() => {
       {viruses.some(v => v.type === 'ransomware') && <RansomScreen />}
       {viruses.some(v => v.type === 'ransomwareHash') && <RansomwareHash />}
       <TaskApp />
+      {showEndGame && (
+      <EndGame
+        title="Simülasyon Tamamlandı!"
+        description="Tüm görevleri başarıyla tamamladınız. Siber farkındalığınız arttı."
+        score={1570}
+        onRestart={() => { navigate("/") }} // isteğe göre değiştir
+        onClose={() => navigate("/") }
+      />
+      )}
     </div>
   );
 };
