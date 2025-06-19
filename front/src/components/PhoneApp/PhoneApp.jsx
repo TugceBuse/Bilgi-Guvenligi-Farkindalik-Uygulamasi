@@ -4,7 +4,8 @@ import { MakeDraggable } from '../../utils/Draggable';
 import { useUIContext } from '../../Contexts/UIContext';
 import { usePhoneContext } from '../../Contexts/PhoneContext';
 import { useNotificationContext } from '../../Contexts/NotificationContext';
-import { useGameContext } from '../../Contexts/GameContext'; // EKLENDİ
+import { useGameContext } from '../../Contexts/GameContext'; 
+import { useEventLog } from '../../Contexts/EventLogContext';
 
 export const usePhoneApp = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -18,7 +19,8 @@ const PhoneApp = ({ closeHandler, style }) => {
   MakeDraggable(PhoneAppRef, `.${styles.phoneWindow}`);
   const { markAsRead, closePopupNotification } = useNotificationContext();
   const { messages, markMessageAsRead, readMessages, getUnreadCount } = usePhoneContext();
-  const { isPhoneConnected, setIsPhoneConnected } = useGameContext(); // Buradan alıyoruz!
+  const { isPhoneConnected, setIsPhoneConnected } = useGameContext();
+  const { addEventLog } = useEventLog();
 
   // Bağlantı kurma animasyonu için state
   const [connecting, setConnecting] = useState(false);
@@ -29,6 +31,16 @@ const PhoneApp = ({ closeHandler, style }) => {
   // Bağlantı butonu işlemi
   const handleConnect = () => {
     setConnecting(true);
+    addEventLog({
+      type: "connect_phone",
+      questId: null,
+      logEventType: "connect",
+      value: 0,
+      data: 
+      {
+        app: "phoneapp",
+      }
+    });
     setTimeout(() => {
       setIsPhoneConnected(true);
       setConnecting(false);
