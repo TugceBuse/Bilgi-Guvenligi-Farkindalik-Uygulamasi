@@ -3,7 +3,7 @@ const GameSession = require('../models/gameSession');
 // Oyun oturumu oluştur (mevcut fonksiyon)
 exports.createGameSession = async (req, res) => {
   try {
-    const { quests, eventLogs, totalScore, gameVersion, deviceInfo } = req.body;
+    const { quests, eventLogs, totalScore, gameVersion, deviceInfo, startedAt } = req.body;
     const userId = req.user.id;
 
     if (!quests || !eventLogs) {
@@ -11,6 +11,8 @@ exports.createGameSession = async (req, res) => {
     }
 
     const endedAt = new Date();
+    const startedAtDate = startedAt ? new Date(startedAt) : endedAt;
+
 
     const session = new GameSession({
       userId,
@@ -18,6 +20,7 @@ exports.createGameSession = async (req, res) => {
       eventLogs,
       totalScore,
       endedAt,
+      startedAt: startedAtDate,
       gameVersion,
       deviceInfo,
     });

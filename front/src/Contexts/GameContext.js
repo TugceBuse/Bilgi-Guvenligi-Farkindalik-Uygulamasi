@@ -437,14 +437,14 @@ export const GameContextProvider = ({ children }) => {
 
       const gameVersion = "1.0.0";
       const deviceInfo = navigator.userAgent;
-
+      console.log("Real start time:", realStart);
       await saveGameSession({
         quests: sanitizedQuests,
         eventLogs: sanitizedEventLogs,
         totalScore,
         gameVersion,
         deviceInfo,
-        startAt: realStart.toISOString(),
+        startedAt: realStart.toISOString(),
       });
       resetQuests();
       resetEventLogs();
