@@ -55,19 +55,25 @@
   gap: 18px; /* 🔄 spacing artırıldı */
 }
 
-/* 🔄 Bağlantılar için flat tasarım ve hover efekti */
-.a {
+.a, .navlink-btn {
   font-size: 15px;
-  color: #cbd5e1;
+  background-color: rgba(201, 201, 201, 0.2); /* 🔄 Arka plan rengi hafif gri */
   text-decoration: none;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border-radius: 6px;
+  border: none;          /* <--- button border'ı sıfırla */
+  outline: none;         /* <--- focus stilini sıfırla */
+  cursor: pointer;       /* <--- el işareti */
+  color: #e2e8f0;
   transition: background 0.3s, color 0.3s;
+  margin-left: 8px;
+  font-family: inherit;  /* Yazı tipiyle uyumlu olsun */
+  box-shadow: none;
 }
 
-.a:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+.a:hover, .navlink-btn:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: #fff;
 }
 
 /* 🔄 Giriş butonu modern mavi ton ve hover animasyonu */
