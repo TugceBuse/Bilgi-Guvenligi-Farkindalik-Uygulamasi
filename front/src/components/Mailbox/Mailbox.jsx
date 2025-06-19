@@ -6,7 +6,9 @@ import { useMailContext } from '../../Contexts/MailContext';
 import { useGameContext } from '../../Contexts/GameContext';
 import { resetScroll } from '../../utils/resetScroll';
 import { useNotificationContext } from '../../Contexts/NotificationContext';
-import ConnectionOverlay from '../../utils/ConnectionOverlay'; // <-- import eklendi
+import ConnectionOverlay from '../../utils/ConnectionOverlay';
+import { useQuestManager } from '../../Contexts/QuestManager';
+import { useEventLog } from '../../Contexts/EventLogContext';
 
 export const useMailbox = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -23,8 +25,10 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const [activeTab, setActiveTab] = useState('inbox');
   const [showSpamMenu, setShowSpamMenu] = useState(false);
-  
+
   const { removeNotification } = useNotificationContext();
+  const { addEventLogOnce, addEventLog } = useEventLog();
+  const { completeQuest } = useQuestManager();
 
   const {
     inboxMails, setInboxMails,
@@ -33,7 +37,6 @@ const Mailbox = ({ closeHandler, style }) => {
     selectedMail, setSelectedMail,
   } = useMailContext();
 
-  // GameContext’ten giriş bilgisi alınır
   const { isWificonnected, constUser, isMailboxLoggedIn, setIsMailboxLoggedIn } = useGameContext();
   const contentRef = useRef(null);
 
@@ -57,12 +60,36 @@ const Mailbox = ({ closeHandler, style }) => {
         )
       );
       removeNotification(mail.id);
+      addEventLog({
+        type: "mail_open",
+        questId: null,
+        logEventType: "mail_read",
+        value: 0, // puan yok
+        data: {
+          mailId: mail.id,
+          title: mail.title,
+          from: mail.from,
+        }
+      });
     } else if (activeTab === "spam") {
       setSpamboxMails(prev =>
         prev.map(m =>
           m.id === mail.id ? { ...m, readMail: true } : m
         )
       );
+
+      // SPAM MAİL TIKLANDI: Logla ve puan düşür!
+      addEventLog({
+        type: "spam_mail_open",
+        questId: null, // spam ile ilgili questId varsa
+        logEventType: "spam_mail",
+        value: -4, // Her açışta -8 puan (değiştirebilirsin)
+        data: {
+          mailId: mail.id,
+          title: mail.title,
+          from: mail.from,
+        }
+      });
     }
   };
 
@@ -91,9 +118,27 @@ const Mailbox = ({ closeHandler, style }) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (loginEmail.trim().toLowerCase() === constUser.email.toLowerCase() &&
-        loginPassword === constUser.tempPassword) {
-      setIsMailboxLoggedIn(true); 
+    if (
+      loginEmail.trim().toLowerCase() === constUser.email.toLowerCase() &&
+      loginPassword === constUser.tempPassword
+    ) {
+      completeQuest("mailbox_login");
+      // DOĞRU GİRİŞ LOGU (wifi logu kaldırıldı)
+      addEventLogOnce(
+        "mailbox_login",         // type
+        "email",                 // uniqueField (her kullanıcı bir kez loglansın)
+        loginEmail.toLowerCase(),
+        {
+          type: "mailbox_login",
+          questId: "mailbox_login",
+          logEventType: "login",
+          value: 0, // Girişten puan
+          data: {
+            email: loginEmail.toLowerCase()
+          }
+        }
+      );
+      setIsMailboxLoggedIn(true);
       setLoginError('');
       setLoginPassword('');
       setLoginEmail('');
@@ -327,6 +372,18 @@ const Mailbox = ({ closeHandler, style }) => {
                                   setInboxMails(prev => prev.filter(mail => mail.id !== selectedMail.id));
                                   setSpamboxMails(prev => [...prev, { ...selectedMail, readMail: true }]);
                                   setSelectedMail(null);
+
+                                  // SPAM'A BİLDİR LOGU (ayarlanmadı)
+                                  // addEventLog({
+                                  //   type: "mark_as_spam",
+                                  //   questId: "mailbox_spam_report", // quest varsa
+                                  //   logEventType: "mark_spam",
+                                  //   value: 2, // spam bildirme puanı
+                                  //   data: {
+                                  //     mailId: selectedMail.id,
+                                  //     title: selectedMail.title,
+                                  //   }
+                                  // });
                                 }
                                 setShowSpamMenu(false);
                               }}

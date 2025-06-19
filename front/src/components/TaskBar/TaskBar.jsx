@@ -120,7 +120,6 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
       }
     );
     completeQuest("wifi_connect");
-    completeQuest("login_mailbox");
   }
 };
 
@@ -131,6 +130,7 @@ const handlePasswordSubmit = (e) => {
   if (password === pass) {
     setIsWificonnected(true);
     setWifiname(selectedWifi);
+    completeQuest("wifi_connect");
     addEventLogOnce(
       "wifi_connect",
       "wifi",

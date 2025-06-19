@@ -29,7 +29,7 @@ const QUEST_LIST = [
     status: "locked",
     unlocks: ["download_taskapp"],
     requires: ["wifi_connect"],
-    point: 10,
+    point: 0,
     penalty: -10,
     logEventType: "mailbox"
   },
