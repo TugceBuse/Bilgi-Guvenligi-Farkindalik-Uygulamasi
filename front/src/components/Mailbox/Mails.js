@@ -234,7 +234,7 @@ export const mails = [
           <DownloadButton label="TaskAppInstaller.exe" fileName="taskappsetupf" mailId={2}/>
           <pre>
               <b>Merhaba,</b><br/><br/>
-              🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhishVille</b> simülasyonuna giriş yaptın.<br/><br/>
+              🎯 Tebrikler! Dijital güvenlik reflekslerini test etmek ve geliştirmek için <b>PhisVille</b> simülasyonuna giriş yaptın.<br/><br/>
       
               Burada karşına gerçek hayatta karşılaşabileceğin siber tehditler, dolandırıcılık girişimleri ve güvenlik açıkları çıkacak. 
               Amacın: Görevleri başarıyla tamamlayarak tuzaklardan kaçmak ve sistemi güvence altına almak!<br/><br/>
@@ -246,7 +246,7 @@ export const mails = [
       
               <b>İyi şanslar dileriz,<br/>
               PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
-              <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phishville.com</span><br/>
+              <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phisville.com</span><br/>
               <b>Telefon:</b> +90 212 123 4567
           </pre>
         </div>
