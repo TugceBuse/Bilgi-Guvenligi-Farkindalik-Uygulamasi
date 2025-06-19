@@ -65,7 +65,6 @@ export const GameContextProvider = ({ children }) => {
     if (!user) return;
     setConstUser(prev => ({
       ...prev,
-      id: user._id || user.id || prev.id,
       firstName: user.firstName !== undefined ? user.firstName : prev.firstName,
       lastName: user.lastName !== undefined ? user.lastName : prev.lastName,
       fullName: `${user.firstName} ${user.lastName}`,
