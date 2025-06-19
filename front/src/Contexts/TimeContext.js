@@ -10,10 +10,21 @@ export const TimeProvider = ({ children }) => {
     now.setHours(9, 0, 0, 0); // saat: 09:00:00
     return new Date(now);
   });
+  //Oyun başlangıcının gerçek tarihi
+  const [realStart, setRealStart] = useState(null);
 
   // Geçen oyun saniyesi
   const [seconds, setSeconds] = useState(0);
   const secondsRef = useRef(seconds);
+
+   const startTimer= () => {
+    setRealStart(new Date());
+    setSeconds(0);
+  };
+
+  useEffect(() => {
+    startTimer();
+  }, []);
 
   // Saniye güncellemesi
   useEffect(() => {
@@ -58,7 +69,8 @@ export const TimeProvider = ({ children }) => {
       secondsRef,
       gameStart,
       gameDate,
-      gameMs,          // <<---- BURAYA EKLENDİ
+      gameMs,
+      realStart,
       getRelativeDate,
       getDateFromseconds
     }}>

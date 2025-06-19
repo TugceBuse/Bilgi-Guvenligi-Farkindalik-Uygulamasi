@@ -16,7 +16,7 @@ export const GameContextProvider = ({ children }) => {
   // AuthContext'ten kullanıcı bilgileri ve fonksiyonlar
   const { user } = useAuthContext();
   // Zaman artık TimeContext'ten alınacak!
-  const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds } = useTimeContext();
+  const { seconds, secondsRef, gameStart, getRelativeDate, getDateFromseconds, realStart } = useTimeContext();
   const { sendMail, addMailToMailbox, isMailboxLoggedIn, setIsMailboxLoggedIn } = useMailContext();
   const { isPhoneConnected, setIsPhoneConnected } = usePhoneContext();
   const { failQuest } = useQuestManager();
@@ -444,6 +444,7 @@ export const GameContextProvider = ({ children }) => {
         totalScore,
         gameVersion,
         deviceInfo,
+        startAt: realStart.toISOString(),
       });
       resetQuests();
       resetEventLogs();

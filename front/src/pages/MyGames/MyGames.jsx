@@ -4,8 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { fetchGameSessions } from "../../services/gameSessionService";
 import { useAuthContext } from "../../Contexts/AuthContext";
 
+// Türkçe tarih formatı
+const toTurkishDate = (date) =>
+  date ? new Date(date).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : "-";
+
+// Süreyi "X dk Y sn" formatında döndürür
 const formatDuration = (seconds) => {
-  if (!seconds) return "-";
+  if (!seconds || isNaN(seconds) || seconds < 0) return "-";
   const min = Math.floor(seconds / 60);
   const sec = seconds % 60;
   return `${min} dk ${sec} sn`;
@@ -13,42 +18,72 @@ const formatDuration = (seconds) => {
 
 const getStatus = (gs) => {
   if (!gs.quests) return "-";
-  const failed = gs.quests.some(q => q.status === "failed");
-  const completed = gs.quests.every(q => q.status === "completed");
-  if (completed) return "Başarıyla Tamamlandı";
-  if (failed) return "Erken Sonlandı";
-  return "-";
+  if (gs.quests.length === 0) return "Başlatılmadı";
+  const allCompleted = gs.quests.every(q => q.status === "completed");
+  const anyFailed = gs.quests.some(q => q.status === "failed");
+  if (allCompleted) return "Başarıyla Tamamlandı";
+  if (anyFailed) return "Erken Sonlandı";
+  return "Yarıda Kaldı";
 };
 
-const mapGameSession = (gs, idx) => ({
-  id: gs._id || idx + 1,
-  date: gs.createdAt ? new Date(gs.createdAt).toLocaleString("tr-TR") : "-",
-  score: gs.totalScore ?? 0,
-  completedQuests: gs.quests?.filter(q => q.status === "completed").length ?? 0,
-  totalQuests: gs.quests?.length ?? 0,
-  duration: gs.duration
-    ? formatDuration(gs.duration)
-    : (gs.startTime && gs.endTime
-        ? formatDuration(Math.floor((new Date(gs.endTime) - new Date(gs.startTime)) / 1000))
-        : "-"),
-  status: getStatus(gs),
-  tasks: (gs.quests || []).map(q => ({
-    name: q.title,
-    done: q.status === "completed"
-  })),
-  errors: (gs.quests || [])
+// Oyun analizi için eventLogs'u işle
+const extractErrors = (gs) => {
+  // Hem quest bazında hem log bazında hata çek
+  const questErrors = (gs.quests || [])
     .filter(q => q.status === "failed")
-    .map(q => `${q.title} görevi başarısız`),
-  viruses: gs.eventLogs?.filter(ev => ev.logEventType === "virus").map(ev => ev.virusType) || [],
-});
+    .map(q => q.title || "Görev Adı Yok");
+  const logErrors = (gs.eventLogs || [])
+    .filter(ev => ev.type === "fail" || ev.logEventType === "error")
+    .map(ev => ev.data?.reason || ev.data?.message || ev.logEventType || "Bilinmeyen hata");
+  return [...questErrors, ...logErrors];
+};
+
+const extractViruses = (gs) => {
+  if (!gs.eventLogs) return [];
+  return gs.eventLogs
+    .filter(ev => ev.logEventType === "virus" || ev.type === "add_virus")
+    .map(ev => {
+      const tarih = toTurkishDate(ev.timestamp);
+      const name = ev.virusType || ev.data?.virusType || "Virüs";
+      const puan = ev.value ? ` (Puan: ${ev.value})` : "";
+      return `${name} - ${tarih}${puan}`;
+    });
+};
+
+const mapGameSession = (gs, idx) => {
+  // Süre hesabı için startedAt ve endedAt kullan
+  let durationSec = null;
+  if (gs.startedAt && gs.endedAt) {
+    durationSec = Math.floor((new Date(gs.endedAt) - new Date(gs.startedAt)) / 1000);
+  } else if (gs.startTime && gs.endTime) {
+    durationSec = Math.floor((new Date(gs.endTime) - new Date(gs.startTime)) / 1000);
+  } else if (gs.duration) {
+    durationSec = gs.duration;
+  }
+  return {
+    id: gs._id || idx + 1,
+    date: toTurkishDate(gs.endedAt || gs.createdAt),
+    score: gs.totalScore ?? 0,
+    completedQuests: gs.quests?.filter(q => q.status === "completed").length ?? 0,
+    totalQuests: gs.quests?.length ?? 0,
+    duration: formatDuration(durationSec),
+    status: getStatus(gs),
+    tasks: (gs.quests || []).map(q => ({
+      name: q.title || "Görev Adı Yok",
+      done: q.status === "completed"
+    })),
+    errors: extractErrors(gs),
+    viruses: extractViruses(gs),
+  };
+};
 
 const GameDetailModal = ({ game, onClose }) => (
   <div className={styles.modalOverlay} onClick={onClose}>
     <div className={styles.modal} onClick={e => e.stopPropagation()}>
-      {/* ...modal içeriğin aynı kalabilir */}
-      <h3>
-        Oyun Detayı <span className={styles.modalDate}>{game.date}</span>
-      </h3>
+      <div style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+        <h3>Oyun Detayı</h3>
+        <span className={styles.modalDate}>{game.date}</span>
+      </div>
       <div className={styles.detailRow}><b>Puan:</b> <span>{game.score}</span></div>
       <div className={styles.detailRow}><b>Süre:</b> <span>{game.duration}</span></div>
       <div className={styles.detailRow}><b>Durum:</b> <span>{game.status}</span></div>
@@ -92,25 +127,25 @@ const MyGames = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [displayedScore, setDisplayedScore] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { token } = useAuthContext(); // Token'ı context'ten veya localden çek
-
+  const { token } = useAuthContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-  const loadGames = async () => {
-    setLoading(true);
-    try {
-      const response = await fetchGameSessions(token);
-      setGames(response.map(mapGameSession));
-    } catch (err) {
-      setGames([]);
-      console.error("Oyunlar çekilemedi:", err);
-    }
-    setLoading(false);
-  };
-  loadGames();
-}, [token]);
+    const loadGames = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchGameSessions(token);
+        setGames(response.map(mapGameSession));
+      } catch (err) {
+        setGames([]);
+        console.error("Oyunlar çekilemedi:", err);
+      }
+      setLoading(false);
+    };
+    loadGames();
+  }, [token]);
 
+  // Son oyun için animasyonlu puan
   useEffect(() => {
     if (!games[0]) return;
     let start = 0;
@@ -119,10 +154,10 @@ const MyGames = () => {
       setDisplayedScore(end);
       return;
     }
-    let step = Math.max(1, Math.floor(end / 35));
+    let step = Math.max(1, Math.floor(Math.abs(end) / 35));
     let interval = setInterval(() => {
-      start += step;
-      if (start >= end) {
+      start += step * (end < 0 ? -1 : 1);
+      if ((end >= 0 && start >= end) || (end < 0 && start <= end)) {
         start = end;
         clearInterval(interval);
       }
