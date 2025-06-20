@@ -217,9 +217,7 @@ export const mails = [
                 Şimdi kemerlerini bağla, şüpheciliğini kuşan ve oyuna başla! 🚀<br/><br/>
         
                 <b>İyi şanslar dileriz,<br/>
-                PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
-                <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phishville.com</span><br/>
-                <b>Telefon:</b> +90 212 123 4567
+                PhishVille Simülasyon Ekibi</b><br/>
             </pre>
           </div>
         )        
@@ -245,9 +243,7 @@ export const mails = [
               Şimdi kemerlerini bağla, şüpheciliğini kuşan ve oyuna başla! 🚀<br/><br/>
       
               <b>İyi şanslar dileriz,<br/>
-              PhishVille Güvenlik Simülasyonu Ekibi</b><br/>
-              <b>İletişim:</b> <span style={{color:"orange", cursor:"pointer"}}>destek@phisville.com</span><br/>
-              <b>Telefon:</b> +90 212 123 4567
+              PhishVille Simülasyon Ekibi</b><br/>
           </pre>
         </div>
       )        

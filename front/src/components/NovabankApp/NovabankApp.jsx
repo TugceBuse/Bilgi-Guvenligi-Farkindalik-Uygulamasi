@@ -236,7 +236,7 @@ const NovabankApp = ({ closeHandler, style }) => {
               <div className={styles.card}>
                 <div className={styles.cardBackground}>
                   <h3 className={styles.cardBankName}>NovaBank</h3>
-                  <div className={styles.cardNumber}>**** **** **** 3456</div>
+                  <div className={styles.cardNumber}>**** **** **** 1064</div>
                   <div className={styles.cardDetails}>
                     <div>
                       <label>Son Kullanım</label>
