@@ -23,22 +23,19 @@ const getStatus = (gs) => {
   const anyFailed = gs.quests.some(q => q.status === "failed");
   if (allCompleted) return "Başarıyla Tamamlandı";
   if (anyFailed) return "Erken Sonlandı";
-  return "Erken Sonlandı";
+  return "Tamamlandı";
 };
 
 // Oyun analizi için eventLogs'u işle
 const extractErrors = (gs) => {
-
-   // 1. EventLog'da açık hata olanlar (type: "fail" veya logEventType: "error")
+  // 1. Açık hata eventleri (fail/error)
   const logErrors = (gs.eventLogs || [])
     .filter(ev => ev.type === "fail" || ev.logEventType === "error")
     .map(ev => {
       let detay = "";
-      // data alanında varsa daha açıklayıcı bilgi ekle
       if (ev.data) {
         const reason = ev.data.reason || ev.data.message;
         if (reason) detay += ` (${reason})`;
-        // data içindeki diğer değerler de gösterilebilir:
         Object.entries(ev.data).forEach(([key, value]) => {
           if (key !== "reason" && key !== "message" && value) {
             detay += ` | ${key}: ${value}`;
@@ -48,16 +45,26 @@ const extractErrors = (gs) => {
       return (ev.logEventType || ev.type || "Hata") + detay;
     });
 
-  // 2. value < 0 ise ve yukarıdaki tiplerden değilse (ör: puan kaybettiren diğer olaylar)
+  // 2. value < 0 ve özelleştirilmiş açıklama
   const negativeValueLogs = (gs.eventLogs || [])
     .filter(ev =>
       typeof ev.value === "number" && ev.value < 0 &&
       !(ev.type === "fail" || ev.logEventType === "error")
     )
     .map(ev => {
+      // Özelleştirilmiş register log metni
+      if (ev.type && ev.type.includes("register") && ev.data && ev.data.for) {
+        let desc = `[${ev.data.for}] kayıt - `;
+        desc += ev.data.isStrong === false
+          ? "Zayıf şifre seçildi"
+          : ev.data.isStrong === true
+            ? "Güçlü şifre seçildi"
+            : "Şifre güvenliği bilinmiyor";
+        return `${desc} (Puan: ${ev.value})`;
+      }
+      // Diğer tüm negatif loglar için
       let detay = "";
       if (ev.data) {
-        // En anlamlıları öne çıkar (ör: dosya adı, neden vs)
         Object.entries(ev.data).forEach(([key, value]) => {
           if (value) detay += ` | ${key}: ${value}`;
         });
@@ -76,12 +83,16 @@ const extractErrors = (gs) => {
 const extractViruses = (gs) => {
   if (!gs.eventLogs) return [];
   return gs.eventLogs
-    .filter(ev => ev.logEventType === "virus" || ev.type === "add_virus")
+    .filter(ev => ev.logEventType === "virus" || ev.type === "add_virus" || ev.type === "remove_virus")
     .map(ev => {
+      let action = "";
+      if (ev.type && ev.type.includes("add")) action = "Virüs Bulaşma: ";
+      else if (ev.type && ev.type.includes("remove")) action = "Virüs Temizleme: ";
       const tarih = toTurkishDate(ev.timestamp);
-      const name = ev.virusType || ev.data?.virusType || "Virüs";
+      const name = ev.virusType || ev.data?.type || "Virüs";
+      const impact = ev.data?.impact ? ` (${ev.data.impact})` : "";
       const puan = ev.value ? ` (Puan: ${ev.value})` : "";
-      return `${name} - ${tarih}${puan}`;
+      return `${action}${name} - ${tarih}${impact}${puan}`;
     });
 };
 

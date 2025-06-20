@@ -120,7 +120,7 @@ const QUEST_LIST = [
       fırsatları yakalamayı da ihmal etme! Ne kadar ucuz o kadar iyi...`,
     status: "locked",
     unlocks: ["save_invoice"],
-    requires: ["download_novabank"],
+    requires: ["download_novabank", "download_cloud"],
     point: 20,
     penalty: -20,
     logEventType: "e-commerce"
@@ -131,7 +131,7 @@ const QUEST_LIST = [
     description:  `Satın alınan renkli baskı destekli yazıcının faturasını kaydet.`,
     status: "locked",
     unlocks: ["share_invoice", "file_backup"],
-    requires: ["buy_printer", "download_novabank"],
+    requires: ["buy_printer", "download_novabank", "download_cloud"],
     point: 20,
     penalty: -20,
     logEventType: "save-invoice"
@@ -142,7 +142,7 @@ const QUEST_LIST = [
     description:  `Satın alınan renkli baskı destekli yazıcının faturasını Chat uygulaması üzerinden Satış departmanıyla paylaş.`,
     status: "locked",
     unlocks: ["share_cargo_status"],
-    requires: ["save_invoice", "buy_printer", "download_novabank", "download_chatapp"],
+    requires: ["save_invoice", "buy_printer", "download_novabank", "download_chatapp", "download_cloud"],
     point: 20,
     penalty: -20,
     logEventType: "share-invoice"
@@ -154,7 +154,7 @@ const QUEST_LIST = [
     status: "locked",
     // unlocks: [""],
     unlocks: null,
-    requires: ["share_invoice", "save_invoice", "buy_printer", "download_novabank"],
+    requires: ["share_invoice", "save_invoice", "buy_printer", "download_novabank", "download_cloud"],
     point: 20,
     penalty: -20,
     logEventType: "cargo"
