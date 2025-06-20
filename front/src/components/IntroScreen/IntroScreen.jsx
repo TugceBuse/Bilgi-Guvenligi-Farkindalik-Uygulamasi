@@ -3,7 +3,7 @@ import styles from "./IntroScreen.module.css";
 import { useGameContext } from "../../Contexts/GameContext";
 
 const introMessages = [
-  "Simülasyon başlangıcında kurumumuz tarafından sana atanan [MAIL] e-posta adresi ve [PASS] geçici şifresi ile MailBox uygulamasına giriş yapmalısın.",
+  "Simülasyon başlangıcında kurumumuz tarafından sana atanan [MAIL] e-posta adresi ve [PASS] geçici şifresi ile MailBox uygulamasına giriş yapmalısın. Özel wifi ağına bağlantı için ise 'XYZ2025' şifresini kullanabilirsin.",
   "Giriş sonrası, PhishVille ekibinden gelen bir hoş geldin e-postası ile karşılaşacaksın. Sana verilecek olan görevleri ve detaylarını ise mailde bulunan 'TaskApp' uygulamasını indirerek görüntüleyebilirsin. ",
   "Unutma, aldığın kararlar puanına ve güvenlik seviyene etki eder. Hazırsan simülasyonu başlatabilirsin.",
 ];
