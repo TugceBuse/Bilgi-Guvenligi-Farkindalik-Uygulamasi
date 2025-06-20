@@ -29,10 +29,24 @@ const getStatus = (gs) => {
 // Oyun analizi için eventLogs'u işle
 const extractErrors = (gs) => {
 
-  // 1. EventLog'da açık hata olanlar (type: "fail" veya logEventType: "error")
+   // 1. EventLog'da açık hata olanlar (type: "fail" veya logEventType: "error")
   const logErrors = (gs.eventLogs || [])
     .filter(ev => ev.type === "fail" || ev.logEventType === "error")
-    .map(ev => ev.data?.reason || ev.data?.message || ev.logEventType || "Bilinmeyen hata");
+    .map(ev => {
+      let detay = "";
+      // data alanında varsa daha açıklayıcı bilgi ekle
+      if (ev.data) {
+        const reason = ev.data.reason || ev.data.message;
+        if (reason) detay += ` (${reason})`;
+        // data içindeki diğer değerler de gösterilebilir:
+        Object.entries(ev.data).forEach(([key, value]) => {
+          if (key !== "reason" && key !== "message" && value) {
+            detay += ` | ${key}: ${value}`;
+          }
+        });
+      }
+      return (ev.logEventType || ev.type || "Hata") + detay;
+    });
 
   // 2. value < 0 ise ve yukarıdaki tiplerden değilse (ör: puan kaybettiren diğer olaylar)
   const negativeValueLogs = (gs.eventLogs || [])
@@ -40,10 +54,20 @@ const extractErrors = (gs) => {
       typeof ev.value === "number" && ev.value < 0 &&
       !(ev.type === "fail" || ev.logEventType === "error")
     )
-    .map(ev =>
-      (ev.data?.reason || ev.data?.message || ev.logEventType || ev.type || "Negatif Etki")
-      + ` (Puan: ${ev.value})`
-    );
+    .map(ev => {
+      let detay = "";
+      if (ev.data) {
+        // En anlamlıları öne çıkar (ör: dosya adı, neden vs)
+        Object.entries(ev.data).forEach(([key, value]) => {
+          if (value) detay += ` | ${key}: ${value}`;
+        });
+      }
+      return (
+        (ev.data?.reason || ev.data?.message || ev.logEventType || ev.type || "Negatif Etki") +
+        ` (Puan: ${ev.value})` +
+        detay
+      );
+    });
 
   return [...logErrors, ...negativeValueLogs];
 };

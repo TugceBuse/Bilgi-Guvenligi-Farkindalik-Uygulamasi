@@ -27,7 +27,7 @@ const TaskBar = ({ windowConfig, hacked, onFormat }) => {
   const [showSystemSettings, setShowSystemSettings] = useState(false);
   const [wifiname, setWifiname] = useState('');
 
-  const pass = "1234";
+  const pass = "XYZ2025";
   const navigate = useNavigate();
 
   const { addEventLogOnce } = useEventLog();

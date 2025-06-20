@@ -302,14 +302,14 @@ export const mails = [
    },
 
    /* 5.Mail Content*/
-   {id: 5, from:'aht-krkse@gmail.com',
-    title: 'Ahmet Karaköse', precontent: `-İş Tamamlandı!`, readMail: false, notified: false, used: false,
+   {id: 5, from:'brs-yldz@gmail.com',
+    title: 'Barış Yıldız', precontent: `-İş Tamamlandı!`, readMail: false, notified: false, used: false,
      content: 
      (
        <div className="mail-content">
           <DownloadButton label="Rapor_2025.docx" fileName="rapor_2025" mailId={5}/>
           <pre>
-                Selam Onur! Anlaştığımız gibi istediğin işlemi tamamladım. Dosyalar Ektee!<br/><br/>
+                Selam, anlaştığımız gibi istediğin işlemi tamamladım. Rapor dosyan ekte!<br/><br/>
                 <b>İyi çalışmalar.</b><br/><br/>
           </pre>
        </div>

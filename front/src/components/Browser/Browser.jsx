@@ -4,6 +4,7 @@ import { MakeDraggable } from "../../utils/Draggable";
 import { useUIContext } from "../../Contexts/UIContext";
 import sites from "../../constants/sites";
 import { useGameContext } from "../../Contexts/GameContext";
+import { useEventLog } from "../../Contexts/EventLogContext";
 
 export const useBrowser = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -17,6 +18,7 @@ const CachedComponents = {};
 
 const Browser = ({ closeHandler, style }) => {
   // 1. windowProps'u oku
+  const { addEventLogOnce } = useEventLog(); 
   const { windowProps } = useUIContext();
   const browserProps = windowProps?.browser || {};
 
@@ -129,6 +131,23 @@ const Browser = ({ closeHandler, style }) => {
   const handleSearchillSearch = async (searchText, addToHistory = true) => {
     if (!searchText || !searchText.trim()) return;
     const searchQuery = normalizeText(searchText.trim());
+
+    addEventLogOnce(
+      "browser_search",      // type
+      "searchQuery",         // unique alan
+      searchQuery,           // value
+      {
+        type: "browser_search",
+        questId: null,
+        logEventType: "browser_search",
+        value: 0,
+        data: {
+          keyword: searchText
+        }
+      }
+    );
+
+
     const searchUrl = `https://www.searchill.com/search?q=${encodeURIComponent(searchQuery)}`;
     setUrl(searchUrl);
     await startLoading();
@@ -163,6 +182,29 @@ const Browser = ({ closeHandler, style }) => {
         }
       }
     }
+
+    let value = 0;
+    let reason = "normal";
+    if (matchedSite?.isSponsored) {
+      value = -4;
+      reason = "sponsored";
+    }
+    addEventLogOnce(
+      "browser_visit",
+      "visitedUrl",
+      finalUrl,
+      {
+        type: "browser_visit",
+        questId: null,
+        logEventType: "browser_visit",
+        value,
+        data: {
+          url: finalUrl,
+          isSponsored: matchedSite?.isSponsored || false,
+          reason,
+        }
+      }
+    );
 
     setCurrentUrl(matchedSite ? (dynamicUrl || finalUrl) : "404");
     setUrl(finalUrl);

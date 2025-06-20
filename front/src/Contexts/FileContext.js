@@ -126,7 +126,7 @@ const defaultFileSchema = {
             detectable: false,
         },
         officedoc: { 
-            available: true,
+            available: false,
             quarantined: false, 
             clickable: true,
             infected: false, 
@@ -139,7 +139,7 @@ const defaultFileSchema = {
             locked: false,
         },
         photo1: { 
-            available: true,
+            available: false,
             quarantined: false, 
             clickable: true,
             infected: false, 
@@ -151,7 +151,7 @@ const defaultFileSchema = {
             content: "/images/office.jpg"
         },
         photo12: { 
-            available: true,
+            available: false,
             quarantined: false,
             clickable: true, 
             infected: false, 
@@ -163,7 +163,7 @@ const defaultFileSchema = {
             content: "/images/office.jpg"
         },
         photo2: { 
-            available: true,
+            available: false,
             quarantined: false, 
             clickable: true,
             infected: false, 
