@@ -47,6 +47,15 @@ export const GameContextProvider = ({ children }) => {
     questsRef.current = quests;
   }, [quests]);
 
+  // ▲▲▲ EKLENDİ: React güncellemelerini kesin olarak flush eden yardımcı fonksiyon
+  const flushReactUpdates = async () => {
+    // micro/macro task kuyruğu ve iki kare/pain sonrası effect'lerin çalıştığından emin ol
+    await Promise.resolve();
+    await new Promise(r => setTimeout(r, 0));
+    await new Promise(r => requestAnimationFrame(() => r()));
+    await new Promise(r => requestAnimationFrame(() => r()));
+  };
+
   // Oyun sonlandırıcı global fonksiyon
   const endGame = async ({ title, description } = {}) => {
     if (showEndGame) return; // İkinci kez tetiklenmesin
@@ -56,10 +65,12 @@ export const GameContextProvider = ({ children }) => {
       ...(description !== undefined ? { description } : {}),
     }));
     setShowEndGame(true);
+
+    // ▼▼▼ EKLENDİ: Son görev/log güncellemeleri tamamen işlensin
+    await flushReactUpdates();
+
     await saveSession(); // Oyun kaydı (asenkron)
   };
-
-
 
   function generateTempPassword() {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
@@ -425,24 +436,37 @@ export const GameContextProvider = ({ children }) => {
   // ---------------------------
   const saveSession = async () => {
     try {
+      // ▼▼▼ EKLENDİ: Her ihtimale karşı burada da flush et
+      await flushReactUpdates();
+
       // 1) Quests'i backend'e uygun şekilde map et
-      const sanitizedQuests = questsRef.current.map(q => ({
-        questId: q.questId || q.id,
-        title: q.title,
-        description: q.description,
-        status: q.status,
-        unlocks: q.unlocks,
-        requires: q.requires,
-        score: q.point,
-        penalty: q.penalty,
-        logEventType: q.logEventType,
-        completedAt: typeof q.completedAt === "number" && !isNaN(q.completedAt)
-          ? new Date(gameStart.getTime() + q.completedAt).toISOString()
-          : null,
-      }));
+      const latestQuests = questsRef.current || quests;
+      const sanitizedQuests = latestQuests.map(q => {
+        let completedISO = null;
+        if (typeof q.completedAt === "number" && !isNaN(q.completedAt)) {
+          // Eğer epoch ms gibi büyükse doğrudan kullan; küçükse gameStart'a relatif say
+          const asMs = q.completedAt > 1e12
+            ? q.completedAt
+            : gameStart.getTime() + q.completedAt;
+          completedISO = new Date(asMs).toISOString();
+        }
+        return {
+          questId: q.questId || q.id,
+          title: q.title,
+          description: q.description,
+          status: q.status,
+          unlocks: q.unlocks,
+          requires: q.requires,
+          score: q.point,
+          penalty: q.penalty,
+          logEventType: q.logEventType,
+          completedAt: completedISO,
+        };
+      });
 
       // 2) EventLogs'u ISO timestamp ile map et
-      const sanitizedEventLogs = eventLogsRef.current.map(log => ({
+      const latestLogs = eventLogsRef.current || eventLogs;
+      const sanitizedEventLogs = latestLogs.map(log => ({
         ...log,
         timestamp: log.timestampMs
           ? new Date(log.timestampMs).toISOString()
