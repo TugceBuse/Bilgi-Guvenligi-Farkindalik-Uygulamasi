@@ -414,10 +414,6 @@ export const GameContextProvider = ({ children }) => {
     addMailToMailbox('inbox', 2);
     addMailToMailbox('spam', 31);
     addMailToMailbox('spam', 32);
-    const timeoutId = setTimeout(() => {
-      addMailToMailbox('inbox', 3, getDateFromseconds(secondsRef.current + 1));
-    }, 60000);
-    return () => clearTimeout(timeoutId);
   }, []);
 
   // ---------------------------
