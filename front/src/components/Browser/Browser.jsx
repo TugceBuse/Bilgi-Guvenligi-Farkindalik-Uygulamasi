@@ -5,6 +5,7 @@ import { useUIContext } from "../../Contexts/UIContext";
 import sites from "../../constants/sites";
 import { useGameContext } from "../../Contexts/GameContext";
 import { useEventLog } from "../../Contexts/EventLogContext";
+import ResetPassword from "../sites/ResetPassword";
 
 export const useBrowser = () => {
   const { openWindow, closeWindow } = useUIContext();
@@ -357,6 +358,22 @@ const Browser = ({ closeHandler, style }) => {
           )}
         </div>
       );
+    }
+
+    if (currentUrl.startsWith("http://reset/")) {
+      try {
+        const urlObj = new URL(currentUrl.replace("http://", "http://dummy."));
+        const path = urlObj.pathname.replace("/", ""); // "procareerhub" gibi
+        const siteDisplayName = path === "procareerhub" ? "ProCareerHub" : "Bilinmeyen";
+
+        return (
+          <ResetPassword
+            siteName={siteDisplayName}
+          />
+        );
+      } catch (e) {
+        return <div className="not-found">404 - Geçersiz sıfırlama bağlantısı</div>;
+      }
     }
 
     if (currentUrl === "https://www.searchill.com") {
