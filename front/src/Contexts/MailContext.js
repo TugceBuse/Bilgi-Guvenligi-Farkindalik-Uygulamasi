@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { mails as initialMails, sentMails as initialSentMails, spamMails as initialSpamMails, createCargoMail, createInvoiceMail, createDiscountMail  } from '../components/Mailbox/Mails';
+import { mails as initialMails, sentMails as initialSentMails, spamMails as initialSpamMails, createCargoMail, createInvoiceMail} from '../components/Mailbox/Mails';
 import { useNotificationContext } from './NotificationContext';
 import { useUIContext } from './UIContext';
 import { useTimeContext } from './TimeContext';
@@ -138,6 +138,18 @@ export const MailContextProvider = ({ children }) => {
         used: false,
         sendTime: params.sendTime || gameDate,
         content: createInvoiceMail({ ...params, mailId }),
+      };
+    } else if (type === "resetPassword") {
+      mailObj = {
+        id: mailId,
+        from: params.from,
+        title: params.title,
+        precontent: params.precontent,
+        readMail: false,
+        notified: false,
+        used: false,
+        sendTime: params.sendTime || gameDate,
+        content: params.content, // ✅ Bu sadece <div>...</div> içeriği olmalı
       };
     }
     // ...diğer türler burada genişletilebilir

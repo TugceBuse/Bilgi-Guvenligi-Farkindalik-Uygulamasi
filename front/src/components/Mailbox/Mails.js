@@ -2,6 +2,35 @@ import './Mailbox.css';
 import DownloadButton from '../../utils/DownloadButton';
 import LinkButton from '../../utils/LinkButton';
 
+export function createResetPasswordMail({
+  email,
+  site = "procareerhub",
+  siteDisplayName = "ProCareerHub",
+  from
+}) {
+  const url = `http://reset/${site}?email=${encodeURIComponent(email)}`;
+
+  return (
+    <div className="mail-content">
+      <pre>
+        <b>Merhaba,</b><br/><br/>
+        {siteDisplayName} hesabınız için şifre sıfırlama talebinde bulundunuz.<br/><br/>
+        Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın:<br/><br/>
+        <LinkButton
+          label="🔁 Şifreyi Sıfırla"
+          url={url}
+          type="reset"
+          logEventType="reset_password"
+          questId="reset_password"
+          value={0}
+          mailId={from?.id}
+        />
+        <br/><br/>
+        Bu bağlantı 10 dakika boyunca geçerlidir.
+      </pre>
+    </div>
+  );
+}
  // Kargo maili
     export function createCargoMail({ 
       name, 

@@ -4,12 +4,19 @@ import { useGameContext } from "../../Contexts/GameContext";
 import { usePhoneContext } from "../../Contexts/PhoneContext";
 import { useQuestManager } from "../../Contexts/QuestManager";
 import  {useEventLog } from "../../Contexts/EventLogContext";
+import { useMailContext } from "../../Contexts/MailContext";
+import { createResetPasswordMail } from "../Mailbox/Mails"; 
 
 const ProCareerHub = () => {
 
   const { ProCareerHubInfo, setProCareerHubInfo} = useGameContext();
   const { addEventLog, addEventLogOnChange } = useEventLog();
   const { completeQuest } = useQuestManager();
+  const { sendMail } = useMailContext(); 
+
+  const [page, setPage] = useState("login"); // mevcut değerler: login, forgot
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetCodeSent, setResetCodeSent] = useState(false);
 
   const [isLogin, setIsLogin] = useState(true);
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
@@ -26,11 +33,53 @@ const ProCareerHub = () => {
   const [newPassword, setNewPassword] = useState("");
   const [successPassword, setSuccessPassword] = useState("");
 
+  
   const [codeTimer, setCodeTimer] = useState(120);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [lockMessage, setLockMessage] = useState("");
 
   const email = ProCareerHubInfo.email;
+
+  const handlePasswordReset = () => {
+     if (!ProCareerHubInfo.isRegistered || ProCareerHubInfo.email !== email) {
+      setPage("login");
+      setErrorMessage("Bu e-posta ile kayıtlı bir hesap bulunmamaktadır.");
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
+
+    if (!email || !email.includes("@")) {
+      setErrorMessage("Lütfen geçerli bir e-posta adresi girin.");
+      setTimeout(() => setErrorMessage(""), 2000);
+      return;
+    }
+
+    // Şifre sıfırlama bağlantısını oluştur
+    const resetLink = `https://procareerhub.com/reset?email=${encodeURIComponent(email)}`;
+
+    // Mail gönder
+    sendMail("resetPassword", {
+      from: "procareerhub@support.com",
+      title: "Şifre Sıfırlama Talebi",
+      precontent: "Şifrenizi sıfırlamak için bu e-postayı inceleyin.",
+      content: createResetPasswordMail({
+        email,
+        site: "procareerhub",
+        siteDisplayName: "ProCareerHub",
+        from: { id: 1009 }
+      })
+    });
+
+    setSuccessMessage("Şifre sıfırlama bağlantısı e-posta kutunuza gönderildi.");
+    // 2 saniye sonra otomatik temizle
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 2000);
+    
+    setPage("login");
+    
+  };
 
   const [showSettings, setShowSettings] = useState(false);
   const [showAd, setShowAd] = useState(false); // Reklam gösterme kontrolü
@@ -362,7 +411,7 @@ const ProCareerHub = () => {
         <p>Kariyerini geliştirmek ve iş fırsatlarını yakalamak için doğru yerdesin!</p>
       </header>
 
-      {!ProCareerHubInfo.isLoggedIn && !is2FAwaiting && (
+      {!ProCareerHubInfo.isLoggedIn && !is2FAwaiting && page !== "forgot" && (
         <div className={styles.authBox}>
           <h2>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</h2>
 
@@ -375,7 +424,8 @@ const ProCareerHub = () => {
 
           <input className="disabled-input" type="email" placeholder="E-posta adresiniz" readOnly value={email} />
           <input type="password" placeholder="Şifreniz" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button
+          <button            
+            className={styles.loginRegisterButton}
             onClick={handleAuth}
             disabled={isLogin && ProCareerHubInfo.lockoutUntil && Date.now() < ProCareerHubInfo.lockoutUntil}
           >
@@ -383,6 +433,7 @@ const ProCareerHub = () => {
           </button>
 
           {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+          {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
           {ProCareerHubInfo.lockoutUntil && Date.now() < ProCareerHubInfo.lockoutUntil && isLogin && (
             <p className={styles.twoFAError}>
               🚫 Çok fazla deneme yapıldı. <b>{getLockoutRemainingMinutes()}</b> dakika sonra tekrar deneyin.
@@ -392,11 +443,33 @@ const ProCareerHub = () => {
             {isLogin ? "Hesabınız yok mu? Kayıt olun!" : "Zaten üye misiniz? Giriş yapın!"}
           </p>
 
-          <p 
-            style={{ cursor: "context-menu", color: "#258cff", marginTop: 6, textDecoration: "underline" }}
-          >
-            Şifremi Unuttum
-          </p>
+          {isLogin && (
+             <button
+              className={styles.forgotPasswordButton}
+              type="button"
+              onClick={() => setPage("forgot")}
+             >
+               🔐 Şifremi Unuttum
+             </button>
+          )}
+        </div>
+      )}
+
+      {page === "forgot" && (
+        <div className={styles.forgotPasswordContainer}>
+          <h2 className={styles.forgotTitle}>🔐 Şifremi Unuttum</h2>
+          <p className={styles.forgotInfo}>Kayıtlı e-posta adresinizi girin. Size bir şifre sıfırlama bağlantısı gönderilecektir.</p>
+
+          <input className={styles.forgotInput} type="email" placeholder="E-posta adresiniz" readOnly value={email} />
+
+          <div className={styles.forgotButtonGroup}>
+            <button className={styles.forgotButton} onClick={handlePasswordReset}>
+              Gönder
+            </button>
+            <button className={styles.forgotBackButton} onClick={() => setPage("login")}>
+              Geri Dön
+            </button>
+          </div>
         </div>
       )}
 
