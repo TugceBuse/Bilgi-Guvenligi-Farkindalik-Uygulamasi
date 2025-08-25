@@ -149,6 +149,37 @@ export function QuestManagerProvider({ children }) {
   };
 
   // ─────────────────────────────────────────────────────────
+  // YENİ: Tek bir görevin şu anda A-K-T-İ-F hale gelebilir olup olmadığını kontrol eder (yan etkisiz)
+  const canActivateQuest = (arr, quest) => {
+    if (!quest || quest.status !== "locked") return false;
+    if (quest.visibility === "hidden") return false;
+
+    const allReq = Array.isArray(quest.requiresAll) ? quest.requiresAll : [];
+    const anyReq = Array.isArray(quest.requiresAny) ? quest.requiresAny : [];
+
+    const allOk =
+      allReq.length === 0
+        ? true
+        : allReq.every((rid) => {
+            const rq = arr.find((x) => x.id === rid);
+            return rq && isSuccess(rq.status);
+          });
+
+    const anyOk =
+      anyReq.length === 0
+        ? true
+        : anyReq.some((rid) => {
+            const rq = arr.find((x) => x.id === rid);
+            return rq && isTerminal(rq.status);
+          });
+
+    const hasNoDeps = allReq.length === 0 && anyReq.length === 0;
+    const canActivate = hasNoDeps ? quest._unlockFlag === true : allOk && anyOk;
+
+    return canActivate;
+  };
+
+  // ─────────────────────────────────────────────────────────
   // Bir görevin sonucu ile hedef görevleri “aç” (unlockFlag)
   const applyUnlocks = (arr, fromId, outcome /* "success" | "fail" */) => {
     const from = arr.find((x) => x.id === fromId);
@@ -174,7 +205,8 @@ export function QuestManagerProvider({ children }) {
   // TEK NOKTADAN TAMAMLAMA:
   // - active ise → completed
   // - locked && acceptsEarlyCompletion !== false ise → completed_hidden
-  // - locked && acceptsEarlyCompletion === false ise → hiçbir şey yapma (erken tamamlamayı reddet)
+  // - locked && acceptsEarlyCompletion === false ise → eğer şu an aktive edilebiliyorsa
+  //   aynı çağrıda active yap + hemen completed; değilse no-op
   const completeQuest = (id) => {
     setQuests((prev) => {
       const cur = prev.find((q) => q.id === id);
@@ -183,15 +215,33 @@ export function QuestManagerProvider({ children }) {
       // completed/failed ise tekrar işlem yapmayalım
       if (cur.status === "completed" || cur.status === "failed") return prev;
 
-      const isEarly =
+      const isEarlyCandidate =
         cur.status === "locked" && cur.acceptsEarlyCompletion !== false;
 
+      const isLockedNoEarly =
+        cur.status === "locked" && cur.acceptsEarlyCompletion === false;
+
+      let updated = prev.map((q) => ({ ...q }));
+
+      // 0) locked + erken yasak → şu an aktive edilebilir mi?
+      if (isLockedNoEarly) {
+        const idx = updated.findIndex((x) => x.id === id);
+        if (idx !== -1 && canActivateQuest(updated, updated[idx])) {
+          // aynı çağrıda aktif et ve hemen tamamla
+          updated[idx].status = "active";
+          // normal tamamlama akışına aşağıda girecek
+        } else {
+          // Aktivasyon mümkün değil → hiçbir şey yapma
+          return prev;
+        }
+      }
+
       // 1) Durumu güncelle
-      let updated = prev.map((q) => {
+      updated = updated.map((q) => {
         if (q.id !== id) return q;
 
         // Erken tamamlama
-        if (isEarly) {
+        if (isEarlyCandidate) {
           return {
             ...q,
             status: "completed_hidden",
@@ -201,7 +251,7 @@ export function QuestManagerProvider({ children }) {
           };
         }
 
-        // Normal tamamlama (aktifken)
+        // Normal tamamlama (aktifken veya az önce aktive edildi)
         if (q.status === "active") {
           return {
             ...q,
@@ -212,11 +262,11 @@ export function QuestManagerProvider({ children }) {
           };
         }
 
-        // locked + acceptsEarlyCompletion === false gibi bir durumda hiçbir şey yapma
+        // (Güvenlik için) diğer durumlar: hiçbir şey yapma
         return q;
       });
 
-      // Tamamlama gerçekleşmediyse (örn. erken tamamlama reddedildi) erken çık
+      // Tamamlama gerçekleşti mi?
       const after = updated.find((q) => q.id === id);
       const actuallyCompleted =
         after && (after.status === "completed" || after.status === "completed_hidden");
@@ -246,7 +296,7 @@ export function QuestManagerProvider({ children }) {
           })
         );
       }
-
+      console.log(updated);
       return updated;
     });
   };
@@ -298,7 +348,7 @@ export function QuestManagerProvider({ children }) {
           })
         );
       }
-
+      console.log(updated);
       return updated;
     });
   };
@@ -323,8 +373,8 @@ export function QuestManagerProvider({ children }) {
   const value = {
     quests,
     getActiveQuests,
-    completeQuest,       // ← Artık tek API noktası
-    failQuest,
+    completeQuest,       // ← Dışarıdan sadece bu…
+    failQuest,           // ← …ve bu çağrılacak.
     resetQuests,
     setQuests,
     isTaskAppInstalled,
