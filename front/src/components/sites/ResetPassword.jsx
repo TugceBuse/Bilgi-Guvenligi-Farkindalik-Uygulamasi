@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ResetPassword.module.css";
+import { useGameContext } from "../../Contexts/GameContext";
 
 const ResetPassword = ({ siteName = "DefaultSite", onSuccessRedirect }) => {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { setProCareerHubInfo } = useGameContext();
+
+  useEffect(() => {
+    if (successMessage && siteName) {
+      const redirectUrl = `https://${siteName.toLowerCase()}.com`;
+
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("open-browser-url", {
+          detail: {
+            url: redirectUrl
+          }
+        }));
+      }, 3000);
+    }
+  }, [successMessage, siteName]);
 
   const handleReset = () => {
     // Validation
@@ -22,14 +38,25 @@ const ResetPassword = ({ siteName = "DefaultSite", onSuccessRedirect }) => {
     }
 
     // Success
+    console.log("site ismi:", siteName);
+    // ✅ Şifre güncelle
+    if (siteName?.toLowerCase() === "procareerhub") {
+      setProCareerHubInfo(prev => ({
+        ...prev,
+        password: password1
+      }));
+    }
+    
     setErrorMessage("");
     setSuccessMessage("✅ Şifreniz başarıyla güncellendi!");
 
     // 3 saniye sonra yönlendir
+    const redirectUrl = `https://${siteName.toLowerCase()}.com`;
+
     setTimeout(() => {
-      if (typeof onSuccessRedirect === "function") {
-        onSuccessRedirect(); // örneğin `setPage("procareerhub")`
-      }
+      window.dispatchEvent(new CustomEvent("open-browser-url", {
+        detail: { url: redirectUrl }
+      }));
     }, 3000);
   };
 
