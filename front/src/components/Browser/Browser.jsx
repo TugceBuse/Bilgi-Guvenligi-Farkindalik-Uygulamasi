@@ -362,13 +362,16 @@ const Browser = ({ closeHandler, style }) => {
 
     if (currentUrl.startsWith("http://reset/")) {
       try {
-        const urlObj = new URL(currentUrl.replace("http://", "http://dummy."));
-        const path = urlObj.pathname.replace("/", ""); // "procareerhub" gibi
-        const siteDisplayName = path === "procareerhub" ? "ProCareerHub" : "Bilinmeyen";
+         window.currentBrowserUrl = currentUrl;
+
+        const dummyUrl = currentUrl.replace("http://", "http://dummy.");
+        const urlObj = new URL(dummyUrl);
+        const siteKey = urlObj.pathname.replace("/", ""); // "procareerhub"
+        const siteName = siteKey === "procareerhub" ? "ProCareerHub" : "Bilinmeyen";
 
         return (
           <ResetPassword
-            siteName={siteDisplayName}
+            siteName={siteName}
           />
         );
       } catch (e) {
