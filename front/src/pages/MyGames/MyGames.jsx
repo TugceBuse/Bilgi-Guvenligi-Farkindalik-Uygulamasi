@@ -10,30 +10,41 @@ const toTurkishDate = (date) =>
 
 // Süreyi "X dk Y sn" formatında döndürür
 const formatDuration = (seconds) => {
-  if (!seconds || isNaN(seconds) || seconds < 0) return "-";
+  if (seconds == null || isNaN(seconds) || seconds < 0) return "-";
   const min = Math.floor(seconds / 60);
-  const sec = seconds % 60;
+  const sec = Math.floor(seconds % 60);
   return `${min} dk ${sec} sn`;
 };
 
+// Yeni statü yardımcıları
+const isSuccess = (st) => st === "completed" || st === "completed_hidden";
+const isFail = (st) => st === "failed";
+const isSkipped = (st) => st === "skipped";
+
 const getStatus = (gs) => {
-  if (!gs.quests) return "-";
-  if (gs.quests.length === 0) return "Başlatılmadı";
-  const allCompleted = gs.quests.every(q => q.status === "completed");
-  const anyFailed = gs.quests.some(q => q.status === "failed");
-  if (allCompleted) return "Başarıyla Tamamlandı";
+  const quests = gs?.quests || [];
+  if (quests.length === 0) return "Başlatılmadı";
+
+  const allSucceeded = quests.length > 0 && quests.every(q => isSuccess(q.status));
+  const anyFailed = quests.some(q => isFail(q.status));
+  const anySkipped = quests.some(q => isSkipped(q.status));
+
+  if (allSucceeded) return "Başarıyla Tamamlandı";
   if (anyFailed) return "Erken Sonlandı";
+  if (anySkipped) return "Bazı Görevler Atlandı";
   return "Tamamlandı";
 };
 
 // Oyun analizi için eventLogs'u işle
 const extractErrors = (gs) => {
+  const logs = gs?.eventLogs || [];
+
   // 1. Açık hata eventleri (fail/error)
-  const logErrors = (gs.eventLogs || [])
-    .filter(ev => ev.type === "fail" || ev.logEventType === "error")
+  const logErrors = logs
+    .filter(ev => ev?.type === "fail" || ev?.logEventType === "error")
     .map(ev => {
       let detay = "";
-      if (ev.data) {
+      if (ev?.data) {
         const reason = ev.data.reason || ev.data.message;
         if (reason) detay += ` (${reason})`;
         Object.entries(ev.data).forEach(([key, value]) => {
@@ -42,18 +53,18 @@ const extractErrors = (gs) => {
           }
         });
       }
-      return (ev.logEventType || ev.type || "Hata") + detay;
+      return (ev?.logEventType || ev?.type || "Hata") + detay;
     });
 
   // 2. value < 0 ve özelleştirilmiş açıklama
-  const negativeValueLogs = (gs.eventLogs || [])
+  const negativeValueLogs = logs
     .filter(ev =>
-      typeof ev.value === "number" && ev.value < 0 &&
-      !(ev.type === "fail" || ev.logEventType === "error")
+      typeof ev?.value === "number" && ev.value < 0 &&
+      !(ev?.type === "fail" || ev?.logEventType === "error")
     )
     .map(ev => {
       // Özelleştirilmiş register log metni
-      if (ev.type && ev.type.includes("register") && ev.data && ev.data.for) {
+      if (ev?.type?.includes("register") && ev?.data?.for) {
         let desc = `[${ev.data.for}] kayıt - `;
         desc += ev.data.isStrong === false
           ? "Zayıf şifre seçildi"
@@ -64,14 +75,14 @@ const extractErrors = (gs) => {
       }
       // Diğer tüm negatif loglar için
       let detay = "";
-      if (ev.data) {
+      if (ev?.data) {
         Object.entries(ev.data).forEach(([key, value]) => {
           if (value) detay += ` | ${key}: ${value}`;
         });
       }
       return (
-        (ev.data?.reason || ev.data?.message || ev.logEventType || ev.type || "Negatif Etki") +
-        ` (Puan: ${ev.value})` +
+        (ev?.data?.reason || ev?.data?.message || ev?.logEventType || ev?.type || "Negatif Etki") +
+        ` (Puan: ${ev?.value})` +
         detay
       );
     });
@@ -79,44 +90,47 @@ const extractErrors = (gs) => {
   return [...logErrors, ...negativeValueLogs];
 };
 
-
 const extractViruses = (gs) => {
-  if (!gs.eventLogs) return [];
-  return gs.eventLogs
-    .filter(ev => ev.logEventType === "virus" || ev.type === "add_virus" || ev.type === "remove_virus")
+  const logs = gs?.eventLogs || [];
+  return logs
+    .filter(ev => ev?.logEventType === "virus" || ev?.type === "add_virus" || ev?.type === "remove_virus")
     .map(ev => {
       let action = "";
-      if (ev.type && ev.type.includes("add")) action = "Virüs Bulaşma: ";
-      else if (ev.type && ev.type.includes("remove")) action = "Virüs Temizleme: ";
-      const tarih = toTurkishDate(ev.timestamp);
-      const name = ev.virusType || ev.data?.type || "Virüs";
-      const impact = ev.data?.impact ? ` (${ev.data.impact})` : "";
-      const puan = ev.value ? ` (Puan: ${ev.value})` : "";
+      if (ev?.type?.includes("add")) action = "Virüs Bulaşma: ";
+      else if (ev?.type?.includes("remove")) action = "Virüs Temizleme: ";
+      const tarih = toTurkishDate(ev?.timestamp);
+      const name = ev?.virusType || ev?.data?.type || "Virüs";
+      const impact = ev?.data?.impact ? ` (${ev.data.impact})` : "";
+      const puan = typeof ev?.value === "number" && ev.value !== 0 ? ` (Puan: ${ev.value})` : "";
       return `${action}${name} - ${tarih}${impact}${puan}`;
     });
 };
 
 const mapGameSession = (gs, idx) => {
-  // Süre hesabı için startedAt ve endedAt kullan
+  // Süre hesabı
   let durationSec = null;
-  if (gs.startedAt && gs.endedAt) {
+  if (gs?.startedAt && gs?.endedAt) {
     durationSec = Math.floor((new Date(gs.endedAt) - new Date(gs.startedAt)) / 1000);
-  } else if (gs.startTime && gs.endTime) {
+  } else if (gs?.startTime && gs?.endTime) {
     durationSec = Math.floor((new Date(gs.endTime) - new Date(gs.startTime)) / 1000);
-  } else if (gs.duration) {
+  } else if (gs?.duration != null) {
     durationSec = gs.duration;
   }
+
+  const quests = gs?.quests || [];
+  const completedCount = quests.filter(q => isSuccess(q.status)).length;
+
   return {
-    id: gs._id || idx + 1,
-    date: toTurkishDate(gs.endedAt || gs.createdAt),
-    score: gs.totalScore ?? 0,
-    completedQuests: gs.quests?.filter(q => q.status === "completed").length ?? 0,
-    totalQuests: gs.quests?.length ?? 0,
+    id: gs?._id || idx + 1,
+    date: toTurkishDate(gs?.endedAt || gs?.createdAt),
+    score: gs?.totalScore ?? 0,
+    completedQuests: completedCount,
+    totalQuests: quests.length,
     duration: formatDuration(durationSec),
     status: getStatus(gs),
-    tasks: (gs.quests || []).map(q => ({
-      name: q.title || "Görev Adı Yok",
-      done: q.status === "completed"
+    tasks: quests.map(q => ({
+      name: q?.title || "Görev Adı Yok",
+      done: isSuccess(q?.status)
     })),
     errors: extractErrors(gs),
     viruses: extractViruses(gs),
@@ -176,17 +190,26 @@ const MyGames = () => {
   const { token } = useAuthContext();
   const navigate = useNavigate();
 
+  // Güvenli dizi çevirici
+  const asArray = (value) => {
+    if (Array.isArray(value)) return value;
+    if (value && Array.isArray(value.sessions)) return value.sessions;
+    return [];
+  };
+
   useEffect(() => {
     const loadGames = async () => {
       setLoading(true);
       try {
         const response = await fetchGameSessions(token);
-        setGames(response.map(mapGameSession));
+        const list = asArray(response);
+        setGames(list.map(mapGameSession));
       } catch (err) {
-        setGames([]);
         console.error("Oyunlar çekilemedi:", err);
+        setGames([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     loadGames();
   }, [token]);
@@ -195,13 +218,13 @@ const MyGames = () => {
   useEffect(() => {
     if (!games[0]) return;
     let start = 0;
-    const end = games[0].score;
+    const end = Number(games[0].score) || 0;
     if (start === end) {
       setDisplayedScore(end);
       return;
     }
-    let step = Math.max(1, Math.floor(Math.abs(end) / 35));
-    let interval = setInterval(() => {
+    const step = Math.max(1, Math.floor(Math.abs(end) / 35));
+    const interval = setInterval(() => {
       start += step * (end < 0 ? -1 : 1);
       if ((end >= 0 && start >= end) || (end < 0 && start <= end)) {
         start = end;
