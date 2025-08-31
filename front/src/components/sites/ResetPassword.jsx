@@ -9,9 +9,12 @@ const ResetPassword = ({ siteName = "DefaultSite", onSuccessRedirect }) => {
 
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
+  const [showP1, setShowP1] = useState(false);
+  const [showP2, setShowP2] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  
+
   const { secondsRef } = useTimeContext();
   const { setProCareerHubInfo } = useGameContext();
 
@@ -34,90 +37,138 @@ const ResetPassword = ({ siteName = "DefaultSite", onSuccessRedirect }) => {
     }
   }, [secondsRef?.current]);
 
-  
   useEffect(() => {
     if (successMessage && siteName) {
       const redirectUrl = `https://${siteName.toLowerCase()}.com`;
-
       setTimeout(() => {
-        window.dispatchEvent(new CustomEvent("open-browser-url", {
-          detail: {
-            url: redirectUrl
-          }
-        }));
+        window.dispatchEvent(
+          new CustomEvent("open-browser-url", { detail: { url: redirectUrl } })
+        );
       }, 3000);
     }
   }, [successMessage, siteName]);
 
-  if (isExpired) {
-    return (
-      <div className={styles.resetContainer}>
-        <h2>⏰ Bağlantı Süresi Doldu</h2>
-        <p>Bu şifre sıfırlama bağlantısı artık geçerli değil.</p>
-        <p>Lütfen yeni bir şifre sıfırlama talebinde bulunun.</p>
-      </div>
-    );
-  }
-
   const handleReset = () => {
-    // Validation
     if (password1.length < 4 || password2.length < 4) {
       setErrorMessage("Şifre en az 4 karakter olmalıdır.");
       setSuccessMessage("");
       return;
     }
-
     if (password1 !== password2) {
       setErrorMessage("Şifreler eşleşmiyor.");
       setSuccessMessage("");
       return;
     }
 
-    // Success
-    console.log("site ismi:", siteName);
-    // ✅ Şifre güncelle
     if (siteName?.toLowerCase() === "procareerhub") {
-      setProCareerHubInfo(prev => ({
+      setProCareerHubInfo((prev) => ({
         ...prev,
-        password: password1
+        password: password1,
       }));
     }
-    
+
     setErrorMessage("");
     setSuccessMessage("✅ Şifreniz başarıyla güncellendi!");
-
-    // 3 saniye sonra yönlendir
-    const redirectUrl = `https://${siteName.toLowerCase()}.com`;
-
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent("open-browser-url", {
-        detail: { url: redirectUrl }
-      }));
-    }, 3000);
   };
 
+  if (isExpired) {
+    return (
+      <div className={styles.centerWrap}>
+        <div className={`${styles.card} ${styles.expiredCard} ${styles.fadeIn}`}>
+          <div className={styles.lockBadge}>
+            <span className={styles.lockIcon}>⏰</span>
+          </div>
+          <h2 className={styles.title}>Bağlantı Süresi Doldu</h2>
+          <p className={styles.subtitle}>
+            Bu şifre sıfırlama bağlantısı artık geçerli değil. Lütfen yeni bir
+            şifre sıfırlama talebinde bulunun.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={styles.resetContainer}>
-      <h2>🔐 {siteName} Şifre Yenileme</h2>
-      <p>Yeni şifrenizi giriniz:</p>
+    <div className={styles.centerWrap}>
+      {/* Arka plan ışıması */}
+      <div className={styles.aura} aria-hidden />
 
-      <input
-        type="password"
-        placeholder="Yeni şifre"
-        value={password1}
-        onChange={(e) => setPassword1(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Yeni şifre (tekrar)"
-        value={password2}
-        onChange={(e) => setPassword2(e.target.value)}
-      />
+      <div className={`${styles.card} ${styles.fadeIn}`}>
+        <div className={styles.lockBadge}>
+          <span className={styles.lockIcon}>🔐</span>
+        </div>
 
-      <button onClick={handleReset}>Şifreyi Güncelle</button>
+        <h2 className={styles.title}>
+          {siteName} • <span className={styles.thin}>Şifre Yenileme</span>
+        </h2>
+        <p className={styles.subtitle}>
+          Yeni şifrenizi girin ve onaylayın. Güvenliğiniz için güçlü bir şifre
+          tercih edin.
+        </p>
 
-      {errorMessage && <p className={styles.error}>{errorMessage}</p>}
-      {successMessage && <p className={styles.success}>{successMessage}</p>}
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Yeni Şifre</label>
+          <div className={styles.inputRow}>
+            <span className={styles.inputIcon} aria-hidden>●●</span>
+            <input
+              type={showP1 ? "text" : "password"}
+              placeholder="Yeni şifre"
+              value={password1}
+              onChange={(e) => setPassword1(e.target.value)}
+              className={styles.input}
+            />
+            <button
+              type="button"
+              className={styles.eyeBtn}
+              onClick={() => setShowP1((s) => !s)}
+              aria-label={showP1 ? "Şifreyi gizle" : "Şifreyi göster"}
+              title={showP1 ? "Şifreyi gizle" : "Şifreyi göster"}
+            >
+              {showP1 ? "🙈" : "👁️"}
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Yeni Şifre (tekrar)</label>
+          <div className={styles.inputRow}>
+            <span className={styles.inputIcon} aria-hidden>●●</span>
+            <input
+              type={showP2 ? "text" : "password"}
+              placeholder="Yeni şifre (tekrar)"
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
+              className={styles.input}
+            />
+            <button
+              type="button"
+              className={styles.eyeBtn}
+              onClick={() => setShowP2((s) => !s)}
+              aria-label={showP2 ? "Şifreyi gizle" : "Şifreyi göster"}
+              title={showP2 ? "Şifreyi gizle" : "Şifreyi göster"}
+            >
+              {showP2 ? "🙈" : "👁️"}
+            </button>
+          </div>
+        </div>
+
+        <button
+          onClick={handleReset}
+          className={styles.cta}
+          disabled={!!successMessage}
+        >
+          {successMessage ? "Yönlendiriliyor..." : "Şifreyi Güncelle"}
+        </button>
+
+        {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+        {successMessage && (
+          <p className={styles.success}>
+            {successMessage} <span className={styles.smallNote}>
+              (3 sn içinde yönlendirileceksiniz)
+            </span>
+          </p>
+        )}
+      </div>
     </div>
   );
 };
