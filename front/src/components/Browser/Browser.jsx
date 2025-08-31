@@ -366,8 +366,16 @@ const Browser = ({ closeHandler, style }) => {
 
         const dummyUrl = currentUrl.replace("http://", "http://dummy.");
         const urlObj = new URL(dummyUrl);
-        const siteKey = urlObj.pathname.replace("/", ""); // "procareerhub"
-        const siteName = siteKey === "procareerhub" ? "ProCareerHub" : "Bilinmeyen";
+        // 1. siteKey'i al
+        const siteKey = urlObj.pathname.replace("/", "").toLowerCase();
+
+        // 2. siteKey ile eşleşen siteyi, sites objesinin değerlerinden title'a göre bul
+        const siteEntry = Object.entries(sites).find(
+          ([_, config]) => config?.title?.toLowerCase() === siteKey
+        );
+
+        // 3. siteName'i al veya bilinmeyen fallback
+        const siteName = siteEntry?.[1]?.title || "Bilinmeyen";
 
         return (
           <ResetPassword

@@ -4,7 +4,6 @@ import { useGameContext } from "../../Contexts/GameContext";
 import { useTimeContext } from "../../Contexts/TimeContext";
 
 const ResetPassword = ({ siteName = "DefaultSite", onSuccessRedirect }) => {
-  const [siteKey, setSiteKey] = useState("procareerhub"); // url’den çekiyoruz
   const [isExpired, setIsExpired] = useState(false);
 
   const [password1, setPassword1] = useState("");
@@ -16,7 +15,7 @@ const ResetPassword = ({ siteName = "DefaultSite", onSuccessRedirect }) => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const { secondsRef } = useTimeContext();
-  const { setProCareerHubInfo } = useGameContext();
+  const gameContext = useGameContext();
 
   useEffect(() => {
     try {
@@ -49,27 +48,33 @@ const ResetPassword = ({ siteName = "DefaultSite", onSuccessRedirect }) => {
   }, [successMessage, siteName]);
 
   const handleReset = () => {
-    if (password1.length < 4 || password2.length < 4) {
-      setErrorMessage("Şifre en az 4 karakter olmalıdır.");
-      setSuccessMessage("");
-      return;
-    }
-    if (password1 !== password2) {
-      setErrorMessage("Şifreler eşleşmiyor.");
-      setSuccessMessage("");
-      return;
-    }
+  if (password1.length < 4 || password2.length < 4) {
+    setErrorMessage("Şifre en az 4 karakter olmalıdır.");
+    setSuccessMessage("");
+    return;
+  }
+  if (password1 !== password2) {
+    setErrorMessage("Şifreler eşleşmiyor.");
+    setSuccessMessage("");
+    return;
+  }
 
-    if (siteName?.toLowerCase() === "procareerhub") {
-      setProCareerHubInfo((prev) => ({
-        ...prev,
-        password: password1,
-      }));
-    }
+  const siteKey = siteName?.replace(/\s+/g, "").trim(); // boşluk varsa temizle
+  const setterName = `set${siteKey}Info`;
+  const setterFn = gameContext?.[setterName];
 
-    setErrorMessage("");
-    setSuccessMessage("✅ Şifreniz başarıyla güncellendi!");
-  };
+  if (typeof setterFn === "function") {
+    setterFn((prev) => ({
+      ...prev,
+      password: password1,
+    }));
+  } else {
+    console.warn("Şifre güncelleme başarısız: Setter bulunamadı →", setterName);
+  }
+
+  setErrorMessage("");
+  setSuccessMessage("✅ Şifreniz başarıyla güncellendi!");
+};
 
   if (isExpired) {
     return (

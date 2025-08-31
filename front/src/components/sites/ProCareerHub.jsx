@@ -18,8 +18,6 @@ const ProCareerHub = () => {
   const { secondsRef } = useTimeContext();
 
   const [page, setPage] = useState("login"); // mevcut değerler: login, forgot
-  const [resetEmail, setResetEmail] = useState("");
-  const [resetCodeSent, setResetCodeSent] = useState(false);
 
   const [isLogin, setIsLogin] = useState(true);
   const { generateCodeMessage, lastCodes, clearCode } = usePhoneContext();
