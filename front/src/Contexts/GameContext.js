@@ -170,7 +170,7 @@ export const GameContextProvider = ({ children }) => {
       cardCVV: constUser.cardCVV,
       adres: constUser.adres,
     }));
-    setCloudUser(prev => ({
+    setCloudBoxInfo(prev => ({
       ...prev,
       email: constUser.email,
       name: constUser.firstName,
@@ -314,7 +314,7 @@ export const GameContextProvider = ({ children }) => {
   });
 
   // CloudBox
-  const [cloudUser, setCloudUser] = useState({
+  const [CloudBoxInfo, setCloudBoxInfo] = useState({
     name: '',
     surname: '',
     email: constUser.email,
@@ -519,7 +519,7 @@ export const GameContextProvider = ({ children }) => {
         constUser,
         BankInfo, setBankInfo,
         openlitePermissions, setOpenlitePermissions,
-        cloudUser, setCloudUser,
+        CloudBoxInfo, setCloudBoxInfo,
         cloudBoxBackup, setCloudBoxBackup,
         openDropPublicFiles, setOpenDropPublicFiles,
         cardBalance, setCardBalance,
